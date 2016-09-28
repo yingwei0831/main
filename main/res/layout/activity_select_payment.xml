@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.jhhy.cuiweitourism.ui.SelectPaymentActivity">
+
+    <include layout="@layout/title_tab1_inner_travel" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1.2px"
+        android:background="@color/colorLineGray2" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/tv_select_payment_unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/pay_type_money_unit"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_select_payment_money"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_select_payment_unit"
+            android:text="￥"
+            android:textColor="@android:color/holo_red_light"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/tv_order_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_select_payment_unit"
+            android:layout_toRightOf="@+id/tv_select_payment_money"
+            android:text="55368"
+            android:textColor="@android:color/holo_red_light"
+            android:textSize="20sp" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        >
+
+        <TextView
+            android:id="@+id/tv_ali_pay"
+            android:paddingTop="14dp"
+            android:paddingBottom="14dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@mipmap/icon_alipay"
+            android:drawablePadding="16dp"
+            android:drawableRight="@mipmap/arrow_right_dark"
+            android:gravity="center_vertical"
+            android:text="@string/pay_type_alipay"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1.2px"
+            android:background="@color/colorLineGray2" />
+
+        <TextView
+            android:id="@+id/tv_wechat_pay"
+            android:paddingTop="14dp"
+            android:paddingBottom="14dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@mipmap/icon_wechatpay"
+            android:drawablePadding="16dp"
+            android:drawableRight="@mipmap/arrow_right_dark"
+            android:gravity="center_vertical"
+            android:text="@string/pay_type_weichatpay"
+            android:textSize="16sp" />
+    </LinearLayout>
+</LinearLayout>

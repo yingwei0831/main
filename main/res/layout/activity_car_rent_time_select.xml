@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_date_picker_corner">
+
+    <TextView
+        android:id="@+id/tv_date_picker_select_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:paddingBottom="20dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:gravity="center_horizontal"
+        android:paddingTop="20dp"
+        android:text="2016年9月3日 星期六"
+        android:textColor="@color/colorTab1RecommendForYouArgument"
+        android:textSize="18sp" />
+
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignLeft="@+id/tv_date_picker_select_time"
+        android:layout_alignRight="@+id/tv_date_picker_select_time"
+        android:layout_below="@+id/tv_date_picker_select_time"
+        android:background="@color/colorTab1RecommendForYouArgument" />
+
+    <LinearLayout
+        android:id="@+id/layout_picker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tv_date_picker_select_time"
+        android:layout_alignRight="@+id/tv_date_picker_select_time"
+        android:layout_below="@+id/line"
+        android:orientation="horizontal"
+        android:layout_marginRight="2dp"
+        android:layout_marginLeft="2dp">
+
+
+        <net.simonvt.numberpicker.NumberPicker
+            android:id="@+id/date_picker_year"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginRight="16dp">
+
+        </net.simonvt.numberpicker.NumberPicker>
+
+        <net.simonvt.numberpicker.NumberPicker
+            android:id="@+id/date_picker_month"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+        </net.simonvt.numberpicker.NumberPicker>
+
+        <net.simonvt.numberpicker.NumberPicker
+            android:id="@+id/date_picker_day"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="16dp">
+
+        </net.simonvt.numberpicker.NumberPicker>
+
+        <net.simonvt.numberpicker.NumberPicker
+            android:id="@+id/date_picker_hour"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="16dp">
+
+        </net.simonvt.numberpicker.NumberPicker>
+
+    </LinearLayout>
+
+    <View
+        android:layout_alignLeft="@+id/tv_date_picker_select_time"
+        android:layout_alignRight="@+id/tv_date_picker_select_time"
+        android:id="@+id/line1"
+        android:layout_below="@+id/layout_picker"
+        android:layout_width="match_parent"
+        android:layout_height="1.2px"
+        android:background="#d1d1d1"
+        />
+    <LinearLayout
+        android:layout_below="@+id/line1"
+        android:layout_alignLeft="@+id/tv_date_picker_select_time"
+        android:layout_alignRight="@+id/tv_date_picker_select_time"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/tab1_inner_travel_pop_cancel"
+            android:background="@drawable/bg_date_picker_btn_left_corner"
+            />
+
+        <View
+            android:layout_width="1.2px"
+            android:layout_height="50dp"
+            android:background="#d1d1d1"
+            />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/tab1_inner_travel_pop_commit"
+            android:background="@drawable/bg_date_picker_btn_right_corner"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

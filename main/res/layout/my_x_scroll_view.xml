@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/title_tab1" android:id="@+id/layout_title_tab1"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.markmao.pulltorefresh.widght.XScrollView
+            android:id="@+id/scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fillViewport="true" />
+
+        <LinearLayout
+            android:id="@+id/layout_tab_recommend_for_you_2"
+            android:visibility="visible"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@android:color/white"
+            android:orientation="horizontal"
+            android:paddingTop="6dp"
+            android:paddingBottom="7dp"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
+            >
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                >
+
+                <TextView
+                    android:id="@+id/tv_tab1_indicator_all_top"
+                    style="@style/Tab1SelectionAreaStyle"
+                    android:background="@drawable/bg_tab1_radiobutton_recommend_for_you"
+                    android:text="@string/tab1_recommend_for_you_all"
+                    android:textColor="@android:color/white" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                >
+
+                <TextView
+                    android:id="@+id/tv_tab1_indicator_inner_top"
+                    style="@style/Tab1SelectionAreaStyle"
+                    android:includeFontPadding="false"
+                    android:text="@string/tab1_recommend_for_you_gny"
+                    android:textColor="@android:color/black"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                >
+
+                <TextView
+                    android:id="@+id/tv_tab1_indicator_outside_top"
+                    style="@style/Tab1SelectionAreaStyle"
+                    android:text="@string/tab1_recommend_for_you_cjy"
+                    android:textColor="@android:color/black"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                >
+
+                <TextView
+                    android:id="@+id/tv_tab1_indicator_nearby_top"
+                    style="@style/Tab1SelectionAreaStyle"
+                    android:text="@string/tab1_recommend_for_you_zby"
+                    android:textColor="@android:color/black"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+
+</LinearLayout>
+
+

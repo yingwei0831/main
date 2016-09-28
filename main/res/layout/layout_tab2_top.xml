@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <com.jhhy.cuiweitourism.view.MyScrollView
+        android:id="@+id/viewflipper_myScrollview"
+        android:layout_width="match_parent"
+        android:layout_height="200dp">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="#67a125">
+
+            <ViewFlipper
+                android:id="@+id/viewflipper"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:visibility="gone">
+
+            </ViewFlipper>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:scaleType="fitXY"
+                android:src="@mipmap/travel_icon" />
+
+
+            <LinearLayout
+                android:id="@+id/layout_indicator_point"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingBottom="2dp">
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+    </com.jhhy.cuiweitourism.view.MyScrollView>
+
+    <SearchView
+        android:id="@+id/tab2_searchview"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_tab2_searchview_border"
+        android:focusableInTouchMode="true"
+        android:imeOptions="actionSearch"
+        android:inputType="textCapWords"
+        android:queryHint="@string/tab2_search_hint">
+
+    </SearchView>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:paddingRight="16dp"
+        android:paddingLeft="16dp"
+        android:paddingBottom="10dp"
+        android:layout_marginBottom="10dp">
+
+
+        <TextView
+            android:id="@+id/tv_tab2_recommend_hot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="10dp"
+            android:text="@string/tab2_recommend_hot"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tv_tab2_hot_recommend_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tv_tab2_recommend_hot"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@id/tv_tab2_recommend_hot"
+            android:gravity="bottom"
+            android:paddingBottom="10dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="10dp"
+            android:text="@string/tab2_recommend_exchange" />
+
+        <!--此处是横向的listView-->
+        <com.jhhy.cuiweitourism.view.MyGridView
+            android:layout_below="@id/tv_tab2_recommend_hot"
+            android:id="@+id/gv_tab2_top_hot_recommend"
+            android:numColumns="2"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:horizontalSpacing="6dp">
+
+        </com.jhhy.cuiweitourism.view.MyGridView>
+
+
+
+    </RelativeLayout>
+
+
+</LinearLayout>

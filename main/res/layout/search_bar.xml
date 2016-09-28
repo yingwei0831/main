@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="@android:color/holo_green_light"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    >
+
+    <TextView
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="6dp"
+        android:drawableRight="@mipmap/arrow_down"
+        android:drawablePadding="6dp"
+        android:id="@+id/tv_search_bar_main_left_location"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:text="北京"
+        android:textColor="@android:color/white"
+        android:layout_alignParentLeft="true"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:textSize="18sp"
+        android:gravity="center_vertical"/>
+
+
+    <EditText
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="6dp"
+        android:layout_toRightOf="@+id/tv_search_bar_main_left_location"
+        android:layout_toLeftOf="@+id/title_main_iv_right_telephone"
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:hint="@string/app_name"
+        android:paddingLeft="10dp"
+        android:background="@drawable/bg_et_search_corner"
+        />
+
+    <ImageView
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="6dp"
+        android:id="@+id/title_main_iv_right_telephone"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:src="@mipmap/edit_search"
+        android:layout_centerVertical="true"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:background="@drawable/bg_btn_login"/>
+
+</RelativeLayout>

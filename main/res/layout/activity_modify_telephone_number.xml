@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.jhhy.cuiweitourism.ui.ModifyTelephoneNumberActivity">
+
+    <include layout="@layout/title_simple"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1.2px"
+        android:background="@color/colorLineGray2"
+        />
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@android:color/white"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tab4_account_security_modify_telephone_number"
+                android:textSize="16sp"
+                />
+
+            <EditText
+                android:id="@+id/et_input_mobile"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawablePadding="10dp"
+                android:hint="@string/tab4_account_security_modify_telephone_number_new"
+                android:background="@android:color/transparent"
+                android:textSize="14sp"
+                android:inputType="number"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                android:maxLength="11"
+                android:maxLines="1"
+                />
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1.2px"
+            android:background="@color/colorLineGray2"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tab4_account_security_modify_telephone_verification_code"
+                android:textSize="16sp"
+                />
+
+            <EditText
+                android:id="@+id/et_verify"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                android:maxLines="1"
+                android:layout_gravity="center_vertical"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawablePadding="10dp"
+                android:hint="@string/tab4_account_security_modify_telephone_number_verify"
+                android:background="@android:color/transparent"
+                android:textSize="14sp"
+                android:inputType="text"
+                />
+            <Button
+                android:id="@+id/activity_regist_btn_getnum"
+                android:layout_width="80dp"
+                android:layout_height="34dp"
+                android:text="@string/tab4_account_security_modify_telephone_get_verification_code"
+                android:textSize="14sp"
+                android:gravity="center"
+                android:background="@drawable/bg_btn_circle_corner_border"
+                />
+
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1.2px"
+            android:background="@color/colorLineGray2"
+            />
+        <Button
+            android:id="@+id/btn_commit"
+            android:layout_marginTop="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/tab4_account_certification_commit"
+            android:textColor="@android:color/white"
+            android:background="@drawable/bg_btn_regist_border_selector"
+            android:textSize="16sp"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>

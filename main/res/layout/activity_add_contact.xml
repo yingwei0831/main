@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    tools:context=".ui.ContactAddActivity"
+    android:paddingBottom="16dp">
+
+    <include android:id="@+id/title_add_contact" layout="@layout/title_tab1_inner_travel"/>
+    <View
+        android:id="@+id/line_add_contact_1"
+        android:layout_below="@+id/title_add_contact"
+        android:layout_width="match_parent"
+        android:layout_height="1.2px"
+        android:background="@color/colorLineGray2"
+        />
+    <LinearLayout
+        android:layout_below="@+id/line_add_contact_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp">
+
+            <TextView
+                android:textSize="16sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="姓名："
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="*"
+                android:textColor="@android:color/holo_red_light" />
+
+            <EditText
+                android:paddingLeft="4dp"
+                android:id="@+id/et_contacts_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:hint="必填"
+                android:textSize="14sp"
+                />
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1.2px"
+            android:background="@color/colorLineGray2"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp">
+
+            <TextView
+                android:textSize="16sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="身份证号："
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="*"
+                android:textColor="@android:color/holo_red_light" />
+
+            <EditText
+                android:paddingLeft="4dp"
+                android:id="@+id/et_contacts_card_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:maxLength="18"
+                android:hint="必填"
+                android:textSize="14sp"
+                />
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1.2px"
+            android:background="@color/colorLineGray2"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp">
+
+            <TextView
+                android:textSize="16sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="手机号："
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="*"
+                android:textColor="@android:color/holo_red_light" />
+
+            <EditText
+                android:paddingLeft="4dp"
+                android:id="@+id/et_contacts_mobile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:hint="必填"
+                android:textSize="14sp"
+                android:maxLength="11"
+                android:inputType="number"
+                />
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1.2px"
+            android:background="@color/colorLineGray2"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp">
+
+            <TextView
+                android:textSize="16sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="护照号："
+                android:textColor="@android:color/black" />
+
+
+
+            <EditText
+                android:id="@+id/et_contacts_passport"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:hint="选填"
+                android:textSize="14sp"
+                />
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1.2px"
+            android:background="@color/colorLineGray2"
+            />
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/btn_add_save_contacts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="保存"
+        android:background="@drawable/bg_btn_inner_travel_argument_selector"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        />
+</RelativeLayout>

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.jhhy.cuiweitourism.ui.Tab4AccountSecurityActivity">
+
+    <include layout="@layout/title_tab1_inner_travel" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1.2px"
+        android:background="@color/colorLineGray2" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tab4_account_security_password"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_modify_password"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawablePadding="10dp"
+                android:drawableRight="@mipmap/arrow_right_dark"
+                android:gravity="right"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                android:text="@string/tab4_account_security_modify"
+                android:textColor="@color/colorActionBar" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1.2px"
+            android:background="@color/colorLineGray2" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tab4_account_security_telephone_authentication"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_certification_mobile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:text="@string/tab4_account_security_already_certified"
+                android:textColor="@color/colorActionBar"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tv_modify_mobile"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawablePadding="10dp"
+                android:drawableRight="@mipmap/arrow_right_dark"
+                android:gravity="right"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                android:text="@string/tab4_account_security_modify"
+                android:textColor="@color/colorActionBar" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1.2px"
+            android:background="@color/colorLineGray2" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tab4_account_security_real_name_authentication"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_certification_true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:text="@string/tab4_account_security_not_certified"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tv_certification_go"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawablePadding="10dp"
+                android:drawableRight="@mipmap/arrow_right_dark"
+                android:gravity="right"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                android:text="@string/tab4_account_security_go_authentication"
+                android:textColor="@color/colorActionBar" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1.2px"
+            android:background="@color/colorLineGray2" />
+
+        <Button
+            android:id="@+id/btn_login_out"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/bg_btn_regist_border_selector"
+            android:text="@string/tab4_account_security_exit"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+
+</LinearLayout>

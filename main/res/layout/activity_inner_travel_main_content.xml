@@ -1,0 +1,146 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:visibility="visible" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@android:color/white"
+            android:orientation="vertical"
+            android:paddingBottom="16dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="热门目的地" />
+
+            <com.jhhy.cuiweitourism.view.MyGridView
+                android:id="@+id/gv_inner_travel_main_hot"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:horizontalSpacing="10dp"
+                android:numColumns="4"
+                android:verticalSpacing="10dp" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@android:color/white"
+            android:paddingBottom="16dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="10dp">
+
+            <TextView
+                android:id="@+id/tv_hot_recommend_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="热门推荐" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="换一批" />
+
+            <com.jhhy.cuiweitourism.view.MyGridView
+                android:id="@+id/gv_inner_travel_main_recommend"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_hot_recommend_title"
+                android:layout_marginTop="10dp"
+                android:numColumns="2" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_inner_travel_main_indicator"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+
+            >
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/tv_inner_travel_main_follow"
+                    android:paddingTop="16dp"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="跟团游"
+                    android:paddingBottom="12dp"
+                    android:textColor="@color/colorTab1RecommendForYouArgument"
+                    android:background="@android:color/white"/>
+                <View
+                    android:id="@+id/indicator_follow"
+                    android:layout_width="match_parent"
+                    android:layout_height="4dp"
+                    android:background="@color/colorTab1RecommendForYouArgument"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/tv_inner_travel_main_freedom"
+                    android:paddingTop="16dp"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="自由游"
+                    android:paddingBottom="12dp"
+                    android:textColor="@android:color/black"
+                    android:background="@android:color/white"/>
+                <View
+                    android:id="@+id/indicator_freedom"
+                    android:visibility="invisible"
+                    android:layout_width="match_parent"
+                    android:layout_height="4dp"
+                    android:background="@color/colorTab1RecommendForYouArgument"/>
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <com.jhhy.cuiweitourism.view.MyGridView
+        android:id="@+id/gv_inner_travel_main_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:cacheColorHint="#00000000"
+        android:numColumns="2"
+        android:padding="8dp"
+        android:horizontalSpacing="8dp"
+        android:verticalSpacing="8dp"
+        >
+
+    </com.jhhy.cuiweitourism.view.MyGridView>
+
+</LinearLayout>

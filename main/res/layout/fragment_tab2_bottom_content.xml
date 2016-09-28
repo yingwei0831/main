@@ -1,0 +1,37 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:background="#F0F0F0">
+
+
+    <ListView
+        android:id="@+id/lv_tab2_bottom_left"
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+       >
+
+    </ListView>
+
+    <GridView
+        android:id="@+id/gv_tab2_bottom_right"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:background="#FFFFFF"
+        android:horizontalSpacing="8dp"
+        android:verticalSpacing="8dp"
+        android:paddingTop="8dp"
+        android:numColumns="2"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:scrollbars="none"
+        >
+
+    </GridView>
+
+
+</LinearLayout>

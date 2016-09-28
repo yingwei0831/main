@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <com.markmao.pulltorefresh.widght.XScrollView
+            android:id="@+id/scroll_view_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fillViewport="true" />
+
+        <LinearLayout
+            android:id="@+id/layout_inner_travel_main_indicator_top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:orientation="horizontal"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/btn_inner_travel_detail_indicator_top_product"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white"
+                    android:gravity="center"
+                    android:paddingBottom="12dp"
+                    android:paddingTop="16dp"
+                    android:text="@string/inner_travel_detail_product"
+                    android:textColor="@color/colorTab1RecommendForYouArgument"
+                    android:textSize="16sp"/>
+
+                <View
+                    android:id="@+id/view_inner_travel_detail_indicator_top_product"
+                    android:layout_width="match_parent"
+                    android:layout_height="4dp"
+                    android:background="@color/colorTab1RecommendForYouArgument" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/btn_inner_travel_detail_indicator_top_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white"
+                    android:gravity="center"
+                    android:paddingBottom="12dp"
+                    android:paddingTop="16dp"
+                    android:text="@string/inner_travel_detail_price"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"/>
+
+                <View
+                    android:id="@+id/view_inner_travel_detail_indicator_top_price"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="4dp"
+                    android:background="@color/colorBgIndicator" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/btn_inner_travel_detail_indicator_top_describe"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white"
+                    android:gravity="center"
+                    android:paddingBottom="12dp"
+                    android:paddingTop="16dp"
+                    android:text="@string/inner_travel_detail_describe"
+                    android:textSize="16sp"/>
+
+                <View
+                    android:id="@+id/view_inner_travel_detail_indicator_top_describe"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="4dp"
+                    android:background="@color/colorBgIndicator" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/btn_inner_travel_detail_indicator_top_notice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white"
+                    android:gravity="center"
+                    android:paddingBottom="12dp"
+                    android:paddingTop="16dp"
+                    android:text="@string/inner_travel_detail_notice"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"/>
+
+                <View
+                    android:id="@+id/view_inner_travel_detail_indicator_top_notice"
+                    android:layout_width="match_parent"
+                    android:layout_height="4dp"
+                    android:background="@color/colorBgIndicator" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <include layout="@layout/inner_travel_detail_bottom" />
+</LinearLayout>

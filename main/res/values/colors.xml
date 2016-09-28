@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+
+    <!--首页-->
+    <color name="colorTab1TitleText">#0BC106</color>
+    <color name="colorTab1BgSearchBar">#4AC76C</color>
+
+    <color name="colorTab1Personalized">#53CA00</color>
+    <color name="colorTab1HotActivity">#FF9A04</color>
+
+    <color name="colorTab1RecommendForYou">#333333</color>
+    <color name="colorTab1RecommendForYouNotice">#999999</color>
+
+    <color name="colorTab1RecommendForYouMoneyDark">#E67800</color>
+    <color name="colorTab1RecommendForYouMoney">#FF8800</color>
+    <color name="colorTab1RecommendForYouArgument">#28CE9D</color>
+    <color name="colorTab1RecommendForYouArgumentDark">#2b9f7d</color>
+
+    <color name="colorTab2Space">#EFF2F7</color>
+
+
+    <color name="colorTab3ItemBgTop">#F3F7FF</color>
+    <color name="colorTab3ItemBorderCancelOrder">#ABABAD</color>
+
+
+    <color name="colorBgTitleMain">#28CE9C</color>
+    <!--<color name="colorMainBottomTextNormal">#333333</color>-->
+    <color name="colorMainBottomTextNormal">#333333</color>
+    <color name="colorMainBottomTextSelected">#64DD9F</color>
+
+    <!--国内游-->
+    <color name="colorBlackBgCityName">#77000000</color>
+
+    <color name="colorFreedom">#00A2FF</color>
+    <color name="colorInnerTravelBottomBar">#bb000000</color>
+    <color name="colorInnerTravelPopLeftBg">#F2F3F4</color>
+    <color name="colorInnerTravelYellowDark">#F57103</color>
+    <color name="colorInnerTravelGreenLight">#28CE9E</color>
+    <color name="colorInnerTravelGreenDark">#21AB82</color>
+
+    <!--国内游详情页-->
+    <color name="colorBgIndicator">#E5E5E5</color>
+    <color name="colorBgDescribe">#A0EFD8</color>
+    <color name="colorBgSelectedDark">#c7c8c9</color>
+
+    <!--个性定制-->
+    <color name="colorBgYellow">#FF6C00</color>
+
+
+    <!--找线路-->
+
+    
+    <!--价格日历-->
+    <color name="colorNumberBorder">#D8D8D8</color>
+    <color name="colorCalendarSelection">#45BDEF</color>
+
+    <!--设置发票信息-->
+    <color name="colorInvoiceNameBg">#F0F2F5</color>
+
+
+    <!--个人中心-->
+    <color name="colorLineGray">#EAEAEA</color>
+    <color name="colorLineGray2">#d1d1d1</color>
+    <color name="colorLineGray3">#EFF2F7</color>
+    <color name="colorActionBar">#28CE9D</color>
+    <color name="colorCircleBorder">#94E7CE</color>
+    <color name="colorMoneySolid">#3BB591</color>
+    <color name="colorMoneySolidDark">#329879</color>
+
+    <color name="colorTransBlack">#66000000</color>
+
+    <!--全部订单-->
+    <color name="colorBgRefundDetails">#F0F2F5</color>
+    <color name="colorTextBorder">#297FD6</color>
+
+    <!--我的点评-->
+    <color name="colorTextColorMyComment">#30D0A1</color>
+    <color name="colorBgTextViewMyComment">#EFEFEF</color>
+
+    <!--XScrollView-->
+    <color name="title_color">#333333</color>
+
+    <!--选择城市-->
+    <color name="ff7c7c7c">#ff7c7c7c</color>
+    <color name="colorBlackLight">#33000000</color>
+    <color name="colorBorderCitySelection">#DBDBDB</color>
+    <color name="colorBgTab2LeftNormal">#F0F0F0</color>
+
+</resources>

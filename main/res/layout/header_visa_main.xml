@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:src="@mipmap/travel_icon"
+        android:scaleType="fitXY"
+        />
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="@android:color/white"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/visa_hot"
+            android:gravity="center_horizontal"/>
+        <GridView
+            android:id="@+id/visa_hot_country"
+            android:numColumns="2"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginTop="16dp"
+            android:visibility="visible"
+            android:verticalSpacing="6dp"
+            android:horizontalSpacing="6dp"
+            />
+        <Button
+            android:id="@+id/btn_visa_view_all"
+            android:layout_marginTop="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="26dp"
+            android:text="@string/visa_hot_all_country"
+            android:textColor="@color/colorActionBar"
+            android:background="@drawable/bg_et_city_selected_corner_border"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/visa_hot_any"
+            android:textColor="@android:color/black"
+            android:gravity="center_horizontal"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            />
+    </LinearLayout>
+</LinearLayout>
