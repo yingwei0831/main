@@ -1,0 +1,185 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+
+    </style>
+
+    <style name="ActionBarTheme" parent="AppTheme">
+        <item name="android:actionBarStyle">@style/MyActionBarStyle</item>
+        <item name="actionBarStyle">@style/MyActionBarStyle</item>
+    </style>
+    <!--<style name="CustomWindowTitleBackground">-->
+        <!--<item name="android:background">@color/colorBgTitleMain</item>-->
+        <!--<item name="android:windowActionBar">true</item>-->
+    <!--</style>-->
+
+    <!--<style name="MyCustomWindowTitle" parent="android:Theme">-->
+        <!--<item name="android:windowTitleSize">50dp</item>-->
+        <!--<item name="android:windowTitleBackgroundStyle">@style/CustomWindowTitleBackground</item>-->
+    <!--</style>-->
+
+    <!-- 自定义导航栏 -->
+    <style name="CustomWindowTitleBackground">
+        <item name="android:background">@android:color/white</item>
+    </style>
+
+    <style name="MyTitleBarStyle"  parent="Theme.AppCompat">
+        <item name="android:windowTitleSize">45dp</item>
+        <item name="android:windowTitleBackgroundStyle">@style/CustomWindowTitleBackground</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <!--PopupWindow滑入滑出动画-->
+    <style name="anim_menu_bottombar">
+        <item name="android:windowEnterAnimation">@anim/menu_bottombar_in</item>
+        <item name="android:windowExitAnimation">@anim/menu_bottombar_out</item>
+    </style>
+    <!--<style name="PopupAnimation" parent="android:Animation" mce_bogus="1">-->
+        <!--<item name="android:windowEnterAnimation">@anim/popup_in</item>-->
+        <!--<item name="android:windowExitAnimation">@anim/popup_out</item>-->
+    <!--</style>-->
+
+    <!--自定义ActionBar-->
+    <style name="MyActionBarStyle" parent="@style/Widget.AppCompat.Light.ActionBar.Solid">
+        <item name="android:background">@android:color/white</item>
+        <item name="contentInsetStart">0dp</item>
+        <item name="contentInsetEnd">0dp</item>
+        <item name="background">@android:color/white</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <style name="textsizeappearance">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="FragmentMineTab">
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:paddingTop">14dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@android:color/white</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:drawablePadding">6dp</item>
+    </style>
+
+    <style name="Tab4Settings">
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:background">@android:color/white</item>
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:drawablePadding">12dp</item>
+        <item name="android:drawableRight">@mipmap/arrow_right_dark</item>
+        <item name="android:paddingLeft">20dp</item>
+        <item name="android:paddingRight">20dp</item>
+    </style>
+
+    <style name="Tab1TableLayoutItem">
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:drawablePadding">8dp</item>
+    </style>
+
+        <!--<item name="android:textColor">@color/colorMainBottomTextNormal</item>-->
+        <!--<item name="android:background">@android:color/white</item>-->
+    <style name="Tab1SelectionAreaStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="Tab1RadioButtonStyle">
+        <item name="android:textColor">@drawable/bg_radiobutton_tab1_recommend_selector</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@drawable/tab1_radiobutton_recommend_selector</item>
+        <item name="android:button">@null</item>
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingBottom">4dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_marginLeft">2dp</item>
+        <item name="android:layout_marginRight">2dp</item>
+        <!--<item name="android:paddingLeft">0dp</item>-->
+        <!--<item name="android:paddingRight">0dp</item>-->
+    </style>
+
+    <style name="MainBottomRadioButtonStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_gravity">bottom</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:button">@null</item>
+        <item name="android:gravity">center_horizontal|bottom</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@drawable/tab_1_text_selector</item>
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingBottom">2dp</item>
+    </style>
+
+    <style name="MyDialogStyleM">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:buttonStyle">@android:style/Widget.Button</item>
+    </style>
+
+
+        <!--<item name="tabMaxWidth">@dimen/tab_max_width</item>-->
+    <style name="MyCustomTabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabIndicatorColor">@android:color/white</item>
+        <item name="tabBackground">@drawable/bg_tab_circle_corner</item>
+        <item name="tabPaddingStart">12dp</item>
+        <item name="tabPaddingEnd">12dp</item>
+        <item name="tabIndicatorHeight">0dp</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="tabSelectedTextColor">@color/colorBgTitleMain</item>
+
+    </style>
+
+    <style name="MyCustomTabLayout2" parent="Widget.Design.TabLayout">
+        <item name="tabIndicatorColor">?attr/colorAccent</item>
+        <item name="tabIndicatorHeight">0dp</item>
+        <item name="tabPaddingStart">12dp</item>
+        <item name="tabPaddingEnd">12dp</item>
+        <item name="tabBackground">@drawable/bg_tab_circle_corner</item>
+        <item name="tabSelectedTextColor">?android:textColorPrimary</item>
+    </style>
+        <!--<item name="tabBackground">@color/tab_bgcolor</item>-->
+    <style name="myRatingBar" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/em_ratingbar_drawable</item>
+        <item name="android:minHeight">52dip</item>
+        <item name="android:maxHeight">52dip</item>
+    </style>
+
+    <style name="EMyDialogStyle" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+</resources>

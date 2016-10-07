@@ -1,0 +1,140 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#EFF2F7"
+    android:id="@+id/scrollView">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:orientation="vertical"
+        android:paddingBottom="12dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="76dp"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/FragmentMineTab"
+                android:drawableTop="@mipmap/tab4_orders"
+                android:text="@string/fragment_mine_all_orders" />
+
+            <TextView
+                style="@style/FragmentMineTab"
+                android:drawableTop="@mipmap/tab4_payment"
+                android:text="@string/fragment_mine_wait_pay" />
+
+            <TextView
+                style="@style/FragmentMineTab"
+                android:drawableTop="@mipmap/tab4_comment"
+                android:text="@string/fragment_mine_wait_comment" />
+
+            <TextView
+                style="@style/FragmentMineTab"
+                android:drawableTop="@mipmap/tab4_refund"
+                android:text="@string/fragment_mine_wait_refund" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@android:color/white"
+            android:orientation="vertical">
+
+            <TextView
+                android:drawableLeft="@mipmap/tab4_my_message"
+                style="@style/Tab4Settings"
+                android:text="@string/fragment_mine_my_message" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/colorLineGray" />
+
+            <TextView
+                android:drawableLeft="@mipmap/tab4_my_comment"
+                style="@style/Tab4Settings"
+                android:text="@string/fragment_mine_my_comment" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/colorLineGray" />
+
+            <TextView
+                android:drawableLeft="@mipmap/tab4_my_collection"
+                style="@style/Tab4Settings"
+                android:text="@string/fragment_mine_my_collection" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/colorLineGray" />
+
+            <TextView
+                android:drawableLeft="@mipmap/tab4_my_release"
+                style="@style/Tab4Settings"
+                android:text="@string/fragment_mine_my_release" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@android:color/white"
+            android:orientation="vertical">
+
+            <TextView
+                android:drawableLeft="@mipmap/tab4_persional_data"
+                style="@style/Tab4Settings"
+                android:text="@string/fragment_mine_personal_data" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/colorLineGray" />
+
+            <TextView
+                android:drawableLeft="@mipmap/tab4_account_security"
+                style="@style/Tab4Settings"
+                android:text="@string/fragment_mine_account_security" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/colorLineGray" />
+
+            <TextView
+                android:drawableLeft="@mipmap/tab4_account_certification"
+                style="@style/Tab4Settings"
+                android:text="@string/fragment_mine_account_certification" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/colorLineGray" />
+
+            <TextView
+                android:drawableLeft="@mipmap/tab4_top_contacts"
+                style="@style/Tab4Settings"
+                android:text="@string/fragment_mine_top_contacts" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

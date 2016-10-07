@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/main_content"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        />
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:src="@mipmap/line_gray"
+        android:background="#E7E7E7"
+        android:contentDescription="@null"/>
+
+    <RadioGroup
+        android:id="@+id/tab_menu"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:checked="true"
+            android:drawableTop="@drawable/tab1_indicator_selector"
+            android:id="@+id/tab1"
+            android:text="@string/activity_main_home"
+            style="@style/MainBottomRadioButtonStyle"
+            />
+
+        <RadioButton
+            android:id="@+id/tab2"
+            android:drawableTop="@drawable/tab2_indicator_selector"
+            android:text="@string/activity_main_sort"
+            style="@style/MainBottomRadioButtonStyle"/>
+
+        <RadioButton
+            android:id="@+id/tab3"
+            android:text="@string/activity_main_order"
+            android:drawableTop="@drawable/tab3_indicator_selector"
+            style="@style/MainBottomRadioButtonStyle"/>
+
+        <RadioButton
+            android:id="@+id/tab4"
+            android:drawableTop="@drawable/tab4_indicator_selector"
+            android:text="@string/activity_main_mine"
+            style="@style/MainBottomRadioButtonStyle"/>
+    </RadioGroup>
+
+</LinearLayout>

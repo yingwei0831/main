@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item >
+        <shape>
+            <solid android:color="@color/colorTab1BgSearchBar"/>
+            <corners android:topLeftRadius="0dp" android:topRightRadius="45dp" android:bottomLeftRadius="0dp" android:bottomRightRadius="45dp"/>
+        </shape>
+    </item>
+</selector>

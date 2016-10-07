@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.jhhy.cuiweitourism.view.MySquareImageView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/iv_inner_travel_gridview_item"
+    android:src="@mipmap/travel_icon"
+    android:scaleType="centerCrop"
+    >
+
+</com.jhhy.cuiweitourism.view.MySquareImageView>

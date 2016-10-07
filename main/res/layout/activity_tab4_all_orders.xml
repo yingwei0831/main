@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.jhhy.cuiweitourism.ui.Tab4AllOrdersActivity"
+    android:orientation="vertical"
+    >
+
+    <include layout="@layout/title_tab1_inner_travel"/>
+
+    <android.support.design.widget.TabLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:id="@+id/tablayout_orders"
+        android:background="@android:color/white"
+        app:tabIndicatorColor="#28CE9D"
+        app:tabSelectedTextColor="#28CE9D"
+        app:tabTextColor="@android:color/black"
+        app:tabMode="scrollable"
+        app:tabGravity="fill"
+        />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager_orders"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+    </android.support.v4.view.ViewPager>
+
+</LinearLayout>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="130dp"
+    android:layout_height="125dp"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/iv_visa_country_any_img"
+        android:layout_width="130dp"
+        android:layout_height="80dp"
+        android:src="@mipmap/travel_icon"
+        android:contentDescription="@null"/>
+
+    <TextView
+        android:gravity="center_vertical"
+        android:id="@+id/tv_visa_any_title"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="visa_title"
+        android:maxLines="1"
+        android:ellipsize="end"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_gravity="bottom"
+            android:textColor="@color/colorTab1RecommendForYouMoney"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="￥"
+            android:textSize="12sp"
+            android:paddingBottom="2dp"/>
+        <TextView
+            android:id="@+id/tv_visa_hot_price"
+            android:textColor="@color/colorTab1RecommendForYouMoney"
+            android:textSize="22sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="price"/>
+    </LinearLayout>
+</LinearLayout>
