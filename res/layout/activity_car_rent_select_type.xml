@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+
+    tools:context="com.jhhy.cuiweitourism.ui.CarRentSelectTypeActivity">
+
+    <include layout="@layout/title_tab1_inner_travel" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@android:color/white"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_rent_car"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:drawablePadding="10dp"
+            android:drawableTop="@mipmap/icon_car"
+            android:gravity="center"
+            android:text="租轿车"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+
+            <TextView
+                android:id="@+id/tv_car_business"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="商务型"
+                android:textSize="16sp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:layout_marginRight="10dp"
+                android:textColor="@color/colorBorderCar"
+                android:background="@drawable/bg_car_border_corner"
+                />
+
+            <TextView
+                android:id="@+id/tv_car_comfortable"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="舒适型"
+                android:textSize="16sp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:textColor="@color/colorBorderCar"
+                android:background="@drawable/bg_car_border_corner"
+                />
+
+            <TextView
+                android:id="@+id/tv_car_luxury"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="豪华型"
+                android:textSize="16sp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:layout_marginLeft="10dp"
+                android:textColor="@color/colorBorderCar"
+                android:background="@drawable/bg_car_border_corner"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@android:color/white"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_rent_carriages"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawablePadding="10dp"
+            android:drawableTop="@mipmap/icon_carriage"
+            android:gravity="center"
+            android:text="租客车"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+
+            <TextView
+                android:id="@+id/tv_carriages_20_koste"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textSize="16sp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:layout_marginRight="6dp"
+                android:textColor="@color/colorActionBar"
+                android:background="@drawable/bg_car_border_corner_2"
+                />
+
+            <TextView
+                android:id="@+id/tv_carriages_35_kinglong"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textSize="16sp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
+                android:textColor="@color/colorActionBar"
+                android:background="@drawable/bg_car_border_corner_2"
+                />
+
+            <TextView
+                android:id="@+id/tv_carriages_55_kinglong"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textSize="16sp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:layout_marginLeft="6dp"
+                android:textColor="@color/colorActionBar"
+                android:background="@drawable/bg_car_border_corner_2"
+                />
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>
