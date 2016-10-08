@@ -8,6 +8,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.jhhy.cuiweitourism.net.models.FetchModel.CarModel;
+import com.jhhy.cuiweitourism.net.models.FetchModel.CarOrderQuery;
 import com.jhhy.cuiweitourism.net.models.FetchModel.CarPriceEstimate;
 import com.jhhy.cuiweitourism.net.models.FetchModel.CarRentCity;
 import com.jhhy.cuiweitourism.net.models.FetchModel.CarRentFetchModel;
@@ -15,10 +16,12 @@ import com.jhhy.cuiweitourism.net.models.FetchModel.CarRentNextModel;
 import com.jhhy.cuiweitourism.net.models.FetchModel.CarRentOrder;
 import com.jhhy.cuiweitourism.net.models.FetchModel.CarRentPickLocation1;
 import com.jhhy.cuiweitourism.net.models.FetchModel.CarRentPickLocation2;
-import com.jhhy.cuiweitourism.net.models.FetchModel.carSmallOrder;
+import com.jhhy.cuiweitourism.net.models.FetchModel.CarSmallOrder;
+import com.jhhy.cuiweitourism.net.models.FetchModel.CarSmallOrderCancel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.BasicResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.CarNextResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.CarRentDetail;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.CarRentOrderInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.CarRentOrderResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchResponseModel;
@@ -316,7 +319,7 @@ public class CarRentActionBiz extends BasicActionBiz {
      *  @param order   参数，参照文档
      */
 
-    public  void carRentSmallCarOrder(carSmallOrder order, BizCallback callBack){
+    public  void carRentSmallCarOrder(CarSmallOrder order, BizCallback callBack){
         order.code = "Order_xcarorder";
         FetchResponse fetchResponse = new FetchResponse(callBack){
             @Override
@@ -347,5 +350,63 @@ public class CarRentActionBiz extends BasicActionBiz {
         };
 
         HttpUtils.executeXutils(order,new FetchCallBack(fetchResponse));
+    }
+
+    /**
+     *  取消小车订单
+     *  @param cancel   参数，参照文档
+     */
+
+    public void carRentSmallCarOrderCancel(CarSmallOrderCancel cancel,BizCallback callBack){
+        cancel.code = "Order_cancelorder";
+        FetchResponse fetchResponse = new FetchResponse(callBack){
+            @Override
+            public void onCompletion(FetchResponseModel response) {
+                BasicResponseModel returnModel = new BasicResponseModel();
+                returnModel.headModel = response.head;
+                this.bizCallback.onCompletion(returnModel);
+            }
+            @Override
+            public void onError(FetchError error) {
+                this.bizCallback.onError(error);
+            }
+        };
+
+        HttpUtils.executeXutils(cancel,new FetchCallBack(fetchResponse));
+    }
+
+    /**
+     *  查询订单
+     *  @param query   参数，参照文档
+     */
+
+    public void carRentOrderQuery(CarOrderQuery query, BizCallback callback){
+        query.code = "Order_selectorder";
+        FetchResponse fetchResponse = new FetchResponse(callback){
+            @Override
+            public void onCompletion(FetchResponseModel response) {
+                BasicResponseModel returnModel = new BasicResponseModel();
+
+                JsonElement element = parseJsonBody(response);
+                if(null != element){
+                    if (element.isJsonObject()){
+                        CarRentOrderInfo orderInfo = new Gson().fromJson(element,CarRentOrderInfo.class);
+                        returnModel.body = orderInfo;
+                    }
+                    else{
+                        assert (false);
+                    }
+                }
+
+                returnModel.headModel = response.head;
+                this.bizCallback.onCompletion(returnModel);
+            }
+            @Override
+            public void onError(FetchError error) {
+                this.bizCallback.onError(error);
+            }
+        };
+
+        HttpUtils.executeXutils(query,new FetchCallBack(fetchResponse));
     }
 }

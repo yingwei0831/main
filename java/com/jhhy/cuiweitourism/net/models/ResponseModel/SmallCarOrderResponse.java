@@ -66,4 +66,15 @@ public class SmallCarOrderResponse {
     public void setEstimatePrice(String estimatePrice) {
         EstimatePrice = estimatePrice;
     }
+
+    @Override
+    public String toString() {
+        return "SmallCarOrderResponse{" +
+                "ErrorCode='" + ErrorCode + '\'' +
+                ", ErrorMsg=" + ErrorMsg +
+                ", PlatOrderNo='" + PlatOrderNo + '\'' +
+                ", OrderNo='" + OrderNo + '\'' +
+                ", EstimatePrice='" + EstimatePrice + '\'' +
+                '}';
+    }
 }

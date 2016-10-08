@@ -3,7 +3,7 @@ package com.jhhy.cuiweitourism.net.models.FetchModel;
 /**
  * Created by birney1 on 16/10/2.
  */
-public class carSmallOrder extends BasicFetchModel {
+public class CarSmallOrder extends BasicFetchModel {
 
     //{"memberid":"1","linkman":"张松钠","linktel":"13898698745",
     // "rtrule":"201","rttype":"0","rtStartcitycode":"1","
@@ -47,7 +47,7 @@ public class carSmallOrder extends BasicFetchModel {
     public String RtLineType;
 
 
-    public carSmallOrder(String memberid, String linkman, String linktel, String rtrule, String rttype, String rtStartcitycode, String rtStartcityname, String rtstartflat, String rtstartflng, String rtstartname, String rtstartaddress, String rtEndCityCode, String rtEndCityName, String rtEndtlat, String rtEndtlng, String rtEndName, String rtEndAddress, String rtDepartureTime, String rtRequireLevel, String rtAppTime, String rtPriceCarCode, String rtPriceCarName, String rtPrice, String rtStartPrice, String rtNormalUnitPrice, String rtLineType) {
+    public CarSmallOrder(String memberid, String linkman, String linktel, String rtrule, String rttype, String rtStartcitycode, String rtStartcityname, String rtstartflat, String rtstartflng, String rtstartname, String rtstartaddress, String rtEndCityCode, String rtEndCityName, String rtEndtlat, String rtEndtlng, String rtEndName, String rtEndAddress, String rtDepartureTime, String rtRequireLevel, String rtAppTime, String rtPriceCarCode, String rtPriceCarName, String rtPrice, String rtStartPrice, String rtNormalUnitPrice, String rtLineType) {
         this.memberid = memberid;
         this.linkman = linkman;
         this.linktel = linktel;
@@ -76,7 +76,7 @@ public class carSmallOrder extends BasicFetchModel {
         RtLineType = rtLineType;
     }
 
-    public carSmallOrder() {
+    public CarSmallOrder() {
     }
 
     public String getMemberid() {
