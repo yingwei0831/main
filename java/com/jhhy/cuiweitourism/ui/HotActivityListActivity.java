@@ -188,9 +188,27 @@ public class HotActivityListActivity extends BaseActivity implements View.OnClic
             addPopListener();
         }else{
             popupWindowSearchLine.showAtLocation(layout, Gravity.BOTTOM, 0, 0);
+            popupWindowSearchLine.refreshView(tag);
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Consts.REQUEST_CODE_DATE_PICKER_EARLY){ //选择最早出发时间
+            if (resultCode == RESULT_OK){
+                String selectDate = data.getExtras().getString("selectDate");
+                popupWindowSearchLine.setEarlyTime(selectDate);
+                earlyTime = selectDate;
+            }
+        }else if (requestCode == Consts.REQUEST_CODE_DATE_PICKER_LATER){ //选择最晚出发时间
+            if (resultCode == RESULT_OK){
+                String selectDate = data.getExtras().getString("selectDate");
+                popupWindowSearchLine.setLaterTime(selectDate);
+                laterTime = selectDate;
+            }
+        }
+    }
 
     private void initDatas() {
         listFreedom = new ArrayList<>();
