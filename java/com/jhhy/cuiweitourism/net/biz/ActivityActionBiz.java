@@ -30,22 +30,4 @@ public class ActivityActionBiz extends BasicActionBiz {
      * 发起活动
      */
 
-    public void lanchActivity(ActivitiesLaunch lanch, BizGenericCallback<ArrayList<Object>> callback)
-    {
-        lanch.code = "Activity_publish";
-        final FetchGenericResponse<ArrayList<Object>> fetchResponse =  new FetchGenericResponse<ArrayList<Object>>(callback) {
-            @Override
-            public void onCompletion(FetchResponseModel response) {
-                ArrayList<Object> objects = parseJsonToObjectArray(response,Object.class);
-                GenericResponseModel<ArrayList<Object>> returnModel = new GenericResponseModel<ArrayList<Object>>(response.head,objects);
-                this.bizCallback.onCompletion(returnModel);
-            }
-
-            @Override
-            public void onError(FetchError error) {
-                this.bizCallback.onError(error);
-            }
-        };
-        HttpUtils.executeXutils(lanch,new FetchGenericCallback(fetchResponse));
-    }
 }

@@ -1,5 +1,6 @@
 package com.jhhy.cuiweitourism.net.netcallback;
 
+import com.jhhy.cuiweitourism.http.ResponseResult;
 import com.jhhy.cuiweitourism.net.models.FetchModel.BasicFetchModel;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
