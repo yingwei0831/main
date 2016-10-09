@@ -116,34 +116,47 @@ public class PopupWindowSearchLine extends PopupWindow implements OnClickListene
      * @param laterTime
      * @param pricePosition
      */
-    public void refreshView(int tag, String sortPosition, String dayPosition, String earlyTime, String laterTime, String pricePosition){
+    public void refreshView(int tag, String sortPosition, String dayPosition, String earlyTime, String laterTime, int pricePosition){
         initFirstListView(tag);
-        sort = sortPosition;
-        day = dayPosition;
-        this.earlyTime = earlyTime;
-        this.laterTime = laterTime;
-        price = pricePosition;
+        if (sortPosition != null && sortPosition.length() != 0) {
+            sort = sortPosition;
+            selectionSort = Integer.parseInt(sortPosition);
+        }else{
+            selectionSort = 0;
+        }
+        if (dayPosition != null && dayPosition.length() != 0){
+            day = dayPosition;
+            selectionDays = Integer.parseInt(dayPosition);
+        }else{
+            selectionDays = -1;
+        }
+        if (pricePosition != -1) {
+            selectionPrice = pricePosition;
+            price = secondListPriceS.get(selectionPrice).getPriceLower() + "," + secondListPriceS.get(selectionPrice).getPriceHigh();
+        }else{
+            selectionPrice = -1;
+        }
+
+        if (earlyTime != null && earlyTime.length() != 0){
+            this.earlyTime = earlyTime;
+        }else{
+            this.earlyTime = "";
+        }
+        tvEarlyTime.setText(earlyTime);
+
+        if (laterTime != null && laterTime.length() != 0){
+            this.laterTime = laterTime;
+        }else{
+            this.laterTime = "";
+        }
+        tvLaterTime.setText(laterTime);
+
         if (tag == 1){
-            if (sortPosition != null && sortPosition.length() != 0) {
-                secondAdapter1.setSelectPosition(Integer.parseInt(sortPosition));
-            }else{
-                secondAdapter1.setSelectPosition(0);
-            }
+            secondAdapter1.setSelectPosition(selectionSort);
         } else if (tag == 2) {
-            if (dayPosition != null && dayPosition.length() != 0){
-                secondAdapter1.setSelectPosition(Integer.parseInt(dayPosition));
-            }
+            secondAdapter1.setSelectPosition(selectionDays);
         }else if (tag == 4){
-            if (pricePosition != null && pricePosition.length() != 0) {
-                secondAdapter1.setSelectPosition(Integer.parseInt(pricePosition));
-            }
-        }else if (tag == 3){
-            if (earlyTime != null && earlyTime.length() != 0){
-                tvEarlyTime.setText(earlyTime);
-            }
-            if (laterTime != null && laterTime.length() != 0){
-                tvLaterTime.setText(laterTime);
-            }
+            secondAdapter1.setSelectPosition(selectionPrice);
         }
         secondAdapter1.notifyDataSetChanged();
     }
@@ -178,7 +191,8 @@ public class PopupWindowSearchLine extends PopupWindow implements OnClickListene
             layoutStartTime.setVisibility(View.GONE);
         } else if (3 == tag) {
             secondAdapter1 = new InnerTravelTripDaysListViewAdapter(mActivity, secondListDefault); //防止空指针
-
+            tvEarlyTime.setText(earlyTime);
+            tvLaterTime.setText(laterTime);
             listViewSecond.setVisibility(View.GONE);
             layoutStartTime.setVisibility(View.VISIBLE);
         } else if (4 == tag) {
@@ -345,6 +359,8 @@ public class PopupWindowSearchLine extends PopupWindow implements OnClickListene
 
         earlyTime = "";
         laterTime = "";
+        tvEarlyTime.setText(earlyTime);
+        tvLaterTime.setText(laterTime);
 
         if (mActivity.getResources().getString(R.string.tab1_inner_travel_sort_default).equals(firstAdapter.getCurrentPositionItem())) { //弹出排序选择
             selectionSort = 0;
@@ -392,6 +408,14 @@ public class PopupWindowSearchLine extends PopupWindow implements OnClickListene
         }
     }
 
+    public int getPricePosition(){
+        if (commit) {
+            return selectionPrice;
+        } else {
+            return -1;
+        }
+    }
+
     public String getEarlyTime() {
         if (commit) {
             return earlyTime;
@@ -409,10 +433,12 @@ public class PopupWindowSearchLine extends PopupWindow implements OnClickListene
     }
 
     public void setEarlyTime(String earlyTime){
+        this.earlyTime = earlyTime;
         tvEarlyTime.setText(earlyTime);
     }
 
     public void setLaterTime(String laterTime){
+        this.laterTime = laterTime;
         tvLaterTime.setText(laterTime);
     }
 //    public void setEarlyTime(String earlyTime){
