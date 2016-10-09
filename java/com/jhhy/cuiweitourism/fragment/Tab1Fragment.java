@@ -367,7 +367,9 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
                 StartActivityEditActivity.actionStart(getContext(), null);
                 break;
             case R.id.tv_tab1_rent_car: //租车
-                CarRentSelectTypeActivity.actionStart(getContext(), null);
+                Bundle bundleCar = new Bundle();
+                bundleCar.putString("city", tvLocationCity.getText().toString());
+                CarRentSelectTypeActivity.actionStart(getContext(), bundleCar);
                 break;
             case R.id.tv_tab1_visa: //签证
                 VisaMainActivity.actionStart(getContext(), null);
@@ -376,7 +378,9 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
                 PersonalizedCustomActivity.actionStart(getContext(), null);
                 break;
             case R.id.layout_hot_activity: //热门活动
-                HotActivityListActivity.actionStart(getContext(), null);
+                Bundle bundleHotActivity = new Bundle();
+                bundleHotActivity.putSerializable("selectCity", selectCity);
+                HotActivityListActivity.actionStart(getContext(), bundleHotActivity);
                 break;
             case R.id.tv_tab1_search_route_activity: //找路线
                 SearchRouteActivity.actionStart(getContext(), null);
@@ -433,7 +437,7 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
                 }
                 getData(3);
                 break;
-            case R.id.tv_search_bar_main_left_location: //顶部搜索栏地址
+            case R.id.tv_search_bar_main_left_location: //顶部搜索栏 选择地址
 //                CitySelectionActivity.actionStart(getContext(), null);
                 Intent intentCity = new Intent(getContext(), CitySelectionActivity.class);
                 Bundle bundleCity = new Bundle();

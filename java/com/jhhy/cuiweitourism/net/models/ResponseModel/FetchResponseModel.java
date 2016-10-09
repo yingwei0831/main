@@ -29,6 +29,7 @@ public class FetchResponseModel {
         public HeadModel() {
         }
 
+
         @Override
         public String toString() {
             return "HeadModel{" +

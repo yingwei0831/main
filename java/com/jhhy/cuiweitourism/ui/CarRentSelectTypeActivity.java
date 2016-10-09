@@ -28,14 +28,19 @@ public class CarRentSelectTypeActivity extends BaseActivity implements View.OnCl
     private TextView tvRentCarriagesKinglong35;
     private TextView tvRentCarriagesKinglong55;
 
+    private String city;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_car_rent_select_type);
-
+        getData();
         setupView();
         addListener();
+    }
+
+    private void getData() {
+        city = getIntent().getExtras().getString("city");
     }
 
     private void setupView() {
@@ -73,15 +78,17 @@ public class CarRentSelectTypeActivity extends BaseActivity implements View.OnCl
     private void addListener() {
         ivTitleLeft.setOnClickListener(this);
 
-        tvRentCar.setOnClickListener(this);
+//        tvRentCar.setOnClickListener(this);
         tvRentCarBusiness.setOnClickListener(this);
         tvRentCarComfortable.setOnClickListener(this);
         tvRentCarLuxury.setOnClickListener(this);
-        tvRentCarriages.setOnClickListener(this);
+//        tvRentCarriages.setOnClickListener(this);
         tvRentCarriagesKoste20.setOnClickListener(this);
         tvRentCarriagesKinglong35.setOnClickListener(this);
         tvRentCarriagesKinglong55.setOnClickListener(this);
     }
+
+    private int position = 0;
 
     @Override
     public void onClick(View view) {
@@ -90,17 +97,58 @@ public class CarRentSelectTypeActivity extends BaseActivity implements View.OnCl
                 finish();
                 break;
 
-            case R.id.tv_rent_car:
+//            case R.id.tv_rent_car:
+//                position = 0;
+//                Bundle bundle0 = new Bundle();
+//                bundle0.putInt("position", position);
+//                bundle0.putString("city", city);
+//                CarRentSmallActivity.actionStart(getApplicationContext(), bundle0);
+//                break;
             case R.id.tv_car_business:
-            case R.id.tv_car_comfortable:
-            case R.id.tv_car_luxury: //租小车
-
+                position = 1;
+                Bundle bundle1 = new Bundle();
+                bundle1.putInt("position", position);
+                bundle1.putString("city", city);
+                CarRentSmallActivity.actionStart(getApplicationContext(), bundle1);
                 break;
-            case R.id.tv_rent_carriages:
+            case R.id.tv_car_comfortable:
+                position = 2;
+                Bundle bundle2 = new Bundle();
+                bundle2.putInt("position", position);
+                bundle2.putString("city", city);
+                CarRentSmallActivity.actionStart(getApplicationContext(), bundle2);
+                break;
+            case R.id.tv_car_luxury: //租小车
+                position = 3;
+                Bundle bundle3 = new Bundle();
+                bundle3.putInt("position", position);
+                bundle3.putString("city", city);
+                CarRentSmallActivity.actionStart(getApplicationContext(), bundle3);
+                break;
+
+//            case R.id.tv_rent_carriages:
+//                position = 0;
+//                Bundle bundle4 = new Bundle();
+//                bundle4.putInt("position", position);
+//                CarRentActivity.actionStart(getApplicationContext(), bundle4);
+//                break;
             case R.id.tv_carriages_20_koste:
+                position = 1;
+                Bundle bundle5 = new Bundle();
+                bundle5.putInt("position", position);
+                CarRentActivity.actionStart(getApplicationContext(), bundle5);
+                break;
             case R.id.tv_carriages_35_kinglong:
+                position = 2;
+                Bundle bundle6 = new Bundle();
+                bundle6.putInt("position", position);
+                CarRentActivity.actionStart(getApplicationContext(), bundle6);
+                break;
             case R.id.tv_carriages_55_kinglong: //租大车
-                CarRentActivity.actionStart(getApplicationContext(), null);
+                position = 3;
+                Bundle bundle7 = new Bundle();
+                bundle7.putInt("position", position);
+                CarRentActivity.actionStart(getApplicationContext(), bundle7);
                 break;
         }
     }

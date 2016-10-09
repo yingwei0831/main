@@ -66,6 +66,8 @@ public class CarRentActivity extends BaseActivity implements View.OnClickListene
     private Button btnNext;
     private CarRentActionBiz carBiz; //租大车业务类
 
+    private int position = 0;
+
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -79,11 +81,15 @@ public class CarRentActivity extends BaseActivity implements View.OnClickListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rent_car);
+        getData();
         getInternetData();
         setupView();
         addListener();
     }
 
+    private void getData() {
+        position = getIntent().getExtras().getInt("position");
+    }
 
 
     private void setupView() {
@@ -130,17 +136,25 @@ public class CarRentActivity extends BaseActivity implements View.OnClickListene
             case R.id.tv_select_carriage_time: //选择用车时间
                 startActivityForResult(new Intent(getApplicationContext(), CarRentTimeSelectActivity.class), SELECT_TIME);
                 break;
-            case R.id.tv_select_from_addr:
-
+            case R.id.tv_select_from_addr: //选择出发地址
+                Intent intentFrom = new Intent(getApplicationContext(), CarRentInputAddressActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putInt("type", 1);
+                intentFrom.putExtras(bundle);
+                startActivityForResult(intentFrom, INPUT_FROM_ADDRESS);
                 break;
-            case R.id.tv_select_to_addr:
-
+            case R.id.tv_select_to_addr: //选择目的地址
+                Intent intentTo = new Intent(getApplicationContext(), CarRentInputAddressActivity.class);
+                Bundle bundleTo = new Bundle();
+                bundleTo.putInt("type", 2);
+                intentTo.putExtras(bundleTo);
+                startActivityForResult(intentTo, INPUT_TO_ADDRESS);
                 break;
             case R.id.btn_car_rent_next:
-//                if (TextUtils.isEmpty(rentTime) || TextUtils.isEmpty(rentType) || TextUtils.isEmpty(rentDay) || TextUtils.isEmpty(rentFromAddr) || TextUtils.isEmpty(rentToAddr)){
-//                    ToastCommon.toastShortShow(getApplicationContext(), null, getString(R.string.empty_input));
-//                    return;
-//                }
+                if (TextUtils.isEmpty(rentTime) || TextUtils.isEmpty(rentType) || TextUtils.isEmpty(rentDay) || TextUtils.isEmpty(rentFromAddr) || TextUtils.isEmpty(rentToAddr)){
+                    ToastCommon.toastShortShow(getApplicationContext(), null, getString(R.string.empty_input));
+                    return;
+                }
                 LoadingIndicator.show(CarRentActivity.this, getString(R.string.http_notice));
                 CarRentNextModel model = new CarRentNextModel(rentType, rentDay, "北京市昌平区史各庄", "北京市大兴区瀛海镇");
                 carBiz.carRentNextApi(model, new BizCallback() {
@@ -179,6 +193,8 @@ public class CarRentActivity extends BaseActivity implements View.OnClickListene
 
     private int SELECT_TIME = 2801; //选择用车时间
     private int ORDER_RENT_CAR = 2802; //进入用车订单
+    private int INPUT_FROM_ADDRESS = 2803; //输入出发地址
+    private int INPUT_TO_ADDRESS = 2804; //输入目的地址
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -198,6 +214,16 @@ public class CarRentActivity extends BaseActivity implements View.OnClickListene
         } else if (requestCode == ORDER_RENT_CAR){ //有可能订车
             if(resultCode == RESULT_OK){
 
+            }
+        }else if (requestCode == INPUT_FROM_ADDRESS){
+            if(resultCode == RESULT_OK){
+                rentFromAddr = data.getExtras().getString("address");
+                tvSelectFromAddr.setText(rentFromAddr);
+            }
+        }else if (requestCode == INPUT_TO_ADDRESS){
+            if(resultCode == RESULT_OK){
+                rentToAddr = data.getExtras().getString("address");
+                tvSelectToAddr.setText(rentToAddr);
             }
         }
     }
@@ -249,6 +275,14 @@ public class CarRentActivity extends BaseActivity implements View.OnClickListene
         ss3.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorActionBar)), 4, 7, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         rbCarriageKinglong55.setText(ss3);
         radioGroup.setVisibility(View.VISIBLE);
+
+        if (position == 1){
+            rbCarriageKoste.setChecked(true);
+        }else if (position == 2){
+            rbCarriageKinglong35.setChecked(true);
+        }else if (position == 3){
+            rbCarriageKinglong55.setChecked(true);
+        }
     }
 
 

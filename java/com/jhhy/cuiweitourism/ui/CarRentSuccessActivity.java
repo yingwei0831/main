@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,6 +18,12 @@ public class CarRentSuccessActivity extends BaseActivity implements View.OnClick
     private ImageView ivTitleLeft;
 
     private CarRentOrderResponse carRentOrderResponse;
+
+    private Button btnPay;
+
+    private TextView tvOrderNo;
+    private TextView tvOrderTime;
+    private TextView tvOrderPrice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,11 +39,19 @@ public class CarRentSuccessActivity extends BaseActivity implements View.OnClick
         tvTitle.setText("租车成功");
         ivTitleLeft = (ImageView) findViewById(R.id.title_main_tv_left_location);
 
+        btnPay = (Button) findViewById(R.id.btn_car_rent_next);
+        tvOrderNo   = (TextView) findViewById(R.id.tv_order_no);
+        tvOrderTime = (TextView) findViewById(R.id.tv_order_time);
+        tvOrderPrice = (TextView) findViewById(R.id.tv_order_price);
+
+        tvOrderNo    .setText(carRentOrderResponse.getOrdersn());
+        tvOrderTime  .setText(carRentOrderResponse.getUsetime());
+        tvOrderPrice .setText(carRentOrderResponse.getPrice());
     }
 
     private void addListener() {
         ivTitleLeft.setOnClickListener(this);
-
+        btnPay.setOnClickListener(this);
     }
 
     private void getData() {
@@ -55,6 +70,10 @@ public class CarRentSuccessActivity extends BaseActivity implements View.OnClick
         switch (view.getId()) {
             case R.id.title_main_tv_left_location:
                 finish();
+                break;
+            case R.id.btn_car_rent_next:
+                //TODO 去支付
+
                 break;
         }
     }

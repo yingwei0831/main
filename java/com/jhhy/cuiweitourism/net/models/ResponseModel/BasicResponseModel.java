@@ -8,4 +8,5 @@ public class BasicResponseModel {
     public FetchResponseModel.HeadModel headModel;
 
     public Object body;
+
 }

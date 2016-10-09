@@ -41,7 +41,6 @@ import java.util.List;
  * Created by zhangguang on 16/9/29.
  */
 public class CarRentActionBiz extends BasicActionBiz {
-
     public CarRentActionBiz(Context context, Handler handler) {
         super(context, handler);
     }
@@ -147,7 +146,7 @@ public class CarRentActionBiz extends BasicActionBiz {
             }
         };
 
-        HttpUtils.executeXutils(model, new FetchCallBack(fetchResponse));
+        HttpUtils.executeXutils(model,new FetchCallBack(fetchResponse));
     }
 
     /**
@@ -318,7 +317,6 @@ public class CarRentActionBiz extends BasicActionBiz {
      *  小车订单
      *  @param order   参数，参照文档
      */
-
     public  void carRentSmallCarOrder(CarSmallOrder order, BizCallback callBack){
         order.code = "Order_xcarorder";
         FetchResponse fetchResponse = new FetchResponse(callBack){
@@ -331,10 +329,8 @@ public class CarRentActionBiz extends BasicActionBiz {
                         SmallCarOrderResponse orderResponse = new Gson().fromJson(element,SmallCarOrderResponse.class);
                         returnModel.headModel = response.head;
                         returnModel.body = orderResponse;
-
                     }
                     else{
-                        // exception
                         assert (false);
                     }
                 }

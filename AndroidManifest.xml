@@ -240,8 +240,10 @@
             android:name=".ui.Tab4MyReleaseActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".ui.Tab4MyCommentActivity" />
-        <activity android:name=".ui.HotActivityListActivity" />
-        <activity android:name=".ui.SearchRouteActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity android:name=".ui.HotActivityListActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".ui.SearchRouteActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.SearchShopActivity"
             android:theme="@style/ActionBarTheme" />
@@ -253,18 +255,24 @@
             android:name=".ui.CarRentActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
+            android:name=".ui.CarRentInputAddressActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
             android:name=".ui.CarRentSelectTypeActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.CarRentOrderActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".ui.CarRentSuccessActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity
+            android:name=".ui.CarRentSuccessActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".ui.CarRentSmallActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".dialog.CarRentTimeSelectActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/SampleTheme.Light"
-            />
+            android:theme="@style/SampleTheme.Light" />
         <activity android:name=".ui.easemob.EasemobLoginActivity" />
         <activity android:name=".ui.easemob.ChatActivity" />
         <activity
@@ -314,7 +322,8 @@
             android:name=".ui.VisaCitySelectionActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".ui.LineListActivity" />
-        <activity android:name=".ui.LineDetailActivity"></activity>
+        <activity android:name=".ui.LineDetailActivity" />
+        <activity android:name=".ui.CarRentSelectAddressActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar" android:windowSoftInputMode="stateHidden|adjustPan"></activity>
     </application>
 
 </manifest>

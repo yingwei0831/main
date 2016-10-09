@@ -175,6 +175,7 @@ public class CarRentTimeSelectActivity extends Activity implements View.OnClickL
                 Intent intent = new Intent();
                 Bundle bundle = new Bundle();
                 bundle.putString("selectDate", String.format("%d-%02d-%02d %02d时", year, month, date, hour));
+                bundle.putString("selectTime", String.format("%d-%02d-%02d %02d:00:00", year, month, date, hour)); //租小车
                 intent.putExtras(bundle);
                 setResult(RESULT_OK, intent);
                 finish();

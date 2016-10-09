@@ -195,42 +195,30 @@ public class SearchRouteActivity extends BaseActivity implements View.OnClickLis
             case R.id.tv_tab1_search_route_list_sort_default:
                 tag = 1;
 //                new InnerTravelPopupWindow(this, layout, tag);
-                if (popupWindowSearchLine == null){
-                    popupWindowSearchLine = new PopupWindowSearchLine(SearchRouteActivity.this, layout, tag, listDays, listPrices);
-                    addPopListener();
-                }else{
-                    popupWindowSearchLine.showAtLocation(layout, Gravity.BOTTOM, 0, 0);
-                }
+                showPopupWindow();
                 break;
             case R.id.tv_tab1_search_route_list_trip_days:
                 tag = 2;
-                if (popupWindowSearchLine == null){
-                    popupWindowSearchLine = new PopupWindowSearchLine(SearchRouteActivity.this, layout, tag, listDays, listPrices);
-                    addPopListener();
-
-                }else{
-                    popupWindowSearchLine.showAtLocation(layout, Gravity.BOTTOM, 0, 0);
-                }
+                showPopupWindow();
                 break;
             case R.id.tv_tab1_search_route_list_start_time:
                 tag = 3;
-                if (popupWindowSearchLine == null){
-                    popupWindowSearchLine = new PopupWindowSearchLine(SearchRouteActivity.this, layout, tag, listDays, listPrices);
-                    addPopListener();
-                }else{
-                    popupWindowSearchLine.showAtLocation(layout, Gravity.BOTTOM, 0, 0);
-                }
+                showPopupWindow();
                 break;
             case R.id.tv_tab1_search_route_list_screen_price:
                 tag = 4;
-                if (popupWindowSearchLine == null){
-                    popupWindowSearchLine = new PopupWindowSearchLine(SearchRouteActivity.this, layout, tag, listDays, listPrices);
-                    addPopListener();
-                }else{
-                    popupWindowSearchLine.showAtLocation(layout, Gravity.BOTTOM, 0, 0);
-                }
+                showPopupWindow();
                 break;
 
+        }
+    }
+
+    private void showPopupWindow() {
+        if (popupWindowSearchLine == null) {
+            popupWindowSearchLine = new PopupWindowSearchLine(SearchRouteActivity.this, layout, tag, listDays, listPrices);
+            addPopListener();
+        }else{
+            popupWindowSearchLine.showAtLocation(layout, Gravity.BOTTOM, 0, 0);
         }
     }
 

@@ -28,7 +28,7 @@ public class User implements Serializable{
     private String street;//北三环中路
 
     private String userCity;//北京市
-    private String userCityCode;//北京市
+    private String userCityCode;//北京市areaid
 
     private String longitude;//经度
     private String latitude;//纬度
