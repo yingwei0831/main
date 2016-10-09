@@ -47,30 +47,7 @@ public class CarRentActionBiz extends BasicActionBiz {
 
     private static final String BIZTAG = "CarRentActionBiz";
 
-    public JsonElement parseJsonBody(FetchResponseModel model){
-        JsonParser parser = new JsonParser();
-        if(model.body != null && !("null".equals(model.body)) && model.body.length() > 0){
-            JsonElement element = parser.parse(model.body);
-            return element;
-        }
-        else {
-            return null;
-        }
 
-
-    }
-
-    public  ArrayList<ArrayList<String>> parseJsonTotwoLevelArray(FetchResponseModel model){
-        JsonElement element = parseJsonBody(model);
-        if (element != null && element.isJsonArray()) {
-            ArrayList<ArrayList<String>> array = new  ArrayList<ArrayList<String>>();
-             array = new Gson().fromJson(element, array.getClass());
-            return array;
-        }
-        else {
-            return null;
-        }
-    }
 
     /**
      *  租车
@@ -193,16 +170,17 @@ public class CarRentActionBiz extends BasicActionBiz {
              @Override
              public void onCompletion(FetchResponseModel response) {
                  BasicResponseModel returnModel = new BasicResponseModel();
+                 returnModel.headModel = response.head;
                  JsonElement element = parseJsonBody(response);
-                 if (element.isJsonArray()){
-                     ArrayList<ArrayList<String>> array = new ArrayList<ArrayList<String>>();
-                     List<List<String>> result =  new Gson().fromJson(element,array.getClass());
-                     returnModel.body = result;
-                     returnModel.headModel = response.head;
-
-                 }
-                 else{
-                     assert (false);
+                 if(element != null){
+                     if (element.isJsonArray()){
+                         ArrayList<ArrayList<String>> array = new ArrayList<ArrayList<String>>();
+                         List<List<String>> result =  new Gson().fromJson(element,array.getClass());
+                         returnModel.body = result;
+                     }
+                     else{
+                         assert (false);
+                     }
                  }
                  this.bizCallback.onCompletion(returnModel);
              }
