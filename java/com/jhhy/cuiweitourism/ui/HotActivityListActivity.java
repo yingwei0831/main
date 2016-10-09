@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
@@ -28,7 +29,7 @@ import com.jhhy.cuiweitourism.utils.ToastUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HotActivityListActivity extends BaseActivity implements View.OnClickListener {
+public class HotActivityListActivity extends BaseActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
 
     private TextView tvTitle;
     private ImageView ivTitleLeft;
@@ -36,6 +37,7 @@ public class HotActivityListActivity extends BaseActivity implements View.OnClic
     private ArrayList<Travel> listFreedom;
 
     private PullToRefreshListView pullToRefreshListView;
+    private ListView listView;
     private HotActivityListViewAdapter adapter;
 
     private View layout;
@@ -54,8 +56,11 @@ public class HotActivityListActivity extends BaseActivity implements View.OnClic
     private String sort = ""; //排序
     private String day = ""; //行程天数
     private String price = ""; //价格
+    private int pricePosition = -1; //价格位置
     private String earlyTime = ""; //最早出发时间
+    private String tempEarlyTime = ""; //最早出发时间
     private String laterTime = ""; //最晚出发时间
+    private String tempLaterTime = ""; //最晚出发时间
 
     private Handler handler = new Handler(){
         @Override
@@ -119,6 +124,7 @@ public class HotActivityListActivity extends BaseActivity implements View.OnClic
 //        viewPager = (ViewPager) findViewById(R.id.activity_inner_travel_viewpager);
 
         pullToRefreshListView = (PullToRefreshListView) findViewById(R.id.activity_hot_activity_list_view);
+        listView = pullToRefreshListView.getRefreshableView();
         //这几个刷新Label的设置
         pullToRefreshListView.getLoadingLayoutProxy().setLastUpdatedLabel("lastUpdateLabel");
         pullToRefreshListView.getLoadingLayoutProxy().setPullLabel("PULLLABLE");
@@ -154,6 +160,8 @@ public class HotActivityListActivity extends BaseActivity implements View.OnClic
         tvSortDays.setOnClickListener(this);
         tvStartTime.setOnClickListener(this);
         tvScreenPrice.setOnClickListener(this);
+
+        listView.setOnItemClickListener(this);
     }
 
     @Override
@@ -188,7 +196,7 @@ public class HotActivityListActivity extends BaseActivity implements View.OnClic
             addPopListener();
         }else{
             popupWindowSearchLine.showAtLocation(layout, Gravity.BOTTOM, 0, 0);
-            popupWindowSearchLine.refreshView(tag);
+            popupWindowSearchLine.refreshView(tag, sort, day, earlyTime, laterTime, pricePosition);
         }
     }
 
@@ -199,13 +207,13 @@ public class HotActivityListActivity extends BaseActivity implements View.OnClic
             if (resultCode == RESULT_OK){
                 String selectDate = data.getExtras().getString("selectDate");
                 popupWindowSearchLine.setEarlyTime(selectDate);
-                earlyTime = selectDate;
+                tempEarlyTime = selectDate;
             }
         }else if (requestCode == Consts.REQUEST_CODE_DATE_PICKER_LATER){ //选择最晚出发时间
             if (resultCode == RESULT_OK){
                 String selectDate = data.getExtras().getString("selectDate");
                 popupWindowSearchLine.setLaterTime(selectDate);
-                laterTime = selectDate;
+                tempLaterTime = selectDate;
             }
         }
     }
@@ -242,8 +250,12 @@ public class HotActivityListActivity extends BaseActivity implements View.OnClic
                         day = newDay;
                     }
                     String newPrice = popupWindowSearchLine.getPrice();
+                    int newPricePosition = popupWindowSearchLine.getPricePosition();
                     if (newPrice != null) {
                         price = newPrice;
+                    }
+                    if (newPricePosition != -1){
+                        pricePosition = newPricePosition;
                     }
                     String newEarylTime = popupWindowSearchLine.getEarlyTime();
                     if (newEarylTime != null) {
@@ -259,6 +271,13 @@ public class HotActivityListActivity extends BaseActivity implements View.OnClic
             }
         });
     }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        //TODO 进入热门活动详情页
+
+    }
+
     public static void actionStart(Context context, Bundle data){
         Intent intent = new Intent(context, HotActivityListActivity.class);
         if(data !=null){
@@ -267,5 +286,4 @@ public class HotActivityListActivity extends BaseActivity implements View.OnClic
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
-
 }
