@@ -32,6 +32,7 @@ import com.jhhy.cuiweitourism.fragment.InnerTravelCityFreedomFragment;
 import com.jhhy.cuiweitourism.moudle.PriceArea;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
+import com.jhhy.cuiweitourism.popupwindows.PopupWindowSearchLine;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
 
 import java.util.ArrayList;
@@ -159,7 +160,7 @@ public class InnerTravelCityActivity extends BaseActivity implements View.OnClic
         indicatorInnerTravel.getTabAt(0).getCustomView().setSelected(true);
     }
 
-    private PopupWindow popupWindow;
+    private PopupWindowSearchLine popupWindow;
 //    private View layoutPop;
 //
 //    private ListView listViewFirst; //主
@@ -224,9 +225,21 @@ public class InnerTravelCityActivity extends BaseActivity implements View.OnClic
                 tag = 4;
                 break;
         }
+        if (popupWindow == null){
+            popupWindow = new PopupWindowSearchLine(InnerTravelCityActivity.this, layout, tag, listDays, listPrices);
+            popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                @Override
+                public void onDismiss() {
+
+                }
+            });
+        } else {
+            popupWindow.showAtLocation(layout, Gravity.BOTTOM, 0, 0);
+//            popupWindow.refreshView(tag, sortPosition, dayPosition, earlyTime, laterTime, pricePosition);
+        }
 //        initFirstListView();
     }
-    
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
