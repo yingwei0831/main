@@ -22,24 +22,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
-import com.bumptech.glide.util.Util;
 import com.jhhy.cuiweitourism.R;
-import com.jhhy.cuiweitourism.biz.HotActivityBiz;
 import com.jhhy.cuiweitourism.biz.InnerTravelDetailBiz;
 import com.jhhy.cuiweitourism.circleviewpager.ViewFactory;
 import com.jhhy.cuiweitourism.moudle.ADInfo;
 import com.jhhy.cuiweitourism.moudle.TravelDetail;
 import com.jhhy.cuiweitourism.moudle.TravelDetailDay;
 import com.jhhy.cuiweitourism.moudle.UserComment;
-import com.jhhy.cuiweitourism.net.biz.ActivityActionBiz;
-import com.jhhy.cuiweitourism.net.models.FetchModel.HomePageCustonDetail;
-import com.jhhy.cuiweitourism.net.models.ResponseModel.ActivityComment;
-import com.jhhy.cuiweitourism.net.models.ResponseModel.ActivityHotDetailInfo;
-import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
-import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
-import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.Consts;
-import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.utils.ImageLoaderUtil;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.utils.MyFileUtils;
@@ -49,19 +39,21 @@ import com.jhhy.cuiweitourism.view.CircleImageView;
 import com.jhhy.cuiweitourism.view.InnerTravelDetailDescribeView;
 import com.jhhy.cuiweitourism.view.MyGridView;
 import com.jhhy.cuiweitourism.view.MyScrollView;
-import com.just.sun.pricecalendar.ToastCommon;
 import com.markmao.pulltorefresh.widght.XScrollView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HotActivityDetailActivity extends BaseActivity implements GestureDetector.OnGestureListener, XScrollView.IXScrollViewListener, View.OnClickListener, AdapterView.OnItemClickListener, View.OnTouchListener {
+public class PersonalizedCustomDetailActivity extends BaseActivity implements GestureDetector.OnGestureListener, XScrollView.IXScrollViewListener, View.OnClickListener, AdapterView.OnItemClickListener, View.OnTouchListener {
 
     private String TAG = getClass().getSimpleName();
 
     private XScrollView mScrollView;
     private View content;
 
+    private TextView tvCollection; //收藏
+    private TextView tvShare; //分享
+    private Button btnArgument; //讨价还价
     private Button btnReserve; //立即预定
     //顶部导航栏
     private LinearLayout layoutIndicatorTop;
@@ -88,7 +80,6 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
     private TextView tvPriceInclude; //费用说明——>费用包含
     private TextView tvPriceNotInclude; //费用说明——>费用不包含
     private LinearLayout layoutTravelDescribe; //行程描述
-    private TextView tvTravelDescribe; //行程描述
     private TextView tvReserveNotice; //预订须知
 
     private TextView tvTitle;
@@ -103,10 +94,12 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
 
     private String[] titles = new String[]{"商品详情", "费用说明", "行程描述", "预订须知"};
 
+//    private String jsonString = "\"<div class=\\\"para\\\" label-module=\\\"para\\\" style=\\\"font-size: 14px; word-wrap: break-word; color: rgb(51, 51, 51); margin-bottom: 15px; text-indent: 28px; line-height: 24px; zoom: 1; font-family: arial, 宋体, sans-serif; white-space: normal; background-color: rgb(255, 255, 255);\\\">颐和园，中国<a target=\\\"_blank\\\" href=\\\"http://baike.baidu.com/subview/5405/13482963.htm\\\" data-lemmaid=\\\"175141\\\" style=\\\"color: rgb(19, 110, 194); text-decoration: none;\\\">清朝</a>时期<a target=\\\"_blank\\\" href=\\\"http://baike.baidu.com/view/646836.htm\\\" style=\\\"color: rgb(19, 110, 194); text-decoration: none;\\\">皇家园林</a>，前身为<a target=\\\"_blank\\\" href=\\\"http://baike.baidu.com/view/1476143.htm\\\" style=\\\"color: rgb(19, 110, 194); text-decoration: none;\\\">清漪园</a>，坐落在北京西郊，距城区十五公里，占地约二百九十公顷，与<a target=\\\"_blank\\\" href=\\\"http://baike.baidu.com/subview/2476/5824630.htm\\\" data-lemmaid=\\\"9328\\\" style=\\\"color: rgb(19, 110, 194); text-decoration: none;\\\">圆明园</a>毗邻。它是以<a target=\\\"_blank\\\" href=\\\"http://baike.baidu.com/view/188034.htm\\\" style=\\\"color: rgb(19, 110, 194); text-decoration: none;\\\">昆明湖</a>、<a target=\\\"_blank\\\" href=\\\"http://baike.baidu.com/view/956201.htm\\\" style=\\\"color: rgb(19, 110, 194); text-decoration: none;\\\">万寿山</a>为基址，以杭州<a target=\\\"_blank\\\" href=\\\"http://baike.baidu.com/view/1598.htm\\\" style=\\\"color: rgb(19, 110, 194); text-decoration: none;\\\">西湖</a>为蓝本，汲取江南园林的设计手法而建成的一座大型山水园林，也是保存最完整的一座皇家行宫御苑，被誉为“皇家园林博物馆”，也是国家重点旅游景点。</div><div class=\\\"para\\\" label-module=\\\"para\\\" style=\\\"font-size: 14px; word-wrap: break-word; color: rgb(51, 51, 51); margin-bottom: 15px; text-indent: 28px; line-height: 24px; zoom: 1; font-family: arial, 宋体, sans-serif; white-space: normal; background-color: rgb(255, 255, 255);\\\">清朝<a target=\\\"_blank\\\" href=\\\"http://baike.baidu.com/view/2436.htm\\\" style=\\\"color: rgb(19, 110, 194); text-decoration: none;\\\">乾隆皇帝</a>继位以前，在北京西郊一带，建起了四座大型<a target=\\\"_blank\\\" href=\\\"http://baike.baidu.com/view/646836.htm\\\" style=\\\"color: rgb(19, 110, 194); text-decoration: none;\\\">皇家园林</a>。<a target=\\\"_blank\\\" href=\\\"http://baike.baidu.com/view/2677.htm\\\" style=\\\"color: rgb(19, 110, 194); text-decoration: none;\\\">乾隆</a>十五年（1750年），乾隆皇帝为孝敬其母孝圣皇后动用448万两白银在这里改建为清漪园，形成了从现<a target=\\\"_blank\\\" href=\\\"http://baike.baidu.com/view/32477.htm\\\" style=\\\"color: rgb(19, 110, 194); text-decoration: none;\\\">清华园</a>到香山长达二十公里的皇家园林区。<a target=\\\"_blank\\\" href=\\\"http://baike.baidu.com/view/84502.htm\\\" style=\\\"color: rgb(19, 110, 194); text-decoration: none;\\\">咸丰</a>十年（1860年），清漪园被<a target=\\\"_blank\\\" href=\\\"http://baike.baidu.com/view/586244.htm\\\" style=\\\"color: rgb(19, 110, 194); text-decoration: none;\\\">英法联军</a>焚毁。<a target=\\\"_blank\\\" href=\\\"http://baike.baidu.com/view/29852.htm\\\" style=\\\"color: rgb(19, 110, 194); text-decoration: none;\\\">光绪</a>十四年（1888年）重建，改称颐和园，作消夏游乐地。光绪二十六年（1900年），颐和园又遭“八国联军”的破坏，珍宝被劫掠一空。清朝灭亡后，颐和园在军阀混战和国民党统治时期，又遭破坏。</div><div class=\\\"para\\\" label-module=\\\"para\\\" style=\\\"font-size: 14px; word-wrap: break-word; color: rgb(51, 51, 51); margin-bottom: 15px; text-indent: 28px; line-height: 24px; zoom: 1; font-family: arial, 宋体, sans-serif; white-space: normal; background-color: rgb(255, 255, 255);\\\">1961年3月4日，颐和园被公布为第一批<a target=\\\"_blank\\\" href=\\\"http://baike.baidu.com/view/163959.htm\\\" style=\\\"color: rgb(19, 110, 194); text-decoration: none;\\\">全国重点文物保护单位</a>，与同时公布的<a target=\\\"_blank\\\" href=\\\"http://baike.baidu.com/view/15110.htm\\\" style=\\\"color: rgb(19, 110, 194); text-decoration: none;\\\">承德避暑山庄</a>、<a target=\\\"_blank\\\" href=\\\"http://baike.baidu.com/view/4131.htm\\\" style=\\\"color: rgb(19, 110, 194); text-decoration: none;\\\">拙政园</a>、<a target=\\\"_blank\\\" href=\\\"http://baike.baidu.com/view/23789.htm\\\" style=\\\"color: rgb(19, 110, 194); text-decoration: none;\\\">留园</a>并称为<a target=\\\"_blank\\\" href=\\\"http://baike.baidu.com/view/400248.htm\\\" style=\\\"color: rgb(19, 110, 194); text-decoration: none;\\\">中国四大名园</a>，1998年11月被列入《<a target=\\\"_blank\\\" href=\\\"http://baike.baidu.com/view/340391.htm\\\" style=\\\"color: rgb(19, 110, 194); text-decoration: none;\\\">世界遗产名录</a>》。2007年5月8日，颐和园经国家旅游局正式批准为国家5A级旅游景区。 2009年，颐和园入选中国世界纪录协会中国现存最大的皇家园林。<span style=\\\"font-size: 12px; line-height: 0; position: relative; vertical-align: baseline; top: -0.5em; margin-left: 2px; color: rgb(51, 102, 204); cursor: default; padding: 0px 2px;\\\">[1]</span><a style=\\\"color: rgb(19, 110, 194); position: relative; top: -50px; font-size: 0px; line-height: 0;\\\" name=\\\"ref_[1]_9572580\\\"></a> </div><p><br/></p>\"";
+
 //    private ScrollView scrollView;
 
-    private String id; //热门活动详情的id
-    private ActivityHotDetailInfo detail; //用来接收获取到的旅游详情
+    private String id; //旅游详情的id
+    private TravelDetail detail; //用来接收获取到的旅游详情
 
     //顶部图片展示
     private List<ADInfo> infos = new ArrayList<ADInfo>();
@@ -124,88 +117,47 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            LogUtil.e(TAG, "-------handleMessage------ arg1 = " + msg.arg1 +", msg.what = " + msg.what);
-            switch (msg.what){
-                case Consts.MESSAGE_HOT_ACTIVITY_DETAIL:
-                    if (msg.arg1 == 0){
-                        ToastCommon.toastShortShow(getApplicationContext(), null, String.valueOf(msg.obj));
-                    } else if (msg.arg1 == 1){
-                        ActivityHotDetailInfo detailHot = (ActivityHotDetailInfo) msg.obj;
-                        if (detailHot == null) {
-                            ToastCommon.toastShortShow(getApplicationContext(), null, "获取热门详情数据失败，请重试");
-                        }else {
-                            detail = detailHot;
+            if (msg.arg1 == 0){
+                ToastUtil.show(getApplicationContext(), (String) msg.obj);
+            } else {
+                switch (msg.what) {
+                    case Consts.MESSAGE_INNER_TRAVEL_DETAIL:
+                        TravelDetail detailNew = (TravelDetail) msg.obj;
+                        if (detailNew != null) {
+                            detail = detailNew;
                             refreshView();
                         }
-                    } else if (msg.arg1 ==-1){
-
-                    }
-                    break;
+                        break;
+                }
             }
             LoadingIndicator.cancel();
         }
     };
 
-    private TextView tvTitleTop;
-    private ImageView ivTitleLeft;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_hot_activity_detail);
+        setContentView(R.layout.activity_personalized_custom_detail);
         getData();
-        getInternetData();
         setupView();
         addListener();
-    }
 
-    /**
-     * 热门活动详情
-     */
-    private void getInternetData() {
-//        InnerTravelDetailBiz biz = new InnerTravelDetailBiz(getApplicationContext(), handler);
-//        biz.getInnerTravelDetail(id);
-        LoadingIndicator.show(HotActivityDetailActivity.this, getString(R.string.http_notice));
-
-        ActivityActionBiz activityBiz = new ActivityActionBiz();
-        HomePageCustonDetail detailC = new HomePageCustonDetail(id);
-        activityBiz.activitiesHotGetDetailInfo(detailC, new BizGenericCallback<ActivityHotDetailInfo>() {
-            @Override
-            public void onCompletion(GenericResponseModel<ActivityHotDetailInfo> model) {
-                ActivityHotDetailInfo info = model.body;
-                LogUtil.e(TAG,"activitiesHotGetInfo " );
-                detail = info;
-                refreshView();
-                LoadingIndicator.cancel();
-            }
-
-            @Override
-            public void onError(FetchError error) {
-                if (error.localReason != null){
-                    ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
-                }else{
-                    ToastCommon.toastShortShow(getApplicationContext(), null, "获取热门线路详情失败，请重试");
-                }
-                LogUtil.e(TAG, "activitiesHotGetDetailInfo: " + error.toString());
-                LoadingIndicator.cancel();
-            }
-        });
-        imageUrls.add("drawable://" + R.drawable.ic_empty);
-//        HotActivityBiz biz = new HotActivityBiz(getApplicationContext(), handler);
-//        biz.getHotActivityDetail(id);
     }
 
     private void getData() {
         Bundle bundle = getIntent().getExtras();
         id = bundle.getString("id");
+
+        InnerTravelDetailBiz biz = new InnerTravelDetailBiz(getApplicationContext(), handler);
+        biz.getInnerTravelDetail(id);
+        LoadingIndicator.show(PersonalizedCustomDetailActivity.this, getString(R.string.http_notice));
+
+        imageUrls.add("drawable://" + R.drawable.ic_empty);
     }
 
     private void setupView() {
-        tvTitleTop = (TextView) findViewById(R.id.tv_title_inner_travel);
-        tvTitleTop.setText("热门活动详情");
-        ivTitleLeft = (ImageView) findViewById(R.id.title_main_tv_left_location);
-
         mScrollView = (XScrollView)findViewById(R.id.scroll_view_detail);
         mScrollView.setPullRefreshEnable(false);
         mScrollView.setPullLoadEnable(false);
@@ -225,10 +177,12 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
         viewDescribeTop = findViewById(R.id.view_inner_travel_detail_indicator_top_describe);
         viewNoticeTop = findViewById(R.id.view_inner_travel_detail_indicator_top_notice);
 
-
+        tvCollection = (TextView) findViewById(R.id.tv_inner_travel_collection);
+        tvShare = (TextView) findViewById(R.id.tv_inner_travel_share);
+        btnArgument = (Button) findViewById(R.id.btn_inner_travel_argument);
         btnReserve = (Button) findViewById(R.id.btn_inner_travel_reserve);
 
-        content = LayoutInflater.from(getApplicationContext()).inflate(R.layout.activity_hot_activity_detail_content, null);
+        content = LayoutInflater.from(getApplicationContext()).inflate(R.layout.activity_personalized_custom_detail_content, null);
         if (null != content) {
             layoutIndicatorBottom = (LinearLayout) content.findViewById(R.id.layout_inner_travel_main_detail_bottom); //底部GridView的导航栏
             tvProduct = (Button) content.findViewById(R.id.tv_inner_travel_detail_content_product_bottom);
@@ -254,7 +208,6 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
             tvPriceInclude = (TextView) content.findViewById(R.id.tv_travel_price_include);
             tvPriceNotInclude = (TextView) content.findViewById(R.id.tv_travel_price_not_include);
             layoutTravelDescribe = (LinearLayout) content.findViewById(R.id.layout_travel_describe);
-            tvTravelDescribe = (TextView) content.findViewById(R.id.tv_hot_activity_trip_describe);
             tvReserveNotice = (TextView) content.findViewById(R.id.tv_travel_notice);
 
             mGestureDetector = new GestureDetector(getApplicationContext(), this);
@@ -354,16 +307,14 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
         String start = "<html><style>body img{width:100%;}</style><body>";
         String end = "</body></html>";
         //TODO 顶部图片
-        List<String> picAddr = detail.getPiclist();
+        List<String> picAddr = detail.getPictureList();
         List<ADInfo> newADInfos = new ArrayList<>();
-        if (picAddr != null) {
-            imageUrls.clear();
-            for (int i = 0; i < picAddr.size(); i++) {
-                imageUrls.add(i, picAddr.get(i));
-                ADInfo adInfo = new ADInfo();
-                adInfo.setUrl(picAddr.get(i));
-                newADInfos.add(adInfo);
-            }
+        imageUrls.clear();
+        for (int i = 0; i < picAddr.size(); i++) {
+            imageUrls.add(i, picAddr.get(i));
+            ADInfo adInfo = new ADInfo();
+            adInfo.setUrl(picAddr.get(i));
+            newADInfos.add(adInfo);
         }
         updateBinner(newADInfos);
         //Title
@@ -373,40 +324,48 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
         String price = detail.getPrice();
         tvPrice.setText(price);
         //comment count
-        String count = detail.getNum();
+        String count = detail.getCommentCount();
         tvCommentCount.setText("累计评价（" + count + "）");
         //TODO comment, 头像
-        ActivityComment comment = detail.getComment();
-        setIconData(comment.getFace());
-        tvNickName.setText(comment.getNickname());
-        String time = comment.getAddtime();
-        if (time != null && !"null".equals(time)) {
-            tvAddTime.setText(Utils.getTimeStrYMD(Long.parseLong(time) * 1000));
-        }
+        UserComment comment = detail.getComment();
+        setIconData(comment.getUserIcon());
+        tvNickName.setText(comment.getNickName());
+        tvAddTime.setText(comment.getCommentTime());
         tvCommentContent.setText(comment.getContent());
         //商品详情
-        String tripDetail = detail.getFeatures();
+        String tripDetail = detail.getLineDetails();
         mWebViewProduct.loadDataWithBaseURL(null, start + tripDetail + end, "text/html", "utf-8", null);
         //费用说明
-        String priceContain = detail.getFeeinclude();
-//        String priceNotContain = detail.getPriceNotContain();
+        String priceContain = detail.getPriceInclude();
+        String priceNotContain = detail.getPriceNotContain();
         tvPriceInclude.setText(priceContain);
-        tvPriceNotInclude.setVisibility(View.GONE);
-//        tvPriceNotInclude.setText(priceNotContain);
+        tvPriceNotInclude.setText(priceNotContain);
         //行程描述
-        String tripDescribe = detail.getXcinfo();
-        tvTravelDescribe.setText(tripDescribe);
+        List<TravelDetailDay> tripDescribe = detail.getTripDescribe();
+        if (tripDescribe != null && tripDescribe.size() > 0){
+            for (int i = 0; i < tripDescribe.size(); i++) {
+                TravelDetailDay tripDay = tripDescribe.get(i);
+                InnerTravelDetailDescribeView viewStep = new InnerTravelDetailDescribeView(getApplicationContext());
+                if (i == 0) {
+                    viewStep.isFirstStep(true);
+                }
+                if (i == tripDescribe.size() - 1){
+                    viewStep.isLastStep(true);
+                }
+                viewStep.setTvDayText(tripDay.getDay());
+                viewStep.setTvTitleText(tripDay.getTitle());
+                viewStep.setTvContent(tripDay.getDetail());
+                layoutTravelDescribe.addView(viewStep);
+            }
+        }
         //预订须知
-//        String remark = detail.get();
-//        tvReserveNotice.setText(remark);
+        String remark = detail.getRemark();
+        tvReserveNotice.setText(remark);
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            case R.id.title_main_tv_left_location:
-                finish();
-                break;
             case R.id.tv_inner_travel_detail_content_product_bottom:
             case R.id.btn_inner_travel_detail_indicator_top_product:
                 tvProduct.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
@@ -503,15 +462,20 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
                 //TODO 进入评价详情页面
 
                 break;
-            case R.id.btn_inner_travel_reserve: //立即预定
-                ToastUtil.show(getApplicationContext(), "木有操作流程图");
-//                Bundle bundle = new Bundle();
-//                bundle.putString("id", id);
-//                bundle.putSerializable("hotActivityDetail", detail);
-//                bundle.putInt("type", 11);
-//                Intent intent = new Intent(getApplicationContext(), PriceCalendarReserveActivity.class);
-//                intent.putExtras(bundle);
-//                startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_SELECT_DATE); //选择日期
+            case R.id.tv_inner_travel_collection:
+
+                break;
+            case R.id.tv_inner_travel_share:
+                break;
+            case R.id.btn_inner_travel_argument:
+                break;
+            case R.id.btn_inner_travel_reserve:
+                Bundle bundle = new Bundle();
+                bundle.putString("id", id);
+                bundle.putSerializable("detail", detail);
+                Intent intent = new Intent(getApplicationContext(), PriceCalendarReserveActivity.class);
+                intent.putExtras(bundle);
+                startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_SELECT_DATE); //选择日期
 //                PriceCalendarReserveActivity.actionStart(getApplicationContext(), bundle);
                 break;
         }
@@ -536,8 +500,9 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
     }
 
     private void addListener() {
-        ivTitleLeft.setOnClickListener(this);
-
+        tvCollection.setOnClickListener(this);
+        tvShare.setOnClickListener(this);
+        btnArgument.setOnClickListener(this);
         btnReserve.setOnClickListener(this);
 
         tvProduct.setOnClickListener(this);
@@ -704,7 +669,7 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
     }
 
     public static void actionStart(Context context, Bundle bundle){
-        Intent intent = new Intent(context, HotActivityDetailActivity.class);
+        Intent intent = new Intent(context, PersonalizedCustomDetailActivity.class);
         if(bundle != null){
             intent.putExtras(bundle);
         }

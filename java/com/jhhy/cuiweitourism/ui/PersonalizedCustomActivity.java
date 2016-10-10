@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -39,7 +40,7 @@ import com.markmao.pulltorefresh.widght.XScrollView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PersonalizedCustomActivity extends BaseActivity implements XScrollView.IXScrollViewListener , GestureDetector.OnGestureListener, View.OnClickListener, View.OnTouchListener {
+public class PersonalizedCustomActivity extends BaseActivity implements XScrollView.IXScrollViewListener , GestureDetector.OnGestureListener, View.OnClickListener, View.OnTouchListener, AdapterView.OnItemClickListener {
 
     private String TAG = PersonalizedCustomActivity.class.getSimpleName();
     private TextView tvTitleTop;
@@ -162,6 +163,8 @@ public class PersonalizedCustomActivity extends BaseActivity implements XScrollV
     private void addListener(){
         ivTitleLeft.setOnClickListener(this);
         btnStartCustom.setOnClickListener(this);
+
+        gvCustom.setOnItemClickListener(this);
     }
 
 
@@ -177,6 +180,12 @@ public class PersonalizedCustomActivity extends BaseActivity implements XScrollV
                 PersonalizedCustomStartActivity.actionStart(getApplicationContext(), bundleCustom);
                 break;
         }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        LogUtil.e(TAG, "i = " + i + ", l = " + l);
+
     }
 
     //获取数据后，更新UI
@@ -348,5 +357,6 @@ public class PersonalizedCustomActivity extends BaseActivity implements XScrollV
         addIndicator(infos.size());
         setIndicator(0);
     }
+
 
 }
