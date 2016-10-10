@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.biz.CalendarLineBiz;
 import com.jhhy.cuiweitourism.moudle.TravelDetail;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.ActivityHotDetailInfo;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
@@ -31,7 +32,9 @@ public class PriceCalendarReserveActivity extends BaseActivity implements View.O
     private String TAG = PriceCalendarReserveActivity.class.getSimpleName();
 
     private String id; //旅游详情id，获取日历id
+    private int type; //11:热门活动；国内游/出境游；
     private TravelDetail detail; //旅游详情
+    private ActivityHotDetailInfo hotActivityDetail;
 
     //    private List<GroupDeadline> calendarPrices;
     private List<GroupDeadline> calendarPricesNew = new ArrayList<>(); //价格日历集合
@@ -80,7 +83,8 @@ public class PriceCalendarReserveActivity extends BaseActivity implements View.O
             }
         }
     };
-
+    private TextView tvTitleTop;
+    private ImageView ivTitleLeft;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +99,13 @@ public class PriceCalendarReserveActivity extends BaseActivity implements View.O
     private void getData() {
         Bundle bundle = getIntent().getExtras();
         id = bundle.getString("id");
-        detail = (TravelDetail) bundle.getSerializable("detail");
+        type = bundle.getInt("type");
+        if (type == 11 ){
+            hotActivityDetail = (ActivityHotDetailInfo) bundle.getSerializable("hotActivityDetail");
+        }else {
+            detail = (TravelDetail) bundle.getSerializable("detail");
+        }
+
 
         LoadingIndicator.show(PriceCalendarReserveActivity.this, getString(R.string.http_notice));
         CalendarLineBiz biz = new CalendarLineBiz(getApplicationContext(), handler);
@@ -103,6 +113,10 @@ public class PriceCalendarReserveActivity extends BaseActivity implements View.O
     }
 
     private void setupView() {
+        tvTitleTop = (TextView) findViewById(R.id.tv_title_inner_travel);
+        tvTitleTop.setText("立即购买");
+        ivTitleLeft = (ImageView) findViewById(R.id.title_main_tv_left_location);
+
         calendar = (KCalendar) findViewById(R.id.calendar);
         tvCurrentDate = (TextView) findViewById(R.id.tv_calendar_month);
         ivLastMonth = (ImageView) findViewById(R.id.imgv_calendar_last_month);
@@ -120,6 +134,8 @@ public class PriceCalendarReserveActivity extends BaseActivity implements View.O
     }
 
     private void addListener() {
+        ivTitleLeft.setOnClickListener(this);
+
         ivLastMonth.setOnClickListener(this);
         ivNextMonth.setOnClickListener(this);
         ivReduceChild.setOnClickListener(this);
@@ -212,6 +228,9 @@ public class PriceCalendarReserveActivity extends BaseActivity implements View.O
     @Override
     public void onClick(View view) {
         switch (view.getId()){
+            case R.id.title_main_tv_left_location:
+                finish();
+                break;
             case R.id.imgv_calendar_last_month: //上个月
                 calendar.lastMonth();
                 break;
@@ -240,16 +259,22 @@ public class PriceCalendarReserveActivity extends BaseActivity implements View.O
                 break;
             case R.id.btn_price_calendar_reserve:
                 if (selectDay) {
-                    Intent intent = new Intent(getApplicationContext(), InnerTravelEditOrderActivity.class);
-                    Bundle bundle = new Bundle();
+//                    if (type == 11){
+//
+//                    }else {
+                        Intent intent = new Intent(getApplicationContext(), InnerTravelEditOrderActivity.class);
+                        Bundle bundle = new Bundle();
 //                    bundle.putInt("priceAdult", priceAdult);
 //                    bundle.putInt("priceChild", priceChild);
-                    bundle.putInt("countAdult", countAdult);
-                    bundle.putInt("countChild", countChild);
-                    bundle.putSerializable("detail", detail);
-                    bundle.putSerializable("priceCalendar", selectGroupDeadLine);
-                    intent.putExtras(bundle);
-                    startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_EDIT_ORDER);
+                        bundle.putInt("countAdult", countAdult);
+                        bundle.putInt("countChild", countChild);
+                        bundle.putSerializable("detail", detail);
+                        bundle.putSerializable("hotActivityDetail", hotActivityDetail);
+                        bundle.putInt("type", type);
+                        bundle.putSerializable("priceCalendar", selectGroupDeadLine);
+                        intent.putExtras(bundle);
+                        startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_EDIT_ORDER);
+//                    }
                 }else{
                     ToastCommon.toastShortShow(getApplicationContext(), null, "请选择出发日期");
                 }

@@ -375,6 +375,7 @@
             android:text="我是费用包含" />
 
         <TextView
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -404,12 +405,21 @@
         android:padding="16dp">
 
         <TextView
+            android:id="@+id/tv_hot_activity_trip_describe_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             android:text="行程描述"
             android:textColor="@android:color/black"
             android:textSize="16sp" />
+        <TextView
+            android:id="@+id/tv_hot_activity_trip_describe"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="行程描述"
+            android:textColor="@android:color/black"
+            android:textSize="14sp" />
 
     </LinearLayout>
 
@@ -437,7 +447,7 @@
             android:id="@+id/tv_travel_notice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="我是预订须知" />
+            android:text="接口未返回预订须知" />
     </LinearLayout>
 
     <View

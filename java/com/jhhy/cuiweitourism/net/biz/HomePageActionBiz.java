@@ -6,6 +6,7 @@ import android.os.Handler;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HomePageCustomAdd;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HomePageCustomList;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HomePageCustonDetail;
+import com.jhhy.cuiweitourism.net.models.FetchModel.HomePageOfflinePay;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
@@ -100,4 +101,11 @@ public class HomePageActionBiz extends BasicActionBiz {
         };
         HttpUtils.executeXutils(add,new FetchGenericCallback(fetchResponse));
     }
+
+
+    /**
+     *  线下支付
+     */
+
+   // public void homePageOfflinePay(HomePageOfflinePay pay )
 }

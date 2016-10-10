@@ -182,6 +182,7 @@ public class CarRentActionBiz extends BasicActionBiz {
                          assert (false);
                      }
                  }
+
                  this.bizCallback.onCompletion(returnModel);
              }
 

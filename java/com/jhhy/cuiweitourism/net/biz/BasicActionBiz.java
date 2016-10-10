@@ -77,6 +77,7 @@ public class BasicActionBiz {
         T object = new Gson().fromJson(element,c);
         return object;
     }
+
 //    public void getBizMap{
 //        Map<String, Object> headMap = new HashMap<>();
 //        headMap.put(Consts.KEY_CODE, CODE_ORDER_DETAIL);

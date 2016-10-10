@@ -209,10 +209,10 @@ public class CitySelectionActivity extends BaseActivity implements View.OnClickL
                     setResult(RESULT_CANCELED);
                 }else {
                     Bundle bundle = new Bundle();
-                    PhoneBean city = new PhoneBean();
-                    city.setName(selectCity);
-                    city.setCity_id("1");
-                    bundle.putSerializable("city", city);
+//                    PhoneBean city = new PhoneBean();
+//                    city.setName(selectCity);
+//                    city.setCity_id("20");
+                    bundle.putString("selectCity", currentCity);
                     intent.putExtras(bundle);
                     setResult(RESULT_OK, intent);
                 }
@@ -321,6 +321,7 @@ public class CitySelectionActivity extends BaseActivity implements View.OnClickL
                     bundle.putSerializable("city", city);
                     intent.putExtras(bundle);
                     setResult(RESULT_OK, intent);
+                    finish();
                 }
             }
         });

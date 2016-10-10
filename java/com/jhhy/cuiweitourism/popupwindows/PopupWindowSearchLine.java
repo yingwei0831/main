@@ -361,6 +361,7 @@ public class PopupWindowSearchLine extends PopupWindow implements OnClickListene
         laterTime = "";
         tvEarlyTime.setText(earlyTime);
         tvLaterTime.setText(laterTime);
+        LogUtil.e(TAG, "清空--------------- earlyTime = " + earlyTime + ", laterTime = " + laterTime);
 
         if (mActivity.getResources().getString(R.string.tab1_inner_travel_sort_default).equals(firstAdapter.getCurrentPositionItem())) { //弹出排序选择
             selectionSort = 0;

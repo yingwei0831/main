@@ -101,6 +101,9 @@ public class Consts {
     // 发起活动
     public static final int MESSAGE_START_ACTIVITY = 118;
 
+//    热门活动
+    public static final int MESSAGE_HOT_ACTIVITY_DETAIL = 156; //热门活动详情
+
     //国内游
     public static final int MESSAGE_INNER_TRAVEL_HOT_DESTINATION = 119; //国内游，出境游——>热门目的地
 //    public static final int MESSAGE_INNER_TRAVEL_DATA = 120; //国内游，出境游——>跟团游，自由游

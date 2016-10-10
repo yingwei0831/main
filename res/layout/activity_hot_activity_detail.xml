@@ -4,11 +4,14 @@
     android:layout_height="fill_parent"
     android:orientation="vertical">
 
+    <include layout="@layout/title_tab1_inner_travel"/>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
+
+        <include layout="@layout/layout_indicator_line_detail"/>
 
         <com.markmao.pulltorefresh.widght.XScrollView
             android:id="@+id/scroll_view_detail"
@@ -16,10 +19,15 @@
             android:layout_height="wrap_content"
             android:fillViewport="true" />
 
-        <include layout="@layout/layout_indicator_line_detail"/>
-
-
     </FrameLayout>
 
-    <include layout="@layout/inner_travel_detail_bottom" />
+    <Button
+        android:id="@+id/btn_inner_travel_reserve"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:text="@string/tab1_inner_travel_detail_reservation"
+        android:textSize="16sp"
+        android:textColor="@android:color/white"
+        android:background="@drawable/bg_btn_inner_travel_reservation_selector"
+        />
 </LinearLayout>

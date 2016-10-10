@@ -3,10 +3,12 @@ package com.jhhy.cuiweitourism.net.models.FetchModel;
 import com.google.gson.Gson;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -68,14 +70,29 @@ import java.util.Map;
         return json;
     }
 
-    protected  JSONObject toFieldJsonObject(Map<String, Object> stringObjectMap) {
+    static public  JSONObject toFieldJsonObject(Map<String, Object> stringObjectMap) {
         JSONObject fieldObj = new JSONObject();
         if(null == stringObjectMap) return fieldObj;
         try {
             for(String key : stringObjectMap.keySet()){
-                fieldObj.put(key, stringObjectMap.get(key));
+                Object obj = stringObjectMap.get(key);
+                if(obj instanceof ArrayList){
+                    ArrayList<BasicFetchModel> array = (ArrayList<BasicFetchModel>)obj;
+                    JSONArray jsonArray = new JSONArray();
+                    for(BasicFetchModel model : array){
+                        JSONObject modelJsonObj = toFieldJsonObject(model.toMapObject());
+                        jsonArray.put(modelJsonObj);
+                    }
+                    fieldObj.put(key, jsonArray);
+                }
+                else{
+                    fieldObj.put(key, obj);
+                }
+
             }
         } catch (JSONException e) {
+            e.printStackTrace();
+        }catch (Exception e){
             e.printStackTrace();
         }
         return fieldObj;

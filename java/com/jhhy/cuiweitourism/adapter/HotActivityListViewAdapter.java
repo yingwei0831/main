@@ -10,9 +10,12 @@ import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.moudle.Travel;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.ActivityHotInfo;
+import com.jhhy.cuiweitourism.utils.ImageLoaderUtil;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.Inflater;
 
@@ -22,10 +25,10 @@ import java.util.zip.Inflater;
 public class HotActivityListViewAdapter extends BaseAdapter {
 
     private Context context;
-    private List<Travel> list;
+    private List<ActivityHotInfo> list;
     private LayoutInflater inflater;
 
-    public HotActivityListViewAdapter(Context context, List<Travel> list) {
+    public HotActivityListViewAdapter(Context context, List<ActivityHotInfo> list) {
         this.context = context;
         this.list = list;
         inflater = LayoutInflater.from(context);
@@ -63,14 +66,26 @@ public class HotActivityListViewAdapter extends BaseAdapter {
             holder = (ViewHolder) view.getTag();
         }
 
-        Travel travel = (Travel) getItem(i);
+        ActivityHotInfo travel = (ActivityHotInfo) getItem(i);
         if(travel != null){
             //TODO
-            holder.tvPrice.setText(travel.getTravelPrice());
-            holder.tvAccount.setText(travel.getAccount()+"");
-
+            holder.tvPrice.setText(travel.getPrice());
+            holder.tvAccount.setText(travel.getBmrs());
+            holder.tvTitle.setText(travel.getTitle());
+            ImageLoaderUtil.getInstance(context).displayImage(travel.getLitpic(), holder.imageView);
         }
+
         return view;
+    }
+
+    public void setData(ArrayList<ActivityHotInfo> listFreedom) {
+        this.list = listFreedom;
+        notifyDataSetChanged();
+    }
+
+    public void addData(ArrayList<ActivityHotInfo> listFreedom) {
+        this.list.addAll(listFreedom);
+        notifyDataSetChanged();
     }
 
     class ViewHolder{

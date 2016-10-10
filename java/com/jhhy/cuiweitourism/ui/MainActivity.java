@@ -18,6 +18,7 @@ import com.jhhy.cuiweitourism.fragment.Tab4Fragment2;
 import com.jhhy.cuiweitourism.moudle.User;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
+import com.jhhy.cuiweitourism.utils.SharedPreferencesUtils;
 
 public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedChangeListener {
 
@@ -63,6 +64,8 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
                 user = (User) bundle.getSerializable(Consts.KEY_REQUEST);
                 if (user != null) {
                     LogUtil.e(TAG, "========= user = " + user.toString() + " ==============");
+                    SharedPreferencesUtils sp = SharedPreferencesUtils.getInstance(getApplicationContext());
+                    sp.saveUserId(user.getUserId());
                 }else{
                     LogUtil.e(TAG, "========= user = null ==============");
                 }

@@ -19,22 +19,34 @@ import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.HotActivityListViewAdapter;
 import com.jhhy.cuiweitourism.biz.FindLinesBiz;
 import com.jhhy.cuiweitourism.biz.ScreenBiz;
+import com.jhhy.cuiweitourism.moudle.PhoneBean;
 import com.jhhy.cuiweitourism.moudle.PriceArea;
 import com.jhhy.cuiweitourism.moudle.Travel;
+import com.jhhy.cuiweitourism.net.biz.ActivityActionBiz;
+import com.jhhy.cuiweitourism.net.models.FetchModel.ActivityHot;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.ActivityHotInfo;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
+import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.Consts;
+import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.popupwindows.InnerTravelPopupWindow;
 import com.jhhy.cuiweitourism.popupwindows.PopupWindowSearchLine;
+import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
+import com.just.sun.pricecalendar.ToastCommon;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class HotActivityListActivity extends BaseActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
 
+    private String TAG = HotActivityListActivity.class.getSimpleName();
+
     private TextView tvTitle;
     private ImageView ivTitleLeft;
 
-    private ArrayList<Travel> listFreedom;
+    private ArrayList<ActivityHotInfo> listFreedom = new ArrayList<>();
 
     private PullToRefreshListView pullToRefreshListView;
     private ListView listView;
@@ -54,6 +66,7 @@ public class HotActivityListActivity extends BaseActivity implements View.OnClic
     private int page = 1;
     private String fromCityId = "1";
     private String sort = ""; //排序
+    private String sortCommit = ""; //排序
     private String day = ""; //行程天数
     private String price = ""; //价格
     private int pricePosition = -1; //价格位置
@@ -61,6 +74,9 @@ public class HotActivityListActivity extends BaseActivity implements View.OnClic
     private String tempEarlyTime = ""; //最早出发时间
     private String laterTime = ""; //最晚出发时间
     private String tempLaterTime = ""; //最晚出发时间
+
+    private PhoneBean selectCity; //主页选择的城市
+    private String areaId; //城市id
 
     private Handler handler = new Handler(){
         @Override
@@ -103,15 +119,27 @@ public class HotActivityListActivity extends BaseActivity implements View.OnClic
     }
 
     private void getInternetData() {
+        LoadingIndicator.show(HotActivityListActivity.this, getString(R.string.http_notice));
         //获取筛选的行程天数和价格
         ScreenBiz screenBiz = new ScreenBiz(getApplicationContext(), handler);
         screenBiz.getScreenDays();
         screenBiz.getScreenPrice();
+
+        if (selectCity == null){
+            areaId = "20"; //此处是北京
+        }else{
+            areaId = selectCity.getCity_id();
+        }
+
+        getHotActivityList();
     }
 
     private void getData() {
-//"areaid":"20","order":"addtime desc","day":"5","price":"2000,50000","zcfdate":"","page":"1","offset":"10"
-
+        //"areaid":"20","order":"addtime desc","day":"5","price":"2000,50000","zcfdate":"","page":"1","offset":"10"
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null){
+            selectCity = (PhoneBean) bundle.getSerializable("selectCity");
+        }
     }
 
     private void setupView() {
@@ -215,21 +243,19 @@ public class HotActivityListActivity extends BaseActivity implements View.OnClic
                 popupWindowSearchLine.setLaterTime(selectDate);
                 tempLaterTime = selectDate;
             }
+        } else if (requestCode == VIEW_HOT_ACTIVITY_DETAIL){
+            if (resultCode == RESULT_OK){ //有可能预订活动
+
+            }
         }
     }
 
     private void initDatas() {
-        listFreedom = new ArrayList<>();
-        for(int i = 0; i < 9; i++){
-            Travel travel = new Travel();
-            travel.setTravelTitle(getString(R.string.tab1_recommend_for_you_title));
-            travel.setTravelPrice("62598");
-            travel.setAccount(i);
-            listFreedom.add(travel);
-        }
         adapter = new HotActivityListViewAdapter(getApplicationContext(), listFreedom);
         pullToRefreshListView.setAdapter(adapter);
-
+    }
+    private void refreshView(){
+        adapter.setData(listFreedom);
     }
 
     private PopupWindowSearchLine popupWindowSearchLine;
@@ -244,6 +270,13 @@ public class HotActivityListActivity extends BaseActivity implements View.OnClic
                     String newSort = popupWindowSearchLine.getSort();
                     if (newSort != null) {
                         sort = newSort;
+                        if ("0".equals(newSort)){
+                            sortCommit = "";
+                        }else if ("1".equals(newSort)){
+                            sortCommit = "price asc";
+                        }else if ("2".equals(newSort)){
+                            sortCommit = "price desc"; //价格降序
+                        }
                     }
                     String newDay = popupWindowSearchLine.getDay();
                     if (newDay != null) {
@@ -266,7 +299,7 @@ public class HotActivityListActivity extends BaseActivity implements View.OnClic
                         laterTime = newLaterTime;
                     }
                     //TODO 重新请求数据
-
+                    getHotActivityList();
                 }
             }
         });
@@ -275,7 +308,44 @@ public class HotActivityListActivity extends BaseActivity implements View.OnClic
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         //TODO 进入热门活动详情页
+        LogUtil.e(TAG, "i = " + i +", l = " + l);
+        Bundle bundle = new Bundle();
+        bundle.putString("id", listFreedom.get((int)l).getId());
+        Intent intent = new Intent(getApplicationContext(), HotActivityDetailActivity.class);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, VIEW_HOT_ACTIVITY_DETAIL);
+    }
 
+    private int VIEW_HOT_ACTIVITY_DETAIL = 3801; //查看热门活动详情
+
+    private void getHotActivityList() {
+        //获取活动列表
+        ActivityActionBiz activityBiz = new ActivityActionBiz();
+        //{"areaid":"20","order":"addtime desc","day":"5", "price":"2000,50000","zcfdate":"","page":"1","offset":"10" (price asc/price desc/2016-10-10)
+        ActivityHot hot = new ActivityHot(areaId, sortCommit, day, price, earlyTime, String.valueOf(page), "10");
+        activityBiz.activitiesHotGetInfo(hot, new BizGenericCallback<ArrayList<ActivityHotInfo>>() {
+            @Override
+            public void onCompletion(GenericResponseModel<ArrayList<ActivityHotInfo>> model) {
+                ArrayList<ActivityHotInfo> array = model.body;
+                //重新加载
+                listFreedom = array;
+                refreshView();
+
+                LogUtil.e(TAG,"activitiesHotGetInfo =" + array.toString());
+                LoadingIndicator.cancel();
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                if (error.localReason != null){
+                    ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
+                }else{
+                    ToastCommon.toastShortShow(getApplicationContext(), null, "与服务器通信异常，请重试");
+                }
+                LogUtil.e(TAG, " activitiesHotGetInfo :" + error.toString());
+                LoadingIndicator.cancel();
+            }
+        });
     }
 
     public static void actionStart(Context context, Bundle data){

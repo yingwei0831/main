@@ -15,7 +15,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:src="@mipmap/line_gray"
+        android:src="@mipmap/line_gray_border"
         android:background="#E7E7E7"
         android:contentDescription="@null"/>
 

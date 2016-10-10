@@ -173,6 +173,16 @@ public class SharedPreferencesUtils {
         return editor.commit();
     }
 
+    public void saveUserId(String userId) {
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(Consts.KEY_ID, userId);
+        editor.commit();
+    }
+
+    public void getUserId(){
+        sp.getString(Consts.KEY_ID, null);
+    }
+
     /**
      * 是否自动登录
      * @param autoLogin 是否自动登录

@@ -4,11 +4,35 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
+    <com.jhhy.cuiweitourism.view.MyScrollView
+        android:id="@+id/viewflipper_myScrollview"
         android:layout_width="match_parent"
-        android:layout_height="200dp">
+        android:layout_height="200dp"
+        android:visibility="visible">
 
-    </LinearLayout>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="200dp">
+
+            <ViewFlipper
+                android:id="@+id/viewflipper"
+                android:layout_width="match_parent"
+                android:layout_height="200dp">
+
+            </ViewFlipper>
+
+            <LinearLayout
+                android:id="@+id/layout_indicator_point"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingBottom="2dp" />
+
+        </FrameLayout>
+
+    </com.jhhy.cuiweitourism.view.MyScrollView>
 
     <Button
         android:id="@+id/btn_custom_start"

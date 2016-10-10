@@ -12,6 +12,8 @@ import com.jhhy.cuiweitourism.ArgumentOnClick;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.moudle.CustomTravel;
 import com.jhhy.cuiweitourism.moudle.Travel;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.HomePageCustomListInfo;
+import com.jhhy.cuiweitourism.utils.ImageLoaderUtil;
 
 import java.util.List;
 
@@ -20,17 +22,24 @@ import java.util.List;
  */
 public class PersonalizedCustomGridViewAdapter extends BaseAdapter {
 
-    private List<CustomTravel> mLists;
+    private List<HomePageCustomListInfo> mLists;
     private LayoutInflater inflater;
+    private Context context;
 
-    public PersonalizedCustomGridViewAdapter(Context context, List<CustomTravel> mLists){
+    public PersonalizedCustomGridViewAdapter(Context context, List<HomePageCustomListInfo> mLists){
         this.mLists = mLists;
         this.inflater = LayoutInflater.from(context);
+        this.context = context;
     }
 
 
-    public void setData(List<CustomTravel> lists){
+    public void setData(List<HomePageCustomListInfo> lists){
         this.mLists = lists;
+        notifyDataSetChanged();
+    }
+
+    public void addData(List<HomePageCustomListInfo> lists){
+        this.mLists.addAll(lists);
         notifyDataSetChanged();
     }
 
@@ -65,12 +74,15 @@ public class PersonalizedCustomGridViewAdapter extends BaseAdapter {
             holder = (ViewHolder) view.getTag();
         }
 
-        CustomTravel travel = (CustomTravel) getItem(position);
+        HomePageCustomListInfo travel = (HomePageCustomListInfo) getItem(position);
 
         if(travel != null){
             //TODO
             holder.tvPrice.setText(travel.getPrice());
             holder.tvDays.setText(travel.getDays());
+            holder.tvDestinationName.setText(travel.getMdd());
+            holder.tvTitle.setText(travel.getTitle());
+            ImageLoaderUtil.getInstance(context).displayImage(travel.getLitpic(), holder.ivDestination);
         }
         return view;
     }

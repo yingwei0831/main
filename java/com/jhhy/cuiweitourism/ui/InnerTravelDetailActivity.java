@@ -154,7 +154,7 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
         biz.getInnerTravelDetail(id);
         LoadingIndicator.show(InnerTravelDetailActivity.this, getString(R.string.http_notice));
 
-        imageUrls.add("drawable://" + R.mipmap.travel_icon);
+        imageUrls.add("drawable://" + R.drawable.ic_empty);
     }
 
     private void setupView() {

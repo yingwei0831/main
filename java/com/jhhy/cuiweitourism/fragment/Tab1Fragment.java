@@ -375,12 +375,14 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
                 VisaMainActivity.actionStart(getContext(), null);
                 break;
             case R.id.layout_personalized_custom: //个性定制
-                PersonalizedCustomActivity.actionStart(getContext(), null);
+                Bundle bundleCustom = new Bundle();
+                bundleCustom.putSerializable("selectCity", selectCity);
+                PersonalizedCustomActivity.actionStart(getContext(), bundleCustom);
                 break;
             case R.id.layout_hot_activity: //热门活动
                 Bundle bundleHotActivity = new Bundle();
                 bundleHotActivity.putSerializable("selectCity", selectCity);
-                HotActivityListActivity.actionStart(getContext(), bundleHotActivity);
+                HotActivityListActivity.actionStart(getContext(),  bundleHotActivity);
                 break;
             case R.id.tv_tab1_search_route_activity: //找路线
                 SearchRouteActivity.actionStart(getContext(), null);

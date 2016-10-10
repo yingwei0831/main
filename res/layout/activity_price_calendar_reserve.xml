@@ -104,8 +104,11 @@
                     android:gravity="center"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:background="@drawable/bg_tv_price_calendar_number_border"
+                    android:background="@android:color/white"
+                    android:drawableTop="@mipmap/line_gray_border"
+                    android:drawableBottom="@mipmap/line_gray_border"
                     />
+                    <!--android:background="@drawable/bg_tv_price_calendar_number_border"-->
 
                 <ImageView
                     android:id="@+id/tv_price_calendar_number_add"
@@ -154,18 +157,22 @@
                     android:layout_alignBottom="@+id/tv_price_calendar_number_child"
                     android:background="@drawable/bg_iv_price_calendar_left_border"
                     />
+                    <!--android:paddingTop="12dp"-->
+                    <!--android:paddingBottom="12dp"-->
+                    <!--android:paddingLeft="20dp"-->
+                    <!--android:paddingRight="20dp"-->
                 <TextView
                     android:id="@+id/tv_price_calendar_number_child"
                     android:layout_toLeftOf="@+id/tv_price_calendar_number_add_child"
-                    android:paddingTop="12dp"
-                    android:paddingBottom="12dp"
-                    android:paddingLeft="20dp"
-                    android:paddingRight="20dp"
                     android:textSize="18sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_tv_price_calendar_number_border"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:gravity="center"
+                    android:background="@android:color/white"
+                    android:drawableTop="@mipmap/line_gray_border"
+                    android:drawableBottom="@mipmap/line_gray_border"
                     />
+                    <!--android:background="@drawable/bg_tv_price_calendar_number_border"-->
 
                 <ImageView
                     android:id="@+id/tv_price_calendar_number_add_child"
@@ -193,6 +200,7 @@
         android:textColor="@android:color/white"
         android:background="@drawable/bg_btn_price_calendar_selector"
         android:textSize="16sp"
+        android:visibility="visible"
         />
 
 </LinearLayout>
