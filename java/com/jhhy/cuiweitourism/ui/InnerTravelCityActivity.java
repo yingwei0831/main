@@ -230,7 +230,8 @@ public class InnerTravelCityActivity extends BaseActivity implements View.OnClic
             popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
                 @Override
                 public void onDismiss() {
-
+                    boolean commit = popupWindow.getCommit();
+                    
                 }
             });
         } else {
