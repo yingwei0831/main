@@ -231,7 +231,7 @@ public class InnerTravelCityActivity extends BaseActivity implements View.OnClic
                 @Override
                 public void onDismiss() {
                     boolean commit = popupWindow.getCommit();
-                    
+
                 }
             });
         } else {
