@@ -107,5 +107,22 @@ public class HomePageActionBiz extends BasicActionBiz {
      *  线下支付
      */
 
-   // public void homePageOfflinePay(HomePageOfflinePay pay )
+    public void homePageOfflinePay(HomePageOfflinePay pay, BizGenericCallback<ArrayList<Object>> callback ){
+        pay.code = "Order_offlinepay";
+        final FetchGenericResponse<ArrayList<Object>> fetchResponse = new FetchGenericResponse<ArrayList<Object>>(callback) {
+            @Override
+            public void onCompletion(FetchResponseModel response) {
+                ArrayList<Object> array = parseJsonToObjectArray(response,Object.class);
+                GenericResponseModel<ArrayList<Object>> returnModel = new GenericResponseModel<>(response.head,array);
+                this.bizCallback.onCompletion(returnModel);
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                this.bizCallback.onError(error);
+            }
+        };
+
+        HttpUtils.executeXutils(pay,new FetchGenericCallback<>(fetchResponse));
+    }
 }

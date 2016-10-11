@@ -208,7 +208,7 @@ public class ActivityHotDetailInfo implements Serializable{
                 ", feeinclude='" + feeinclude + '\'' +
                 ", features='" + features + '\'' +
                 ", piclist=" + piclist +
-                ", comment=" + comment +
+                ", comment=" + comment.toString() +
                 ", ctnum='" + ctnum + '\'' +
                 ", xlxq='" + xlxq + '\'' +
                 ", xcinfo='" + xcinfo + '\'' +

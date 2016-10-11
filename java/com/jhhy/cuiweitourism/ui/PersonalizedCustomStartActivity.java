@@ -13,8 +13,19 @@ import android.widget.TextView;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.dialog.DatePickerActivity;
 import com.jhhy.cuiweitourism.moudle.PhoneBean;
+import com.jhhy.cuiweitourism.net.biz.ActivityActionBiz;
+import com.jhhy.cuiweitourism.net.biz.HomePageActionBiz;
+import com.jhhy.cuiweitourism.net.models.FetchModel.ActivityOrder;
+import com.jhhy.cuiweitourism.net.models.FetchModel.HomePageCustomAdd;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.ActivityOrderInfo;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
+import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.Consts;
+import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.just.sun.pricecalendar.ToastCommon;
+
+import java.util.ArrayList;
 
 public class PersonalizedCustomStartActivity extends BaseActivity implements View.OnClickListener {
 
@@ -153,22 +164,22 @@ public class PersonalizedCustomStartActivity extends BaseActivity implements Vie
                 Intent intentTime = new Intent(getApplicationContext(), DatePickerActivity.class);
                 startActivityForResult(intentTime, SELECT_TIME);
                 break;
-            case R.id.tv_price_calendar_day_number_reduce: //天数增加
+            case R.id.tv_price_calendar_day_number_add: //天数增加
                 addDays();
                 break;
-            case R.id.tv_price_calendar_day_number_add: //天数减少
+            case R.id.tv_price_calendar_day_number_reduce: //天数减少
                 reduceDays();
                 break;
-            case R.id.tv_price_calendar_number_reduce: //成人增加
+            case R.id.tv_price_calendar_number_add:  //成人增加
                 addAdultNum();
                 break;
-            case R.id.tv_price_calendar_number_add: //成人减少
+            case R.id.tv_price_calendar_number_reduce: //成人减少
                 reduceAdultNum();
                 break;
-            case R.id.tv_price_calendar_number_reduce_child: //儿童增加
+            case R.id.tv_price_calendar_number_add_child: //儿童增加
                 addChildNum();
                 break;
-            case R.id.tv_price_calendar_number_add_child: //儿童减少
+            case R.id.tv_price_calendar_number_reduce_child: //儿童减少
                 reduceChildNum();
                 break;
             case R.id.tv_hotel_type_luxury: //豪华型
@@ -231,9 +242,29 @@ public class PersonalizedCustomStartActivity extends BaseActivity implements Vie
             return;
         }
 
-
-
         String remark = etRemark.getText().toString();
+        HomePageCustomAdd add = new HomePageCustomAdd(selectFromCityName, selectToCityName, selectDate,
+                String.valueOf(day), String.valueOf(adultNum), String.valueOf(childNum),
+                priceLower +","+priceHigher, type, remark, name, mobile, mail);
+        HomePageActionBiz homePageBiz = new HomePageActionBiz();
+        homePageBiz.homePageCustomAdd(add, new BizGenericCallback<ArrayList<Object>>() {
+            @Override
+            public void onCompletion(GenericResponseModel<ArrayList<Object>> model) {
+                ArrayList<Object> array = model.body;
+                LogUtil.e(TAG,"homePageCustomAdd =" + array.toString());
+                ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);
+                finish();
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                LogUtil.e(TAG, " homePageCustomAdd :" + error.toString());
+                if (error.localReason != null){
+
+                }
+            }
+        });
+
     }
 
     private void changeType(int tag) {

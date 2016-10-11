@@ -15,6 +15,8 @@ import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.ui.Tab4AccountSecurityActivity;
 import com.jhhy.cuiweitourism.ui.Tab4AllOrdersActivity;
 import com.jhhy.cuiweitourism.ui.Tab4MyCollectionActivity;
+import com.jhhy.cuiweitourism.ui.Tab4MyCommentActivity;
+import com.jhhy.cuiweitourism.ui.Tab4MyMessageActivity;
 import com.jhhy.cuiweitourism.ui.Tab4MyReleaseActivity;
 import com.jhhy.cuiweitourism.ui.Tab4MyTourismCoinActivity;
 import com.jhhy.cuiweitourism.ui.Tab4UserInfoActivity;
@@ -93,11 +95,11 @@ public class Tab4Fragment2 extends Fragment implements View.OnClickListener {
         tvMessage.setOnClickListener(this);
         tvComment.setOnClickListener(this);
         tvCollection.setOnClickListener(this);
-                tvRelease.setOnClickListener(this);
+        tvRelease.setOnClickListener(this);
         tvInformation.setOnClickListener(this);
-                tvSecurity.setOnClickListener(this);
+        tvSecurity.setOnClickListener(this);
         tvAuthentication.setOnClickListener(this);
-                tvContacts.setOnClickListener(this);
+        tvContacts.setOnClickListener(this);
     }
 
     @Override
@@ -126,11 +128,11 @@ public class Tab4Fragment2 extends Fragment implements View.OnClickListener {
             case R.id.tv_tab4_fragment2_my_tourism_coin:
                 Tab4MyTourismCoinActivity.actionStart(getContext(), null);
                 break;
-            case R.id.tv_user_message:
-
+            case R.id.tv_user_message: //我的消息
+                Tab4MyMessageActivity.actionStart(getContext(), null);
                 break;
-            case R.id.tv_user_comment:
-
+            case R.id.tv_user_comment: //我的评论
+                Tab4MyCommentActivity.actionStart(getContext(), null);
                 break;
             case R.id.tv_user_collection:
                 Intent intentColl = new Intent(getContext(), Tab4MyCollectionActivity.class);

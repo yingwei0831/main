@@ -217,7 +217,7 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:orientation="horizontal">
-
+<!--个性定制-->
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -262,7 +262,7 @@
             android:layout_width="1dp"
             android:layout_height="match_parent"
             android:background="@color/colorLineGray" />
-
+<!--热门活动-->
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -372,9 +372,9 @@
             >
 
             <TextView
+                android:background="@drawable/bg_tab1_radiobutton_recommend_for_you"
                 android:id="@+id/tv_tab1_recommend_all_bottom"
                 style="@style/Tab1SelectionAreaStyle"
-                android:background="@drawable/bg_tab1_radiobutton_recommend_for_you"
                 android:text="@string/tab1_recommend_for_you_all"
                 android:textColor="@android:color/white"
                 />
@@ -390,7 +390,6 @@
             <TextView
                 android:id="@+id/tv_tab1_recommend_inner_bottom"
                 style="@style/Tab1SelectionAreaStyle"
-                android:includeFontPadding="false"
                 android:text="@string/tab1_recommend_for_you_gny"
                 android:textColor="@android:color/black"/>
 

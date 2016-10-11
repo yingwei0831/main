@@ -191,6 +191,11 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:windowSoftInputMode="stateHidden|adjustPan"/>
         <activity
+            android:name=".ui.PersonalizedCustomDetailActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/ActionBarTheme"
+            />
+        <activity
             android:name=".ui.ContactPreviewActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
@@ -243,7 +248,13 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:screenOrientation="portrait"/>
         <activity android:name=".ui.Tab4MyCommentActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/ActionBarTheme"
+            />
+        <activity android:name=".ui.Tab4MyMessageActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/ActionBarTheme"
+            />
         <activity android:name=".ui.HotActivityListActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:screenOrientation="portrait"/>
         <activity android:name=".ui.HotActivityDetailActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"
@@ -251,14 +262,17 @@
         <activity
             android:name=".ui.SearchRouteActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|stateHidden"/>
         <activity
             android:name=".ui.SearchShopActivity"
             android:theme="@style/ActionBarTheme"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.VisaMainActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:launchMode="singleTop"/>
+
         <activity android:name=".ui.InnerTravelDetailActivity3"
             android:screenOrientation="portrait"/>
         <activity

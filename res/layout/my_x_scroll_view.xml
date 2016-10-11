@@ -53,7 +53,6 @@
                 <TextView
                     android:id="@+id/tv_tab1_indicator_inner_top"
                     style="@style/Tab1SelectionAreaStyle"
-                    android:includeFontPadding="false"
                     android:text="@string/tab1_recommend_for_you_gny"
                     android:textColor="@android:color/black"
                     />

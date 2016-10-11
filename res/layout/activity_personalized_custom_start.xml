@@ -23,7 +23,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="30dp"
             android:background="@android:color/white"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="16dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -344,10 +345,13 @@
                         android:text="￥" />
 
                     <EditText
+                        android:layout_gravity="center_vertical"
                         android:id="@+id/et_customized_price_lower"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
+                        android:inputType="number"
+                        android:gravity="right"
                         android:background="@android:color/white"
                         android:paddingLeft="6dp"
                         android:paddingRight="6dp" />
@@ -357,12 +361,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:text="～" />
+                    android:text="～"
+                    android:paddingLeft="2dp"
+                    android:paddingRight="2dp"/>
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="36dp"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginRight="8dp"
                     android:layout_weight="1"
                     android:background="@drawable/bg_et_border_corner"
                     android:gravity="center_vertical"
@@ -377,10 +383,13 @@
                         android:text="￥" />
 
                     <EditText
+                        android:layout_gravity="center_vertical"
                         android:id="@+id/et_customized_price_higher"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
+                        android:inputType="number"
+                        android:gravity="right"
                         android:background="@android:color/white"
                         android:paddingLeft="6dp"
                         android:paddingRight="6dp" />
@@ -603,9 +612,9 @@
             <Button
                 android:id="@+id/btn_commit_custom"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
+                android:layout_height="46dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
                 android:background="@drawable/bg_btn_regist_border_selector"
                 android:text="提交定制"
                 android:textColor="@android:color/white" />

@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.ISlideCallback;
@@ -40,6 +41,10 @@ import cn.bleu.widget.slidedetails.SlideDetailsLayout;
 public class InnerActivity4 extends AppCompatActivity  implements ISlideCallback, XScrollView.IXScrollViewListener, SlideDetailsLayout.IConfigCurrentPagerScrollSlide {
 
     private String TAG = InnerActivity4.class.getSimpleName();
+    private ImageView ivTitleLeft;
+    private TextView tvTitle;
+    private ActionBar actionBar;
+
     private SlideDetailsLayout mSlideDetailsLayout;
 
     private int type; // 1：国内游，2：出境游
@@ -103,11 +108,18 @@ public class InnerActivity4 extends AppCompatActivity  implements ISlideCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //获取ActionBar对象
-        ActionBar bar =  getSupportActionBar();
+//        ActionBar bar =  getSupportActionBar();
+//        //自定义一个布局，并居中
+//        bar.setDisplayShowCustomEnabled(true);
+//        View v = LayoutInflater.from(getApplicationContext()).inflate(R.layout.title_tab1_inner_travel, null);
+//        bar.setCustomView(v, new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT));
+        //获取ActionBar对象
+        actionBar =  getSupportActionBar();
         //自定义一个布局，并居中
-        bar.setDisplayShowCustomEnabled(true);
+        actionBar.setDisplayShowCustomEnabled(true);
         View v = LayoutInflater.from(getApplicationContext()).inflate(R.layout.title_tab1_inner_travel, null);
-        bar.setCustomView(v, new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT));
+        actionBar.setCustomView(v, new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT)); //自定义ActionBar布局);
+        actionBar.setElevation(0); //删除自带阴影
 
         setContentView(R.layout.activity_inner4);
         Bundle bundle = getIntent().getExtras();
@@ -121,21 +133,40 @@ public class InnerActivity4 extends AppCompatActivity  implements ISlideCallback
     }
 
     private void addListener() {
+        ivTitleLeft.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
         gvHotDestination.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                //热门目的地详情
                 HotDestination item = listHotDestination.get(position);
                 String cityId = item.getCityId();
                 Bundle bundle = new Bundle();
                 bundle.putString("cityId", cityId);
+                bundle.putString("cityName", item.getCityName());
                 InnerTravelCityActivity.actionStart(getApplicationContext(), bundle);
+            }
+        });
+        gvHotRecommend.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                //热门推荐详情，没有UI设计，此处不正确
+//                CityRecommend item = listHotRecommend.get(i);
+//                Bundle bundle = new Bundle();
+//                bundle.putString("id", item.getCityId());
+//                InnerTravelDetailActivity.actionStart(getApplicationContext(), bundle);
             }
         });
     }
 
     private void getData() {
         InnerTravelMainBiz biz = new InnerTravelMainBiz(getApplicationContext(), handler, Consts.MESSAGE_INNER_TRAVEL_HOT_DESTINATION);
-        biz.getHotDestination("1");
+        biz.getHotDestination(String.valueOf(type));
 
         ExchangeBiz bizE = new ExchangeBiz(getApplicationContext(), handler);
         bizE.getHotRecommend();
@@ -143,6 +174,15 @@ public class InnerActivity4 extends AppCompatActivity  implements ISlideCallback
     }
 
     private void setupView() {
+        tvTitle = (TextView) actionBar.getCustomView().findViewById(R.id.tv_title_inner_travel);
+        if (type == 1){
+            tvTitle.setText("国内游");
+        }else if(type == 2){
+            tvTitle.setText("出境游");
+        }
+
+        ivTitleLeft = (ImageView) actionBar.getCustomView().findViewById(R.id.title_main_tv_left_location);
+
         xScrollView = (XScrollView)findViewById(R.id.slidedetails_front);
         xScrollView.setPullRefreshEnable(true);
         xScrollView.setPullLoadEnable(false);

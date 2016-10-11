@@ -2,6 +2,8 @@ package com.jhhy.cuiweitourism.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.GestureDetector;
@@ -9,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -23,23 +26,28 @@ import com.jhhy.cuiweitourism.moudle.ADInfo;
 import com.jhhy.cuiweitourism.moudle.CustomTravel;
 import com.jhhy.cuiweitourism.moudle.PhoneBean;
 import com.jhhy.cuiweitourism.moudle.Travel;
+import com.jhhy.cuiweitourism.net.biz.ForeEndActionBiz;
 import com.jhhy.cuiweitourism.net.biz.HomePageActionBiz;
+import com.jhhy.cuiweitourism.net.models.FetchModel.ForeEndAdvertise;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HomePageCustomList;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.ForeEndAdvertisingPositionInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HomePageCustomListInfo;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
+import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.utils.Utils;
 import com.jhhy.cuiweitourism.view.MyGridView;
 import com.jhhy.cuiweitourism.view.MyScrollView;
+import com.just.sun.pricecalendar.ToastCommon;
 import com.markmao.pulltorefresh.widght.XScrollView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PersonalizedCustomActivity extends BaseActivity implements XScrollView.IXScrollViewListener , GestureDetector.OnGestureListener, View.OnClickListener, View.OnTouchListener {
+public class PersonalizedCustomActivity extends BaseActivity implements XScrollView.IXScrollViewListener , GestureDetector.OnGestureListener, View.OnClickListener, View.OnTouchListener, AdapterView.OnItemClickListener {
 
     private String TAG = PersonalizedCustomActivity.class.getSimpleName();
     private TextView tvTitleTop;
@@ -58,6 +66,11 @@ public class PersonalizedCustomActivity extends BaseActivity implements XScrollV
     private static final int FLING_MIN_DISTANCE = 20;
     private static final int FLING_MIN_VELOCITY = 0;
 
+    private final int WHEEL = 100; // 转动
+    private final int WHEEL_WAIT = 101; // 等待
+    private boolean isScrolling = false; // 滚动框是否滚动着
+    private long releaseTime = 0; // 手指松开、页面不滚动时间，防止手机松开后短时间进行切换
+    private int time = 4000; // 默认轮播时间
 
     private View content;
     private Button btnStartCustom; //开始定制按钮
@@ -69,8 +82,49 @@ public class PersonalizedCustomActivity extends BaseActivity implements XScrollV
     private boolean refresh; //下拉刷新
 
     private PhoneBean selectCity; //从主页传过来的城市
-//    private String city;
-//    private String cityCode = "20";
+
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case WHEEL:
+                    if(flipper.getChildCount() != 0){
+                        if(!isScrolling){
+                            //向前滑向后滑
+                            showNextView();
+                        }
+                    }
+                    releaseTime = System.currentTimeMillis();
+                    handler.removeCallbacks(runnable);
+                    handler.postDelayed(runnable, time);
+                    break;
+                case WHEEL_WAIT:
+                    if(flipper.getChildCount() != 0){
+                        handler.removeCallbacks(runnable);
+                        handler.postDelayed(runnable, time);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+
+    private final Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            if (PersonalizedCustomActivity.this != null && !PersonalizedCustomActivity.this.isFinishing()) {
+                long now = System.currentTimeMillis();
+                // 检测上一次滑动时间与本次之间是否有触击(手滑动)操作，有的话等待下次轮播
+                if (now - releaseTime > time - 500) {
+                    handler.sendEmptyMessage(WHEEL);
+                } else {
+                    handler.sendEmptyMessage(WHEEL_WAIT);
+                }
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +134,7 @@ public class PersonalizedCustomActivity extends BaseActivity implements XScrollV
         getInternetData();
         setupView();
         addListener();
+        handler.postDelayed(runnable, time);
     }
 
     private void getData() {
@@ -94,27 +149,63 @@ public class PersonalizedCustomActivity extends BaseActivity implements XScrollV
     private void getInternetData() {
         imageUrls.add("drawable://" + R.drawable.ic_empty);
         LoadingIndicator.show(PersonalizedCustomActivity.this, getString(R.string.http_notice));
+
         //个性定制列表
         HomePageActionBiz homePageBiz = new HomePageActionBiz();
         final HomePageCustomList list = new HomePageCustomList(String.valueOf(page),"10");
         homePageBiz.houmePageCustomList(list, new BizGenericCallback<ArrayList<HomePageCustomListInfo>>() {
             @Override
             public void onCompletion(GenericResponseModel<ArrayList<HomePageCustomListInfo>> model) {
-                ArrayList<HomePageCustomListInfo> array = model.body;
-                LogUtil.e(TAG, "houmePageCustomList = " + array.toString());
-                LoadingIndicator.cancel();
-                lists = array;
-                if (refresh) {
+                if ("0000".equals(model.headModel.res_code)) {
+                    ArrayList<HomePageCustomListInfo> array = model.body;
+                    LogUtil.e(TAG, "houmePageCustomList = " + array.toString());
+                    lists = array;
+                    if (refresh) {
+                    } else {
+                    }
+                    refreshView();
                 }else{
+                    ToastCommon.toastShortShow(getApplicationContext(), null, "获取优秀个性定制数据失败");
                 }
-                refreshView();
+                LoadingIndicator.cancel();
             }
-
 
             @Override
             public void onError(FetchError error) {
+                if (error.localReason != null){
+                    ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
+                }else{
+                    ToastCommon.toastShortShow(getApplicationContext(), null, "获取优秀个性定制数据出错");
+                }
                 LogUtil.e(TAG, " houmePageCustomList :" + error.toString());
                 LoadingIndicator.cancel();
+            }
+        });
+
+        //广告位
+        ForeEndActionBiz fbiz = new ForeEndActionBiz();
+//        mark:index（首页）、line_index(国内游、出境游)、header（分类上方）、visa_index（签证）、customize_index(个性定制)
+        ForeEndAdvertise ad = new ForeEndAdvertise("customize_index");
+        fbiz.foreEndGetAdvertisingPosition(ad, new BizGenericCallback<ArrayList<ForeEndAdvertisingPositionInfo>>() {
+            @Override
+            public void onCompletion(GenericResponseModel<ArrayList<ForeEndAdvertisingPositionInfo>> model) {
+                if ("0000".equals(model.headModel.res_code)) {
+                    ArrayList<ForeEndAdvertisingPositionInfo> array = model.body;
+                    LogUtil.e(TAG,"foreEndGetAdvertisingPosition =" + array.toString());
+                    refreshViewBanner(array);
+                }else{
+                    ToastCommon.toastShortShow(getApplicationContext(), null, "获取广告位数据失败");
+                }
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                if (error.localReason != null){
+                    ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
+                }else{
+                    ToastCommon.toastShortShow(getApplicationContext(), null, "获取广告位数据出错");
+                }
+                LogUtil.e(TAG, "foreEndGetAdvertisingPosition: " + error.toString());
             }
         });
     }
@@ -149,7 +240,6 @@ public class PersonalizedCustomActivity extends BaseActivity implements XScrollV
             addIndicator(imageUrls.size());
             setIndicator(currentPosition);
 
-            mGestureDetector = new GestureDetector(getApplicationContext(), this);
             flipper.setOnTouchListener(this);
 
             dianSelect(currentPosition);
@@ -162,6 +252,8 @@ public class PersonalizedCustomActivity extends BaseActivity implements XScrollV
     private void addListener(){
         ivTitleLeft.setOnClickListener(this);
         btnStartCustom.setOnClickListener(this);
+
+        gvCustom.setOnItemClickListener(this);
     }
 
 
@@ -179,9 +271,46 @@ public class PersonalizedCustomActivity extends BaseActivity implements XScrollV
         }
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        LogUtil.e(TAG, "i = " + i + ", l = " + l);
+        HomePageCustomListInfo item = lists.get((int) l);
+        Intent intent = new Intent(getApplicationContext(), PersonalizedCustomDetailActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("id", item.getAid());
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
     //获取数据后，更新UI
     private void refreshView() {
         adapter.setData(lists);
+    }
+
+    private void refreshViewBanner(ArrayList<ForeEndAdvertisingPositionInfo> array) {
+        ArrayList<ADInfo> infosNew = new ArrayList<>();
+//        for (int i = 0; i < array.size(); i++){
+            ForeEndAdvertisingPositionInfo item = array.get(0);
+            ArrayList<String> picList = item.getT();
+            ArrayList<String> linkList = item.getL();
+            for (int j = 0; j < picList.size(); j++){
+                ADInfo ad = new ADInfo();
+                ad.setUrl(picList.get(j));
+                ad.setContent(linkList.get(j));
+                infosNew.add(ad);
+            }
+//        }
+        updateBanner(infosNew);
+    }
+
+    private void updateBanner(ArrayList<ADInfo> listsBanner) {
+        infos = listsBanner;
+        flipper.removeAllViews();
+        for (int i = 0; i < infos.size(); i++) {
+            flipper.addView(ViewFactory.getImageView(getApplicationContext(), infos.get(i).getUrl()));
+        }
+        addIndicator(infos.size());
+        setIndicator(0);
     }
 
     @Override
@@ -243,11 +372,17 @@ public class PersonalizedCustomActivity extends BaseActivity implements XScrollV
                 Math.abs(velocityX) > FLING_MIN_VELOCITY){
 //            Log.i(TAG, "==============开始向左滑动了================");
             showNextView();
+            releaseTime = System.currentTimeMillis();
+            handler.removeCallbacks(runnable);
+            handler.postDelayed(runnable, time);
             return true;
         }else if(e2.getX() - e1.getX() > FLING_MIN_DISTANCE &&
                 Math.abs(velocityX) > FLING_MIN_VELOCITY){
 //            Log.i(TAG, "==============开始向右滑动了================");
             showPreviousView();
+            releaseTime = System.currentTimeMillis();
+            handler.removeCallbacks(runnable);
+            handler.postDelayed(runnable, time);
             return true;
         }else{
             return false;
@@ -339,14 +474,15 @@ public class PersonalizedCustomActivity extends BaseActivity implements XScrollV
         indicators[id].setImageResource(R.drawable.icon_point);
     }
 
-    public void updateBinner(List<ADInfo> listsBinner) {
-        infos = listsBinner;
-        flipper.removeAllViews();
-        for (int i = 0; i < infos.size(); i++) {
-            flipper.addView(ViewFactory.getImageView(getApplicationContext(), infos.get(i).getUrl()));
-        }
-        addIndicator(infos.size());
-        setIndicator(0);
-    }
+//    public void updateBinner(List<ADInfo> listsBinner) {
+//        infos = listsBinner;
+//        flipper.removeAllViews();
+//        for (int i = 0; i < infos.size(); i++) {
+//            flipper.addView(ViewFactory.getImageView(getApplicationContext(), infos.get(i).getUrl()));
+//        }
+//        addIndicator(infos.size());
+//        setIndicator(0);
+//    }
+
 
 }

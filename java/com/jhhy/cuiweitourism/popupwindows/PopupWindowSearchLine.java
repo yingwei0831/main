@@ -125,8 +125,8 @@ public class PopupWindowSearchLine extends PopupWindow implements OnClickListene
             selectionSort = 0;
         }
         if (dayPosition != null && dayPosition.length() != 0){
-            day = dayPosition;
             selectionDays = Integer.parseInt(dayPosition);
+            day = secondListDaysS.get(selectionDays);
         }else{
             selectionDays = -1;
         }
@@ -274,7 +274,6 @@ public class PopupWindowSearchLine extends PopupWindow implements OnClickListene
             day = secondListDaysS.get(position);
         } else if (mActivity.getResources().getString(R.string.tab1_inner_travel_price_screen).equals(firstAdapter.getCurrentPositionItem())) { //弹出价格筛选
             selectionPrice = position;
-
             price = secondListPriceS.get(position).getPriceLower() + "," + secondListPriceS.get(position).getPriceHigh();
         }
         secondAdapter1.setSelectPosition(position);

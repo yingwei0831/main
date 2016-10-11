@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -22,6 +23,7 @@ import com.jhhy.cuiweitourism.biz.InnerTravelMainBiz;
 import com.jhhy.cuiweitourism.moudle.Travel;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
+import com.jhhy.cuiweitourism.ui.InnerTravelDetailActivity;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
 
 import java.util.ArrayList;
@@ -30,7 +32,7 @@ import java.util.List;
 import cn.bleu.widget.slidedetails.SlideDetailsLayout;
 
 
-public class InnerTravelFollowFragment extends Fragment implements ArgumentOnClick, SlideDetailsLayout.IPagerScrollSlide, AbsListView.OnScrollListener {
+public class InnerTravelFollowFragment extends Fragment implements ArgumentOnClick, SlideDetailsLayout.IPagerScrollSlide, AbsListView.OnScrollListener, AdapterView.OnItemClickListener {
 
     private static final String TITLE = "title";
     private static final String TYPE = "type"; //国内游，出境游
@@ -114,6 +116,8 @@ public class InnerTravelFollowFragment extends Fragment implements ArgumentOnCli
     }
 
     private void addListener() {
+        gridViewFollow.setOnItemClickListener(this);
+
         refreshableView.setOnScrollListener(this);
     }
 
@@ -161,6 +165,15 @@ public class InnerTravelFollowFragment extends Fragment implements ArgumentOnCli
     @Override
     public void goToArgument(View view, View viewGroup, int position, int which) {
         ToastUtil.showShortToast(getContext(), "讨价还价");
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        ToastUtil.show(getContext(), "进入详情页面");
+        Travel travel = lists.get((int) l);
+        Bundle bundle = new Bundle();
+        bundle.putString("id", travel.getId());
+        InnerTravelDetailActivity.actionStart(getContext(), bundle);
     }
 
     protected void open(boolean smooth) {

@@ -49,25 +49,32 @@ public class InnerTravelCityFollowFragment extends Fragment implements AdapterVi
     private Tab1InnerTravelListViewAdapter adapter;
 
     private int page = 1;
+    private boolean refresh; //刷新标志
 
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            if (msg.arg1 == 0){
+            if (msg.arg1 == 1){
+                switch (msg.what) {
+                    case Consts.MESSAGE_INNER_CITY_LIST_FOLLOW:
+                        List<Travel> listFollow = (List<Travel>) msg.obj;
+                        if (refresh){ //刷新
+                            refresh = false;
+                            if (listFollow == null || listFollow.size() == 0) {
+//                                ToastUtil.show(getContext(), "当前城市没有即将进行的跟团旅游项目");
+                            }
+                            list = listFollow;
+                            adapter.setData(listFollow);
+                        }else{ //加载更多
+
+                        }
+
+                        break;
+                }
+            }else{
                 ToastUtil.show(getContext(), (String) msg.obj);
                 return;
-            }
-            switch (msg.what){
-                case Consts.MESSAGE_INNER_CITY_LIST_FOLLOW:
-                    List<Travel> listFollow = (List<Travel>) msg.obj;
-                    if (listFollow == null || listFollow.size() == 0){
-                        ToastUtil.show(getContext(), "当前城市没有即将进行的跟团旅游项目");
-                        return;
-                    }
-                    list = listFollow;
-                    adapter.setData(listFollow);
-                    break;
             }
         }
     };
@@ -100,11 +107,12 @@ public class InnerTravelCityFollowFragment extends Fragment implements AdapterVi
         View view = inflater.inflate(R.layout.layout_listview, container, false);
         setupView(view);
         addListener();
-        getData();
+        getData(true);
         return view;
     }
 
-    private void getData() {
+    public void getData(boolean refresh) {
+        this.refresh = refresh;
         InnerTravelCityListBiz biz = new InnerTravelCityListBiz(getContext(), handler, Consts.MESSAGE_INNER_CITY_LIST_FOLLOW);
         biz.getCityList(cityId, InnerTravelCityActivity.sort, InnerTravelCityActivity.day, InnerTravelCityActivity.price,
                 InnerTravelCityActivity.earlyTime, InnerTravelCityActivity.laterTime, String.valueOf(page), String.valueOf(attr));
@@ -159,7 +167,10 @@ public class InnerTravelCityFollowFragment extends Fragment implements AdapterVi
         Bundle bundle = new Bundle();
         bundle.putString("id", travel.getId());
         InnerTravelDetailActivity.actionStart(getContext(), bundle);
+//        startActivityForResult(intent, VIEW_TRAVEL_DETAIL);
     }
+
+//    private int VIEW_TRAVEL_DETAIL = 3692; //查看旅游详情，有可能预定
 
     /**
      * 讨价还价

@@ -168,33 +168,32 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
 //        biz.getInnerTravelDetail(id);
         LoadingIndicator.show(HotActivityDetailActivity.this, getString(R.string.http_notice));
 
-//        HomePageCustonDetail detailC = new HomePageCustonDetail(id);
-//        ActivityActionBiz activityBiz = new ActivityActionBiz();
-//        activityBiz.activitiesHotGetDetailInfo(detailC, new BizGenericCallback<ActivityHotDetailInfo>() {
-//            @Override
-//            public void onCompletion(GenericResponseModel<ActivityHotDetailInfo> model) {
-//                ActivityHotDetailInfo info = model.body;
-//                String toString = info.toString();
-//                LogUtil.e(TAG,"activitiesHotGetDetailInfo: " + toString.substring(0,300));
-//                LogUtil.e(TAG,"activitiesHotGetDetailInfo: " + toString);
-//                refreshView();
-//                LoadingIndicator.cancel();
-//            }
-//
-//            @Override
-//            public void onError(FetchError error) {
-//                if (error.localReason != null){
-//                    ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
-//                }else{
-//                    ToastCommon.toastShortShow(getApplicationContext(), null, "获取热门线路详情失败，请重试");
-//                }
-//                LogUtil.e(TAG, "activitiesHotGetDetailInfo: " + error.toString());
-//                LoadingIndicator.cancel();
-//            }
-//        });
+        ActivityActionBiz activityBiz = new ActivityActionBiz();
+        HomePageCustonDetail detailC = new HomePageCustonDetail(id);
+        activityBiz.activitiesHotGetDetailInfo(detailC, new BizGenericCallback<ActivityHotDetailInfo>() {
+            @Override
+            public void onCompletion(GenericResponseModel<ActivityHotDetailInfo> model) {
+                ActivityHotDetailInfo info = model.body;
+                LogUtil.e(TAG,"activitiesHotGetInfo " );
+                detail = info;
+                refreshView();
+                LoadingIndicator.cancel();
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                if (error.localReason != null){
+                    ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
+                }else{
+                    ToastCommon.toastShortShow(getApplicationContext(), null, "获取热门线路详情失败，请重试");
+                }
+                LogUtil.e(TAG, "activitiesHotGetDetailInfo: " + error.toString());
+                LoadingIndicator.cancel();
+            }
+        });
         imageUrls.add("drawable://" + R.drawable.ic_empty);
-        HotActivityBiz biz = new HotActivityBiz(getApplicationContext(), handler);
-        biz.getHotActivityDetail(id);
+//        HotActivityBiz biz = new HotActivityBiz(getApplicationContext(), handler);
+//        biz.getHotActivityDetail(id);
     }
 
     private void getData() {

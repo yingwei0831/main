@@ -53,7 +53,7 @@
             android:src="@mipmap/travel_icon" />
 
         <TextView
-            android:id="@+id/tv_content_be_comment"
+            android:id="@+id/tv_content_be_title"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"

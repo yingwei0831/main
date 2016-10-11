@@ -21,6 +21,8 @@ import com.jhhy.cuiweitourism.adapter.Tab1GridViewAdapter;
 import com.jhhy.cuiweitourism.biz.InnerTravelMainBiz;
 import com.jhhy.cuiweitourism.moudle.Travel;
 import com.jhhy.cuiweitourism.net.utils.Consts;
+import com.jhhy.cuiweitourism.net.utils.LogUtil;
+import com.jhhy.cuiweitourism.ui.InnerTravelDetailActivity;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
 
 import java.util.ArrayList;
@@ -119,7 +121,7 @@ public class InnerTravelFreeFragment extends Fragment implements ArgumentOnClick
     }
 
     private void addListener() {
-        refreshableView.setOnItemClickListener(this);
+        gridViewFreedom.setOnItemClickListener(this);
         refreshableView.setOnScrollListener(this);
     }
 
@@ -142,12 +144,12 @@ public class InnerTravelFreeFragment extends Fragment implements ArgumentOnClick
             }
         });
 
-        for(int i = 0; i < 11; i++){
-            Travel travel = new Travel();
-            travel.setTravelTitle(getString(R.string.tab1_recommend_for_you_title));
-            travel.setTravelPrice("12100");
-            mList.add(travel);
-        }
+//        for(int i = 0; i < 11; i++){
+//            Travel travel = new Travel();
+//            travel.setTravelTitle(getString(R.string.tab1_recommend_for_you_title));
+//            travel.setTravelPrice("12100");
+//            mList.add(travel);
+//        }
         adapter = new Tab1GridViewAdapter(getContext(), mList, this);
         refreshableView.setAdapter(adapter);
     }
@@ -166,7 +168,11 @@ public class InnerTravelFreeFragment extends Fragment implements ArgumentOnClick
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         ToastUtil.show(getContext(), "进入详情页面");
-
+        LogUtil.e(TAG, "i = " + i + ", l = " + l);
+        Travel travel = mList.get((int) l);
+        Bundle bundle = new Bundle();
+        bundle.putString("id", travel.getId());
+        InnerTravelDetailActivity.actionStart(getContext(), bundle);
     }
 
     protected void open(boolean smooth) {
