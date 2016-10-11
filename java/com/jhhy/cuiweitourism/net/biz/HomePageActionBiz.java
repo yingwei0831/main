@@ -116,7 +116,6 @@ public class HomePageActionBiz extends BasicActionBiz {
                 GenericResponseModel<ArrayList<Object>> returnModel = new GenericResponseModel<>(response.head,array);
                 this.bizCallback.onCompletion(returnModel);
             }
-
             @Override
             public void onError(FetchError error) {
                 this.bizCallback.onError(error);

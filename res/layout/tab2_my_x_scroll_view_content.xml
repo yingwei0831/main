@@ -30,7 +30,7 @@
                 android:layout_gravity="bottom"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:paddingBottom="2dp"></LinearLayout>
+                android:paddingBottom="2dp"/>
 
         </FrameLayout>
 

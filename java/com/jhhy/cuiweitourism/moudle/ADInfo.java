@@ -42,4 +42,13 @@ public class ADInfo {
 		this.type = type;
 	}
 
+	@Override
+	public String toString() {
+		return "ADInfo { " +
+				"id='" + id + '\'' +
+				", url='" + url + '\'' +
+				", content='" + content + '\'' +
+				", type='" + type + '\'' +
+				'}';
+	}
 }

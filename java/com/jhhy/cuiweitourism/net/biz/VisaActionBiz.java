@@ -56,3 +56,4 @@ public class VisaActionBiz extends  BasicActionBiz {
         HttpUtils.executeXutils(hotCountry, new FetchGenericCallback(fetchResponse));
     }
 }
+
