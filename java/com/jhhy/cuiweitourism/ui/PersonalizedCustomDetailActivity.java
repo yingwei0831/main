@@ -8,10 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.ContextCompat;
-<<<<<<< HEAD
-=======
 import android.support.v7.app.ActionBar;
->>>>>>> 6a998d2493030d10de86bc1869a963ffb42a624f
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -33,9 +30,7 @@ import com.jhhy.cuiweitourism.moudle.ADInfo;
 import com.jhhy.cuiweitourism.moudle.TravelDetail;
 import com.jhhy.cuiweitourism.moudle.TravelDetailDay;
 import com.jhhy.cuiweitourism.moudle.UserComment;
-<<<<<<< HEAD
-import com.jhhy.cuiweitourism.net.utils.Consts;
-=======
+
 import com.jhhy.cuiweitourism.net.biz.ActivityActionBiz;
 import com.jhhy.cuiweitourism.net.biz.HomePageActionBiz;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HomePageCustonDetail;
@@ -46,7 +41,6 @@ import com.jhhy.cuiweitourism.net.models.ResponseModel.HomePageCustomDetailInfo;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
->>>>>>> 6a998d2493030d10de86bc1869a963ffb42a624f
 import com.jhhy.cuiweitourism.utils.ImageLoaderUtil;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.utils.MyFileUtils;
@@ -56,10 +50,7 @@ import com.jhhy.cuiweitourism.view.CircleImageView;
 import com.jhhy.cuiweitourism.view.InnerTravelDetailDescribeView;
 import com.jhhy.cuiweitourism.view.MyGridView;
 import com.jhhy.cuiweitourism.view.MyScrollView;
-<<<<<<< HEAD
-=======
 import com.just.sun.pricecalendar.ToastCommon;
->>>>>>> 6a998d2493030d10de86bc1869a963ffb42a624f
 import com.markmao.pulltorefresh.widght.XScrollView;
 
 import java.util.ArrayList;
@@ -68,58 +59,14 @@ import java.util.List;
 public class PersonalizedCustomDetailActivity extends BaseActivity implements GestureDetector.OnGestureListener, XScrollView.IXScrollViewListener, View.OnClickListener, AdapterView.OnItemClickListener, View.OnTouchListener {
 
     private String TAG = getClass().getSimpleName();
-<<<<<<< HEAD
-=======
     private ImageView ivTitleLeft;
     private TextView tvActionBarTitle;
     private ActionBar actionBar;
->>>>>>> 6a998d2493030d10de86bc1869a963ffb42a624f
 
     private XScrollView mScrollView;
     private View content;
 
-<<<<<<< HEAD
-    private TextView tvCollection; //收藏
-    private TextView tvShare; //分享
-    private Button btnArgument; //讨价还价
-    private Button btnReserve; //立即预定
-    //顶部导航栏
-    private LinearLayout layoutIndicatorTop;
-    private Button btnProductTop;
-    private Button btnPriceTop;
-    private Button btnDescribeTop;
-    private Button btnNoticeTop;
-    private View viewProductTop;
-    private View viewPriceTop;
-    private View viewDescribeTop;
-    private View viewNoticeTop;
-    //Scrollview中导航栏
-    private LinearLayout layoutIndicatorBottom;
-    private Button tvProduct;
-    private Button btnPrice;
-    private Button tvDescribe;
-    private Button tvNotice;
-    private View viewProduct;
-    private View viewPrice;
-    private View viewDescribe;
-    private View viewNotice;
 
-    private WebView mWebViewProduct; //商品详情
-    private TextView tvPriceInclude; //费用说明——>费用包含
-    private TextView tvPriceNotInclude; //费用说明——>费用不包含
-    private LinearLayout layoutTravelDescribe; //行程描述
-    private TextView tvReserveNotice; //预订须知
-
-    private TextView tvTitle;
-    private TextView tvPrice; //价格
-    private TextView tvCommentCount;
-    private CircleImageView civIcon;
-    private TextView tvNickName;
-    private TextView tvAddTime;
-    private TextView tvCommentContent;
-    private MyGridView gvImages;
-
-=======
     private LinearLayout layoutRecommendReasonIndicator; //推荐理由Indicator布局
     private WebView mWebViewProduct; //推荐理由
     private LinearLayout layoutTravelDescribeIndicator; //行程描述Indicator布局
@@ -130,7 +77,6 @@ public class PersonalizedCustomDetailActivity extends BaseActivity implements Ge
     private TextView tvPrice; //价格
     private TextView tvDestination; //目的地
     private TextView tvTripDays; //天数
->>>>>>> 6a998d2493030d10de86bc1869a963ffb42a624f
 
     private String[] titles = new String[]{"商品详情", "费用说明", "行程描述", "预订须知"};
 
@@ -139,11 +85,8 @@ public class PersonalizedCustomDetailActivity extends BaseActivity implements Ge
 //    private ScrollView scrollView;
 
     private String id; //旅游详情的id
-<<<<<<< HEAD
-    private TravelDetail detail; //用来接收获取到的旅游详情
-=======
+
     private HomePageCustomDetailInfo detailInfo; //用来接收获取到的个性定制详情
->>>>>>> 6a998d2493030d10de86bc1869a963ffb42a624f
 
     //顶部图片展示
     private List<ADInfo> infos = new ArrayList<ADInfo>();
@@ -161,27 +104,13 @@ public class PersonalizedCustomDetailActivity extends BaseActivity implements Ge
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-<<<<<<< HEAD
-            if (msg.arg1 == 0){
-                ToastUtil.show(getApplicationContext(), (String) msg.obj);
-            } else {
-                switch (msg.what) {
-                    case Consts.MESSAGE_INNER_TRAVEL_DETAIL:
-                        TravelDetail detailNew = (TravelDetail) msg.obj;
-                        if (detailNew != null) {
-                            detail = detailNew;
-                            refreshView();
-                        }
-                        break;
-                }
-=======
+
             if (msg.arg1 == 1){
                 switch (msg.what) {
 
                 }
             }else{
                 ToastUtil.show(getApplicationContext(), (String) msg.obj);
->>>>>>> 6a998d2493030d10de86bc1869a963ffb42a624f
             }
             LoadingIndicator.cancel();
         }
@@ -191,9 +120,7 @@ public class PersonalizedCustomDetailActivity extends BaseActivity implements Ge
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-<<<<<<< HEAD
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-=======
+
         //获取ActionBar对象
         actionBar =  getSupportActionBar();
         //自定义一个布局，并居中
@@ -201,7 +128,6 @@ public class PersonalizedCustomDetailActivity extends BaseActivity implements Ge
         View v = LayoutInflater.from(getApplicationContext()).inflate(R.layout.title_tab1_inner_travel, null);
         actionBar.setCustomView(v, new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT)); //自定义ActionBar布局);
         actionBar.setElevation(0); //删除自带阴影
->>>>>>> 6a998d2493030d10de86bc1869a963ffb42a624f
         setContentView(R.layout.activity_personalized_custom_detail);
         getData();
         setupView();
@@ -213,11 +139,7 @@ public class PersonalizedCustomDetailActivity extends BaseActivity implements Ge
         Bundle bundle = getIntent().getExtras();
         id = bundle.getString("id");
 
-<<<<<<< HEAD
-        InnerTravelDetailBiz biz = new InnerTravelDetailBiz(getApplicationContext(), handler);
-        biz.getInnerTravelDetail(id);
-        LoadingIndicator.show(PersonalizedCustomDetailActivity.this, getString(R.string.http_notice));
-=======
+
         LoadingIndicator.show(PersonalizedCustomDetailActivity.this, getString(R.string.http_notice));
         //个性定制详情
         final HomePageCustonDetail detail = new HomePageCustonDetail(id);
@@ -247,19 +169,15 @@ public class PersonalizedCustomDetailActivity extends BaseActivity implements Ge
                 LoadingIndicator.cancel();
             }
         });
->>>>>>> 6a998d2493030d10de86bc1869a963ffb42a624f
 
         imageUrls.add("drawable://" + R.drawable.ic_empty);
     }
 
     private void setupView() {
-<<<<<<< HEAD
-=======
         tvActionBarTitle = (TextView) actionBar.getCustomView().findViewById(R.id.tv_title_inner_travel);
         tvActionBarTitle.setText("个性定制详情");
         ivTitleLeft = (ImageView) actionBar.getCustomView().findViewById(R.id.title_main_tv_left_location);
 
->>>>>>> 6a998d2493030d10de86bc1869a963ffb42a624f
         mScrollView = (XScrollView)findViewById(R.id.scroll_view_detail);
         mScrollView.setPullRefreshEnable(false);
         mScrollView.setPullLoadEnable(false);
@@ -267,52 +185,6 @@ public class PersonalizedCustomDetailActivity extends BaseActivity implements Ge
         mScrollView.setIXScrollViewListener(this);
 //        mScrollView.setRefreshTime(Utils.getCurrentTime());
 
-<<<<<<< HEAD
-        layoutIndicatorTop = (LinearLayout) findViewById(R.id.layout_inner_travel_main_indicator_top);
-        layoutIndicatorTop.setVisibility(View.GONE);
-
-        btnProductTop = (Button) findViewById(R.id.btn_inner_travel_detail_indicator_top_product);
-        btnPriceTop = (Button) findViewById(R.id.btn_inner_travel_detail_indicator_top_price);
-        btnDescribeTop = (Button) findViewById(R.id.btn_inner_travel_detail_indicator_top_describe);
-        btnNoticeTop = (Button) findViewById(R.id.btn_inner_travel_detail_indicator_top_notice);
-        viewProductTop = findViewById(R.id.view_inner_travel_detail_indicator_top_product);
-        viewPriceTop = findViewById(R.id.view_inner_travel_detail_indicator_top_price);
-        viewDescribeTop = findViewById(R.id.view_inner_travel_detail_indicator_top_describe);
-        viewNoticeTop = findViewById(R.id.view_inner_travel_detail_indicator_top_notice);
-
-        tvCollection = (TextView) findViewById(R.id.tv_inner_travel_collection);
-        tvShare = (TextView) findViewById(R.id.tv_inner_travel_share);
-        btnArgument = (Button) findViewById(R.id.btn_inner_travel_argument);
-        btnReserve = (Button) findViewById(R.id.btn_inner_travel_reserve);
-
-        content = LayoutInflater.from(getApplicationContext()).inflate(R.layout.activity_personalized_custom_detail_content, null);
-        if (null != content) {
-            layoutIndicatorBottom = (LinearLayout) content.findViewById(R.id.layout_inner_travel_main_detail_bottom); //底部GridView的导航栏
-            tvProduct = (Button) content.findViewById(R.id.tv_inner_travel_detail_content_product_bottom);
-            btnPrice = (Button) content.findViewById(R.id.tv_inner_travel_detail_content_price_bottom);
-            tvDescribe = (Button) content.findViewById(R.id.tv_inner_travel_detail_content_describe_bottom);
-            tvNotice = (Button) content.findViewById(R.id.tv_inner_travel_detail_content_notice_bottom);
-
-            viewProduct = content.findViewById(R.id.view_product_bottom);
-            viewPrice = content.findViewById(R.id.view_price_bottom);
-            viewDescribe = content.findViewById(R.id.view_describe_bottom);
-            viewNotice = content.findViewById(R.id.view_notice_bottom);
-
-            tvTitle = (TextView) content.findViewById(R.id.tv_travel_detail_title);
-            tvPrice = (TextView) content.findViewById(R.id.tv_travel_price);
-            tvCommentCount = (TextView) content.findViewById(R.id.tv_travel_comment_count);
-            civIcon = (CircleImageView) content.findViewById(R.id.inner_travel_detail_comment_user_icon);
-            tvNickName = (TextView) content.findViewById(R.id.inner_travel_detail_comment_username);
-            tvAddTime = (TextView) content.findViewById(R.id.tv_travel_comment_add_time);
-            tvCommentContent = (TextView) content.findViewById(R.id.tv_comment_content);
-            gvImages = (MyGridView) content.findViewById(R.id.inner_travel_detail_gridview);
-
-            mWebViewProduct = (WebView) content.findViewById(R.id.webview_inner_travel_detail_content_product);
-            tvPriceInclude = (TextView) content.findViewById(R.id.tv_travel_price_include);
-            tvPriceNotInclude = (TextView) content.findViewById(R.id.tv_travel_price_not_include);
-            layoutTravelDescribe = (LinearLayout) content.findViewById(R.id.layout_travel_describe);
-            tvReserveNotice = (TextView) content.findViewById(R.id.tv_travel_notice);
-=======
         content = LayoutInflater.from(getApplicationContext()).inflate(R.layout.activity_personalized_custom_detail_content, null);
         if (null != content) {
 
@@ -327,7 +199,7 @@ public class PersonalizedCustomDetailActivity extends BaseActivity implements Ge
             layoutTravelDescribeIndicator = (LinearLayout) content.findViewById(R.id.layout_travel_describe_indicator);
             layoutTravelDescribe = (LinearLayout) content.findViewById(R.id.layout_travel_describe_content);
             mWebViewDescribe = (WebView) content.findViewById(R.id.webview_personalized_trip_describe);
->>>>>>> 6a998d2493030d10de86bc1869a963ffb42a624f
+
 
             mGestureDetector = new GestureDetector(getApplicationContext(), this);
 
@@ -353,21 +225,7 @@ public class PersonalizedCustomDetailActivity extends BaseActivity implements Ge
         mScrollView.setOnXScrollChangedI(new XScrollView.onXScrollChangedI() {
             @Override
             public void onXScrollChangedImpl(int l, int t, int oldl, int oldt) {
-<<<<<<< HEAD
-                int[] s = new int[2];
-                layoutIndicatorBottom.getLocationOnScreen(s);
-                int statusHeight = Utils.getStatusBarHeight(getApplicationContext());
-//                int titleHeight = layoutTitle.getHeight();
-                if(statusHeight >= s[1]){ // + titleHeight
-                    layoutIndicatorTop.setVisibility(View.VISIBLE);
-                }else{
-                    layoutIndicatorTop.setVisibility(View.GONE);
-                }
-            }
-        });
 
-    }
-=======
 //                int[] s = new int[2];
 //                layoutIndicatorBottom.getLocationOnScreen(s);
 //                int statusHeight = Utils.getStatusBarHeight(getApplicationContext());
@@ -381,7 +239,6 @@ public class PersonalizedCustomDetailActivity extends BaseActivity implements Ge
         });
     }
 
->>>>>>> 6a998d2493030d10de86bc1869a963ffb42a624f
     private void addImageView(int length) {
         for(int i=0; i < length; i++){
             ADInfo info = new ADInfo();
@@ -391,10 +248,7 @@ public class PersonalizedCustomDetailActivity extends BaseActivity implements Ge
             flipper.addView(ViewFactory.getImageView(getApplicationContext(), infos.get(i).getUrl()));
         }
     }
-<<<<<<< HEAD
-=======
 
->>>>>>> 6a998d2493030d10de86bc1869a963ffb42a624f
     private void addIndicator(int size){
 //        if(indicators == null) {
         indicators = new ImageView[size];
@@ -446,11 +300,8 @@ public class PersonalizedCustomDetailActivity extends BaseActivity implements Ge
         String start = "<html><style>body img{width:100%;}</style><body>";
         String end = "</body></html>";
         //TODO 顶部图片
-<<<<<<< HEAD
-        List<String> picAddr = detail.getPictureList();
-=======
+
         List<String> picAddr = detailInfo.getPiclist();
->>>>>>> 6a998d2493030d10de86bc1869a963ffb42a624f
         List<ADInfo> newADInfos = new ArrayList<>();
         imageUrls.clear();
         for (int i = 0; i < picAddr.size(); i++) {
@@ -461,51 +312,7 @@ public class PersonalizedCustomDetailActivity extends BaseActivity implements Ge
         }
         updateBinner(newADInfos);
         //Title
-<<<<<<< HEAD
-        String title = detail.getTitle();
-        tvTitle.setText(title);
-        //Price
-        String price = detail.getPrice();
-        tvPrice.setText(price);
-        //comment count
-        String count = detail.getCommentCount();
-        tvCommentCount.setText("累计评价（" + count + "）");
-        //TODO comment, 头像
-        UserComment comment = detail.getComment();
-        setIconData(comment.getUserIcon());
-        tvNickName.setText(comment.getNickName());
-        tvAddTime.setText(comment.getCommentTime());
-        tvCommentContent.setText(comment.getContent());
-        //商品详情
-        String tripDetail = detail.getLineDetails();
-        mWebViewProduct.loadDataWithBaseURL(null, start + tripDetail + end, "text/html", "utf-8", null);
-        //费用说明
-        String priceContain = detail.getPriceInclude();
-        String priceNotContain = detail.getPriceNotContain();
-        tvPriceInclude.setText(priceContain);
-        tvPriceNotInclude.setText(priceNotContain);
-        //行程描述
-        List<TravelDetailDay> tripDescribe = detail.getTripDescribe();
-        if (tripDescribe != null && tripDescribe.size() > 0){
-            for (int i = 0; i < tripDescribe.size(); i++) {
-                TravelDetailDay tripDay = tripDescribe.get(i);
-                InnerTravelDetailDescribeView viewStep = new InnerTravelDetailDescribeView(getApplicationContext());
-                if (i == 0) {
-                    viewStep.isFirstStep(true);
-                }
-                if (i == tripDescribe.size() - 1){
-                    viewStep.isLastStep(true);
-                }
-                viewStep.setTvDayText(tripDay.getDay());
-                viewStep.setTvTitleText(tripDay.getTitle());
-                viewStep.setTvContent(tripDay.getDetail());
-                layoutTravelDescribe.addView(viewStep);
-            }
-        }
-        //预订须知
-        String remark = detail.getRemark();
-        tvReserveNotice.setText(remark);
-=======
+
         String title = detailInfo.getTitle();
         tvTitle.setText(title);
         //Price
@@ -520,130 +327,15 @@ public class PersonalizedCustomDetailActivity extends BaseActivity implements Ge
         //行程描述
         String tripDescribe = detailInfo.getXcms();
         mWebViewDescribe.loadDataWithBaseURL(null, start + tripDescribe + end, "text/html", "utf-8", null);
->>>>>>> 6a998d2493030d10de86bc1869a963ffb42a624f
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-<<<<<<< HEAD
-            case R.id.tv_inner_travel_detail_content_product_bottom:
-            case R.id.btn_inner_travel_detail_indicator_top_product:
-                tvProduct.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-                viewProduct.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-                btnProductTop.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-                viewProductTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-
-                btnPrice.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewPrice.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-                btnPriceTop.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewPriceTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-
-                tvDescribe.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewDescribe.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-                btnDescribeTop.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewDescribeTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-
-                tvNotice.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewNotice.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-                btnNoticeTop.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewNoticeTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-
-                break;
-            case R.id.tv_inner_travel_detail_content_price_bottom:
-            case R.id.btn_inner_travel_detail_indicator_top_price:
-                tvProduct.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewProduct.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-                btnProductTop.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewProductTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-
-                btnPrice.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-                viewPrice.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-                btnPriceTop.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-                viewPriceTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-
-                tvDescribe.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewDescribe.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-                btnDescribeTop.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewDescribeTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-
-                tvNotice.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewNotice.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-                btnNoticeTop.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewNoticeTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-
-                break;
-            case R.id.tv_inner_travel_detail_content_describe_bottom:
-            case R.id.btn_inner_travel_detail_indicator_top_describe:
-                tvProduct.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewProduct.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-                btnProductTop.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewProductTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-
-
-                btnPrice.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewPrice.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-                btnPriceTop.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewPriceTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-
-                tvDescribe.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-                viewDescribe.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-                btnDescribeTop.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-                viewDescribeTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-
-                tvNotice.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewNotice.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-                btnNoticeTop.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewNoticeTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-
-                break;
-            case R.id.tv_inner_travel_detail_content_notice_bottom:
-            case R.id.btn_inner_travel_detail_indicator_top_notice:
-                tvProduct.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewProduct.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-                btnProductTop.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewProductTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-
-                btnPrice.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewPrice.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-                btnPriceTop.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewPriceTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-
-                tvDescribe.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewDescribe.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-                btnDescribeTop.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewDescribeTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-
-                tvNotice.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-                viewNotice.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-                btnNoticeTop.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-                viewNoticeTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-                break;
-            case R.id.tv_travel_comment_count: //累计评价
-                //TODO 进入评价详情页面
-
-                break;
-            case R.id.tv_inner_travel_collection:
-
-                break;
-            case R.id.tv_inner_travel_share:
-                break;
-            case R.id.btn_inner_travel_argument:
-                break;
-            case R.id.btn_inner_travel_reserve:
-                Bundle bundle = new Bundle();
-                bundle.putString("id", id);
-                bundle.putSerializable("detail", detail);
-                Intent intent = new Intent(getApplicationContext(), PriceCalendarReserveActivity.class);
-                intent.putExtras(bundle);
-                startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_SELECT_DATE); //选择日期
-//                PriceCalendarReserveActivity.actionStart(getApplicationContext(), bundle);
-=======
             case R.id.title_main_tv_left_location:
                 finish();
                 break;
             default:
->>>>>>> 6a998d2493030d10de86bc1869a963ffb42a624f
                 break;
         }
     }
@@ -667,36 +359,15 @@ public class PersonalizedCustomDetailActivity extends BaseActivity implements Ge
     }
 
     private void addListener() {
-<<<<<<< HEAD
-        tvCollection.setOnClickListener(this);
-        tvShare.setOnClickListener(this);
-        btnArgument.setOnClickListener(this);
-        btnReserve.setOnClickListener(this);
 
-        tvProduct.setOnClickListener(this);
-        btnPrice.setOnClickListener(this);
-        tvDescribe.setOnClickListener(this);
-        tvNotice.setOnClickListener(this);
-        btnProductTop.setOnClickListener(this);
-        btnPriceTop.setOnClickListener(this);
-        btnDescribeTop.setOnClickListener(this);
-        btnNoticeTop.setOnClickListener(this);
-        tvCommentCount.setOnClickListener(this);
-
-        gvImages.setOnItemClickListener(this);
-=======
         ivTitleLeft.setOnClickListener(this);
->>>>>>> 6a998d2493030d10de86bc1869a963ffb42a624f
         mWebViewProduct.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 return true;
             }
         });
-<<<<<<< HEAD
 
-=======
->>>>>>> 6a998d2493030d10de86bc1869a963ffb42a624f
     }
 
     @Override
@@ -820,31 +491,6 @@ public class PersonalizedCustomDetailActivity extends BaseActivity implements Ge
 //		Log.i(TAG, "==============第"+currentPage+"页==========");
     }
 
-<<<<<<< HEAD
-    private void setIconData(String url) {
-        final String subString = url.substring(url.lastIndexOf("/") + 1);
-        if(MyFileUtils.fileIsExists(Consts.IMG_PATH + subString)){
-            Bitmap iconBmp = BitmapFactory.decodeFile(Consts.IMG_PATH + subString);
-            if(iconBmp != null){
-                civIcon.setImageBitmap(iconBmp);
-            }
-        }else{
-            ImageLoaderUtil imageLoader = ImageLoaderUtil.getInstance(getApplicationContext());
-            imageLoader.getImage(civIcon, url);
-            imageLoader.setCallBack(new ImageLoaderUtil.ImageLoaderCallBack() {
-                @Override
-                public void refreshAdapter(Bitmap loadedImage) {
-                    if(loadedImage != null){
-                        civIcon.setImageBitmap(loadedImage);
-                    }
-                }
-            });
-        }
-
-    }
-
-=======
->>>>>>> 6a998d2493030d10de86bc1869a963ffb42a624f
     public static void actionStart(Context context, Bundle bundle){
         Intent intent = new Intent(context, PersonalizedCustomDetailActivity.class);
         if(bundle != null){

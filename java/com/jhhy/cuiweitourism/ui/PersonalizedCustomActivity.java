@@ -274,16 +274,12 @@ public class PersonalizedCustomActivity extends BaseActivity implements XScrollV
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         LogUtil.e(TAG, "i = " + i + ", l = " + l);
-<<<<<<< HEAD
-
-=======
         HomePageCustomListInfo item = lists.get((int) l);
         Intent intent = new Intent(getApplicationContext(), PersonalizedCustomDetailActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString("id", item.getAid());
         intent.putExtras(bundle);
         startActivity(intent);
->>>>>>> 6a998d2493030d10de86bc1869a963ffb42a624f
     }
 
     //获取数据后，更新UI

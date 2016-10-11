@@ -16,16 +16,6 @@
             android:layout_height="wrap_content"
             android:fillViewport="true" />
 
-<<<<<<< HEAD
-
-
-
     </FrameLayout>
 
-    <include layout="@layout/inner_travel_detail_bottom" />
-
-=======
-    </FrameLayout>
-
->>>>>>> 6a998d2493030d10de86bc1869a963ffb42a624f
 </LinearLayout>

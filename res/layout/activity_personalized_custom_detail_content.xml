@@ -45,10 +45,7 @@
         android:paddingRight="16dp">
 
         <TextView
-<<<<<<< HEAD
-=======
             android:textColor="@android:color/black"
->>>>>>> 6a998d2493030d10de86bc1869a963ffb42a624f
             android:id="@+id/tv_travel_detail_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -100,50 +97,30 @@
 
             <LinearLayout android:orientation="horizontal" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content">
                 <TextView
-<<<<<<< HEAD
-=======
                     android:textColor="@android:color/black"
->>>>>>> 6a998d2493030d10de86bc1869a963ffb42a624f
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="目的地："/>
                 <TextView
-<<<<<<< HEAD
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:text="西藏"
-=======
                     android:id="@+id/tv_personalized_custom_destination_name"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
->>>>>>> 6a998d2493030d10de86bc1869a963ffb42a624f
                     android:textColor="@color/colorActionBar"
                     />
             </LinearLayout>
 
             <LinearLayout android:orientation="horizontal" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content">
                 <TextView
-<<<<<<< HEAD
-=======
                     android:textColor="@android:color/black"
->>>>>>> 6a998d2493030d10de86bc1869a963ffb42a624f
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="行程天数："/>
                 <TextView
-<<<<<<< HEAD
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:text="7天"
-=======
                     android:id="@+id/tv_personalized_custom_days"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
->>>>>>> 6a998d2493030d10de86bc1869a963ffb42a624f
                     android:textColor="@color/colorActionBar"
                     />
             </LinearLayout>
@@ -151,130 +128,11 @@
 
     </LinearLayout>
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 6a998d2493030d10de86bc1869a963ffb42a624f
     <View
         android:layout_width="match_parent"
         android:layout_height="10dp"
         android:background="#EFF2F7" />
 
-<<<<<<< HEAD
-
-    <!--bottom indicator-->
-    <LinearLayout
-        android:id="@+id/layout_inner_travel_main_detail_bottom"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:orientation="horizontal"
-        android:visibility="gone">
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <Button
-                android:id="@+id/tv_inner_travel_detail_content_product_bottom"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/white"
-                android:gravity="center"
-                android:paddingBottom="12dp"
-                android:paddingTop="16dp"
-                android:text="@string/inner_travel_detail_product"
-                android:textColor="@color/colorTab1RecommendForYouArgument"
-                android:textSize="16sp"/>
-
-            <View
-                android:id="@+id/view_product_bottom"
-                android:layout_width="match_parent"
-                android:layout_height="4dp"
-                android:background="@color/colorTab1RecommendForYouArgument" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <Button
-                android:id="@+id/tv_inner_travel_detail_content_price_bottom"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/white"
-                android:gravity="center"
-                android:paddingBottom="12dp"
-                android:paddingTop="16dp"
-                android:text="@string/inner_travel_detail_price"
-                android:textColor="@android:color/black"
-                android:textSize="16sp"/>
-
-            <View
-                android:id="@+id/view_price_bottom"
-                android:layout_width="match_parent"
-                android:layout_height="4dp"
-                android:background="@color/colorBgIndicator" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <Button
-                android:id="@+id/tv_inner_travel_detail_content_describe_bottom"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/white"
-                android:gravity="center"
-                android:paddingBottom="12dp"
-                android:paddingTop="16dp"
-                android:text="@string/inner_travel_detail_describe"
-                android:textColor="@android:color/black"
-                android:textSize="16sp"/>
-
-            <View
-                android:id="@+id/view_describe_bottom"
-                android:layout_width="match_parent"
-                android:layout_height="4dp"
-                android:background="@color/colorBgIndicator" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <Button
-                android:id="@+id/tv_inner_travel_detail_content_notice_bottom"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/white"
-                android:gravity="center"
-                android:paddingBottom="12dp"
-                android:paddingTop="16dp"
-                android:text="@string/inner_travel_detail_notice"
-                android:textColor="@android:color/black"
-                android:textSize="16sp"/>
-
-            <View
-                android:id="@+id/view_notice_bottom"
-                android:layout_width="match_parent"
-                android:layout_height="4dp"
-                android:background="@color/colorBgIndicator" />
-        </LinearLayout>
-    </LinearLayout>
-    <!--商品详情-->
-    <WebView
-        android:id="@+id/webview_inner_travel_detail_content_product"
-=======
     <!--推荐理由-->
     <LinearLayout
         android:id="@+id/layout_recommend_reason_indicator"
@@ -305,7 +163,6 @@
 
     <WebView
         android:id="@+id/webview_personalized_detail_content_product"
->>>>>>> 6a998d2493030d10de86bc1869a963ffb42a624f
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -315,65 +172,7 @@
         android:layout_width="match_parent"
         android:layout_height="10dp"
         android:background="@color/colorLineGray2" />
-<<<<<<< HEAD
 
-
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:background="@color/colorLineGray2" />
-
-    <LinearLayout
-        android:id="@+id/layout_travel_describe"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:orientation="vertical"
-        android:padding="16dp">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:text="行程描述"
-            android:textColor="@android:color/black"
-            android:textSize="16sp" />
-
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:background="@color/colorLineGray2" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:orientation="vertical"
-        android:padding="16dp">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="预定须知"
-            android:textColor="@android:color/black"
-            android:textSize="16sp" />
-
-        <TextView
-            android:paddingTop="10dp"
-            android:id="@+id/tv_travel_notice"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="我是预订须知" />
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:background="@color/colorLineGray2" />
-=======
 <!--行程描述-->
     <LinearLayout
         android:id="@+id/layout_travel_describe_indicator"
