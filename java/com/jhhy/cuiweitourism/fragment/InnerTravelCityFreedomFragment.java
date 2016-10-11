@@ -48,26 +48,31 @@ public class InnerTravelCityFreedomFragment extends Fragment implements AdapterV
     private Tab1InnerTravelListViewAdapter adapter;
 
     private int page = 1;
-
+    private boolean refresh; //刷新标志
 
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            if (msg.arg1 == 0){
+            if (msg.arg1 == 1) {
+                switch (msg.what) {
+                    case Consts.MESSAGE_INNER_CITY_LIST_FREEDOM:
+                        List<Travel> listFollow = (List<Travel>) msg.obj;
+                        if (refresh) { //刷新
+                            refresh = false;
+                            if (listFollow == null || listFollow.size() == 0) {
+//                                ToastUtil.show(getActivity(), "当前城市没有即将进行的自由旅游项目");
+                            }
+                            list = listFollow;
+                            adapter.setData(listFollow);
+                        }else{ //加载更多
+
+                        }
+                        break;
+                }
+            }else{
                 ToastUtil.show(getContext(), (String) msg.obj);
                 return;
-            }
-            switch (msg.what){
-                case Consts.MESSAGE_INNER_CITY_LIST_FREEDOM:
-                    List<Travel> listFollow = (List<Travel>) msg.obj;
-                    if (listFollow == null || listFollow.size() == 0){
-                        ToastUtil.show(getActivity(), "当前城市没有即将进行的自由旅游项目");
-                        return;
-                    }
-                    list = listFollow;
-                    adapter.setData(listFollow);
-                    break;
             }
         }
     };
@@ -98,12 +103,13 @@ public class InnerTravelCityFreedomFragment extends Fragment implements AdapterV
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.layout_listview, container, false);
         setupView(view);
-        getData();
+        getData(true);
         addListener();
         return view;
     }
 
-    private void getData() {
+    public void getData(boolean refresh) {
+        this.refresh = refresh;
         InnerTravelCityListBiz biz = new InnerTravelCityListBiz(getContext(), handler, Consts.MESSAGE_INNER_CITY_LIST_FREEDOM);
         biz.getCityList(cityId, InnerTravelCityActivity.sort,InnerTravelCityActivity.day, InnerTravelCityActivity.price,
                 InnerTravelCityActivity.earlyTime, InnerTravelCityActivity.laterTime, String.valueOf(page), String.valueOf(attr));

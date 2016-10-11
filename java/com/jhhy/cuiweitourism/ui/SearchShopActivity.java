@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -83,7 +84,9 @@ public class SearchShopActivity extends BaseActivity implements View.OnClickList
             actionBar = getSupportActionBar();
 //            actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
             actionBar.setDisplayShowCustomEnabled(true);
-            actionBar.setCustomView(R.layout.title_tab1_inner_travel);//自定义ActionBar布局
+            View v = LayoutInflater.from(getApplicationContext()).inflate(R.layout.title_tab1_inner_travel, null);
+            actionBar.setCustomView(v, new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT)); //自定义ActionBar布局);
+            actionBar.setElevation(0); //删除自带阴影
 
             setContentView(R.layout.activity_search_shop);
             getInternetData();

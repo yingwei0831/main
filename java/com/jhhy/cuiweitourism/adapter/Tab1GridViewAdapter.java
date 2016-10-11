@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.jhhy.cuiweitourism.ArgumentOnClick;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.moudle.Travel;
+import com.jhhy.cuiweitourism.utils.ImageLoaderUtil;
 
 import java.util.List;
 
@@ -23,10 +24,12 @@ public class Tab1GridViewAdapter extends BaseAdapter {
 
     private List<Travel> mLists;
     private LayoutInflater inflater;
+    private Context context;
 
     public Tab1GridViewAdapter(Context context, List<Travel> mLists, ArgumentOnClick listener){
         this.mLists = mLists;
         this.inflater = LayoutInflater.from(context);
+        this.context = context;
         this.argument = listener;
     }
 
@@ -83,6 +86,9 @@ public class Tab1GridViewAdapter extends BaseAdapter {
 
         if(travel != null){
             //TODO
+            holder.tvTitle.setText(travel.getTravelTitle());
+            holder.tvPrice.setText(travel.getTravelPrice());
+            ImageLoaderUtil.getInstance(context).displayImage(travel.getTravelIconPath(), holder.ivDestination);
         }
         return view;
     }

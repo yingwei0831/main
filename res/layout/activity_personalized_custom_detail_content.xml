@@ -45,6 +45,10 @@
         android:paddingRight="16dp">
 
         <TextView
+<<<<<<< HEAD
+=======
+            android:textColor="@android:color/black"
+>>>>>>> 6a998d2493030d10de86bc1869a963ffb42a624f
             android:id="@+id/tv_travel_detail_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -96,28 +100,50 @@
 
             <LinearLayout android:orientation="horizontal" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content">
                 <TextView
+<<<<<<< HEAD
+=======
+                    android:textColor="@android:color/black"
+>>>>>>> 6a998d2493030d10de86bc1869a963ffb42a624f
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="目的地："/>
                 <TextView
+<<<<<<< HEAD
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:text="西藏"
+=======
+                    android:id="@+id/tv_personalized_custom_destination_name"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+>>>>>>> 6a998d2493030d10de86bc1869a963ffb42a624f
                     android:textColor="@color/colorActionBar"
                     />
             </LinearLayout>
 
             <LinearLayout android:orientation="horizontal" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content">
                 <TextView
+<<<<<<< HEAD
+=======
+                    android:textColor="@android:color/black"
+>>>>>>> 6a998d2493030d10de86bc1869a963ffb42a624f
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="行程天数："/>
                 <TextView
+<<<<<<< HEAD
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:text="7天"
+=======
+                    android:id="@+id/tv_personalized_custom_days"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+>>>>>>> 6a998d2493030d10de86bc1869a963ffb42a624f
                     android:textColor="@color/colorActionBar"
                     />
             </LinearLayout>
@@ -125,12 +151,16 @@
 
     </LinearLayout>
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 6a998d2493030d10de86bc1869a963ffb42a624f
     <View
         android:layout_width="match_parent"
         android:layout_height="10dp"
         android:background="#EFF2F7" />
 
+<<<<<<< HEAD
 
     <!--bottom indicator-->
     <LinearLayout
@@ -244,6 +274,38 @@
     <!--商品详情-->
     <WebView
         android:id="@+id/webview_inner_travel_detail_content_product"
+=======
+    <!--推荐理由-->
+    <LinearLayout
+        android:id="@+id/layout_recommend_reason_indicator"
+        android:background="@android:color/white"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:weightSum="4">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:gravity="center"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="推荐理由"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/colorActionBar"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <WebView
+        android:id="@+id/webview_personalized_detail_content_product"
+>>>>>>> 6a998d2493030d10de86bc1869a963ffb42a624f
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -253,6 +315,7 @@
         android:layout_width="match_parent"
         android:layout_height="10dp"
         android:background="@color/colorLineGray2" />
+<<<<<<< HEAD
 
 
 
@@ -310,6 +373,50 @@
         android:layout_width="match_parent"
         android:layout_height="10dp"
         android:background="@color/colorLineGray2" />
+=======
+<!--行程描述-->
+    <LinearLayout
+        android:id="@+id/layout_travel_describe_indicator"
+        android:background="@android:color/white"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:weightSum="4">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:gravity="center"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="行程描述"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/colorActionBar"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_travel_describe_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+    </LinearLayout>
+
+    <WebView
+        android:id="@+id/webview_personalized_trip_describe"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+>>>>>>> 6a998d2493030d10de86bc1869a963ffb42a624f
 </LinearLayout>
 
 

@@ -15,6 +15,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -32,6 +33,7 @@ import com.jhhy.cuiweitourism.ui.CarRentSelectTypeActivity;
 import com.jhhy.cuiweitourism.ui.CitySelectionActivity;
 import com.jhhy.cuiweitourism.ui.HotActivityListActivity;
 import com.jhhy.cuiweitourism.ui.InnerActivity4;
+import com.jhhy.cuiweitourism.ui.InnerTravelDetailActivity;
 import com.jhhy.cuiweitourism.ui.PersonalizedCustomActivity;
 import com.jhhy.cuiweitourism.ui.SearchRouteActivity;
 import com.jhhy.cuiweitourism.ui.SearchShopActivity;
@@ -53,7 +55,7 @@ import java.util.List;
  * Use the {@link Tab1Fragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewListener, GestureDetector.OnGestureListener, View.OnClickListener, ArgumentOnClick {
+public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewListener, GestureDetector.OnGestureListener, View.OnClickListener, ArgumentOnClick, AdapterView.OnItemClickListener {
 
     private static final String TAG = Tab1Fragment.class.getSimpleName();
 
@@ -348,6 +350,8 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
         tvIndicatorInnerTop .setOnClickListener(this);
         tvIndicatorOutsideTop.setOnClickListener(this);
         tvIndicatorNearbyTop.setOnClickListener(this);
+
+        gridViewRecommend.setOnItemClickListener(this);
     }
 
     @Override
@@ -385,7 +389,9 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
                 HotActivityListActivity.actionStart(getContext(),  bundleHotActivity);
                 break;
             case R.id.tv_tab1_search_route_activity: //找路线
-                SearchRouteActivity.actionStart(getContext(), null);
+                Bundle bundleLine = new Bundle();
+                bundleLine.putSerializable("selectCity", selectCity);
+                SearchRouteActivity.actionStart(getContext(), bundleLine);
                 break;
             case R.id.tv_tab1_search_shop: //找商铺
                 SearchShopActivity.actionStart(getContext(), null);
@@ -462,6 +468,15 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
         }
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        LogUtil.e(TAG, "i = " + i +", l = " + l);
+        Travel travel = lists.get((int) l);
+        Bundle bundle = new Bundle();
+        bundle.putString("id", travel.getId());
+        InnerTravelDetailActivity.actionStart(getContext(), bundle);
+    }
+
     private void changeIndicator(int type){
             tvIndicatorAllBottom.setTextColor(getResources().getColor(android.R.color.black));
             tvIndicatorAllBottom.setBackground(null);
@@ -481,7 +496,6 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
             tvIndicatorNearbyTop.setTextColor(getResources().getColor(android.R.color.black));
             tvIndicatorNearbyTop.setBackground(null);
 
-//        for(int i = 0; i < 4; i++){
             if (type == 0){
                 tvIndicatorAllBottom.setTextColor(getResources().getColor(android.R.color.white));
                 tvIndicatorAllBottom.setBackground(getResources().getDrawable(R.drawable.bg_tab1_radiobutton_recommend_for_you));
@@ -503,7 +517,6 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
                 tvIndicatorNearbyTop.setTextColor(getResources().getColor(android.R.color.white));
                 tvIndicatorNearbyTop.setBackground(getResources().getDrawable(R.drawable.bg_tab1_radiobutton_recommend_for_you));
             }
-//        }
     }
 
     /**

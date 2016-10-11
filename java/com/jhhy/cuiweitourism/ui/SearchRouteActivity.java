@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -19,6 +20,7 @@ import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.Tab1InnerTravelListViewAdapter;
 import com.jhhy.cuiweitourism.biz.FindLinesBiz;
 import com.jhhy.cuiweitourism.biz.ScreenBiz;
+import com.jhhy.cuiweitourism.moudle.PhoneBean;
 import com.jhhy.cuiweitourism.moudle.PriceArea;
 import com.jhhy.cuiweitourism.moudle.Travel;
 import com.jhhy.cuiweitourism.popupwindows.PopupWindowSearchLine;
@@ -30,6 +32,8 @@ import java.util.List;
 
 public class SearchRouteActivity extends BaseActivity implements View.OnClickListener, ArgumentOnClick {
 
+    private TextView tvTitleTop;
+    private ImageView ivTitleLeft;
 
     private List<Travel> mLists = new ArrayList<>();
 
@@ -56,6 +60,7 @@ public class SearchRouteActivity extends BaseActivity implements View.OnClickLis
     private String earlyTime = "";
     private String laterTime = "";
 
+    private PhoneBean selectCity;
 
     private Handler handler = new Handler(){
         @Override
@@ -103,12 +108,13 @@ public class SearchRouteActivity extends BaseActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_route);
+        getData();
         setupView();
         addListener();
-        getData();
+        getInternetData();
     }
 
-    private void getData() {
+    private void getInternetData() {
         //获取筛选的行程天数和价格
         ScreenBiz screenBiz = new ScreenBiz(getApplicationContext(), handler);
         screenBiz.getScreenDays();
@@ -118,7 +124,23 @@ public class SearchRouteActivity extends BaseActivity implements View.OnClickLis
         biz.getLines(page, fromCityId, sort, day, price, earlyTime, laterTime);
     }
 
+    private void getData() {
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null){
+            selectCity = (PhoneBean) bundle.getSerializable("selectCity");
+            if (selectCity == null){
+                selectCity = new PhoneBean();
+                selectCity.setCity_id("20");
+                selectCity.setName("北京");
+            }
+        }
+    }
+
     private void setupView() {
+        tvTitleTop = (TextView) findViewById(R.id.tv_title_inner_travel);
+        tvTitleTop.setText(selectCity.getName());
+        ivTitleLeft = (ImageView) findViewById(R.id.title_main_tv_left_location);
+
         layout = findViewById(R.id.activity_search_route_list);
 
         pullToRefreshListView = (PullToRefreshListView) findViewById(R.id.activity_search_route_list_view);
