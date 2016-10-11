@@ -9,33 +9,69 @@ import android.os.Message;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.ViewFlipper;
 
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.HotRecommendGridViewAdapter;
 import com.jhhy.cuiweitourism.adapter.OrdersPagerAdapter;
 import com.jhhy.cuiweitourism.biz.ExchangeBiz;
+import com.jhhy.cuiweitourism.circleviewpager.ViewFactory;
+import com.jhhy.cuiweitourism.moudle.ADInfo;
 import com.jhhy.cuiweitourism.moudle.CityRecommend;
+import com.jhhy.cuiweitourism.net.biz.ForeEndActionBiz;
+import com.jhhy.cuiweitourism.net.models.FetchModel.ForeEndAdvertise;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.ForeEndAdvertisingPositionInfo;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
+import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
+import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.ui.InnerTravelCityActivity;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.jhhy.cuiweitourism.view.MyGridView;
+import com.jhhy.cuiweitourism.view.MyScrollView;
+import com.just.sun.pricecalendar.ToastCommon;
 import com.ns.fhvp.IPagerScroll;
 import com.ns.fhvp.TouchPanelLayoutModify;
 
 import java.util.ArrayList;
 import java.util.List;
 
+public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.IConfigCurrentPagerScroll, TouchPanelLayoutModify.OnViewUpdateListener, View.OnClickListener, AdapterView.OnItemClickListener, View.OnTouchListener, GestureDetector.OnGestureListener {
 
-public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.IConfigCurrentPagerScroll, TouchPanelLayoutModify.OnViewUpdateListener, View.OnClickListener, AdapterView.OnItemClickListener {
-
+    private String TAG = Tab2Fragment_2.class.getSimpleName();
     private static final String ARG_PARAM1 = "param1";
     private String mParam1;
 
+    //  轮播图片
+    private List<ADInfo> infos = new ArrayList<ADInfo>();
+
+    private ViewFlipper flipper;
+    private LinearLayout layoutPoint;
+    private List<String> imageUrls = new ArrayList<>();
+
+    private ImageView[] indicators; // 轮播图片数组
+    private int currentPosition = 0; // 轮播当前位置
+
+    private static final int FLING_MIN_DISTANCE = 100;
+    private static final int FLING_MIN_VELOCITY = 0;
+    private GestureDetector mGestureDetector; // MyScrollView的手势
+    private long releaseTime = 0; // 手指松开、页面不滚动时间，防止手机松开后短时间进行切换
+    private boolean isScrolling = false; // 滚动框是否滚动着
+    private int time = 4000; // 默认轮播时间
+    private final int WHEEL = 100; // 转动
+    private final int WHEEL_WAIT = 101; // 等待
 
     private TextView tvHotRecommendNext; //换一批
     private MyGridView gridViewHotRecommend;
@@ -52,6 +88,7 @@ public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.I
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+            LogUtil.e(TAG, "---------------handleMessage--------------- what = " + msg.what);
             switch (msg.what){
                 case Consts.MESSAGE_EXCHANGE:
                     if (msg.arg1 == 0){
@@ -67,6 +104,40 @@ public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.I
 
                     }
                     break;
+                case WHEEL:
+                    if(flipper.getChildCount() != 0){
+                        if(!isScrolling){
+                            //向前滑向后滑
+                            showNextView();
+                        }
+                    }
+                    releaseTime = System.currentTimeMillis();
+                    handler.removeCallbacks(runnable);
+                    handler.postDelayed(runnable, time);
+                    break;
+                case WHEEL_WAIT:
+                    if(flipper.getChildCount() != 0){
+                        handler.removeCallbacks(runnable);
+                        handler.postDelayed(runnable, time);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+
+    private final Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            if (getActivity() != null && !getActivity().isFinishing()) {
+                long now = System.currentTimeMillis();
+                // 检测上一次滑动时间与本次之间是否有触击(手滑动)操作，有的话等待下次轮播
+                if (now - releaseTime > time - 500) {
+                    handler.sendEmptyMessage(WHEEL);
+                } else {
+                    handler.sendEmptyMessage(WHEEL_WAIT);
+                }
             }
         }
     };
@@ -96,12 +167,44 @@ public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.I
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View mTouchPanelLayout = inflater.inflate(R.layout.fragment_tab2_2, container, false);
+        getInternetData();
         ((TouchPanelLayoutModify)mTouchPanelLayout).setConfigCurrentPagerScroll(this);
         ((TouchPanelLayoutModify)mTouchPanelLayout).setOnViewUpdateListener(this);
 
         setupView(mTouchPanelLayout);
         addListener();
+        handler.postDelayed(runnable, time);
         return mTouchPanelLayout;
+    }
+
+    private void getInternetData() {
+        imageUrls.add("drawable://" + R.drawable.ic_empty);
+        //广告位
+        ForeEndActionBiz fbiz = new ForeEndActionBiz();
+//        mark:index（首页）、line_index(国内游、出境游)、header（分类上方）、visa_index（签证）、customize_index(个性定制)
+        ForeEndAdvertise ad = new ForeEndAdvertise("header");
+        fbiz.foreEndGetAdvertisingPosition(ad, new BizGenericCallback<ArrayList<ForeEndAdvertisingPositionInfo>>() {
+            @Override
+            public void onCompletion(GenericResponseModel<ArrayList<ForeEndAdvertisingPositionInfo>> model) {
+                if ("0000".equals(model.headModel.res_code)) {
+                    ArrayList<ForeEndAdvertisingPositionInfo> array = model.body;
+                    LogUtil.e(TAG,"foreEndGetAdvertisingPosition =" + array.toString());
+                    refreshViewBanner(array);
+                }else{
+                    ToastCommon.toastShortShow(getContext(), null, "获取广告位数据失败");
+                }
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                if (error.localReason != null){
+                    ToastCommon.toastShortShow(getContext(), null, error.localReason);
+                }else{
+                    ToastCommon.toastShortShow(getContext(), null, "获取广告位数据出错");
+                }
+                LogUtil.e(TAG, "foreEndGetAdvertisingPosition: " + error.toString());
+            }
+        });
     }
 
     private void setupView(View view) {
@@ -133,6 +236,21 @@ public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.I
         pagerAdapter = new OrdersPagerAdapter(getChildFragmentManager(), mTitles, mContent);
         viewPager.setAdapter(pagerAdapter);
         tabIndicator.setupWithViewPager(viewPager);
+
+        mGestureDetector = new GestureDetector(getActivity(), this);
+
+        flipper = (ViewFlipper)view.findViewById(R.id.viewflipper);
+        layoutPoint =(LinearLayout)view.findViewById(R.id.layout_indicator_point);
+
+        addImageView(imageUrls.size());
+        addIndicator(imageUrls.size());
+        setIndicator(currentPosition);
+
+        flipper.setOnTouchListener(this);
+
+        dianSelect(currentPosition);
+        MyScrollView myScrollView = (MyScrollView)view.findViewById(R.id.viewflipper_myScrollview);
+        myScrollView.setGestureDetector(mGestureDetector);
     }
 
     private void addListener() {
@@ -197,4 +315,177 @@ public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.I
             }
         }
     }
+
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        return  mGestureDetector.onTouchEvent(motionEvent);
+    }
+
+    private void refreshViewBanner(ArrayList<ForeEndAdvertisingPositionInfo> array) {
+        ArrayList<ADInfo> infosNew = new ArrayList<>();
+//        for (int i = 0; i < array.size(); i++){
+        ForeEndAdvertisingPositionInfo item = array.get(0);
+        ArrayList<String> picList = item.getT();
+        ArrayList<String> linkList = item.getL();
+        for (int j = 0; j < picList.size(); j++){
+            ADInfo ad = new ADInfo();
+            ad.setUrl(picList.get(j));
+            ad.setContent(linkList.get(j));
+            infosNew.add(ad);
+            LogUtil.e(TAG, "adInfo = " + ad.toString());
+        }
+//        }
+        updateBanner(infosNew);
+    }
+    private void updateBanner(ArrayList<ADInfo> listsBanner) {
+        infos = listsBanner;
+        flipper.removeAllViews();
+        for (int i = 0; i < infos.size(); i++) {
+            flipper.addView(ViewFactory.getImageView(getContext(), infos.get(i).getUrl()));
+        }
+        addIndicator(infos.size());
+        setIndicator(0);
+    }
+
+    private void addIndicator(int size){
+//        if(indicators == null) {
+        indicators = new ImageView[size];
+//        }
+        layoutPoint.removeAllViews();
+        for (int i = 0; i < size; i++) {
+            View view = LayoutInflater.from(getContext()).inflate(R.layout.view_cycle_viewpager_indicator, null);
+            indicators[i] = (ImageView) view.findViewById(R.id.image_indicator);
+            layoutPoint.addView(view);
+        }
+
+    }
+
+    private void setIndicator(int current){
+        for(int i = 0; i < indicators.length; i++) {
+            if(i == current) {
+                indicators[current].setImageResource(R.drawable.icon_point_pre);
+            }else{
+                indicators[i].setImageResource(R.drawable.icon_point);
+            }
+        }
+    }
+
+    private void addImageView(int length) {
+        for(int i=0; i < length; i++){
+            ADInfo info = new ADInfo();
+            info.setUrl(imageUrls.get(i));
+            info.setContent("图片-->" + i);
+            infos.add(info);
+            flipper.addView(ViewFactory.getImageView(getContext(), infos.get(i).getUrl()));
+        }
+    }
+
+    /**
+     * 对应被选中的点的图片
+     * @param id
+     */
+    private void dianSelect(int id) {
+        indicators[id].setImageResource(R.drawable.icon_point_pre);
+    }
+
+    @Override
+    public boolean onDown(MotionEvent motionEvent) {
+        return false;
+    }
+
+    @Override
+    public void onShowPress(MotionEvent motionEvent) {
+
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent motionEvent) {
+        return false;
+    }
+
+    @Override
+    public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
+        return false;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent motionEvent) {
+
+    }
+
+    @Override
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        if(e1.getX() - e2.getX() > FLING_MIN_DISTANCE &&
+                Math.abs(velocityX) > FLING_MIN_VELOCITY){
+//            Log.i(TAG, "==============开始向左滑动了================");
+            showNextView();
+            releaseTime = System.currentTimeMillis();
+            handler.removeCallbacks(runnable);
+            handler.postDelayed(runnable, time);
+            return true;
+        }else if(e2.getX() - e1.getX() > FLING_MIN_DISTANCE &&
+                Math.abs(velocityX) > FLING_MIN_VELOCITY){
+//            Log.i(TAG, "==============开始向右滑动了================");
+            showPreviousView();
+            releaseTime = System.currentTimeMillis();
+            handler.removeCallbacks(runnable);
+            handler.postDelayed(runnable, time);
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    private void showNextView() {
+        Log.i(TAG, "========showNextView=======向左滑动=======");
+        isScrolling = true;
+        flipper.setInAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.push_left_in));
+        flipper.setOutAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.push_left_out));
+        flipper.showNext();
+        currentPosition++;
+        if(currentPosition == flipper.getChildCount()){
+            dianUnselect(currentPosition-1);
+            currentPosition = 0;
+            dianSelect(currentPosition);
+        }else{
+            dianUnselect(currentPosition-1);
+            dianSelect(currentPosition);
+        }
+        releaseTime = System.currentTimeMillis();
+        isScrolling = false;
+        Log.i(TAG, "==============第"+currentPosition+"页==========");
+    }
+
+    private void showPreviousView() {
+        // TODO Auto-generated method stub
+//        Log.i(TAG, "========showPreviousView=======向右滑动=======");
+        isScrolling = true;
+//		thread.suspend();
+        dianSelect(currentPosition);
+        flipper.setInAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.push_right_in));
+        flipper.setOutAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.push_right_out));
+        flipper.showPrevious();
+        currentPosition--;
+        if(currentPosition == -1){
+            dianUnselect(currentPosition+1);
+            currentPosition = flipper.getChildCount()-1;
+            dianSelect(currentPosition);
+        }else{
+            dianUnselect(currentPosition+1);
+            dianSelect(currentPosition);
+        }
+        releaseTime = System.currentTimeMillis();
+        isScrolling = false;
+//		Log.i(TAG, "==============第"+currentPage+"页==========");
+//		thread.resume();
+    }
+
+    /**
+     * 对应未被选中的点的图片
+     * @param id
+     */
+    private void dianUnselect(int id){
+        indicators[id].setImageResource(R.drawable.icon_point);
+    }
+
 }

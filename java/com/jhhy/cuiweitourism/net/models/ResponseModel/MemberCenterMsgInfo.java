@@ -9,15 +9,15 @@ public class MemberCenterMsgInfo {
 //
 //    {
 //        "title": "撒哈拉沙漠",
-//        "id": "1",
-//        "memberid": "1",
-//        "litpic": "/uploads/2015/0909/6576cb3bfd961a0e13e6cc203b4ce012.jpg",
-//        "pl": [
-//                {
-//                    "content": "这个活动很好",
-//                    "addtime": null
-//                }
-//              ]
+//            "id": "1",
+//            "memberid": "1",
+//            "litpic": "/uploads/2015/0909/6576cb3bfd961a0e13e6cc203b4ce012.jpg",
+//            "pl": [
+//        {
+//            "content": "这个活动很好",
+//                "addtime": null
+//        }
+//        ]
 //    }
 
     public class comment{

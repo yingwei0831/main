@@ -30,6 +30,7 @@ import com.jhhy.cuiweitourism.moudle.ADInfo;
 import com.jhhy.cuiweitourism.moudle.TravelDetail;
 import com.jhhy.cuiweitourism.moudle.TravelDetailDay;
 import com.jhhy.cuiweitourism.moudle.UserComment;
+
 import com.jhhy.cuiweitourism.net.biz.ActivityActionBiz;
 import com.jhhy.cuiweitourism.net.biz.HomePageActionBiz;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HomePageCustonDetail;
@@ -65,6 +66,7 @@ public class PersonalizedCustomDetailActivity extends BaseActivity implements Ge
     private XScrollView mScrollView;
     private View content;
 
+
     private LinearLayout layoutRecommendReasonIndicator; //推荐理由Indicator布局
     private WebView mWebViewProduct; //推荐理由
     private LinearLayout layoutTravelDescribeIndicator; //行程描述Indicator布局
@@ -83,6 +85,7 @@ public class PersonalizedCustomDetailActivity extends BaseActivity implements Ge
 //    private ScrollView scrollView;
 
     private String id; //旅游详情的id
+
     private HomePageCustomDetailInfo detailInfo; //用来接收获取到的个性定制详情
 
     //顶部图片展示
@@ -101,6 +104,7 @@ public class PersonalizedCustomDetailActivity extends BaseActivity implements Ge
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+
             if (msg.arg1 == 1){
                 switch (msg.what) {
 
@@ -116,6 +120,7 @@ public class PersonalizedCustomDetailActivity extends BaseActivity implements Ge
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         //获取ActionBar对象
         actionBar =  getSupportActionBar();
         //自定义一个布局，并居中
@@ -133,6 +138,7 @@ public class PersonalizedCustomDetailActivity extends BaseActivity implements Ge
     private void getData() {
         Bundle bundle = getIntent().getExtras();
         id = bundle.getString("id");
+
 
         LoadingIndicator.show(PersonalizedCustomDetailActivity.this, getString(R.string.http_notice));
         //个性定制详情
@@ -194,6 +200,7 @@ public class PersonalizedCustomDetailActivity extends BaseActivity implements Ge
             layoutTravelDescribe = (LinearLayout) content.findViewById(R.id.layout_travel_describe_content);
             mWebViewDescribe = (WebView) content.findViewById(R.id.webview_personalized_trip_describe);
 
+
             mGestureDetector = new GestureDetector(getApplicationContext(), this);
 
             flipper = (ViewFlipper)content.findViewById(R.id.viewflipper);
@@ -218,6 +225,7 @@ public class PersonalizedCustomDetailActivity extends BaseActivity implements Ge
         mScrollView.setOnXScrollChangedI(new XScrollView.onXScrollChangedI() {
             @Override
             public void onXScrollChangedImpl(int l, int t, int oldl, int oldt) {
+
 //                int[] s = new int[2];
 //                layoutIndicatorBottom.getLocationOnScreen(s);
 //                int statusHeight = Utils.getStatusBarHeight(getApplicationContext());
@@ -292,6 +300,7 @@ public class PersonalizedCustomDetailActivity extends BaseActivity implements Ge
         String start = "<html><style>body img{width:100%;}</style><body>";
         String end = "</body></html>";
         //TODO 顶部图片
+
         List<String> picAddr = detailInfo.getPiclist();
         List<ADInfo> newADInfos = new ArrayList<>();
         imageUrls.clear();
@@ -303,6 +312,7 @@ public class PersonalizedCustomDetailActivity extends BaseActivity implements Ge
         }
         updateBinner(newADInfos);
         //Title
+
         String title = detailInfo.getTitle();
         tvTitle.setText(title);
         //Price
@@ -349,6 +359,7 @@ public class PersonalizedCustomDetailActivity extends BaseActivity implements Ge
     }
 
     private void addListener() {
+
         ivTitleLeft.setOnClickListener(this);
         mWebViewProduct.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -356,6 +367,7 @@ public class PersonalizedCustomDetailActivity extends BaseActivity implements Ge
                 return true;
             }
         });
+
     }
 
     @Override

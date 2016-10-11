@@ -3,6 +3,8 @@ package com.jhhy.cuiweitourism.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -21,12 +23,22 @@ import android.widget.ViewFlipper;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.Tab1GridViewAdapter;
 import com.jhhy.cuiweitourism.adapter.Tab2ContentListViewAdapter;
+import com.jhhy.cuiweitourism.circleviewpager.ViewFactory;
 import com.jhhy.cuiweitourism.moudle.ADInfo;
 import com.jhhy.cuiweitourism.moudle.ClassifyArea;
 import com.jhhy.cuiweitourism.moudle.Travel;
+import com.jhhy.cuiweitourism.net.biz.ForeEndActionBiz;
+import com.jhhy.cuiweitourism.net.models.FetchModel.ForeEndAdvertise;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.ForeEndAdvertisingPositionInfo;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
+import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
+import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.utils.Utils;
 import com.jhhy.cuiweitourism.view.MyGridView;
 import com.jhhy.cuiweitourism.view.MyListView;
+import com.jhhy.cuiweitourism.view.MyScrollView;
+import com.just.sun.pricecalendar.ToastCommon;
 import com.markmao.pulltorefresh.widght.XScrollView;
 
 import java.util.ArrayList;
@@ -37,16 +49,10 @@ import java.util.List;
  * Use the {@link Tab2Fragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Tab2Fragment extends Fragment implements XScrollView.IXScrollViewListener, GestureDetector.OnGestureListener, AbsListView.OnScrollListener {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-//    private static final String ARG_PARAM1 = "param1";
-//    private static final String ARG_PARAM2 = "param2";
+public class Tab2Fragment extends Fragment implements XScrollView.IXScrollViewListener, GestureDetector.OnGestureListener, AbsListView.OnScrollListener, View.OnTouchListener {
+
     private static final String TAG = Tab2Fragment.class.getSimpleName();
 
-    // TODO: Rename and change types of parameters
-//    private String mParam1;
-//    private String mParam2;
 
     private Context mContext;
     private View content;
@@ -58,6 +64,49 @@ public class Tab2Fragment extends Fragment implements XScrollView.IXScrollViewLi
     private MyGridView listViewContent;
     private Tab2ContentListViewAdapter contentAdapter;
 
+
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case WHEEL:
+                    if(flipper.getChildCount() != 0){
+                        if(!isScrolling){
+                            //向前滑向后滑
+                            showNextView();
+                        }
+                    }
+                    releaseTime = System.currentTimeMillis();
+                    handler.removeCallbacks(runnable);
+                    handler.postDelayed(runnable, time);
+                    break;
+                case WHEEL_WAIT:
+                    if(flipper.getChildCount() != 0){
+                        handler.removeCallbacks(runnable);
+                        handler.postDelayed(runnable, time);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+
+    private final Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            if (getActivity() != null && !getActivity().isFinishing()) {
+                long now = System.currentTimeMillis();
+                // 检测上一次滑动时间与本次之间是否有触击(手滑动)操作，有的话等待下次轮播
+                if (now - releaseTime > time - 500) {
+                    handler.sendEmptyMessage(WHEEL);
+                } else {
+                    handler.sendEmptyMessage(WHEEL_WAIT);
+                }
+            }
+        }
+    };
 
     public Tab2Fragment() {
         // Required empty public constructor
@@ -91,9 +140,41 @@ public class Tab2Fragment extends Fragment implements XScrollView.IXScrollViewLi
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.tab2_my_x_scroll_view, container, false);
+        getInternetData();
         setupView(view);
         addListener();
+        handler.postDelayed(runnable, time);
         return view;
+    }
+
+    private void getInternetData() {
+        imageUrls.add("drawable://" + R.drawable.ic_empty);
+        //广告位
+        ForeEndActionBiz fbiz = new ForeEndActionBiz();
+//        mark:index（首页）、line_index(国内游、出境游)、header（分类上方）、visa_index（签证）、customize_index(个性定制)
+        ForeEndAdvertise ad = new ForeEndAdvertise("header");
+        fbiz.foreEndGetAdvertisingPosition(ad, new BizGenericCallback<ArrayList<ForeEndAdvertisingPositionInfo>>() {
+            @Override
+            public void onCompletion(GenericResponseModel<ArrayList<ForeEndAdvertisingPositionInfo>> model) {
+                if ("0000".equals(model.headModel.res_code)) {
+                    ArrayList<ForeEndAdvertisingPositionInfo> array = model.body;
+                    LogUtil.e(TAG,"foreEndGetAdvertisingPosition =" + array.toString());
+                    refreshViewBanner(array);
+                }else{
+                    ToastCommon.toastShortShow(getContext(), null, "获取广告位数据失败");
+                }
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                if (error.localReason != null){
+                    ToastCommon.toastShortShow(getContext(), null, error.localReason);
+                }else{
+                    ToastCommon.toastShortShow(getContext(), null, "获取广告位数据出错");
+                }
+                LogUtil.e(TAG, "foreEndGetAdvertisingPosition: " + error.toString());
+            }
+        });
     }
 
     private void setupView(View view) {
@@ -122,15 +203,26 @@ public class Tab2Fragment extends Fragment implements XScrollView.IXScrollViewLi
             indicatorAdapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, new String[]{"热门","上海","北京","海南","东北","华北","西北","云南","香港","澳门","热门","上海","北京","海南","东北","华北","西北","云南","香港","澳门"});
             listViewIndicator.setAdapter(indicatorAdapter);
 
-            mGestureDetector = new GestureDetector(getActivity(), this);
-
             listViewContent = (MyGridView) content.findViewById(R.id.tab2_gridview_content);
             listViewContent.setFocusable(false);
             listViewContent.setFocusableInTouchMode(false);
             contentAdapter = new Tab2ContentListViewAdapter(getContext(), mData.get(0).getListProvince());
             listViewContent.setAdapter(contentAdapter);
 
+            mGestureDetector = new GestureDetector(getActivity(), this);
 
+            flipper = (ViewFlipper)content.findViewById(R.id.viewflipper);
+            layoutPoint =(LinearLayout)content.findViewById(R.id.layout_indicator_point);
+
+            addImageView(imageUrls.size());
+            addIndicator(imageUrls.size());
+            setIndicator(currentPosition);
+
+            flipper.setOnTouchListener(this);
+
+            dianSelect(currentPosition);
+            MyScrollView myScrollView = (MyScrollView)content.findViewById(R.id.viewflipper_myScrollview);
+            myScrollView.setGestureDetector(mGestureDetector);
         }
         mScrollView.setView(content);
     }
@@ -149,8 +241,6 @@ public class Tab2Fragment extends Fragment implements XScrollView.IXScrollViewLi
         Log.i(TAG, "=====onLoadMore=====");
 
     }
-
-
 
     @Override
     public boolean onDown(MotionEvent e) {
@@ -175,14 +265,23 @@ public class Tab2Fragment extends Fragment implements XScrollView.IXScrollViewLi
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
         if(e1.getX() - e2.getX() > FLING_MIN_DISTANCE &&
                 Math.abs(velocityX) > FLING_MIN_VELOCITY){
-            Log.i(TAG, "==============开始向左滑动了================");
+//            Log.i(TAG, "==============开始向左滑动了================");
             showNextView();
+            releaseTime = System.currentTimeMillis();
+            handler.removeCallbacks(runnable);
+            handler.postDelayed(runnable, time);
+            return true;
         }else if(e2.getX() - e1.getX() > FLING_MIN_DISTANCE &&
                 Math.abs(velocityX) > FLING_MIN_VELOCITY){
-            Log.i(TAG, "==============开始向右滑动了================");
+//            Log.i(TAG, "==============开始向右滑动了================");
             showPreviousView();
+            releaseTime = System.currentTimeMillis();
+            handler.removeCallbacks(runnable);
+            handler.postDelayed(runnable, time);
+            return true;
+        }else{
+            return false;
         }
-        return false;
     }
 
     //  轮播图片
@@ -190,6 +289,7 @@ public class Tab2Fragment extends Fragment implements XScrollView.IXScrollViewLi
 
     private ViewFlipper flipper;
     private LinearLayout layoutPoint;
+    private List<String> imageUrls = new ArrayList<>();
 
     private ImageView[] indicators; // 轮播图片数组
     private int currentPosition = 0; // 轮播当前位置
@@ -271,5 +371,67 @@ public class Tab2Fragment extends Fragment implements XScrollView.IXScrollViewLi
     public void onScroll(AbsListView absListView, int i, int i1, int i2) {
         Log.i(TAG, "=====onScroll=====");
 
+    }
+
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        return  mGestureDetector.onTouchEvent(motionEvent);
+    }
+    private void addImageView(int length) {
+        for(int i=0; i < length; i++){
+            ADInfo info = new ADInfo();
+            info.setUrl(imageUrls.get(i));
+            info.setContent("图片-->" + i);
+            infos.add(info);
+            flipper.addView(ViewFactory.getImageView(getContext(), infos.get(i).getUrl()));
+        }
+    }
+
+    private void refreshViewBanner(ArrayList<ForeEndAdvertisingPositionInfo> array) {
+        ArrayList<ADInfo> infosNew = new ArrayList<>();
+//        for (int i = 0; i < array.size(); i++){
+        ForeEndAdvertisingPositionInfo item = array.get(0);
+        ArrayList<String> picList = item.getT();
+        ArrayList<String> linkList = item.getL();
+        for (int j = 0; j < picList.size(); j++){
+            ADInfo ad = new ADInfo();
+            ad.setUrl(picList.get(j));
+            ad.setContent(linkList.get(j));
+            infosNew.add(ad);
+        }
+//        }
+        updateBanner(infosNew);
+    }
+    private void updateBanner(ArrayList<ADInfo> listsBanner) {
+        infos = listsBanner;
+        flipper.removeAllViews();
+        for (int i = 0; i < infos.size(); i++) {
+            flipper.addView(ViewFactory.getImageView(getContext(), infos.get(i).getUrl()));
+        }
+        addIndicator(infos.size());
+        setIndicator(0);
+    }
+
+    private void addIndicator(int size){
+//        if(indicators == null) {
+        indicators = new ImageView[size];
+//        }
+        layoutPoint.removeAllViews();
+        for (int i = 0; i < size; i++) {
+            View view = LayoutInflater.from(getContext()).inflate(R.layout.view_cycle_viewpager_indicator, null);
+            indicators[i] = (ImageView) view.findViewById(R.id.image_indicator);
+            layoutPoint.addView(view);
+        }
+
+    }
+
+    private void setIndicator(int current){
+        for(int i = 0; i < indicators.length; i++) {
+            if(i == current) {
+                indicators[current].setImageResource(R.drawable.icon_point_pre);
+            }else{
+                indicators[i].setImageResource(R.drawable.icon_point);
+            }
+        }
     }
 }

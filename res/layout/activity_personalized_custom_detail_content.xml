@@ -172,6 +172,7 @@
         android:layout_width="match_parent"
         android:layout_height="10dp"
         android:background="@color/colorLineGray2" />
+
 <!--行程描述-->
     <LinearLayout
         android:id="@+id/layout_travel_describe_indicator"
@@ -214,6 +215,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
+>>>>>>> 6a998d2493030d10de86bc1869a963ffb42a624f
 </LinearLayout>
 
 
