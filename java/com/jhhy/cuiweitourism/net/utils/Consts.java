@@ -16,6 +16,8 @@ public class Consts {
 
     public static final int NET_ERROR = 9999; //网络发生故障
 
+    public static final int TIME_PERIOD = 4000; //轮播图片时间间隔
+
     public static final String IMG_PATH = Environment.getExternalStorageDirectory()+ File.separator+"cuiweiTourism/";
 
     public static final String IMG_TEMP_PATH = Environment.getExternalStorageDirectory()+ File.separator+"cuiweiTemp/"; //上传图片用，传完删除
