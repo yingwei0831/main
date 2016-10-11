@@ -180,6 +180,7 @@ public class InnerTravelCityActivity extends BaseActivity implements View.OnClic
 
     private PopupWindowSearchLine popupWindow;
     private int pricePosition = -1;
+    private int dayPosition = -1;
 //    private View layoutPop;
 //    private ListView listViewFirst; //主
 //    private ListView listViewSecond; //从
@@ -252,7 +253,7 @@ public class InnerTravelCityActivity extends BaseActivity implements View.OnClic
             addPopListener();
         } else{
             popupWindow.showAtLocation(layout, Gravity.BOTTOM, 0, 0);
-            popupWindow.refreshView(tag, sort, String.valueOf(Integer.parseInt(day)-1), earlyTime, laterTime, pricePosition);
+            popupWindow.refreshView(tag, sort, String.valueOf(dayPosition), earlyTime, laterTime, pricePosition);
         }
     }
 
@@ -270,8 +271,12 @@ public class InnerTravelCityActivity extends BaseActivity implements View.OnClic
                         sort = String.valueOf(newSort);
                     }
                     String newDay = popupWindow.getDay();
-                    if (newDay != null) {
+                    if (newDay != null && newDay.length() != 0) {
                         day = newDay;
+                        dayPosition = Integer.parseInt(newDay);
+                    }else{
+                        day = "";
+                        dayPosition = -1;
                     }
                     int newPricePosition = popupWindow.getPricePosition();
                     if (newPricePosition != -1) {
@@ -289,6 +294,7 @@ public class InnerTravelCityActivity extends BaseActivity implements View.OnClic
                     if (newLaterTime != null) {
                         laterTime = newLaterTime;
                     }
+                    LogUtil.e(TAG, "dayPosition = " + dayPosition +", pricePosition = " + pricePosition);
                     LogUtil.e(TAG, "sort = " + sort + ", day = " + day+", price = "+ price+", earlyTime = " + earlyTime + ", laterTime = " + laterTime);
 //                    {"head":{"code":"Publics_lines"},"field":{"type":"1","attr":"1","page":"1","offset":"10"}}
                     int currentItem = viewPager.getCurrentItem();

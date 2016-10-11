@@ -62,7 +62,7 @@ public class VisaMainActivity extends BaseActivity implements XScrollView.IXScro
     private final int WHEEL_WAIT = 101; // 等待
     private boolean isScrolling = false; // 滚动框是否滚动着
     private long releaseTime = 0; // 手指松开、页面不滚动时间，防止手机松开后短时间进行切换
-    private int time = 4000; // 默认轮播时间
+//    private int time = 4000; // 默认轮播时间
 
     private View content;
 //    private Button btnStartCustom; //开始定制按钮
@@ -117,12 +117,12 @@ public class VisaMainActivity extends BaseActivity implements XScrollView.IXScro
                     }
                     releaseTime = System.currentTimeMillis();
                     handler.removeCallbacks(runnable);
-                    handler.postDelayed(runnable, time);
+                    handler.postDelayed(runnable, Consts.TIME_PERIOD);
                     break;
                 case WHEEL_WAIT:
                     if(flipper.getChildCount() != 0){
                         handler.removeCallbacks(runnable);
-                        handler.postDelayed(runnable, time);
+                        handler.postDelayed(runnable, Consts.TIME_PERIOD);
                     }
                     break;
                 default:
@@ -137,7 +137,7 @@ public class VisaMainActivity extends BaseActivity implements XScrollView.IXScro
             if (VisaMainActivity.this != null && !VisaMainActivity.this.isFinishing()) {
                 long now = System.currentTimeMillis();
                 // 检测上一次滑动时间与本次之间是否有触击(手滑动)操作，有的话等待下次轮播
-                if (now - releaseTime > time - 500) {
+                if (now - releaseTime > Consts.TIME_PERIOD - 500) {
                     handler.sendEmptyMessage(WHEEL);
                 } else {
                     handler.sendEmptyMessage(WHEEL_WAIT);
@@ -153,7 +153,7 @@ public class VisaMainActivity extends BaseActivity implements XScrollView.IXScro
         getInternetData();
         setupView();
         addListener();
-        handler.postDelayed(runnable, time);
+        handler.postDelayed(runnable, Consts.TIME_PERIOD);
     }
 
     private void getInternetData() {
@@ -385,7 +385,7 @@ public class VisaMainActivity extends BaseActivity implements XScrollView.IXScro
             showNextView();
             releaseTime = System.currentTimeMillis();
             handler.removeCallbacks(runnable);
-            handler.postDelayed(runnable, time);
+            handler.postDelayed(runnable, Consts.TIME_PERIOD);
             return true;
         }else if(e2.getX() - e1.getX() > FLING_MIN_DISTANCE &&
                 Math.abs(velocityX) > FLING_MIN_VELOCITY){
@@ -393,7 +393,7 @@ public class VisaMainActivity extends BaseActivity implements XScrollView.IXScro
             showPreviousView();
             releaseTime = System.currentTimeMillis();
             handler.removeCallbacks(runnable);
-            handler.postDelayed(runnable, time);
+            handler.postDelayed(runnable, Consts.TIME_PERIOD);
             return true;
         }else{
             return false;

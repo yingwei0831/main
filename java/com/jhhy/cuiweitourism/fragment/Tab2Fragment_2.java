@@ -69,7 +69,7 @@ public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.I
     private GestureDetector mGestureDetector; // MyScrollView的手势
     private long releaseTime = 0; // 手指松开、页面不滚动时间，防止手机松开后短时间进行切换
     private boolean isScrolling = false; // 滚动框是否滚动着
-    private int time = 4000; // 默认轮播时间
+//    private int time = 4000; // 默认轮播时间
     private final int WHEEL = 100; // 转动
     private final int WHEEL_WAIT = 101; // 等待
 
@@ -113,12 +113,12 @@ public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.I
                     }
                     releaseTime = System.currentTimeMillis();
                     handler.removeCallbacks(runnable);
-                    handler.postDelayed(runnable, time);
+                    handler.postDelayed(runnable, Consts.TIME_PERIOD);
                     break;
                 case WHEEL_WAIT:
                     if(flipper.getChildCount() != 0){
                         handler.removeCallbacks(runnable);
-                        handler.postDelayed(runnable, time);
+                        handler.postDelayed(runnable, Consts.TIME_PERIOD);
                     }
                     break;
                 default:
@@ -133,7 +133,7 @@ public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.I
             if (getActivity() != null && !getActivity().isFinishing()) {
                 long now = System.currentTimeMillis();
                 // 检测上一次滑动时间与本次之间是否有触击(手滑动)操作，有的话等待下次轮播
-                if (now - releaseTime > time - 500) {
+                if (now - releaseTime > Consts.TIME_PERIOD - 500) {
                     handler.sendEmptyMessage(WHEEL);
                 } else {
                     handler.sendEmptyMessage(WHEEL_WAIT);
@@ -173,7 +173,7 @@ public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.I
 
         setupView(mTouchPanelLayout);
         addListener();
-        handler.postDelayed(runnable, time);
+        handler.postDelayed(runnable, Consts.TIME_PERIOD);
         return mTouchPanelLayout;
     }
 
@@ -421,7 +421,7 @@ public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.I
             showNextView();
             releaseTime = System.currentTimeMillis();
             handler.removeCallbacks(runnable);
-            handler.postDelayed(runnable, time);
+            handler.postDelayed(runnable, Consts.TIME_PERIOD);
             return true;
         }else if(e2.getX() - e1.getX() > FLING_MIN_DISTANCE &&
                 Math.abs(velocityX) > FLING_MIN_VELOCITY){
@@ -429,7 +429,7 @@ public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.I
             showPreviousView();
             releaseTime = System.currentTimeMillis();
             handler.removeCallbacks(runnable);
-            handler.postDelayed(runnable, time);
+            handler.postDelayed(runnable, Consts.TIME_PERIOD);
             return true;
         }else{
             return false;
