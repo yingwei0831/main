@@ -62,8 +62,8 @@ public class EditUserInfoActivity extends BaseActivity implements View.OnClickLi
         tvNameTitle = (TextView) findViewById(R.id.activity_edit_use_info_tv_modify_name);
         etName = (EditText) findViewById(R.id.activity_edit_use_info_et_modify_edit);
 
-            tvNameTitle.setText("昵称");
-            etName.setText(MainActivity.user.getUserNickName());
+        tvNameTitle.setText("昵称");
+        etName.setText(MainActivity.user.getUserNickName());
 
 
         addListener();

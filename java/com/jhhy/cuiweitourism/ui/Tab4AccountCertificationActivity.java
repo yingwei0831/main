@@ -1,5 +1,6 @@
 package com.jhhy.cuiweitourism.ui;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -7,6 +8,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,10 +18,12 @@ import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.biz.UserInformationBiz;
+import com.jhhy.cuiweitourism.moudle.User;
 import com.jhhy.cuiweitourism.picture.Bimp;
 import com.jhhy.cuiweitourism.popupwindows.PopupWindowImage;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
+import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.utils.MyFileUtils;
 import com.jhhy.cuiweitourism.utils.Utils;
 import com.just.sun.pricecalendar.ToastCommon;
@@ -55,6 +60,7 @@ public class Tab4AccountCertificationActivity extends BaseActivity implements Vi
     private Bitmap bimpOpposite;
     private Bitmap bimpOther;
 
+    private String gender; //真实性别
 
     private Handler handler = new Handler(){
         @Override
@@ -83,7 +89,7 @@ public class Tab4AccountCertificationActivity extends BaseActivity implements Vi
 
     private void setupView() {
         tvTitle = (TextView) findViewById(R.id.tv_title_inner_travel);
-        tvTitle.setText("账户安全");
+        tvTitle.setText(getString(R.string.fragment_mine_account_certification));
         ivTitleLeft = (ImageView) findViewById(R.id.title_main_tv_left_location);
 
         layout = findViewById(R.id.layout_certification);
@@ -118,7 +124,7 @@ public class Tab4AccountCertificationActivity extends BaseActivity implements Vi
                 finish();
                 break;
             case R.id.et_real_gender:
-
+                modifyGender();
                 break;
             case R.id.iv_real_icon: //真实头像
                 avatarName = String.valueOf(System.currentTimeMillis()) + ".jpg";
@@ -180,6 +186,23 @@ public class Tab4AccountCertificationActivity extends BaseActivity implements Vi
         }
     }
 
+    private void modifyGender() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(Tab4AccountCertificationActivity.this);
+        builder.setIcon(R.mipmap.ic_launcher);
+        builder.setTitle("选择性别");
+        // 指定下拉列表的显示数据
+        final String[] sexs = {"女", "男"};
+        // 设置一个下拉的列表选择项
+        builder.setItems(sexs, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                gender = sexs[which];
+                tvGender.setText(gender);
+            }
+        });
+        builder.show();
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -196,7 +219,6 @@ public class Tab4AccountCertificationActivity extends BaseActivity implements Vi
 //                String imagePath = data.getStringExtra("imagePath"); // /storage/emulated/0/MIUI/wallpaper/宝马_&_457f9e19-e66c-4ec7-9c64-a26fc3f03612.jpg
             if (resultCode == RESULT_OK) {
                 loading();
-
             }
 //          upLoadBitmap.add(BitmapUtil.loadBitmap(Bimp.drr.get(Bimp.drr.size()-1), Utils.getScreenWidth(getApplicationContext()), Utils.getScreenHeight(getApplicationContext())));
 //            if (userIcon != null) {
@@ -258,8 +280,40 @@ public class Tab4AccountCertificationActivity extends BaseActivity implements Vi
     }
 
     private void goCertivication() {
+        String name = etRealName.getText().toString();
+        if (TextUtils.isEmpty(name)){
+            ToastCommon.toastShortShow(getApplicationContext(), null, "请输入真实姓名");
+            return;
+        }
+        String mobile = etMobile.getText().toString();
+        if (TextUtils.isEmpty(mobile)){
+            ToastCommon.toastShortShow(getApplicationContext(), null, "请输入手机号码");
+            return;
+        }else{
+            if (mobile.trim().length() != 11){
+                ToastCommon.toastShortShow(getApplicationContext(), null, "请核对手机号码");
+                return;
+            }
+        }
+        if (TextUtils.isEmpty(gender)) {
+            ToastCommon.toastShortShow(getApplicationContext(), null, "请选择性别");
+            return;
+        }
+        String idStr = etIdNumber.getText().toString();
+        if (TextUtils.isEmpty(idStr)){
+            ToastCommon.toastShortShow(getApplicationContext(), null, "请输入身份证号码");
+            return;
+        }else{
+            if (mobile.trim().length() != 18){
+                ToastCommon.toastShortShow(getApplicationContext(), null, "请核对身份证号码");
+                return;
+            }
+        }
 
 
+
+
+        String remark = etRemark.getText().toString();
 
         UserInformationBiz biz = new UserInformationBiz(getApplicationContext(), handler);
 //        biz.userAuthentication();

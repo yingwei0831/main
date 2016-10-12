@@ -1,5 +1,6 @@
 package com.jhhy.cuiweitourism.ui;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -7,13 +8,16 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.biz.UserInformationBiz;
+import com.jhhy.cuiweitourism.moudle.User;
 import com.jhhy.cuiweitourism.picture.Bimp;
 import com.jhhy.cuiweitourism.popupwindows.PopupWindowImage;
 import com.jhhy.cuiweitourism.net.utils.Consts;
@@ -34,7 +38,7 @@ public class Tab4UserInfoActivity extends BaseActivity implements View.OnClickLi
     private String TAG = Tab4UserInfoActivity.class.getSimpleName();
 
     private TextView tvTitle;
-    private TextView tvTitleLeft;
+    private ImageView ivTitleLeft;
 
     private View layout;
 
@@ -53,6 +57,8 @@ public class Tab4UserInfoActivity extends BaseActivity implements View.OnClickLi
     private TextView tvRealName;
     private TextView tvID;
 
+    private String gender;
+
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -69,6 +75,13 @@ public class Tab4UserInfoActivity extends BaseActivity implements View.OnClickLi
                 case MESSAGE_REFRESH_IMAGE:
                     modifyUserIcon();
                     break;
+                case Consts.MESSAGE_MODIFY_USER_INFO: //修改用户性别
+                    ToastCommon.toastShortShow(getApplicationContext(), null, String.valueOf(msg.obj));
+                    if (msg.arg1 == 1){
+                        tvGender.setText(gender);
+                        MainActivity.user.setUserGender(gender);
+                    }
+                    break;
             }
         }
     };
@@ -82,6 +95,10 @@ public class Tab4UserInfoActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void setupView() {
+        tvTitle = (TextView) findViewById(R.id.tv_title_inner_travel);
+        tvTitle.setText(getString(R.string.fragment_mine_personal_data));
+        ivTitleLeft = (ImageView) findViewById(R.id.title_main_tv_left_location);
+
         layout = findViewById(R.id.activity_user_info);
         layoutUserIcon = (RelativeLayout) findViewById(R.id.fragment_userinfo_layout_change_icon);
         civUserIcon = (CircleImageView) findViewById(R.id.fragment_userinfo_civ_usericon);
@@ -120,6 +137,8 @@ public class Tab4UserInfoActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void addListener() {
+        ivTitleLeft.setOnClickListener(this);
+
         layoutUserIcon.setOnClickListener(this);
         layoutNickName.setOnClickListener(this);
         layoutGender.setOnClickListener(this);
@@ -130,6 +149,9 @@ public class Tab4UserInfoActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.title_main_tv_left_location:
+                finish();
+                break;
             case R.id.fragment_userinfo_layout_change_icon:
                 picName = String.valueOf(System.currentTimeMillis()) + ".jpg";
                 //清空
@@ -143,8 +165,8 @@ public class Tab4UserInfoActivity extends BaseActivity implements View.OnClickLi
 
                 startActivityForResult(intentNick, REQUEST_CHANGE_NICK_NAME);
                 break;
-            case R.id.fragment_userinfo_layout_change_gender:
-
+            case R.id.fragment_userinfo_layout_change_gender: //更改性别
+                modifyGender();
                 break;
             case R.id.fragment_userinfo_layout_phonenumber:
                 Intent intentTel = new Intent(getApplicationContext(), ModifyTelephoneNumberActivity.class);
@@ -152,6 +174,31 @@ public class Tab4UserInfoActivity extends BaseActivity implements View.OnClickLi
                 break;
 
         }
+    }
+
+    private void modifyGender() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(Tab4UserInfoActivity.this);
+        builder.setIcon(R.mipmap.ic_launcher);
+        builder.setTitle("选择性别");
+        // 指定下拉列表的显示数据
+        final String[] sexs = {"女", "男"};
+        // 设置一个下拉的列表选择项
+        builder.setItems(sexs, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                gender = sexs[which];
+                save(gender);
+            }
+        });
+        builder.show();
+    }
+
+    private void save(String gender) {
+//        {"head":{"code":"User_edit"},"field":{"mid":"1","nickname":"小蜗","sex":"男"}}
+        //请求前添加遮罩，在有回调的时候取消遮罩
+        LoadingIndicator.show(Tab4UserInfoActivity.this, getString(R.string.http_notice));
+        UserInformationBiz biz = new UserInformationBiz(getApplicationContext(), handler);
+        biz.modifyUserInfo(MainActivity.user.getUserId(), MainActivity.user.getUserNickName(), gender);
     }
 
     private int REQUEST_CHANGE_NICK_NAME = 1122;

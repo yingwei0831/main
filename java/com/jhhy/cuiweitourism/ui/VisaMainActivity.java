@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.ViewFlipper;
 
 import com.jhhy.cuiweitourism.R;
@@ -44,6 +45,8 @@ import java.util.List;
 public class VisaMainActivity extends BaseActivity implements XScrollView.IXScrollViewListener, GestureDetector.OnGestureListener, View.OnClickListener, View.OnTouchListener {
 
     private String TAG = VisaMainActivity.class.getSimpleName();
+    private TextView tvTitle;
+    private ImageView ivTitleLeft;
 
     private XScrollView mScrollView;
     private GestureDetector mGestureDetector; // MyScrollView的手势?
@@ -153,7 +156,7 @@ public class VisaMainActivity extends BaseActivity implements XScrollView.IXScro
         getInternetData();
         setupView();
         addListener();
-        handler.postDelayed(runnable, Consts.TIME_PERIOD);
+
     }
 
     private void getInternetData() {
@@ -170,7 +173,7 @@ public class VisaMainActivity extends BaseActivity implements XScrollView.IXScro
                     LogUtil.e(TAG,"foreEndGetAdvertisingPosition =" + array.toString());
                     refreshViewBanner(array);
                 }else{
-                    ToastCommon.toastShortShow(getApplicationContext(), null, "获取广告位数据失败");
+                    ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);
                 }
             }
 
@@ -187,6 +190,10 @@ public class VisaMainActivity extends BaseActivity implements XScrollView.IXScro
     }
 
     private void setupView(){
+        tvTitle = (TextView) findViewById(R.id.tv_title_inner_travel);
+        tvTitle.setText(getString(R.string.tab1_tablelayout_item8));
+        ivTitleLeft = (ImageView) findViewById(R.id.title_main_tv_left_location);
+
         mScrollView = (XScrollView) findViewById(R.id.scroll_view_visa);
         mScrollView.setPullRefreshEnable(false);
         mScrollView.setPullLoadEnable(false);
@@ -241,6 +248,8 @@ public class VisaMainActivity extends BaseActivity implements XScrollView.IXScro
     }
 
     private void addListener(){
+        ivTitleLeft.setOnClickListener(this);
+
         btnVisaViewMore.setOnClickListener(this);
 
         //热门签证国家
@@ -275,6 +284,9 @@ public class VisaMainActivity extends BaseActivity implements XScrollView.IXScro
     @Override
     public void onClick(View view) {
         switch (view.getId()){
+            case R.id.title_main_tv_left_location:
+                finish();
+                break;
             case R.id.btn_visa_view_all: //查看全部国家和地区
                 startActivity(new Intent(getApplicationContext(), SelectAllCountryAreaActivity.class));
                 break;
@@ -327,6 +339,7 @@ public class VisaMainActivity extends BaseActivity implements XScrollView.IXScro
         }
         addIndicator(infos.size());
         setIndicator(0);
+        handler.postDelayed(runnable, Consts.TIME_PERIOD);
     }
 
     private void addIndicator(int size){

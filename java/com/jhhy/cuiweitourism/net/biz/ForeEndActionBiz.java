@@ -4,11 +4,13 @@ import android.content.Context;
 import android.os.Handler;
 
 import com.jhhy.cuiweitourism.net.models.FetchModel.ForeEndAdvertise;
+import com.jhhy.cuiweitourism.net.models.FetchModel.ForeEndMoreCommentFetch;
 import com.jhhy.cuiweitourism.net.models.FetchModel.ForeEndSearch;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.ForceEndSearchInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.ForeEndAdvertisingPositionInfo;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.ForeEndMoreCommentInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.netcallback.FetchGenericCallback;
@@ -80,4 +82,30 @@ public class ForeEndActionBiz extends  BasicActionBiz {
 
         HttpUtils.executeXutils(ad, new FetchGenericCallback(fetchResponse));
     }
+
+
+    /**
+     *  更多评论信息
+     */
+
+
+    public void foreEndGetMoreCommentInfo(ForeEndMoreCommentFetch fetch , BizGenericCallback<ArrayList<ForeEndMoreCommentInfo>> callback){
+        fetch.code = "Publics_comment";
+        FetchGenericResponse<ArrayList<ForeEndMoreCommentInfo>> fetchResponse = new FetchGenericResponse<ArrayList<ForeEndMoreCommentInfo>>(callback) {
+            @Override
+            public void onCompletion(FetchResponseModel response) {
+                ArrayList<ForeEndMoreCommentInfo> array = parseJsonToObjectArray(response,ForeEndMoreCommentInfo.class);
+                GenericResponseModel<ArrayList<ForeEndMoreCommentInfo>> returnModel = new GenericResponseModel<ArrayList<ForeEndMoreCommentInfo>>(response.head,array);
+                this.bizCallback.onCompletion(returnModel);
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                this.bizCallback.onError(error);
+            }
+        };
+
+        HttpUtils.executeXutils(fetch,new FetchGenericCallback<ArrayList<ForeEndMoreCommentInfo>>(fetchResponse));
+    }
+
 }

@@ -118,25 +118,31 @@ public class InnerTravelDetailBiz {
                             }
                         }
                         detail.setTripDescribe(tripDetail);
-                        JSONObject commentObj = bodyObj.getJSONObject("comment");
-                        UserComment userComment = null;
-                        if (commentObj != null){
-                            userComment = new UserComment();
-                            userComment.setNickName(commentObj.getString(Consts.KEY_USER_NICK_NAME).trim());
-                            userComment.setUserIcon(commentObj.getString("face").trim());
-                            userComment.setCommentTime(commentObj.getString(Consts.ORDER_ADD_TIME).trim());
-                            userComment.setContent(commentObj.getString("content").trim());
-                            List<String> commentPicList = null;
-                            JSONArray comPicListAry = commentObj.getJSONArray("pllist");
-                            if (comPicListAry != null && comPicListAry.length() != 0){
-                                commentPicList = new ArrayList<>();
-                                for (int i = 0; i < comPicListAry.length(); i++){
-                                    commentPicList.add(comPicListAry.getString(i).trim());
+                        String comment = (String) bodyObj.get("comment");
+                        if (comment != null && !"null".equals(comment) && !"[]".equals(comment) && comment.trim().length() != 0){
+                            JSONObject commentObj = new JSONObject(comment);
+//                            JSONObject commentObj = bodyObj.getJSONObject("comment");
+                            UserComment userComment = null;
+                            if (commentObj != null){
+                                userComment = new UserComment();
+                                userComment.setNickName(commentObj.getString(Consts.KEY_USER_NICK_NAME).trim());
+                                userComment.setUserIcon(commentObj.getString("face").trim());
+                                userComment.setCommentTime(commentObj.getString(Consts.ORDER_ADD_TIME).trim());
+                                userComment.setContent(commentObj.getString("content").trim());
+                                List<String> commentPicList = null;
+                                JSONArray comPicListAry = commentObj.getJSONArray("pllist");
+                                if (comPicListAry != null && comPicListAry.length() != 0){
+                                    commentPicList = new ArrayList<>();
+                                    for (int i = 0; i < comPicListAry.length(); i++){
+                                        commentPicList.add(comPicListAry.getString(i).trim());
+                                    }
                                 }
+                                userComment.setPicList(commentPicList);
                             }
-                            userComment.setPicList(commentPicList);
+                            detail.setComment(userComment);
+                        } else {
+                            detail.setComment(null);
                         }
-                        detail.setComment(userComment);
                         detail.setTypeId(bodyObj.getString("typeid").trim());
                         detail.setCommentCount(bodyObj.getString("plcount").trim());
                     }

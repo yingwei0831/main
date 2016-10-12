@@ -113,6 +113,9 @@
     <string name="tab1_inner_travel_detail_argument">讨价还价</string>
     <string name="tab1_inner_travel_detail_reservation">立即预定</string>
 
+    <string name="tab1_inner_travel_detail_all_comment">全部点评</string>
+
+
     <!--个性定制-->
     <string name="personalized_custom_title">个性定制</string>
     <string name="personalized_custom_start">快来定制</string>

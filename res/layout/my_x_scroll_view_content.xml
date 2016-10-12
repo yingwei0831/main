@@ -179,7 +179,7 @@
 
 
     <com.jhhy.cuiweitourism.view.MyScrollView
-        android:visibility="gone"
+        android:visibility="visible"
         android:id="@+id/viewflipper_myScrollview2"
         android:layout_width="match_parent"
         android:layout_height="100dp"

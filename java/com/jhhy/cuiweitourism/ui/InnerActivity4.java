@@ -10,11 +10,16 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.ViewFlipper;
 
 import com.jhhy.cuiweitourism.ISlideCallback;
 import com.jhhy.cuiweitourism.R;
@@ -23,14 +28,25 @@ import com.jhhy.cuiweitourism.adapter.HotRecommendGridViewAdapter;
 import com.jhhy.cuiweitourism.adapter.OrdersPagerAdapter;
 import com.jhhy.cuiweitourism.biz.ExchangeBiz;
 import com.jhhy.cuiweitourism.biz.InnerTravelMainBiz;
+import com.jhhy.cuiweitourism.circleviewpager.ViewFactory;
 import com.jhhy.cuiweitourism.fragment.InnerTravelFollowFragment;
 import com.jhhy.cuiweitourism.fragment.InnerTravelFreeFragment;
+import com.jhhy.cuiweitourism.moudle.ADInfo;
 import com.jhhy.cuiweitourism.moudle.CityRecommend;
 import com.jhhy.cuiweitourism.moudle.HotDestination;
+import com.jhhy.cuiweitourism.net.biz.ForeEndActionBiz;
+import com.jhhy.cuiweitourism.net.models.FetchModel.ForeEndAdvertise;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.ForeEndAdvertisingPositionInfo;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
+import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.Consts;
+import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.jhhy.cuiweitourism.utils.Utils;
 import com.jhhy.cuiweitourism.view.MyGridView;
+import com.jhhy.cuiweitourism.view.MyScrollView;
+import com.just.sun.pricecalendar.ToastCommon;
 import com.markmao.pulltorefresh.widght.XScrollView;
 
 import java.util.ArrayList;
@@ -38,7 +54,7 @@ import java.util.List;
 
 import cn.bleu.widget.slidedetails.SlideDetailsLayout;
 
-public class InnerActivity4 extends AppCompatActivity  implements ISlideCallback, XScrollView.IXScrollViewListener, SlideDetailsLayout.IConfigCurrentPagerScrollSlide {
+public class InnerActivity4 extends AppCompatActivity  implements ISlideCallback, XScrollView.IXScrollViewListener, SlideDetailsLayout.IConfigCurrentPagerScrollSlide, View.OnTouchListener, GestureDetector.OnGestureListener {
 
     private String TAG = InnerActivity4.class.getSimpleName();
     private ImageView ivTitleLeft;
@@ -50,7 +66,25 @@ public class InnerActivity4 extends AppCompatActivity  implements ISlideCallback
     private int type; // 1：国内游，2：出境游
 
     private XScrollView xScrollView;
-    private View content;
+    private GestureDetector mGestureDetector; // MyScrollView的手势?
+
+    //顶部图片展示
+    private List<ADInfo> infos = new ArrayList<ADInfo>();
+    private ViewFlipper flipper;
+    private LinearLayout layoutPoint;
+    private List<String> imageUrls = new ArrayList<>();
+    private ImageView[] indicators; // 轮播图片数组
+    private int currentPosition = 0; // 轮播当前位置
+
+    private static final int FLING_MIN_DISTANCE = 20;
+    private static final int FLING_MIN_VELOCITY = 0;
+
+    private final int WHEEL = 100; // 转动
+    private final int WHEEL_WAIT = 101; // 等待
+    private boolean isScrolling = false; // 滚动框是否滚动着
+    private long releaseTime = 0; // 手指松开、页面不滚动时间，防止手机松开后短时间进行切换
+
+    private View content; //XScrollView内容
 
     private MyGridView gvHotDestination; //热门目的地
     private List<HotDestination> listHotDestination = new ArrayList<>();
@@ -100,6 +134,40 @@ public class InnerActivity4 extends AppCompatActivity  implements ISlideCallback
 
                     }
                     break;
+                case WHEEL:
+                    if(flipper.getChildCount() != 0){
+                        if(!isScrolling){
+                            //向前滑向后滑
+                            showNextView();
+                        }
+                    }
+                    releaseTime = System.currentTimeMillis();
+                    handler.removeCallbacks(runnable);
+                    handler.postDelayed(runnable, Consts.TIME_PERIOD);
+                    break;
+                case WHEEL_WAIT:
+                    if(flipper.getChildCount() != 0){
+                        handler.removeCallbacks(runnable);
+                        handler.postDelayed(runnable, Consts.TIME_PERIOD);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+
+    private final Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            if (InnerActivity4.this != null && !InnerActivity4.this.isFinishing()) {
+                long now = System.currentTimeMillis();
+                // 检测上一次滑动时间与本次之间是否有触击(手滑动)操作，有的话等待下次轮播
+                if (now - releaseTime > Consts.TIME_PERIOD - 500) {
+                    handler.sendEmptyMessage(WHEEL);
+                } else {
+                    handler.sendEmptyMessage(WHEEL_WAIT);
+                }
             }
         }
     };
@@ -127,9 +195,40 @@ public class InnerActivity4 extends AppCompatActivity  implements ISlideCallback
 
         mSlideDetailsLayout = (SlideDetailsLayout) findViewById(R.id.slidedetails);
         mSlideDetailsLayout.setConfigCurrentPagerScroll(this);
+        getInternetData();
         setupView();
         addListener();
         getData();
+    }
+
+    private void getInternetData() {
+        imageUrls.add("drawable://" + R.drawable.ic_empty);
+        //广告位
+        ForeEndActionBiz fbiz = new ForeEndActionBiz();
+//        mark:index（首页）、line_index(国内游、出境游)、header（分类上方）、visa_index（签证）、customize_index(个性定制)
+        ForeEndAdvertise ad = new ForeEndAdvertise("line_index");
+        fbiz.foreEndGetAdvertisingPosition(ad, new BizGenericCallback<ArrayList<ForeEndAdvertisingPositionInfo>>() {
+            @Override
+            public void onCompletion(GenericResponseModel<ArrayList<ForeEndAdvertisingPositionInfo>> model) {
+                if ("0000".equals(model.headModel.res_code)) {
+                    ArrayList<ForeEndAdvertisingPositionInfo> array = model.body;
+                    LogUtil.e(TAG,"foreEndGetAdvertisingPosition =" + array.toString());
+                    refreshViewBanner(array);
+                }else{
+                    ToastCommon.toastShortShow(getApplicationContext(), null, "获取广告位数据失败");
+                }
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                if (error.localReason != null){
+                    ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
+                }else{
+                    ToastCommon.toastShortShow(getApplicationContext(), null, "获取广告位数据出错");
+                }
+                LogUtil.e(TAG, "foreEndGetAdvertisingPosition: " + error.toString());
+            }
+        });
     }
 
     private void addListener() {
@@ -204,6 +303,21 @@ public class InnerActivity4 extends AppCompatActivity  implements ISlideCallback
 
             hotRecomAdapter = new HotRecommendGridViewAdapter(getApplicationContext(), listHotRecommend);
             gvHotRecommend.setAdapter(hotRecomAdapter);
+
+            mGestureDetector = new GestureDetector(getApplicationContext(), this);
+
+            flipper = (ViewFlipper)content.findViewById(R.id.viewflipper);
+            layoutPoint =(LinearLayout)content.findViewById(R.id.layout_indicator_point);
+
+            addImageView(imageUrls.size());
+            addIndicator(imageUrls.size());
+            setIndicator(currentPosition);
+
+            flipper.setOnTouchListener(this);
+
+            dianSelect(currentPosition);
+            MyScrollView myScrollView = (MyScrollView)content.findViewById(R.id.viewflipper_myScrollview);
+            myScrollView.setGestureDetector(mGestureDetector);
         }
         xScrollView.setView(content);
 
@@ -262,6 +376,81 @@ public class InnerActivity4 extends AppCompatActivity  implements ISlideCallback
         return 0;
     }
 
+    private void refreshViewBanner(ArrayList<ForeEndAdvertisingPositionInfo> array) {
+        ArrayList<ADInfo> infosNew = new ArrayList<>();
+//        for (int i = 0; i < array.size(); i++){
+        ForeEndAdvertisingPositionInfo item = array.get(0);
+        ArrayList<String> picList = item.getT();
+        ArrayList<String> linkList = item.getL();
+        for (int j = 0; j < picList.size(); j++){
+            ADInfo ad = new ADInfo();
+            ad.setUrl(picList.get(j));
+            ad.setContent(linkList.get(j));
+            infosNew.add(ad);
+        }
+//        }
+        updateBanner(infosNew);
+    }
+
+    private void updateBanner(ArrayList<ADInfo> listsBanner) {
+        infos = listsBanner;
+        flipper.removeAllViews();
+        for (int i = 0; i < infos.size(); i++) {
+            flipper.addView(ViewFactory.getImageView(getApplicationContext(), infos.get(i).getUrl()));
+        }
+        addIndicator(infos.size());
+        setIndicator(0);
+        handler.postDelayed(runnable, Consts.TIME_PERIOD);
+    }
+
+    private void addIndicator(int size){
+//        if(indicators == null) {
+        indicators = new ImageView[size];
+//        }
+        layoutPoint.removeAllViews();
+        for (int i = 0; i < size; i++) {
+            View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.view_cycle_viewpager_indicator, null);
+            indicators[i] = (ImageView) view.findViewById(R.id.image_indicator);
+            layoutPoint.addView(view);
+        }
+
+    }
+
+    private void setIndicator(int current){
+        for(int i = 0; i < indicators.length; i++) {
+            if(i == current) {
+                indicators[current].setImageResource(R.drawable.icon_point_pre);
+            }else{
+                indicators[i].setImageResource(R.drawable.icon_point);
+            }
+        }
+    }
+
+    private void addImageView(int length) {
+        for(int i=0; i < length; i++){
+            ADInfo info = new ADInfo();
+            info.setUrl(imageUrls.get(i));
+            info.setContent("图片-->" + i);
+            infos.add(info);
+            flipper.addView(ViewFactory.getImageView(getApplicationContext(), infos.get(i).getUrl()));
+        }
+    }
+
+    /**
+     * 对应被选中的点的图片
+     * @param id
+     */
+    private void dianSelect(int id) {
+        indicators[id].setImageResource(R.drawable.icon_point_pre);
+    }
+    /**
+     * 对应未被选中的点的图片
+     * @param id
+     */
+    private void dianUnselect(int id){
+        indicators[id].setImageResource(R.drawable.icon_point);
+    }
+
     public static void actionStart(Context context, Bundle bundle){
         Intent intent = new Intent(context, InnerActivity4.class);
         if (bundle != null){
@@ -270,4 +459,92 @@ public class InnerActivity4 extends AppCompatActivity  implements ISlideCallback
         context.startActivity(intent);
     }
 
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        return mGestureDetector.onTouchEvent(motionEvent);
+    }
+
+
+    @Override
+    public boolean onDown(MotionEvent motionEvent) {
+        return false;
+    }
+
+    @Override
+    public void onShowPress(MotionEvent motionEvent) {
+
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent motionEvent) {
+        return false;
+    }
+
+    @Override
+    public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
+        return false;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent motionEvent) {
+
+    }
+
+    @Override
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        if(e1.getX() - e2.getX() > FLING_MIN_DISTANCE &&
+                Math.abs(velocityX) > FLING_MIN_VELOCITY){
+//            Log.i(TAG, "==============开始向左滑动了================");
+            showNextView();
+            releaseTime = System.currentTimeMillis();
+            handler.removeCallbacks(runnable);
+            handler.postDelayed(runnable, Consts.TIME_PERIOD);
+            return true;
+        }else if(e2.getX() - e1.getX() > FLING_MIN_DISTANCE &&
+                Math.abs(velocityX) > FLING_MIN_VELOCITY){
+//            Log.i(TAG, "==============开始向右滑动了================");
+            showPreviousView();
+            releaseTime = System.currentTimeMillis();
+            handler.removeCallbacks(runnable);
+            handler.postDelayed(runnable, Consts.TIME_PERIOD);
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    private void showNextView() {
+//        Log.i(TAG, "========showNextView=======向左滑动=======");
+        flipper.setInAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.push_left_in));
+        flipper.setOutAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.push_left_out));
+        flipper.showNext();
+        currentPosition++;
+        if(currentPosition == flipper.getChildCount()){
+            dianUnselect(currentPosition - 1);
+            currentPosition = 0;
+            dianSelect(currentPosition);
+        }else{
+            dianUnselect(currentPosition - 1);
+            dianSelect(currentPosition);
+        }
+//		Log.i(TAG, "==============第"+currentPage+"页==========");
+    }
+
+    private void showPreviousView() {
+//        Log.i(TAG, "========showPreviousView=======向右滑动=======");
+        dianSelect(currentPosition);
+        flipper.setInAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.push_right_in));
+        flipper.setOutAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.push_right_out));
+        flipper.showPrevious();
+        currentPosition--;
+        if(currentPosition == -1){
+            dianUnselect(currentPosition + 1);
+            currentPosition = flipper.getChildCount() - 1;
+            dianSelect(currentPosition);
+        }else{
+            dianUnselect(currentPosition + 1);
+            dianSelect(currentPosition);
+        }
+//		Log.i(TAG, "==============第"+currentPage+"页==========");
+    }
 }

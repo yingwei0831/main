@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    android:padding="16dp"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.jhhy.cuiweitourism.view.CircleImageView
+            android:id="@+id/civ_item_comment_user_portrait"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="16dp"
+            android:src="@mipmap/travel_icon" />
+
+        <TextView
+            android:id="@+id/tv_item_comment_user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/civ_item_comment_user_portrait"
+            android:layout_toRightOf="@+id/civ_item_comment_user_portrait"
+            android:text="name"
+            android:textSize="16sp"
+            android:textColor="@android:color/black"/>
+
+        <TextView
+            android:id="@+id/tv_item_comment_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/civ_item_comment_user_portrait"
+            android:layout_toRightOf="@+id/civ_item_comment_user_portrait"
+            android:gravity="bottom"
+            android:text="2016-08-19" />
+            <!--android:layout_below="@+id/tv_item_comment_user_name"-->
+
+    </RelativeLayout>
+
+    <TextView
+        android:textColor="@android:color/black"
+        android:layout_marginTop="10dp"
+        android:id="@+id/tv_item_comment_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:text="@string/tab1_recommend_for_you_title"
+        />
+
+    <com.jhhy.cuiweitourism.view.MyGridView
+        android:id="@+id/gv_images_pic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:horizontalSpacing="4dp"
+        android:numColumns="4"
+        />
+</LinearLayout>

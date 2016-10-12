@@ -7,32 +7,52 @@ import java.util.ArrayList;
  */
 public class PlanTicketAboardInfo {
 
- static  public class P {
-     public ArrayList<String> PEK;
-     public ArrayList<String> BKK;
-     public ArrayList<String> KMG;
-     public ArrayList<String> LZO;
-     public ArrayList<String> NKG;
-     public ArrayList<String> PVG;
-     public ArrayList<String> SHA;
-     public ArrayList<String> LYA;
-     public ArrayList<String> HKT;
-     public ArrayList<String> HGH;
-     public ArrayList<String> XMN;
-     public ArrayList<String> FOC;
-     public ArrayList<String> CAN;
-     public ArrayList<String> SZX;
-     public ArrayList<String> MFM;
-     public ArrayList<String> HKG;
-     public ArrayList<String> ICN;
-     public ArrayList<String> YIC;
-     public ArrayList<String> GMP;
-     public ArrayList<String> TPE;
-     public ArrayList<String> SWA;
-     public ArrayList<String> KUL;
-     public ArrayList<String> SIN;
- }
-    public P P;
+    public static class AirportInfo{
+        public String airportCode;      //        "机场三字码"
+        public String abbreviation;     //        "机场简称",
+        public String fullName;         //        "机场全称",
+        public String city;             //        "机场所在城市",
+        public String cityCode;         //        "城市三字码"
+
+    }
+    public ArrayList<AirportInfo> P; //机场信息列表
+
+
+    public static class AirlineCompanyInfo{
+        public String airlineCompanyCode;//航空公司二字码"" +
+        public String CompanyName;//""航空公司名称","
+        public String shortName;//""航空公司简称","
+        public String isOnlineCheckin;//""是否有网上值机"
+
+    }
+
+    public ArrayList<AirlineCompanyInfo> A; //航空公司列表信息
+
+
+    public static class AircraftTypeInfo{
+        public String typeCode;//    "机型代码"
+        public String typeName;//    :"机型名称"
+        public String typeNum; //    ,"型号",
+        public String airframe;//    "机体",
+        public String minNum;  //    最少人数,
+        public String maxNum;  //    最多人数
+
+    }
+
+    public ArrayList<AircraftTypeInfo> J; //机型列表
+
+
+    public static class AircraftCabinInfo{
+        public String levelCode;//"舱位级别代码"
+        public String levelDescription;//"舱位级别描述"
+    }
+
+    public ArrayList<AircraftCabinInfo> R;//舱位级别列表
+
+
+
+
+
 /***********************************************
  "P": {
 

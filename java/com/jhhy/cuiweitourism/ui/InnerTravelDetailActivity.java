@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.ViewFlipper;
 
 import com.jhhy.cuiweitourism.R;
+import com.jhhy.cuiweitourism.adapter.ImageGridViewAdapter;
 import com.jhhy.cuiweitourism.biz.InnerTravelDetailBiz;
 import com.jhhy.cuiweitourism.circleviewpager.ViewFactory;
 import com.jhhy.cuiweitourism.moudle.ADInfo;
@@ -30,6 +31,7 @@ import com.jhhy.cuiweitourism.moudle.TravelDetail;
 import com.jhhy.cuiweitourism.moudle.TravelDetailDay;
 import com.jhhy.cuiweitourism.moudle.UserComment;
 import com.jhhy.cuiweitourism.net.utils.Consts;
+import com.jhhy.cuiweitourism.picture.ImageGridAdapter;
 import com.jhhy.cuiweitourism.utils.ImageLoaderUtil;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.utils.MyFileUtils;
@@ -76,6 +78,7 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
     private View viewDescribe;
     private View viewNotice;
 
+    private LinearLayout layoutComment; //评论大布局
     private WebView mWebViewProduct; //商品详情
     private TextView tvPriceInclude; //费用说明——>费用包含
     private TextView tvPriceNotInclude; //费用说明——>费用不包含
@@ -89,8 +92,7 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
     private TextView tvNickName;
     private TextView tvAddTime;
     private TextView tvCommentContent;
-    private MyGridView gvImages;
-
+    private MyGridView gvImages; //评论中的图片
 
     private String[] titles = new String[]{"商品详情", "费用说明", "行程描述", "预订须知"};
 
@@ -197,6 +199,7 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
 
             tvTitle = (TextView) content.findViewById(R.id.tv_travel_detail_title);
             tvPrice = (TextView) content.findViewById(R.id.tv_travel_price);
+            layoutComment = (LinearLayout) content.findViewById(R.id.layout_comment);
             tvCommentCount = (TextView) content.findViewById(R.id.tv_travel_comment_count);
             civIcon = (CircleImageView) content.findViewById(R.id.inner_travel_detail_comment_user_icon);
             tvNickName = (TextView) content.findViewById(R.id.inner_travel_detail_comment_username);
@@ -328,10 +331,14 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
         tvCommentCount.setText("累计评价（" + count + "）");
         //TODO comment, 头像
         UserComment comment = detail.getComment();
-        setIconData(comment.getUserIcon());
-        tvNickName.setText(comment.getNickName());
-        tvAddTime.setText(comment.getCommentTime());
-        tvCommentContent.setText(comment.getContent());
+        if (comment != null) {
+            setIconData(comment.getUserIcon());
+            tvNickName.setText(comment.getNickName());
+            tvAddTime.setText(comment.getCommentTime());
+            tvCommentContent.setText(comment.getContent());
+        } else {
+            layoutComment.setVisibility(View.GONE);
+        }
         //商品详情
         String tripDetail = detail.getLineDetails();
         mWebViewProduct.loadDataWithBaseURL(null, start + tripDetail + end, "text/html", "utf-8", null);
@@ -460,7 +467,11 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
                 break;
             case R.id.tv_travel_comment_count: //累计评价
                 //TODO 进入评价详情页面
-
+                Intent intentComment = new Intent(getApplicationContext(), CommentAllActivity.class);
+                Bundle bundleComment = new Bundle();
+                bundleComment.putString("articleId", detail.getId());
+                intentComment.putExtras(bundleComment);
+                startActivity(intentComment);
                 break;
             case R.id.tv_inner_travel_collection:
 

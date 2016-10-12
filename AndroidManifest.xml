@@ -10,6 +10,17 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
+    <!-- ShareSDK -->
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+
     <!-- begin 环信 -->
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -189,12 +200,11 @@
             android:name=".ui.PersonalizedCustomStartActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".ui.PersonalizedCustomDetailActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/ActionBarTheme"
-            />
+            android:theme="@style/ActionBarTheme" />
         <activity
             android:name=".ui.ContactPreviewActivity"
             android:screenOrientation="portrait"
@@ -222,7 +232,8 @@
         <activity
             android:name=".ui.Tab4AccountSecurityActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:windowSoftInputMode="adjustPan|stateHidden"/>
         <activity
             android:name=".ui.ModifyPasswordActivity"
             android:screenOrientation="portrait"
@@ -234,7 +245,9 @@
         <activity
             android:name=".ui.Tab4AccountCertificationActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:windowSoftInputMode="adjustPan|stateHidden"/>
+
         <activity
             android:name=".ui.Tab4MyCollectionActivity"
             android:screenOrientation="portrait"
@@ -245,79 +258,96 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.Tab4MyReleaseActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.Tab4MyCommentActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/ActionBarTheme"
-            />
-        <activity android:name=".ui.Tab4MyMessageActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".ui.Tab4MyCommentActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/ActionBarTheme"
-            />
-        <activity android:name=".ui.HotActivityListActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.HotActivityDetailActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:screenOrientation="portrait"/>
+            android:theme="@style/ActionBarTheme" />
+        <activity
+            android:name=".ui.Tab4MyMessageActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/ActionBarTheme" />
+        <activity
+            android:name=".ui.HotActivityListActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".ui.HotActivityDetailActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.SearchRouteActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|stateHidden"/>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".ui.SearchShopActivity"
-            android:theme="@style/ActionBarTheme"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/ActionBarTheme" />
         <activity
             android:name=".ui.VisaMainActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:launchMode="singleTop"/>
-
-        <activity android:name=".ui.InnerTravelDetailActivity3"
-            android:screenOrientation="portrait"/>
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".ui.InnerTravelDetailActivity3"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.CarRentActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.CarRentInputAddressActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.CarRentSelectTypeActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.CarRentOrderActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.CarRentSuccessActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.CarRentSmallActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".dialog.CarRentTimeSelectActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/SampleTheme.Light"
-            />
-        <activity android:name=".ui.easemob.EasemobLoginActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.easemob.ChatActivity"
-            android:screenOrientation="portrait"/>
+            android:theme="@style/SampleTheme.Light" />
+        <activity
+            android:name=".ui.easemob.EasemobLoginActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.easemob.ChatActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.easemob.ContextMenuActivity"
             android:screenOrientation="portrait"
             android:theme="@style/EMyDialogStyle" />
-        <activity android:name=".ui.LineFindActivity"  android:screenOrientation="portrait" />
-        <activity android:name=".picture.TestPicActivity"  android:screenOrientation="portrait"/>
-        <activity android:name=".picture.BitmapCacheActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".picture.ImageGridActivity"  android:screenOrientation="portrait"/>
-        <activity android:name=".picture.PhotoActivity"  android:screenOrientation="portrait"/>
-        <activity android:name=".ui.InnerTravelMainActivity2"  android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.LineFindActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".picture.TestPicActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".picture.BitmapCacheActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".picture.ImageGridActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".picture.PhotoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.InnerTravelMainActivity2"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.InnerActivity4"
             android:screenOrientation="portrait"
@@ -328,17 +358,21 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.VisaListActivity"
-            android:theme="@style/ActionBarTheme"  android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/ActionBarTheme" />
         <activity
             android:name=".ui.SelectAllCountryAreaActivity"
-            android:theme="@style/ActionBarTheme"  android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/ActionBarTheme" />
         <activity
             android:name=".ui.VisaItemDetailActivity"
-            android:theme="@style/ActionBarTheme"  android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/ActionBarTheme" />
         <activity
             android:name=".ui.VisaNeedMaterialActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/ActionBarTheme"
-            android:windowSoftInputMode="adjustResize|stateHidden"  android:screenOrientation="portrait"/>
+            android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".dialog.SendMaterialActivity"
             android:launchMode="singleTop"
@@ -346,17 +380,77 @@
             android:theme="@style/Theme.AppCompat.Dialog" />
         <activity
             android:name=".ui.VisaPriceCalendarReserveActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"  android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.VisaOrderActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/ActionBarTheme"
-            android:windowSoftInputMode="adjustNothing|stateHidden"  android:screenOrientation="portrait"/>
+            android:windowSoftInputMode="adjustNothing|stateHidden" />
         <activity
             android:name=".ui.VisaCitySelectionActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"  android:screenOrientation="portrait"/>
-        <activity android:name=".ui.LineListActivity"  android:screenOrientation="portrait"/>
-        <activity android:name=".ui.LineDetailActivity"  android:screenOrientation="portrait"/>
-        <activity android:name=".ui.CarRentSelectAddressActivity"  android:screenOrientation="portrait" android:theme="@style/Theme.AppCompat.Light.NoActionBar" android:windowSoftInputMode="stateHidden|adjustPan"></activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".ui.LineListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.LineDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.CarRentSelectAddressActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+        <activity android:name=".ui.CommentAllActivity" android:theme="@style/ActionBarTheme"/>
+
+        <!--ShareSDK 2、注意： tencent后面的appid要保持和您配置的QQ的appid一致 -->
+        <activity
+            android:name="com.mob.tools.MobUIShell"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize" >
+
+            <intent-filter>
+                <data android:scheme="tencent100371282" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+            <!-- 调用新浪原生SDK，需要注册的回调activity -->
+            <intent-filter>
+                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <!-- ShareSDK 3、如果您集成了微信，易信，支付宝还需要添加下面回调的activity处理 -->
+        <!--微信分享回调 -->
+        <activity
+            android:name=".wxapi.WXEntryActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+
+        <!--&lt;!&ndash;易信分享回调 &ndash;&gt;-->
+        <!--<activity-->
+            <!--android:name=".yxapi.YXEntryActivity"-->
+            <!--android:theme="@android:style/Theme.Translucent.NoTitleBar"-->
+            <!--android:configChanges="keyboardHidden|orientation|screenSize"-->
+            <!--android:exported="true"-->
+            <!--android:screenOrientation="portrait" />-->
+
+        <!-- 支付宝分享回调 -->
+        <!--<activity-->
+            <!--android:name=".apshare.ShareEntryActivity"-->
+            <!--android:theme="@android:style/Theme.Translucent.NoTitleBar"-->
+            <!--android:configChanges="keyboardHidden|orientation|screenSize"-->
+            <!--android:exported="true"/>-->
+
+
     </application>
 
 </manifest>

@@ -37,7 +37,6 @@ public class InnerTravelMainActivity extends BaseActivity implements XScrollView
     private HotRecommendGridViewAdapter gvHotRecomAdapter;
     private List<CityRecommend> citiesHotRecom;
 
-
     private List<String> titles = new ArrayList<>();
 
 

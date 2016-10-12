@@ -62,8 +62,8 @@ public class UserCommentListAdapter extends MyBaseAdapter {
         private CircleImageView civIconOther; //谁回复我的——>谁发的
         private TextView tvNameOther;
         private TextView tvCommentTime;
-        private ImageView ivTitleImage; //谁发的什么内容
         private TextView tvTitle; //谁发的什么内容
+        private ImageView ivTitleImage; //谁发的什么内容
         private TextView tvMyContent; //我评论的什么内容
 //        private TextView tvCommentTimeTop; //点评顶部时间
     }

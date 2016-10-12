@@ -26,9 +26,16 @@ import com.jhhy.cuiweitourism.ArgumentOnClick;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.Tab1GridViewAdapter;
 import com.jhhy.cuiweitourism.biz.Tab1RecommendBiz;
+import com.jhhy.cuiweitourism.circleviewpager.ViewFactory;
 import com.jhhy.cuiweitourism.moudle.ADInfo;
 import com.jhhy.cuiweitourism.moudle.PhoneBean;
 import com.jhhy.cuiweitourism.moudle.Travel;
+import com.jhhy.cuiweitourism.net.biz.ForeEndActionBiz;
+import com.jhhy.cuiweitourism.net.models.FetchModel.ForeEndAdvertise;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.ForeEndAdvertisingPositionInfo;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
+import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.ui.CarRentSelectTypeActivity;
 import com.jhhy.cuiweitourism.ui.CitySelectionActivity;
 import com.jhhy.cuiweitourism.ui.HotActivityListActivity;
@@ -45,6 +52,8 @@ import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.jhhy.cuiweitourism.utils.Utils;
 import com.jhhy.cuiweitourism.view.MyGridView;
+import com.jhhy.cuiweitourism.view.MyScrollView;
+import com.just.sun.pricecalendar.ToastCommon;
 import com.markmao.pulltorefresh.widght.XScrollView;
 
 import java.util.ArrayList;
@@ -55,11 +64,12 @@ import java.util.List;
  * Use the {@link Tab1Fragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewListener, GestureDetector.OnGestureListener, View.OnClickListener, ArgumentOnClick, AdapterView.OnItemClickListener {
+public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewListener, GestureDetector.OnGestureListener,
+        View.OnClickListener, ArgumentOnClick, AdapterView.OnItemClickListener, View.OnTouchListener {
 
     private static final String TAG = Tab1Fragment.class.getSimpleName();
 
-    //  轮播图片
+    //  轮播图片 顶部
     private List<ADInfo> infos = new ArrayList<ADInfo>();
 
     private ViewFlipper flipper;
@@ -67,15 +77,34 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
 
     private ImageView[] indicators; // 轮播图片数组
     private int currentPosition = 0; // 轮播当前位置
+    private List<String> imageUrls = new ArrayList<>();
 
-    private static final int FLING_MIN_DISTANCE = 100;
+    private static final int FLING_MIN_DISTANCE = 20;
     private static final int FLING_MIN_VELOCITY = 0;
     private GestureDetector mGestureDetector; // MyScrollView的手势
     private long releaseTime = 0; // 手指松开、页面不滚动时间，防止手机松开后短时间进行切换
     private boolean isScrolling = false; // 滚动框是否滚动着
-    private int time = 4000; // 默认轮播时间
+//    private int time = 4000; // 默认轮播时间
     private final int WHEEL = 100; // 转动
     private final int WHEEL_WAIT = 101; // 等待
+
+    //  轮播图片 底部
+    private List<ADInfo> infosBottom = new ArrayList<ADInfo>();
+
+    private ViewFlipper flipperBottom;
+    private LinearLayout layoutPointBottom;
+
+    private ImageView[] indicatorsBottom; // 轮播图片数组
+    private int currentPositionBottom = 0; // 轮播当前位置
+    private List<String> imageUrlsBottom = new ArrayList<>();
+
+    private GestureDetector mGestureDetectorBottom; // MyScrollView的手势
+    private long releaseTimeBottom = 0; // 手指松开、页面不滚动时间，防止手机松开后短时间进行切换
+    private boolean isScrollingBottom = false; // 滚动框是否滚动着
+    private final int WHEEL_BOTTOM = 1010; // 转动
+    private final int WHEEL_WAIT_BOTTOM = 1011; // 等待
+
+    private int typeFlipper = 0; //区分滑动的是哪个Flipper：1，顶部flipper；2，底部flipper
 
     private TextView tvLocationCity; //显示当前选择的城市
     private PhoneBean selectCity; //选择的城市
@@ -108,7 +137,7 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            LogUtil.i(TAG, "-------------------handleMessage---------------------");
+            LogUtil.i(TAG, "-------------------handleMessage--------------------- what = " + msg.what);
             switch (msg.what){
                 case Consts.MESSAGE_TAB1_RECOMMEND:
                     if(msg.arg1 == 0){
@@ -166,6 +195,73 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
                         }
                     }
                     break;
+
+                case WHEEL:
+                    if(flipper.getChildCount() != 0){
+                        if(!isScrolling){
+                            //向前滑向后滑
+                            showNextView(1);
+                        }
+                    }
+                    releaseTime = System.currentTimeMillis();
+                    handler.removeCallbacks(runnable);
+                    handler.postDelayed(runnable, Consts.TIME_PERIOD);
+                    break;
+                case WHEEL_WAIT:
+                    if(flipper.getChildCount() != 0){
+                        handler.removeCallbacks(runnable);
+                        handler.postDelayed(runnable, Consts.TIME_PERIOD);
+                    }
+                    break;
+                case WHEEL_BOTTOM:
+                    if(flipperBottom.getChildCount() != 0){
+                        if(!isScrollingBottom){
+                            //向前滑向后滑
+                            showNextView(2);
+                        }
+                    }
+                    releaseTimeBottom = System.currentTimeMillis();
+                    handler.removeCallbacks(runnableBottom);
+                    handler.postDelayed(runnableBottom, Consts.TIME_PERIOD);
+                    break;
+                case WHEEL_WAIT_BOTTOM:
+                    if(flipperBottom.getChildCount() != 0){
+                        handler.removeCallbacks(runnableBottom);
+                        handler.postDelayed(runnableBottom, Consts.TIME_PERIOD);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+
+    private final Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            if (getActivity() != null && !getActivity().isFinishing()) {
+                long now = System.currentTimeMillis();
+                // 检测上一次滑动时间与本次之间是否有触击(手滑动)操作，有的话等待下次轮播
+                if (now - releaseTime > Consts.TIME_PERIOD - 500) {
+                    handler.sendEmptyMessage(WHEEL);
+                } else {
+                    handler.sendEmptyMessage(WHEEL_WAIT);
+                }
+            }
+        }
+    };
+
+    private final Runnable runnableBottom = new Runnable() {
+        @Override
+        public void run() {
+            if (getActivity() != null && !getActivity().isFinishing()) {
+                long now = System.currentTimeMillis();
+                // 检测上一次滑动时间与本次之间是否有触击(手滑动)操作，有的话等待下次轮播
+                if (now - releaseTimeBottom > Consts.TIME_PERIOD - 500) {
+                    handler.sendEmptyMessage(WHEEL_BOTTOM);
+                } else {
+                    handler.sendEmptyMessage(WHEEL_WAIT_BOTTOM);
+                }
             }
         }
     };
@@ -205,14 +301,44 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         LogUtil.i(TAG, "======onCreateView======");
-
         View view = inflater.inflate(R.layout.my_x_scroll_view, container, false);
+        getBannerData();
         setupView(view);
         addListener();
         getData(0);
         return view;
+    }
+
+    private void getBannerData() {
+        imageUrls.add("drawable://" + R.mipmap.travel_icon);
+        imageUrlsBottom.add("drawable://" + R.mipmap.travel_icon);
+        //广告位
+        ForeEndActionBiz fbiz = new ForeEndActionBiz();
+//        mark:index（首页）、line_index(国内游、出境游)、header（分类上方）、visa_index（签证）、customize_index(个性定制)
+        ForeEndAdvertise ad = new ForeEndAdvertise("index");
+        fbiz.foreEndGetAdvertisingPosition(ad, new BizGenericCallback<ArrayList<ForeEndAdvertisingPositionInfo>>() {
+            @Override
+            public void onCompletion(GenericResponseModel<ArrayList<ForeEndAdvertisingPositionInfo>> model) {
+                if ("0000".equals(model.headModel.res_code)) {
+                    ArrayList<ForeEndAdvertisingPositionInfo> array = model.body;
+                    LogUtil.e(TAG,"foreEndGetAdvertisingPosition =" + array.toString());
+                    refreshViewBanner(array);
+                }else{
+                    ToastCommon.toastShortShow(getContext(), null, "获取广告位数据失败");
+                }
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                if (error.localReason != null){
+                    ToastCommon.toastShortShow(getContext(), null, error.localReason);
+                }else{
+                    ToastCommon.toastShortShow(getContext(), null, "获取广告位数据出错");
+                }
+                LogUtil.e(TAG, "foreEndGetAdvertisingPosition: " + error.toString());
+            }
+        });
     }
 
     private void getData(int type) {
@@ -262,6 +388,7 @@ private LinearLayout    layoutTabRecommendForYou2; //顶部GridView的悬浮导�
     private TextView tvSearchrShop; //找商铺
 
     private void setupView(View view) {
+
 layoutTitle = (RelativeLayout) view.findViewById(R.id.layout_title_tab1);
 layoutTabRecommendForYou2 = (LinearLayout) view.findViewById(R.id.layout_tab_recommend_for_you_2);
         tvIndicatorAllTop       = (TextView) view.findViewById(R.id.tv_tab1_indicator_all_top);
@@ -308,6 +435,33 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
             gridViewRecommend.setAdapter(adapter);
 
             mGestureDetector = new GestureDetector(getActivity(), this);
+            //顶部banner页
+            flipper = (ViewFlipper)content.findViewById(R.id.viewflipper);
+            layoutPoint =(LinearLayout)content.findViewById(R.id.layout_indicator_point);
+
+            addImageView(imageUrls.size());
+            addIndicator(1, imageUrls.size());
+            setIndicator(1, currentPosition);
+
+            flipper.setOnTouchListener(this);
+
+            dianSelect(1, currentPosition);
+            MyScrollView myScrollView = (MyScrollView)content.findViewById(R.id.viewflipper_myScrollview);
+            myScrollView.setGestureDetector(mGestureDetector);
+
+            //底部banner页
+            flipperBottom = (ViewFlipper)content.findViewById(R.id.viewflipper2);
+            layoutPointBottom =(LinearLayout)content.findViewById(R.id.layout_indicator_point2);
+
+            addImageView(imageUrlsBottom.size());
+            addIndicator(2, imageUrlsBottom.size());
+            setIndicator(2, currentPositionBottom);
+
+            flipperBottom.setOnTouchListener(this);
+
+            dianSelect(2, currentPositionBottom);
+            MyScrollView myScrollView2 = (MyScrollView)content.findViewById(R.id.viewflipper_myScrollview2);
+            myScrollView2.setGestureDetector(mGestureDetector);
         }
         mScrollView.setView(content);
         final int titleHeight = layoutTitle.getHeight();
@@ -563,60 +717,115 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
     @Override
     public void onLongPress(MotionEvent e) {
     }
+    //GestureDetector.OnGestureListener 回调
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
         if(e1.getX() - e2.getX() > FLING_MIN_DISTANCE &&
                 Math.abs(velocityX) > FLING_MIN_VELOCITY){
-            LogUtil.i(TAG, "==============开始向左滑动了================");
-            showNextView();
+//            LogUtil.i(TAG, "==============开始向左滑动了================");
+            showNextView(typeFlipper);
+            resetTime(typeFlipper);
+            return true;
         }else if(e2.getX() - e1.getX() > FLING_MIN_DISTANCE &&
                 Math.abs(velocityX) > FLING_MIN_VELOCITY){
-            LogUtil.i(TAG, "==============开始向右滑动了================");
-            showPreviousView();
+//            Log.i(TAG, "==============开始向右滑动了================");
+            showPreviousView(typeFlipper);
+            resetTime(typeFlipper);
+            return true;
         }
         return false;
     }
 
-    private void showNextView() {
-        LogUtil.i(TAG, "========showNextView=======向左滑动=======");
-        isScrolling = true;
-        flipper.setInAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.push_left_in));
-        flipper.setOutAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.push_left_out));
-        flipper.showNext();
-        currentPosition++;
-        if(currentPosition == flipper.getChildCount()){
-            dianUnselect(currentPosition-1);
-            currentPosition = 0;
-            dianSelect(currentPosition);
-        }else{
-            dianUnselect(currentPosition-1);
-            dianSelect(currentPosition);
+    private void resetTime(int type){
+        if (type == 1){
+//            releaseTime = System.currentTimeMillis();
+            handler.removeCallbacks(runnable);
+            handler.postDelayed(runnable, Consts.TIME_PERIOD);
+        }else if (type == 2){
+//            releaseTimeBottom = System.currentTimeMillis();
+            handler.removeCallbacks(runnableBottom);
+            handler.postDelayed(runnableBottom, Consts.TIME_PERIOD);
         }
-        releaseTime = System.currentTimeMillis();
-        isScrolling = false;
-        LogUtil.i(TAG, "==============第"+currentPosition+"页==========");
     }
 
-    private void showPreviousView() {
+    private void showNextView(int type) {
+//        LogUtil.i(TAG, "========showNextView=======向左滑动=======");
+        if (type == 1) {
+            isScrolling = true;
+            flipper.setInAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.push_left_in));
+            flipper.setOutAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.push_left_out));
+            flipper.showNext();
+            currentPosition++;
+            if (currentPosition == flipper.getChildCount()) {
+                dianUnselect(type, currentPosition - 1);
+                currentPosition = 0;
+                dianSelect(type, currentPosition);
+            } else {
+                dianUnselect(type, currentPosition - 1);
+                dianSelect(type, currentPosition);
+            }
+            releaseTime = System.currentTimeMillis();
+            isScrolling = false;
+        }else if (type == 2){
+            isScrollingBottom = true;
+            flipperBottom.setInAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.push_left_in));
+            flipperBottom.setOutAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.push_left_out));
+            flipperBottom.showNext();
+            currentPositionBottom ++;
+            if (currentPositionBottom == flipperBottom.getChildCount()) {
+                dianUnselect(type, currentPositionBottom - 1);
+                currentPositionBottom = 0;
+                dianSelect(type, currentPositionBottom);
+            } else {
+                dianUnselect(type, currentPositionBottom - 1);
+                dianSelect(type, currentPositionBottom);
+            }
+            releaseTimeBottom = System.currentTimeMillis();
+            isScrollingBottom = false;
+        }
+//        LogUtil.i(TAG, "==============第"+currentPosition+"页==========");
+    }
+
+    private void showPreviousView(int type) {
         // TODO Auto-generated method stub
 //        LogUtil.i(TAG, "========showPreviousView=======向右滑动=======");
-        isScrolling = true;
+        if (type == 1) {
+            isScrolling = true;
 //		thread.suspend();
-        dianSelect(currentPosition);
-        flipper.setInAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.push_right_in));
-        flipper.setOutAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.push_right_out));
-        flipper.showPrevious();
-        currentPosition--;
-        if(currentPosition == -1){
-            dianUnselect(currentPosition+1);
-            currentPosition = flipper.getChildCount()-1;
-            dianSelect(currentPosition);
-        }else{
-            dianUnselect(currentPosition+1);
-            dianSelect(currentPosition);
+            dianSelect(type, currentPosition);
+            flipper.setInAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.push_right_in));
+            flipper.setOutAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.push_right_out));
+            flipper.showPrevious();
+            currentPosition--;
+            if (currentPosition == -1) {
+                dianUnselect(type, currentPosition + 1);
+                currentPosition = flipper.getChildCount() - 1;
+                dianSelect(type, currentPosition);
+            } else {
+                dianUnselect(type, currentPosition + 1);
+                dianSelect(type, currentPosition);
+            }
+            releaseTime = System.currentTimeMillis();
+            isScrolling = false;
+        }else if (type == 2){
+            isScrollingBottom = true;
+//		thread.suspend();
+            dianSelect(type, currentPositionBottom);
+            flipperBottom.setInAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.push_right_in));
+            flipperBottom.setOutAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.push_right_out));
+            flipperBottom.showPrevious();
+            currentPositionBottom--;
+            if (currentPositionBottom == -1) {
+                dianUnselect(type, currentPositionBottom + 1);
+                currentPositionBottom = flipperBottom.getChildCount() - 1;
+                dianSelect(type, currentPositionBottom);
+            } else {
+                dianUnselect(type, currentPositionBottom + 1);
+                dianSelect(type, currentPositionBottom);
+            }
+            releaseTimeBottom = System.currentTimeMillis();
+            isScrollingBottom = false;
         }
-        releaseTime = System.currentTimeMillis();
-        isScrolling = false;
 //		LogUtil.i(TAG, "==============第"+currentPage+"页==========");
 //		thread.resume();
     }
@@ -625,16 +834,143 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
      * 对应被选中的点的图片
      * @param id
      */
-    private void dianSelect(int id) {
-        indicators[id].setImageResource(R.drawable.icon_point_pre);
+    private void dianSelect(int type, int id) {
+        if (type == 1) {
+            indicators[id].setImageResource(R.drawable.icon_point_pre);
+        }else if (type ==2){
+            indicatorsBottom[id].setImageResource(R.drawable.icon_point_pre);
+        }
     }
     /**
      * 对应未被选中的点的图片
      * @param id
      */
-    private void dianUnselect(int id){
-        indicators[id].setImageResource(R.drawable.icon_point);
+    private void dianUnselect(int type, int id){
+        if (type == 1){
+            indicators[id].setImageResource(R.drawable.icon_point);
+        }else if (type == 2) {
+            indicatorsBottom[id].setImageResource(R.drawable.icon_point);
+        }
     }
 
+    //Flipper的OnTouchListener回调
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        switch (view.getId()){
+            case R.id.viewflipper:
+                LogUtil.e(TAG, "第一个 Flipper 滑动");
+                typeFlipper = 1;
+                break;
+            case R.id.viewflipper2:
+                LogUtil.e(TAG, "第二个 Flipper 滑动");
+                typeFlipper = 2;
+                break;
+        }
+        return mGestureDetector.onTouchEvent(motionEvent);
+    }
 
+    private void addImageView(int length) {
+        for(int i=0; i < length; i++){
+            ADInfo info = new ADInfo();
+            info.setUrl(imageUrls.get(i));
+            info.setContent("图片-->" + i);
+            infos.add(info);
+            flipper.addView(ViewFactory.getImageView(getContext(), infos.get(i).getUrl()));
+        }
+    }
+
+    private void addIndicator(int type, int size){
+//        if(indicators == null) {
+        if (type == 1) {
+            indicators = new ImageView[size];
+//        }
+            layoutPoint.removeAllViews();
+            for (int i = 0; i < size; i++) {
+                View view = LayoutInflater.from(getContext()).inflate(R.layout.view_cycle_viewpager_indicator, null);
+                indicators[i] = (ImageView) view.findViewById(R.id.image_indicator);
+                layoutPoint.addView(view);
+            }
+        }else if (type == 2){
+            indicatorsBottom = new ImageView[size];
+            layoutPointBottom.removeAllViews();
+            for (int i = 0; i < size; i++) {
+                View view = LayoutInflater.from(getContext()).inflate(R.layout.view_cycle_viewpager_indicator, null);
+                indicatorsBottom[i] = (ImageView) view.findViewById(R.id.image_indicator);
+                layoutPointBottom.addView(view);
+            }
+        }
+
+    }
+
+    private void setIndicator(int type, int current){
+        if (type == 1) {
+            for (int i = 0; i < indicators.length; i++) {
+                if (i == current) {
+                    indicators[current].setImageResource(R.drawable.icon_point_pre);
+                } else {
+                    indicators[i].setImageResource(R.drawable.icon_point);
+                }
+            }
+        }else if (type == 2){
+            for (int i = 0; i < indicatorsBottom.length; i++) {
+                if (i == current) {
+                    indicatorsBottom[current].setImageResource(R.drawable.icon_point_pre);
+                } else {
+                    indicatorsBottom[i].setImageResource(R.drawable.icon_point);
+                }
+            }
+        }
+    }
+    private void refreshViewBanner(ArrayList<ForeEndAdvertisingPositionInfo> array) {
+        ArrayList<ADInfo> infosNew = new ArrayList<>();
+        // 顶部Banner
+        ForeEndAdvertisingPositionInfo item = array.get(0);
+        ArrayList<String> picList = item.getT();
+        ArrayList<String> linkList = item.getL();
+        for (int j = 0; j < picList.size(); j++){
+            ADInfo ad = new ADInfo();
+            ad.setUrl(picList.get(j));
+            ad.setContent(linkList.get(j));
+            infosNew.add(ad);
+        }
+        updateBanner(1, infosNew);
+
+        //底部Banner
+        ArrayList<ADInfo> infosNewBottom = new ArrayList<>();
+        // 顶部Banner
+        ForeEndAdvertisingPositionInfo itemBottom = array.get(1);
+        ArrayList<String> picListBottom = itemBottom.getT();
+        ArrayList<String> linkListBottom = itemBottom.getL();
+        LogUtil.e(TAG, " ++ picListBottom.size = " + picListBottom.size() +" ++");
+        for (int j = 0; j < picListBottom.size(); j++){
+            ADInfo ad = new ADInfo();
+            ad.setUrl(picListBottom.get(j));
+            ad.setContent(linkListBottom.get(j));
+            infosNewBottom.add(ad);
+        }
+        updateBanner(2, infosNewBottom);
+
+    }
+
+    private void updateBanner(int type, ArrayList<ADInfo> listsBanner) {
+        if (type == 1) {
+            infos = listsBanner;
+            flipper.removeAllViews();
+            for (int i = 0; i < infos.size(); i++) {
+                flipper.addView(ViewFactory.getImageView(getContext(), infos.get(i).getUrl()));
+            }
+            addIndicator(type, infos.size());
+            setIndicator(type, 0);
+            handler.postDelayed(runnable, Consts.TIME_PERIOD);
+        }else if (type == 2){
+            infosBottom = listsBanner;
+            flipperBottom.removeAllViews();
+            for (int i = 0; i < infosBottom.size(); i++) {
+                flipperBottom.addView(ViewFactory.getImageView(getContext(), infosBottom.get(i).getUrl()));
+            }
+            addIndicator(type, infosBottom.size());
+            setIndicator(type, 0);
+            handler.postDelayed(runnableBottom, Consts.TIME_PERIOD);
+        }
+    }
 }

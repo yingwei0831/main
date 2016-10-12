@@ -38,7 +38,7 @@ public class Tab4AccountSecurityActivity extends BaseActivity implements View.On
 
     private void setupView() {
         tvTitle = (TextView) findViewById(R.id.tv_title_inner_travel);
-        tvTitle.setText("账户安全");
+        tvTitle.setText(getString(R.string.fragment_mine_account_security));
         ivTitleLeft = (ImageView) findViewById(R.id.title_main_tv_left_location);
 
         tvModifyPassword = (TextView) findViewById(R.id.tv_modify_password);

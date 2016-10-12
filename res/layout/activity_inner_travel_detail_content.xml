@@ -141,16 +141,17 @@
     </LinearLayout>
 
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:background="#EFF2F7" />
+
 
     <LinearLayout
+        android:id="@+id/layout_comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:background="#EFF2F7" />
         <TextView
             android:id="@+id/tv_travel_comment_count"
             android:layout_width="match_parent"

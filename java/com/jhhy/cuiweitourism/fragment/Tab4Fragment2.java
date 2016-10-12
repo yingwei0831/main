@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
+import com.jhhy.cuiweitourism.ui.Tab4AccountCertificationActivity;
 import com.jhhy.cuiweitourism.ui.Tab4AccountSecurityActivity;
 import com.jhhy.cuiweitourism.ui.Tab4AllOrdersActivity;
 import com.jhhy.cuiweitourism.ui.Tab4MyCollectionActivity;
@@ -151,7 +152,7 @@ public class Tab4Fragment2 extends Fragment implements View.OnClickListener {
                 startActivity(intentSec);
                 break;
             case R.id.tv_user_authentication:
-                Intent intentAut = new Intent(getContext(), AccountAuthenticatorActivity.class);
+                Intent intentAut = new Intent(getContext(), Tab4AccountCertificationActivity.class);
                 startActivity(intentAut);
                 break;
             case R.id.tv_user_contacts:
