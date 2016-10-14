@@ -190,6 +190,7 @@
                     android:layout_height="10dp"
                     android:background="#EFF2F7" />
 
+                <!--页面中的indicator-->
                 <LinearLayout
                     android:id="@+id/layout_visa_item_main_indicator_bottom"
                     android:layout_width="match_parent"

@@ -120,38 +120,73 @@ public class ImageGridAdapter extends BaseAdapter {
 			@Override
 			public void onClick(View v) {
 				String path = dataList.get(position).imagePath;
-
-				if ((Bimp.drr.size() + selectTotal) < Consts.IMAGE_COUNT) {
-					item.isSelected = !item.isSelected;
-					if (item.isSelected) {
-						holder.selected.setVisibility(View.VISIBLE);
-						holder.selected.setImageResource(R.drawable.icon_data_select);
-						holder.text.setBackgroundResource(R.drawable.bgd_relatly_line);
-						selectTotal++;
-						if (textcallback != null)
-							textcallback.onListen(selectTotal);
-						map.put(path, path);
-
-					} else if (!item.isSelected) {
-						holder.selected.setVisibility(View.GONE);
-//						holder.selected.setImageResource(-1);
-						holder.text.setBackgroundColor(0x00000000);
-						selectTotal--;
-						if (textcallback != null)
-							textcallback.onListen(selectTotal);
-						map.remove(path);
-					}
-				} else if ((Bimp.drr.size() + selectTotal) >= Consts.IMAGE_COUNT) {
-					if (item.isSelected == true) {
+				if (ImageGridActivity.number == 1){
+					if ((Bimp.drr.size() + selectTotal) < ImageGridActivity.number) {
 						item.isSelected = !item.isSelected;
-						holder.selected.setVisibility(View.GONE);
-//						holder.selected.setImageResource(-1);
-						selectTotal--;
-						map.remove(path);
+						if (item.isSelected) {
+							holder.selected.setVisibility(View.VISIBLE);
+							holder.selected.setImageResource(R.drawable.icon_data_select);
+							holder.text.setBackgroundResource(R.drawable.bgd_relatly_line);
+							selectTotal++;
+							if (textcallback != null)
+								textcallback.onListen(selectTotal);
+							map.put(path, path);
 
-					} else {
-						Message message = Message.obtain(mHandler, 0);
-						message.sendToTarget();
+						} else if (!item.isSelected) {
+							holder.selected.setVisibility(View.GONE);
+//						holder.selected.setImageResource(-1);
+							holder.text.setBackgroundColor(0x00000000);
+							selectTotal--;
+							if (textcallback != null)
+								textcallback.onListen(selectTotal);
+							map.remove(path);
+						}
+					} else if ((Bimp.drr.size() + selectTotal) >= ImageGridActivity.number) {
+						if (item.isSelected == true) {
+							item.isSelected = !item.isSelected;
+							holder.selected.setVisibility(View.GONE);
+//						holder.selected.setImageResource(-1);
+							selectTotal--;
+							map.remove(path);
+
+						} else {
+							Message message = Message.obtain(mHandler, 1);
+							message.sendToTarget();
+						}
+					}
+				}else {
+					if ((Bimp.drr.size() + selectTotal) < Consts.IMAGE_COUNT) {
+						item.isSelected = !item.isSelected;
+						if (item.isSelected) {
+							holder.selected.setVisibility(View.VISIBLE);
+							holder.selected.setImageResource(R.drawable.icon_data_select);
+							holder.text.setBackgroundResource(R.drawable.bgd_relatly_line);
+							selectTotal++;
+							if (textcallback != null)
+								textcallback.onListen(selectTotal);
+							map.put(path, path);
+
+						} else if (!item.isSelected) {
+							holder.selected.setVisibility(View.GONE);
+//						holder.selected.setImageResource(-1);
+							holder.text.setBackgroundColor(0x00000000);
+							selectTotal--;
+							if (textcallback != null)
+								textcallback.onListen(selectTotal);
+							map.remove(path);
+						}
+					} else if ((Bimp.drr.size() + selectTotal) >= Consts.IMAGE_COUNT) {
+						if (item.isSelected == true) {
+							item.isSelected = !item.isSelected;
+							holder.selected.setVisibility(View.GONE);
+//						holder.selected.setImageResource(-1);
+							selectTotal--;
+							map.remove(path);
+
+						} else {
+							Message message = Message.obtain(mHandler, 0);
+							message.sendToTarget();
+						}
 					}
 				}
 			}

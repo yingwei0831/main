@@ -27,6 +27,9 @@ import com.just.sun.pricecalendar.ToastCommon;
 public class VisaItemDetailActivity extends BaseActivity implements View.OnClickListener {
 
     private String TAG = VisaItemDetailActivity.class.getSimpleName();
+    private ImageView ivTitleLeft;
+    private TextView tvTitle;
+    private ActionBar actionBar;
 
     private String id;
 
@@ -68,6 +71,10 @@ public class VisaItemDetailActivity extends BaseActivity implements View.OnClick
 
     private VisaDetail mVisaDetail;
 
+    private int actionBarHeight; //ActionBar 高度
+    private int indicatorTopHeight2; //IndicatorTopHeight 高度
+    private boolean click = false; //是否点击indicator
+
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -100,12 +107,11 @@ public class VisaItemDetailActivity extends BaseActivity implements View.OnClick
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //获取ActionBar对象
-        ActionBar bar =  getSupportActionBar();
+        actionBar =  getSupportActionBar();
         //自定义一个布局，并居中
-        bar.setDisplayShowCustomEnabled(true);
+        actionBar.setDisplayShowCustomEnabled(true);
         View v = LayoutInflater.from(getApplicationContext()).inflate(R.layout.title_tab1_inner_travel, null);
-        bar.setCustomView(v, new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT));
+        actionBar.setCustomView(v, new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT)); //自定义ActionBar布局);
         setContentView(R.layout.activity_visa_item_detail);
         //以下代码用于去除阴影
         if(Build.VERSION.SDK_INT>=21){
@@ -118,6 +124,10 @@ public class VisaItemDetailActivity extends BaseActivity implements View.OnClick
 
 
     private void setupView() {
+        tvTitle = (TextView) actionBar.getCustomView().findViewById(R.id.tv_title_inner_travel);
+        tvTitle.setText(getString(R.string.visa_title));
+        ivTitleLeft = (ImageView) actionBar.getCustomView().findViewById(R.id.title_main_tv_left_location);
+
         ivNation = (ImageView) findViewById(R.id.iv_visa_nation);
         scrollView = (MyScrollViewIS) findViewById(R.id.scrollview_visa_detail);
 
@@ -158,6 +168,7 @@ public class VisaItemDetailActivity extends BaseActivity implements View.OnClick
     }
 
     private void addListener() {
+        ivTitleLeft.setOnClickListener(this);
         tvNeedMaterial.setOnClickListener(this);
 
         btnIntroduceTop.setOnClickListener(this);
@@ -172,38 +183,40 @@ public class VisaItemDetailActivity extends BaseActivity implements View.OnClick
         btnReserve.setOnClickListener(this);
 
         final int statusHeight = Utils.getStatusBarHeight(getApplicationContext()); //状态栏高度
-        final int titleHeight = getSupportActionBar().getHeight(); //ActionBar高度
-
         scrollView.setOnScrollChangedI(new MyScrollViewIS.onScrollChangedI() {
             @Override
             public void onScrollChangedImpl(int l, int t, int oldl, int oldt) {
-                LogUtil.e(TAG, "----onScrollChangedImpl----");
                 int[] s = new int[2];
 
+                actionBarHeight = actionBar.getHeight(); //ActionBar高度
                 layoutIndicatorBottom.getLocationOnScreen(s);
-//                int titleHeight = layoutTitle.getHeight();
-                final int indicatorTopHeight2 = layoutIndicatorTop.getMeasuredHeight();
-//                LogUtil.i(TAG, "s: x = " + s[0] + ", y = " + s[1]);
-//                LogUtil.i(TAG, "statusHeight = " + statusHeight + ", titleHeight = " + titleHeight);
-                if(statusHeight + titleHeight + indicatorTopHeight2 >= s[1]){
+                indicatorTopHeight2 = layoutIndicatorTop.getMeasuredHeight(); //页面中indicator高度
+//                LogUtil.e(TAG, "statusHeight = " + statusHeight + ", titleHeight = " + titleHeight + ", indicatorTopHeight2 = " + indicatorTopHeight2);
+                if(statusHeight + indicatorTopHeight2 >= s[1]){
                     layoutIndicatorTop.setVisibility(View.VISIBLE);
                 }else{
                     layoutIndicatorTop.setVisibility(View.INVISIBLE);
                 }
-                //滑动过程中，监听3个tab的位置，变换相关tab的显示
-                int[] introduce = new int[2];
-                tvIntroduce.getLocationOnScreen(introduce);
+                if (!click) {
+                    //滑动过程中，监听3个tab的位置，变换相关tab的显示
+                    int[] introduce = new int[2];
+                    tvIntroduce.getLocationOnScreen(introduce);
+                    if (introduce[1] <= statusHeight + actionBarHeight + indicatorTopHeight2) {
+                        changeIndicator(0);
+                    }
 
-                int[] material = new int[2];
-                tvNeedMaterial.getLocationOnScreen(material);
+                    int[] material = new int[2];
+                    tvNeedMaterial.getLocationOnScreen(material);
+                    if (material[1] <= statusHeight + actionBarHeight + indicatorTopHeight2) {
+                        changeIndicator(1);
+                    }
 
-                int[] layoutNotice = new int[2];
-                layoutReserveNotice.getLocationOnScreen(layoutNotice);
-
-                if (introduce[1] <= statusHeight + titleHeight + indicatorTopHeight2 ){
-                    changeIndicator(1);
+                    int[] layoutNotice = new int[2];
+                    layoutReserveNotice.getLocationOnScreen(layoutNotice);
+                    if (layoutNotice[1] <= statusHeight + actionBarHeight + indicatorTopHeight2) {
+                        changeIndicator(2);
+                    }
                 }
-
             }
         });
     }
@@ -222,6 +235,9 @@ public class VisaItemDetailActivity extends BaseActivity implements View.OnClick
     @Override
     public void onClick(View view) {
         switch (view.getId()){
+            case R.id.title_main_tv_left_location:
+                finish();
+                break;
             case R.id.tv_material:
                 //所需材料
                 Intent intent = new Intent(getApplicationContext(), VisaNeedMaterialActivity.class);
@@ -234,14 +250,38 @@ public class VisaItemDetailActivity extends BaseActivity implements View.OnClick
                 break;
             case R.id.btn_visa_item_detail_indicator_top_product:
             case R.id.btn_visa_item_detail_indicator_bottom_product:
+                click = true;
+                tvIntroduce.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        scrollView.scrollTo(0, tvIntroduce.getTop() - indicatorTopHeight2);
+                        click = false;
+                    }
+                });
                 changeIndicator(0);
                 break;
             case R.id.btn_visa_item_detail_indicator_top_material:
             case R.id.btn_visa_item_detail_indicator_bottom_material:
+                click = true;
+                tvNeedMaterial.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        scrollView.scrollTo(0, tvNeedMaterial.getTop() - indicatorTopHeight2);
+                        click = false;
+                    }
+                });
                 changeIndicator(1);
                 break;
             case R.id.btn_visa_item_detail_indicator_top_notice:
             case R.id.btn_visa_item_detail_indicator_bottom_notice:
+                click = true;
+                layoutReserveNotice.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        scrollView.scrollTo(0, layoutReserveNotice.getTop() - indicatorTopHeight2);
+                        click = false;
+                    }
+                });
                 changeIndicator(2);
                 break;
             case R.id.tv_visa_detail_collection: //收藏

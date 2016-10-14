@@ -126,8 +126,6 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
         adapter.setData(lists);
     }
     private void addListener() {
-//        xListView.setXListViewListener(this);
-//        xListView.setOnItemClickListener(this);
         pullListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
             @Override
             public void onRefresh(PullToRefreshBase<ListView> refreshView) {
@@ -135,12 +133,21 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
 //                    mListItems.addFirst(result); //在头部增加新添内容
 //                    mAdapter.notifyDataSetChanged();//通知程序数据集已经改变，如果不做通知，那么将不会刷新mListItems的集合
                     // Call onRefreshComplete when the list has been refreshed.
-                    pullListView.onRefreshComplete();
+                    refresh();
                 } else { //上拉加载
-                    pullListView.onRefreshComplete();
+                    loadMore();
                 }
             }
         });
+    }
+
+    private void refresh() {
+        //TODO 下拉刷新
+        pullListView.onRefreshComplete();
+    }
+    private void loadMore() {
+        //TODO 加载更多
+        pullListView.onRefreshComplete();
     }
 
     private void setupView(View view) {

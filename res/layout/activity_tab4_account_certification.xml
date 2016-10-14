@@ -199,7 +199,8 @@
                     android:id="@+id/iv_real_icon"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
-                    android:src="@mipmap/icon_add" />
+                    android:src="@mipmap/icon_add"
+                    />
             </LinearLayout>
 
             <View
@@ -236,7 +237,8 @@
                     android:id="@+id/iv_real_idinfo_positive"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
-                    android:src="@mipmap/icon_add" />
+                    android:src="@mipmap/icon_add"
+                    />
             </LinearLayout>
 
             <View

@@ -9,6 +9,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -29,6 +30,8 @@ public class Tab4AllOrdersActivity extends BaseActivity implements View.OnClickL
 
     private RelativeLayout layoutTitle;
     private TextView tvTitle;
+    private ImageView ivTitleLeft;
+
     private int[]   typeTitles    =   new     int[]{  R.string.orders_all, R.string.orders_travel, R.string.orders_air,
                                                 R.string.orders_train, R.string.orders_hotel, R.string.orders_rent_car,
                                                 R.string.orders_activity, R.string.orders_visa};
@@ -38,7 +41,7 @@ public class Tab4AllOrdersActivity extends BaseActivity implements View.OnClickL
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
 
-    private String[] mTitlesF = new String[]{"全部", "待付款", "待点评", "待退款"};
+    private String[] mTitlesF = new String[]{"全部","待付款","待点评","待退款"};
     private List<Fragment> mContent = new ArrayList<>(4);
 
     private OrdersPagerAdapter mAdapter;
@@ -64,6 +67,8 @@ public class Tab4AllOrdersActivity extends BaseActivity implements View.OnClickL
         layoutTitle = (RelativeLayout) findViewById(R.id.layout_title_inner_travel);
         tvTitle = (TextView) findViewById(R.id.tv_title_inner_travel);
         tvTitle.setText(typeTitles[selection]);
+        ivTitleLeft = (ImageView) findViewById(R.id.title_main_tv_left_location);
+
         drawableRightDown = ContextCompat.getDrawable(Tab4AllOrdersActivity.this, R.mipmap.arrow_tran_down);
         drawableRightDown.setBounds(0, 0, drawableRightDown.getMinimumWidth(), drawableRightDown.getMinimumHeight());
         drawableRightTop = ContextCompat.getDrawable(Tab4AllOrdersActivity.this, R.mipmap.arrow_tran_top);
@@ -78,6 +83,7 @@ public class Tab4AllOrdersActivity extends BaseActivity implements View.OnClickL
 
     private void addListener() {
         tvTitle.setOnClickListener(this);
+        ivTitleLeft.setOnClickListener(this);
     }
 
     private OrdersAllFragment f1;
@@ -112,28 +118,27 @@ public class Tab4AllOrdersActivity extends BaseActivity implements View.OnClickL
     @Override
     public void onClick(View view) {
         switch (view.getId()){
+            case R.id.title_main_tv_left_location:
+                finish();
+                break;
             case R.id.tv_title_inner_travel:
                 tvTitle.setCompoundDrawables(null, null, drawableRightTop, null);
                 if (popOrderType == null) {
                     popOrderType = new AllOrdersPopupWindow(Tab4AllOrdersActivity.this, layoutTitle);
-                    setupPopView();
                     addPopListener();
-                }else {
+                } else {
                     if (popOrderType.isShowing()) {
                         popOrderType.dismiss();
                     } else {
                         LogUtil.e(TAG, "------ selection before = " + selection + "-----------");
-                        popOrderType.refreshData(selection);
                         popOrderType.showAsDropDown(layoutTitle, 0, 0);
+                        popOrderType.refreshData(selection);
                     }
                 }
                 break;
         }
     }
 
-    private void setupPopView() {
-
-    }
     private String TAG = getClass().getSimpleName();
 
     private void addPopListener() {
@@ -143,7 +148,7 @@ public class Tab4AllOrdersActivity extends BaseActivity implements View.OnClickL
                 LogUtil.e(TAG, "------------------onDismiss--------------");
                 tvTitle.setCompoundDrawables(null, null, drawableRightDown, null);
                 int newSelection = popOrderType.getCheckButton();
-                LogUtil.e(TAG, "------ selection after = " + selection + "-----------");
+                LogUtil.e(TAG, "------ selection after = " + newSelection + "-----------");
                 if (selection == newSelection){
 
                 }else{
@@ -152,25 +157,33 @@ public class Tab4AllOrdersActivity extends BaseActivity implements View.OnClickL
                     switch (selection){
                         case 0:
                             type = "0";
+                            tvTitle.setText(typeTitles[0]);
                             break;
                         case 1:
                             type = "1";
+                            tvTitle.setText(typeTitles[1]);
                             break;
                         case 2:
+                            tvTitle.setText(typeTitles[2]);
                             break;
                         case 3:
+                            tvTitle.setText(typeTitles[3]);
                             break;
                         case 4:
                             type = "2";
+                            tvTitle.setText(typeTitles[4]);
                             break;
                         case 5:
                             type = "3";
+                            tvTitle.setText(typeTitles[5]);
                             break;
                         case 6:
                             type = "202";
+                            tvTitle.setText(typeTitles[6]);
                             break;
                         case 7:
                             type = "8";
+                            tvTitle.setText(typeTitles[7]);
                             break;
                     }
                     f1.getData(type);

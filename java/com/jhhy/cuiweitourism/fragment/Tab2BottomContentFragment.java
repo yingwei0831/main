@@ -69,15 +69,15 @@ public class Tab2BottomContentFragment extends Fragment implements IPagerScroll,
                         if(array != null) {
                             listLeft = array[1];
                             listRight = array[0];
+                            adapterLeft.setSelection(0);
                             adapterLeft.setData(listLeft);
-                            listView.setSelection(0);
                             adapterRight.setData(listRight.get(0).getListProvince());
 
-                            handler.postDelayed(new Runnable() {
-                                @Override public void run() {
-                                    listView.performItemClick(listView.getAdapter().getView(0, null, null), 0, listView.getAdapter().getItemId(0));
-                                }
-                            }, 1000);
+//                            handler.postDelayed(new Runnable() {
+//                                @Override public void run() {
+//                                    listView.performItemClick(listView.getAdapter().getView(0, null, null), 0, listView.getAdapter().getItemId(0));
+//                                }
+//                            }, 1000);
 
                         }else{
                             ToastUtil.show(getContext(), "没有分类数据");

@@ -105,7 +105,7 @@
             android:id="@+id/gv_tab2_top_hot_recommend"
             android:numColumns="2"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="120dp"
             android:horizontalSpacing="6dp">
 
         </com.jhhy.cuiweitourism.view.MyGridView>

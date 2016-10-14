@@ -64,7 +64,7 @@ public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.I
     private ImageView[] indicators; // 轮播图片数组
     private int currentPosition = 0; // 轮播当前位置
 
-    private static final int FLING_MIN_DISTANCE = 100;
+    private static final int FLING_MIN_DISTANCE = 20;
     private static final int FLING_MIN_VELOCITY = 0;
     private GestureDetector mGestureDetector; // MyScrollView的手势
     private long releaseTime = 0; // 手指松开、页面不滚动时间，防止手机松开后短时间进行切换
@@ -84,6 +84,9 @@ public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.I
     private ViewPager viewPager;
     private OrdersPagerAdapter pagerAdapter;
 
+    private boolean loadErrorHot; //其中有一个下载失败，则为失败
+    private boolean loadErrorBan; //其中有一个下载失败，则为失败
+
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -91,17 +94,18 @@ public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.I
             LogUtil.e(TAG, "---------------handleMessage--------------- what = " + msg.what);
             switch (msg.what){
                 case Consts.MESSAGE_EXCHANGE:
-                    if (msg.arg1 == 0){
-                        ToastUtil.show(getContext(), (String) msg.obj);
-                    }else{
+                    if (msg.arg1 == 1){
                         List<CityRecommend> listDest = (List<CityRecommend>) msg.obj;
                         if (listDest == null || listDest.size() == 0){
                             ToastUtil.show(getContext(), "没有热门推荐");
+                            loadErrorHot = true;
                         }else{
                             listHotRecommend = listDest;
                             hotAdapter.setData(listHotRecommend);
                         }
-
+                    }else if (msg.arg1 == 0){
+                        ToastUtil.show(getContext(), (String) msg.obj);
+                        loadErrorHot = true;
                     }
                     break;
                 case WHEEL:
@@ -173,8 +177,19 @@ public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.I
 
         setupView(mTouchPanelLayout);
         addListener();
-        handler.postDelayed(runnable, Consts.TIME_PERIOD);
         return mTouchPanelLayout;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        LogUtil.e(TAG, "===== onStart =====");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        LogUtil.e(TAG, "===== onResume =====");
     }
 
     private void getInternetData() {
@@ -191,16 +206,18 @@ public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.I
                     LogUtil.e(TAG,"foreEndGetAdvertisingPosition =" + array.toString());
                     refreshViewBanner(array);
                 }else{
-                    ToastCommon.toastShortShow(getContext(), null, "获取广告位数据失败");
+                    ToastCommon.toastShortShow(getContext(), null, "获取广告位数据失败, 点击广告位重试");
+                    loadErrorBan = true;
                 }
             }
 
             @Override
             public void onError(FetchError error) {
+                loadErrorBan = true;
                 if (error.localReason != null){
-                    ToastCommon.toastShortShow(getContext(), null, error.localReason);
+                    ToastCommon.toastShortShow(getContext(), null, error.localReason + ", 点击广告位重试");
                 }else{
-                    ToastCommon.toastShortShow(getContext(), null, "获取广告位数据出错");
+                    ToastCommon.toastShortShow(getContext(), null, "获取广告位数据出错, 点击广告位重试");
                 }
                 LogUtil.e(TAG, "foreEndGetAdvertisingPosition: " + error.toString());
             }
@@ -213,7 +230,7 @@ public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.I
         gridViewHotRecommend = (MyGridView) view.findViewById(R.id.gv_tab2_top_hot_recommend);
         for(int i = 0; i < 2; i++){
             CityRecommend cityRecommend = new CityRecommend();
-            cityRecommend.setCityName("巴厘岛 "+i);
+            cityRecommend.setCityName(" ");
             listHotRecommend.add(cityRecommend);
         }
         hotAdapter = new HotRecommendGridViewAdapter(getContext(), listHotRecommend);
@@ -256,6 +273,8 @@ public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.I
     private void addListener() {
         tvHotRecommendNext.setOnClickListener(this);
         gridViewHotRecommend.setOnItemClickListener(this);
+
+        flipper.setOnClickListener(this);
     }
 
     @Override
@@ -285,6 +304,13 @@ public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.I
         switch (view.getId()){
             case R.id.tv_tab2_hot_recommend_next: //热门推荐，缓一缓
                 getRecommend();
+                break;
+            case R.id.viewflipper:
+                if (loadErrorBan){
+                    getInternetData();
+                }else if (loadErrorHot){
+                    getRecommend();
+                }
                 break;
         }
     }
@@ -345,6 +371,7 @@ public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.I
         }
         addIndicator(infos.size());
         setIndicator(0);
+        handler.postDelayed(runnable, Consts.TIME_PERIOD);
     }
 
     private void addIndicator(int size){
@@ -437,7 +464,7 @@ public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.I
     }
 
     private void showNextView() {
-        Log.i(TAG, "========showNextView=======向左滑动=======");
+//        Log.i(TAG, "========showNextView=======向左滑动=======");
         isScrolling = true;
         flipper.setInAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.push_left_in));
         flipper.setOutAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.push_left_out));
@@ -453,7 +480,7 @@ public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.I
         }
         releaseTime = System.currentTimeMillis();
         isScrolling = false;
-        Log.i(TAG, "==============第"+currentPosition+"页==========");
+//        Log.i(TAG, "==============第"+currentPosition+"页==========");
     }
 
     private void showPreviousView() {

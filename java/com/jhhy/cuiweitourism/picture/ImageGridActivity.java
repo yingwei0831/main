@@ -1,6 +1,7 @@
 package com.jhhy.cuiweitourism.picture;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.net.utils.Consts;
+import com.jhhy.cuiweitourism.net.utils.LogUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,6 +27,7 @@ import java.util.List;
 
 public class ImageGridActivity extends Activity {
 	public static final String EXTRA_IMAGE_LIST = "imagelist";
+	private String TAG = ImageGridActivity.class.getSimpleName();
 
 	// ArrayList<Entity> dataList;//鐢ㄦ潵瑁呰浇鏁版嵁婧愮殑鍒楄〃
 	List<ImageItem> dataList;
@@ -33,14 +36,18 @@ public class ImageGridActivity extends Activity {
 	AlbumHelper helper;
 	Button bt;
 
+	public static int number = -1; //此处为允许上传图片的个数
+
 	Handler mHandler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case 0:
-				Toast.makeText(ImageGridActivity.this, "最多选择"+ Consts.IMAGE_COUNT+"张图片", 400).show();
+				Toast.makeText(ImageGridActivity.this, "最多选择"+ Consts.IMAGE_COUNT+"张图片", Toast.LENGTH_SHORT).show();
 				break;
-
+			case 1:
+				Toast.makeText(ImageGridActivity.this, "最多选择"+ number+"张图片", Toast.LENGTH_SHORT).show();
+				break;
 			default:
 				break;
 			}
@@ -57,30 +64,36 @@ public class ImageGridActivity extends Activity {
 		helper.init(getApplicationContext());
 
 		dataList = (List<ImageItem>) getIntent().getSerializableExtra(EXTRA_IMAGE_LIST);
+		number = getIntent().getIntExtra("number", -1);
+		LogUtil.e(TAG, "number = " + number);
 
 		initView();
 		bt = (Button) findViewById(R.id.bt);
 		bt.setOnClickListener(new OnClickListener() {
-
 			public void onClick(View v) {
-				ArrayList<String> list = new ArrayList<String>();
-				Collection<String> c = adapter.map.values();
-				Iterator<String> it = c.iterator();
-				for (; it.hasNext();) {
-					list.add(it.next());
-				}
-
-//				if (Bimp.act_bool) {
-//					Intent intent = new Intent(ImageGridActivity.this, PublishedActivity.class);
-//					startActivity(intent);
-//					Bimp.act_bool = false;
-//				}
-				for (int i = 0; i < list.size(); i++) {
-					if (Bimp.drr.size() < Consts.IMAGE_COUNT) {
-						Bimp.drr.add(list.get(i));
+					ArrayList<String> list = new ArrayList<String>();
+					Collection<String> c = adapter.map.values();
+					Iterator<String> it = c.iterator();
+					for (; it.hasNext(); ) {
+						list.add(it.next());
 					}
+				if (number == -1) {
+					for (int i = 0; i < list.size(); i++) {
+						if (Bimp.drr.size() < Consts.IMAGE_COUNT) {
+							Bimp.drr.add(list.get(i));
+						}
+					}
+					setResult(RESULT_OK);
+				}else if (number == 1){
+					for (int i = 0; i < list.size(); i++) {
+						if (Bimp.drr.size() < number) {
+							Bimp.drr.add(list.get(i));
+						}
+					}
+					Intent data = new Intent();
+					data.putExtra("imagePath", list.get(0));
+					setResult(RESULT_OK, data);
 				}
-				setResult(RESULT_OK);
 				finish();
 			}
 

@@ -39,6 +39,7 @@ import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.ui.CarRentSelectTypeActivity;
 import com.jhhy.cuiweitourism.ui.CitySelectionActivity;
 import com.jhhy.cuiweitourism.ui.HotActivityListActivity;
+import com.jhhy.cuiweitourism.ui.HotelMainActivity;
 import com.jhhy.cuiweitourism.ui.InnerActivity4;
 import com.jhhy.cuiweitourism.ui.InnerTravelDetailActivity;
 import com.jhhy.cuiweitourism.ui.PersonalizedCustomActivity;
@@ -106,6 +107,7 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
 
     private int typeFlipper = 0; //区分滑动的是哪个Flipper：1，顶部flipper；2，底部flipper
 
+    private TextView tvMobile; //客服号码
     private TextView tvLocationCity; //显示当前选择的城市
     private PhoneBean selectCity; //选择的城市
 
@@ -113,6 +115,7 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
     private TextView tvOutsideTravel; //出境游
     private TextView tvStartActivity; //发起活动
     private TextView tvRentCar; //租车
+    private TextView tvHotel; //酒店
     private TextView tvVisa; //签证
 
     private TextView tvSearchRoute; //找路线
@@ -390,6 +393,7 @@ private LinearLayout    layoutTabRecommendForYou2; //顶部GridView的悬浮导�
     private void setupView(View view) {
 
 layoutTitle = (RelativeLayout) view.findViewById(R.id.layout_title_tab1);
+        tvMobile = (TextView) view.findViewById(R.id.title_main_iv_right_telephone);
 layoutTabRecommendForYou2 = (LinearLayout) view.findViewById(R.id.layout_tab_recommend_for_you_2);
         tvIndicatorAllTop       = (TextView) view.findViewById(R.id.tv_tab1_indicator_all_top);
         tvIndicatorInnerTop     = (TextView) view.findViewById(R.id.tv_tab1_indicator_inner_top);
@@ -413,6 +417,7 @@ layoutTabRecommendForYou2 = (LinearLayout) view.findViewById(R.id.layout_tab_rec
 
             tvStartActivity = (TextView) content.findViewById(R.id.tv_tab1_start_activity); //发起活动
             tvRentCar = (TextView) content.findViewById(R.id.tv_tab1_rent_car); //发起活动
+            tvHotel = (TextView) content.findViewById(R.id.tv_tab1_hotel); //酒店
             tvVisa = (TextView) content.findViewById(R.id.tv_tab1_visa); //签证
 
             tvSearchRoute = (TextView) content.findViewById(R.id.tv_tab1_search_route_activity); //找路线
@@ -486,6 +491,7 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
     }
 
     private void addListener() {
+        tvMobile.setOnClickListener(this);
         tvLocationCity.setOnClickListener(this);
         tvInnerTravel.setOnClickListener(this);
         tvOutsideTravel.setOnClickListener(this);
@@ -511,6 +517,9 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
     @Override
     public void onClick(View view) {
         switch (view.getId()){
+            case R.id.title_main_iv_right_telephone:
+                Utils.contact(getContext(), tvMobile.getText().toString().trim());
+                break;
             case R.id.tv_tab1_inner_travel: //国内游
                 Bundle bundle = new Bundle();
                 bundle.putInt("type", 1);
@@ -531,6 +540,9 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
                 break;
             case R.id.tv_tab1_visa: //签证
                 VisaMainActivity.actionStart(getContext(), null);
+                break;
+            case R.id.tv_tab1_hotel: //酒店
+                startActivity(new Intent(getContext(), HotelMainActivity.class));
                 break;
             case R.id.layout_personalized_custom: //个性定制
                 Bundle bundleCustom = new Bundle();

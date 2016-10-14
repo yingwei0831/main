@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.Gravity;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.picture.TestPicActivity;
 import com.jhhy.cuiweitourism.net.utils.Consts;
+import com.jhhy.cuiweitourism.ui.Tab4AccountCertificationActivity;
 
 import java.io.File;
 
@@ -29,8 +31,9 @@ public class PopupWindowImage extends PopupWindow {
     private Activity activity;
     private String mPicName;
 
-    public static final int TAKE_PICTURE = 0x000009;
-    public static final int OTHER_PICTURE=0x0001020;
+    public static final int TAKE_PICTURE = 0x000009; //
+    public static final int OTHER_PICTURE = 0x0001020; //可以选择多张图片
+    public static final int OTHER_PICTURE_ONE = 0x0001021; //可以选择一张图片
 
 
     public PopupWindowImage(final Activity activity, View parent, String picName) {
@@ -67,7 +70,14 @@ public class PopupWindowImage extends PopupWindow {
         bt2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(activity, TestPicActivity.class);
-                activity.startActivityForResult(intent, OTHER_PICTURE);
+                if (activity instanceof Tab4AccountCertificationActivity){ //此处只允许上传一张图片
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("number", 1);
+                    intent.putExtras(bundle);
+                    activity.startActivityForResult(intent, OTHER_PICTURE_ONE);
+                }else{ //这里可以上传多张图片
+                    activity.startActivityForResult(intent, OTHER_PICTURE);
+                }
                 dismiss();
             }
         });

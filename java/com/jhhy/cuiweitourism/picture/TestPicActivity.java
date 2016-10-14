@@ -24,13 +24,21 @@ public class TestPicActivity extends Activity {
 	AlbumHelper helper;
 	public static final String EXTRA_IMAGE_LIST = "imagelist";
 	public static Bitmap bimap;
+
+	private int number = -1; //此处为允许上传图片的个数
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_image_bucket);
-
+		Intent intent = getIntent();
+		if (intent != null){
+			Bundle bundle = intent.getExtras();
+			if ( bundle != null){
+				number = bundle.getInt("number");
+			}
+		}
 		helper = AlbumHelper.getHelper();
 		helper.init(getApplicationContext());
 
@@ -84,7 +92,12 @@ public class TestPicActivity extends Activity {
 				// adapter.notifyDataSetChanged();
 				Intent intent = new Intent(TestPicActivity.this, ImageGridActivity.class);
 				intent.putExtra(TestPicActivity.EXTRA_IMAGE_LIST, (Serializable) dataList.get(position).imageList);
-				startActivityForResult(intent, PopupWindowImage.OTHER_PICTURE);
+				if (number == -1){
+					startActivityForResult(intent, PopupWindowImage.OTHER_PICTURE);
+				}else{
+					intent.putExtra("number", number);
+					startActivityForResult(intent, PopupWindowImage.OTHER_PICTURE_ONE);
+				}
 //				finish();
 			}
 
@@ -97,7 +110,10 @@ public class TestPicActivity extends Activity {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == RESULT_OK){
 			if (requestCode == PopupWindowImage.OTHER_PICTURE){
-				setResult(RESULT_OK);
+				setResult(RESULT_OK, data);
+				finish();
+			}else if (requestCode == PopupWindowImage.OTHER_PICTURE_ONE){
+				setResult(RESULT_OK, data);
 				finish();
 			}
 //			if(requestCode == StartActivityEditActivity.OTHER_PICTURE && data != null){ // 上传头像；设置物品照片

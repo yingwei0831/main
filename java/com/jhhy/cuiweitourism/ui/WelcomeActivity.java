@@ -8,10 +8,12 @@ import android.text.TextUtils;
 
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.biz.LoginBiz;
+import com.jhhy.cuiweitourism.http.NetworkUtil;
 import com.jhhy.cuiweitourism.moudle.User;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.utils.SharedPreferencesUtils;
+import com.just.sun.pricecalendar.ToastCommon;
 
 public class WelcomeActivity extends BaseActivity {
 
@@ -38,13 +40,18 @@ public class WelcomeActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
+        if(NetworkUtil.checkNetwork(getApplicationContext())){
+
+        }else{
+            ToastCommon.toastShortShow(getApplicationContext(), null, getString(R.string.Network_error));
+        }
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
                 checkFirstIn();
             }
         };
-        handler.postDelayed(runnable, 0); // 2秒钟之后
+        handler.postDelayed(runnable, 2000); // 2秒钟之后
 
     }
 

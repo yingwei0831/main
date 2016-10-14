@@ -3,6 +3,7 @@ package com.jhhy.cuiweitourism.ui;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
@@ -16,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.util.Util;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.biz.UserInformationBiz;
 import com.jhhy.cuiweitourism.moudle.User;
@@ -23,6 +25,7 @@ import com.jhhy.cuiweitourism.picture.Bimp;
 import com.jhhy.cuiweitourism.popupwindows.PopupWindowImage;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
+import com.jhhy.cuiweitourism.utils.BitmapUtil;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.utils.MyFileUtils;
 import com.jhhy.cuiweitourism.utils.Utils;
@@ -48,19 +51,18 @@ public class Tab4AccountCertificationActivity extends BaseActivity implements Vi
     private ImageView ivAvatar;
     private ImageView ivPositive;
     private ImageView ivOpposite;
+    private ImageView ivOther;
 
     private EditText etRemark;
 
-    private ImageView ivOther;
-
-    private Button btnCommit;
+    private String gender; //真实性别
 
     private Bitmap bimpAvatar;
     private Bitmap bimpPositive;
     private Bitmap bimpOpposite;
     private Bitmap bimpOther;
 
-    private String gender; //真实性别
+    private Button btnCommit;
 
     private Handler handler = new Handler(){
         @Override
@@ -68,10 +70,12 @@ public class Tab4AccountCertificationActivity extends BaseActivity implements Vi
             super.handleMessage(msg);
             switch (msg.what){
                 case Consts.MESSAGE_MODIFY_USER_AUTHENTICATION:
-                    ToastCommon.toastShortShow(getApplicationContext(), null, String.valueOf(msg.obj));
                     if (msg.arg1 == 1){
+                        ToastCommon.toastShortShow(getApplicationContext(), null, "上传成功，请等待审核");
                         setResult(RESULT_OK);
                         finish();
+                    }else {
+                        ToastCommon.toastShortShow(getApplicationContext(), null, String.valueOf(msg.obj));
                     }
                     break;
             }
@@ -151,7 +155,6 @@ public class Tab4AccountCertificationActivity extends BaseActivity implements Vi
                 Bimp.drr.clear();
                 Bimp.max = 0;
                 new PopupWindowImage(Tab4AccountCertificationActivity.this, layout, picName);
-
                 break;
             case R.id.iv_real_idinfo_opposite: //身份证反面照
                 idOppositeName = String.valueOf(System.currentTimeMillis()) + ".jpg";
@@ -179,9 +182,8 @@ public class Tab4AccountCertificationActivity extends BaseActivity implements Vi
                 Bimp.max = 0;
                 new PopupWindowImage(Tab4AccountCertificationActivity.this, layout, picName);
                 break;
-
             case R.id.btn_commit:
-                goCertivication();
+                goCertification();
                 break;
         }
     }
@@ -210,15 +212,34 @@ public class Tab4AccountCertificationActivity extends BaseActivity implements Vi
             if (resultCode == RESULT_OK) {
                 // 设置文件保存路径
                 File picture = new File(Consts.IMG_TEMP_PATH + picName);
-//                LogUtil.e(TAG, "picPath = " + picture.getPath()); // /storage/emulated/0/cuiweiTemp/1474785184315.jpg
-                Bimp.drr.add(picture.getPath());
+                picPath = picture.getPath();
+                LogUtil.e(TAG, "picPath = " + picPath); // /storage/emulated/0/cuiweiTemp/1474785184315.jpg
+//                Bimp.drr.add(picPath);
+//                position = Bimp.drr.indexOf(picPath);
                 startPhotoZoom(Uri.fromFile(picture), Consts.IMG_TEMP_PATH + picName,
                         Utils.getScreenWidth(getApplicationContext()), Utils.getScreenHeight(getApplicationContext())); //裁剪
             }
-        } else if (PopupWindowImage.OTHER_PICTURE == requestCode) { //图库
-//                String imagePath = data.getStringExtra("imagePath"); // /storage/emulated/0/MIUI/wallpaper/宝马_&_457f9e19-e66c-4ec7-9c64-a26fc3f03612.jpg
+        } else if (PopupWindowImage.OTHER_PICTURE_ONE == requestCode) { //图库
             if (resultCode == RESULT_OK) {
-                loading();
+                if (data != null) {
+                    String imagePath = data.getStringExtra("imagePath"); // /storage/emulated/0/MIUI/wallpaper/宝马_&_457f9e19-e66c-4ec7-9c64-a26fc3f03612.jpg
+                    LogUtil.e(TAG, "imagePath = " + imagePath);
+                    LogUtil.e(TAG, "Bimp.drr.get(0) = " + Bimp.drr.get(0));
+                    if (avatar) {
+                        bimpAvatar = BitmapUtil.loadBitmap(imagePath, ivAvatar.getWidth(), ivAvatar.getHeight());
+                        ivAvatar.setImageBitmap(bimpAvatar);
+                    } else if (positive){
+                        bimpPositive = BitmapUtil.loadBitmap(imagePath, ivPositive.getWidth(), ivPositive.getHeight());
+                        ivPositive.setImageBitmap(bimpPositive);
+                    } else if (opposite){
+                        bimpOpposite = BitmapUtil.loadBitmap(imagePath, ivOpposite.getWidth(), ivOpposite.getHeight());
+                        ivOpposite.setImageBitmap(bimpOpposite);
+                    }else if(other) {
+                        bimpOther = BitmapUtil.loadBitmap(Bimp.drr.get(0), ivOther.getWidth(), ivOther.getHeight());
+                        ivOther.setImageBitmap(bimpOther);
+                    }
+                }
+//                loading();
             }
 //          upLoadBitmap.add(BitmapUtil.loadBitmap(Bimp.drr.get(Bimp.drr.size()-1), Utils.getScreenWidth(getApplicationContext()), Utils.getScreenHeight(getApplicationContext())));
 //            if (userIcon != null) {
@@ -230,6 +251,19 @@ public class Tab4AccountCertificationActivity extends BaseActivity implements Vi
         } else if (PHOTO_RESULT == requestCode) { //保存拍照的图片
             if (resultCode == RESULT_OK) {
                 try {
+                    if (avatar) {
+                        bimpAvatar = BitmapFactory.decodeStream(getContentResolver().openInputStream(uritempFile));
+                        ivAvatar.setImageBitmap(bimpAvatar);
+                    } else if (positive) {
+                        bimpPositive = BitmapFactory.decodeStream(getContentResolver().openInputStream(uritempFile));
+                        ivPositive.setImageBitmap(bimpPositive);
+                    } else if (opposite) {
+                        bimpOpposite = BitmapFactory.decodeStream(getContentResolver().openInputStream(uritempFile));
+                        ivOpposite.setImageBitmap(bimpOpposite);
+                    }else if(other){
+                        bimpOther = BitmapFactory.decodeStream(getContentResolver().openInputStream(uritempFile));
+                        ivOther.setImageBitmap(bimpOther);
+                    }
 //                    upLoadBitmap.add(BitmapFactory.decodeStream(getContentResolver().openInputStream(uritempFile)));
 //                if (userIcon != null) {
 //                    userInfo.setUserIconPath(mPicName);
@@ -243,6 +277,8 @@ public class Tab4AccountCertificationActivity extends BaseActivity implements Vi
     }
 
     private String picName;
+    private String picPath;
+
     private String avatarName;
     private String idPositionName;
     private String idOppositeName;
@@ -279,7 +315,8 @@ public class Tab4AccountCertificationActivity extends BaseActivity implements Vi
         startActivityForResult(intent, PHOTO_RESULT);
     }
 
-    private void goCertivication() {
+    //身份认证
+    private void goCertification() {
         String name = etRealName.getText().toString();
         if (TextUtils.isEmpty(name)){
             ToastCommon.toastShortShow(getApplicationContext(), null, "请输入真实姓名");
@@ -304,19 +341,35 @@ public class Tab4AccountCertificationActivity extends BaseActivity implements Vi
             ToastCommon.toastShortShow(getApplicationContext(), null, "请输入身份证号码");
             return;
         }else{
-            if (mobile.trim().length() != 18){
+            if (idStr.trim().length() != 18){
                 ToastCommon.toastShortShow(getApplicationContext(), null, "请核对身份证号码");
                 return;
+            }else{
+                boolean resul = Utils.is18ByteIdCard(idStr);
+                if (!resul){
+                    ToastCommon.toastShortShow(getApplicationContext(), null, "请核对身份证号码");
+                    return;
+                }
             }
         }
 
-
-
+        if (bimpAvatar == null){
+            ToastCommon.toastShortShow(getApplicationContext(), null, "请上传真实头像");
+            return;
+        }
+        if (bimpPositive == null){
+            ToastCommon.toastShortShow(getApplicationContext(), null, "请上传身份证正面照");
+            return;
+        }
+        if (bimpOpposite == null){
+            ToastCommon.toastShortShow(getApplicationContext(), null, "请上传身份证反面照");
+            return;
+        }
 
         String remark = etRemark.getText().toString();
 
         UserInformationBiz biz = new UserInformationBiz(getApplicationContext(), handler);
-//        biz.userAuthentication();
+        biz.userAuthentication(MainActivity.user.getUserId(), name, idStr, bimpAvatar, bimpPositive, bimpOpposite, remark, bimpOther);
     }
 
     public void loading() {

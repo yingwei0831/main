@@ -45,6 +45,7 @@
     <string name="visa_hot_all_country">查看全部国家和地区</string>
     <string name="visa_hot_any">热门签证</string>
     <string name="visa_deliver">发送材料至我的邮箱</string>
+    <string name="visa_title">签证详情</string>
 
 
     <!--租车-->
@@ -182,6 +183,7 @@
 
     <string name="fragment_mine_all_orders">全部订单</string>
     <string name="fragment_mine_wait_pay">等待付款</string>
+    <string name="fragment_mine_wait_pay_title">待付款</string>
     <string name="fragment_mine_wait_comment">待点评</string>
     <string name="fragment_mine_wait_refund">待退款</string>
 

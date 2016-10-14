@@ -25,12 +25,14 @@ import android.widget.ViewFlipper;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.ImageGridViewAdapter;
 import com.jhhy.cuiweitourism.biz.InnerTravelDetailBiz;
+import com.jhhy.cuiweitourism.biz.UserCollectionBiz;
 import com.jhhy.cuiweitourism.circleviewpager.ViewFactory;
 import com.jhhy.cuiweitourism.moudle.ADInfo;
 import com.jhhy.cuiweitourism.moudle.TravelDetail;
 import com.jhhy.cuiweitourism.moudle.TravelDetailDay;
 import com.jhhy.cuiweitourism.moudle.UserComment;
 import com.jhhy.cuiweitourism.net.utils.Consts;
+import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.picture.ImageGridAdapter;
 import com.jhhy.cuiweitourism.utils.ImageLoaderUtil;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
@@ -53,12 +55,14 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
     private XScrollView mScrollView;
     private View content;
 
+    private LinearLayout layoutTravelDetailBottom; //底部控件
     private TextView tvCollection; //收藏
     private TextView tvShare; //分享
     private Button btnArgument; //讨价还价
     private Button btnReserve; //立即预定
     //顶部导航栏
     private LinearLayout layoutIndicatorTop;
+    private int indicatorHeightTop; //顶部导航栏高度
     private Button btnProductTop;
     private Button btnPriceTop;
     private Button btnDescribeTop;
@@ -78,11 +82,13 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
     private View viewDescribe;
     private View viewNotice;
 
-    private LinearLayout layoutComment; //评论大布局
+    private LinearLayout layoutComment; //评论
     private WebView mWebViewProduct; //商品详情
+    private LinearLayout layoutPrice; //费用说明
     private TextView tvPriceInclude; //费用说明——>费用包含
     private TextView tvPriceNotInclude; //费用说明——>费用不包含
     private LinearLayout layoutTravelDescribe; //行程描述
+    private LinearLayout layoutReserveNotice; //预订须知
     private TextView tvReserveNotice; //预订须知
 
     private TextView tvTitle;
@@ -93,6 +99,9 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
     private TextView tvAddTime;
     private TextView tvCommentContent;
     private MyGridView gvImages; //评论中的图片
+
+    private int bottom; //底部控件在屏幕的起始高度
+    private boolean click; //是否是点击indicator
 
     private String[] titles = new String[]{"商品详情", "费用说明", "行程描述", "预订须知"};
 
@@ -179,10 +188,12 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
         viewDescribeTop = findViewById(R.id.view_inner_travel_detail_indicator_top_describe);
         viewNoticeTop = findViewById(R.id.view_inner_travel_detail_indicator_top_notice);
 
+        layoutTravelDetailBottom = (LinearLayout) findViewById(R.id.layout_travel_detail_bottom);
         tvCollection = (TextView) findViewById(R.id.tv_inner_travel_collection);
         tvShare = (TextView) findViewById(R.id.tv_inner_travel_share);
         btnArgument = (Button) findViewById(R.id.btn_inner_travel_argument);
         btnReserve = (Button) findViewById(R.id.btn_inner_travel_reserve);
+
 
         content = LayoutInflater.from(getApplicationContext()).inflate(R.layout.activity_inner_travel_detail_content, null);
         if (null != content) {
@@ -208,9 +219,11 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
             gvImages = (MyGridView) content.findViewById(R.id.inner_travel_detail_gridview);
 
             mWebViewProduct = (WebView) content.findViewById(R.id.webview_inner_travel_detail_content_product);
+            layoutPrice = (LinearLayout) content.findViewById(R.id.layout_travel_price);
             tvPriceInclude = (TextView) content.findViewById(R.id.tv_travel_price_include);
             tvPriceNotInclude = (TextView) content.findViewById(R.id.tv_travel_price_not_include);
             layoutTravelDescribe = (LinearLayout) content.findViewById(R.id.layout_travel_describe);
+            layoutReserveNotice = (LinearLayout) content.findViewById(R.id.layout_reserve_notice);
             tvReserveNotice = (TextView) content.findViewById(R.id.tv_travel_notice);
 
             mGestureDetector = new GestureDetector(getApplicationContext(), this);
@@ -231,20 +244,55 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
         }
         mScrollView.setView(content);
 
+//        int[] bottomAry = new int[2];
+//        layoutTravelDetailBottom.getLocationOnScreen(bottomAry);
+//        this.bottom = bottomAry[1];
+//        LogUtil.e(TAG, "bottom = " + this.bottom);
         /**
          * 此处是为了顶部导航栏的显示和隐藏
          */
         mScrollView.setOnXScrollChangedI(new XScrollView.onXScrollChangedI() {
             @Override
             public void onXScrollChangedImpl(int l, int t, int oldl, int oldt) {
+                //页面中的导航栏
                 int[] s = new int[2];
                 layoutIndicatorBottom.getLocationOnScreen(s);
                 int statusHeight = Utils.getStatusBarHeight(getApplicationContext());
 //                int titleHeight = layoutTitle.getHeight();
-                if(statusHeight >= s[1]){ // + titleHeight
+                indicatorHeightTop = layoutIndicatorTop.getHeight();
+                if(s[1] <= statusHeight){ // + titleHeight
                     layoutIndicatorTop.setVisibility(View.VISIBLE);
                 }else{
                     layoutIndicatorTop.setVisibility(View.GONE);
+                }
+                if (!click) {
+                    //商品详情
+                    int[] detailAry = new int[2];
+                    mWebViewProduct.getLocationOnScreen(detailAry);
+                    if (detailAry[1] <= statusHeight) {
+                        changeIndicator(1);
+                    }
+
+                    //费用说明
+                    int[] priceAry = new int[2];
+                    layoutPrice.getLocationOnScreen(priceAry);
+                    if (priceAry[1] <= statusHeight + indicatorHeightTop) {
+                        changeIndicator(2);
+                    }
+
+                    //行程描述
+                    int[] describe = new int[2];
+                    layoutTravelDescribe.getLocationOnScreen(describe);
+                    if (describe[1] <= statusHeight + indicatorHeightTop) {
+                        changeIndicator(3);
+                    }
+
+                    //预订须知
+                    int[] reserve = new int[2];
+                    layoutReserveNotice.getLocationOnScreen(reserve);
+                    if (reserve[1] <= statusHeight + indicatorHeightTop) {
+                        changeIndicator(4);
+                    }
                 }
             }
         });
@@ -375,95 +423,51 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
         switch (view.getId()){
             case R.id.tv_inner_travel_detail_content_product_bottom:
             case R.id.btn_inner_travel_detail_indicator_top_product:
-                tvProduct.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-                viewProduct.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-                btnProductTop.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-                viewProductTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-
-                btnPrice.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewPrice.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-                btnPriceTop.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewPriceTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-
-                tvDescribe.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewDescribe.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-                btnDescribeTop.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewDescribeTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-
-                tvNotice.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewNotice.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-                btnNoticeTop.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewNoticeTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-
+                click = true;
+               changeIndicator(1);
+                mWebViewProduct.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mScrollView.scrollTo(0, mWebViewProduct.getTop() - indicatorHeightTop);
+                        click = false;
+                    }
+                });
                 break;
             case R.id.tv_inner_travel_detail_content_price_bottom:
             case R.id.btn_inner_travel_detail_indicator_top_price:
-                tvProduct.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewProduct.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-                btnProductTop.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewProductTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-
-                btnPrice.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-                viewPrice.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-                btnPriceTop.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-                viewPriceTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-
-                tvDescribe.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewDescribe.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-                btnDescribeTop.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewDescribeTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-
-                tvNotice.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewNotice.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-                btnNoticeTop.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewNoticeTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-
+                click = true;
+                changeIndicator(2);
+                layoutPrice.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mScrollView.scrollTo(0, layoutPrice.getTop() - indicatorHeightTop );
+                        click = false;
+                    }
+                });
                 break;
             case R.id.tv_inner_travel_detail_content_describe_bottom:
             case R.id.btn_inner_travel_detail_indicator_top_describe:
-                tvProduct.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewProduct.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-                btnProductTop.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewProductTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-
-
-                btnPrice.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewPrice.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-                btnPriceTop.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewPriceTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-
-                tvDescribe.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-                viewDescribe.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-                btnDescribeTop.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-                viewDescribeTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-
-                tvNotice.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewNotice.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-                btnNoticeTop.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewNoticeTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-
+                click = true;
+                changeIndicator(3);
+                layoutTravelDescribe.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mScrollView.scrollTo(0, layoutTravelDescribe.getTop() - indicatorHeightTop);
+                        click = false;
+                    }
+                });
                 break;
             case R.id.tv_inner_travel_detail_content_notice_bottom:
             case R.id.btn_inner_travel_detail_indicator_top_notice:
-                tvProduct.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewProduct.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-                btnProductTop.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewProductTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-
-                btnPrice.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewPrice.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-                btnPriceTop.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewPriceTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-
-                tvDescribe.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewDescribe.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-                btnDescribeTop.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewDescribeTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-
-                tvNotice.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-                viewNotice.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-                btnNoticeTop.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-                viewNoticeTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
+                click = true;
+                layoutReserveNotice.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mScrollView.scrollTo(0, layoutReserveNotice.getTop() - indicatorHeightTop);
+                        click = false;
+                    }
+                });
+                changeIndicator(4);
                 break;
             case R.id.tv_travel_comment_count: //累计评价
                 //TODO 进入评价详情页面
@@ -473,12 +477,14 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
                 intentComment.putExtras(bundleComment);
                 startActivity(intentComment);
                 break;
-            case R.id.tv_inner_travel_collection:
+            case R.id.tv_inner_travel_collection: //收藏
+                doCollection();
+                break;
+            case R.id.tv_inner_travel_share: //分享
 
                 break;
-            case R.id.tv_inner_travel_share:
-                break;
-            case R.id.btn_inner_travel_argument:
+            case R.id.btn_inner_travel_argument: //讨价还价
+
                 break;
             case R.id.btn_inner_travel_reserve:
                 Bundle bundle = new Bundle();
@@ -691,5 +697,53 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
         return mGestureDetector.onTouchEvent(motionEvent);
+    }
+
+    private void changeIndicator(int tag){
+        tvProduct.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
+        viewProduct.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
+        btnProductTop.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
+        viewProductTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
+
+        btnPrice.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
+        viewPrice.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
+        btnPriceTop.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
+        viewPriceTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
+
+        tvDescribe.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
+        viewDescribe.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
+        btnDescribeTop.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
+        viewDescribeTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
+
+        tvNotice.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
+        viewNotice.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
+        btnNoticeTop.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
+        viewNoticeTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
+        if (tag == 1){
+            tvProduct.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
+            viewProduct.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
+            btnProductTop.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
+            viewProductTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
+        } else if (tag ==2){
+            btnPrice.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
+            viewPrice.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
+            btnPriceTop.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
+            viewPriceTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
+        } else if (tag == 3){
+            tvDescribe.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
+            viewDescribe.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
+            btnDescribeTop.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
+            viewDescribeTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
+        } else if (tag == 4){
+            tvNotice.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
+            viewNotice.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
+            btnNoticeTop.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
+            viewNoticeTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
+        }
+    }
+
+    private void doCollection() {
+        UserCollectionBiz biz = new UserCollectionBiz(getApplicationContext(), handler);
+        biz.doCollection(MainActivity.user.getUserId(), "1", detail.getId());
     }
 }

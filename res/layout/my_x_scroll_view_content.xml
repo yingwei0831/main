@@ -90,6 +90,7 @@
                 android:text="@string/tab1_tablelayout_item5" />
 
             <TextView
+                android:id="@+id/tv_tab1_hotel"
                 style="@style/Tab1TableLayoutItem"
                 android:drawableTop="@mipmap/tab1_6_jd"
                 android:text="@string/tab1_tablelayout_item6" />

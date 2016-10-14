@@ -124,13 +124,24 @@ public class OrdersWaitRefundFragment extends Fragment  implements ArgumentOnCli
             public void onRefresh(PullToRefreshBase<ListView> refreshView) {
                 if (PullToRefreshBase.Mode.PULL_FROM_START.equals( pullListView.getCurrentMode())){ //下拉刷新
                     ToastCommon.toastShortShow(getContext(), null, "下拉刷新");
-                    initData();
-                } else if (PullToRefreshBase.Mode.PULL_FROM_END.equals( pullListView.getCurrentMode())){
+                    getData();
+//                    refresh();
+                } else { //上拉加载
                     ToastCommon.toastShortShow(getContext(), null, "上拉加载");
-                    initData();
+                    getData();
+//                    loadMore();
                 }
             }
         });
+    }
+
+    private void refresh() {
+        //TODO 下拉刷新
+        pullListView.onRefreshComplete();
+    }
+    private void loadMore() {
+        //TODO 加载更多
+        pullListView.onRefreshComplete();
     }
 
     private void setupView(View view) {
@@ -162,7 +173,7 @@ public class OrdersWaitRefundFragment extends Fragment  implements ArgumentOnCli
         listView.setAdapter(adapter);
     }
 
-    private void initData() {
+    private void getData() {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
