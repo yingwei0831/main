@@ -6,7 +6,7 @@
     android:focusable="true"
     android:focusableInTouchMode="true">
 
-    <include layout="@layout/search_bar_simple"/>
+    <include layout="@layout/search_bar_simple_out"/>
 
     <com.jhhy.cuiweitourism.view.MyScrollView
         android:id="@+id/viewflipper_myScrollview"

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_search"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:layout_below="@+id/title_city_selection"
+    android:paddingBottom="8dp"
+    android:paddingRight="20dp"
+    android:paddingTop="8dp">
+
+    <ImageView
+        android:id="@+id/iv_search_title_left"
+        android:layout_width="40dp"
+        android:layout_height="match_parent"
+        android:src="@mipmap/arrow_left_green"
+        android:scaleType="centerInside"
+        />
+
+    <EditText
+        android:layout_toRightOf="@+id/iv_search_title_left"
+        android:drawableLeft="@mipmap/edit_search"
+        android:id="@+id/edit_search"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#EFF2F7"
+        android:drawablePadding="10dp"
+        android:focusableInTouchMode="true"
+        android:hint="关键字/位置/品牌/酒店等"
+        android:gravity="center"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:singleLine="true"
+        android:textColor="@android:color/black"
+        android:textColorHint="#ff333333"
+        android:textSize="16sp" />
+</RelativeLayout>

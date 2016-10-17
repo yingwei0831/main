@@ -6,12 +6,14 @@ import android.os.Handler;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelDetailRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelListFetchRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelOrderFetch;
+import com.jhhy.cuiweitourism.net.models.FetchModel.NullArrayFetchModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelDetailInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelListInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelOrderInfo;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.HoutelPropertiesInfo;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.netcallback.FetchGenericCallback;
 import com.jhhy.cuiweitourism.net.netcallback.FetchGenericResponse;
@@ -29,6 +31,32 @@ public class HotelActionBiz extends  BasicActionBiz {
     }
 
     public HotelActionBiz() {
+    }
+
+    /**
+     *  获取酒店属性列表
+     */
+
+
+    public void hotelGetPropertiesList(BizGenericCallback<ArrayList<HoutelPropertiesInfo>> callback){
+        NullArrayFetchModel fetchModel = new NullArrayFetchModel();
+        fetchModel.code = "Hotel_hotelattr";
+
+        FetchGenericResponse<ArrayList<HoutelPropertiesInfo>> fetchResponse = new FetchGenericResponse<ArrayList<HoutelPropertiesInfo>>(callback) {
+            @Override
+            public void onCompletion(FetchResponseModel response) {
+                ArrayList<HoutelPropertiesInfo> array = parseJsonToObjectArray(response,HoutelPropertiesInfo.class);
+                GenericResponseModel returnModel = new GenericResponseModel<ArrayList<HoutelPropertiesInfo>>(response.head,array);
+                this.bizCallback.onCompletion(returnModel);
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                this.bizCallback.onError(error);
+            }
+        } ;
+
+        HttpUtils.executeXutils(fetchModel,new FetchGenericCallback<>(fetchResponse));
     }
 
 

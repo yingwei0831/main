@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <!--接入支付宝支付-->
+    <!-- 接入支付宝支付 -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -461,22 +461,22 @@
         <!-- android:configChanges="keyboardHidden|orientation|screenSize" -->
         <!-- android:exported="true"/> -->
 
-        <!--接入支付宝支付-start- -->
+
+        <!-- 接入支付宝支付-start- -->
         <activity
             android:name="com.alipay.sdk.app.H5PayActivity"
             android:configChanges="orientation|keyboardHidden|navigation"
             android:exported="false"
-            android:screenOrientation="behind" >
-        </activity>
+            android:screenOrientation="behind"></activity>
         <activity
             android:name="com.alipay.sdk.auth.AuthActivity"
             android:configChanges="orientation|keyboardHidden|navigation"
             android:exported="false"
-            android:screenOrientation="behind" >
-        </activity>
-        <activity android:name=".ui.HotelMainActivity"/>
-        <!--接入支付宝支付-end- -->
+            android:screenOrientation="behind"></activity>
+        <activity android:name=".ui.HotelMainActivity" />
+        <!-- 接入支付宝支付-end- -->
 
+        <activity android:name=".ui.HotelDetailActivity"></activity>
     </application>
 
 </manifest>

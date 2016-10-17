@@ -10,7 +10,7 @@
     >
 
     <include
-        layout="@layout/search_bar_simple"
+        layout="@layout/search_bar_simple_out"
         android:id="@+id/layout_search"
         />
 

@@ -3,167 +3,229 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.jhhy.cuiweitourism.ui.HotelMainActivity"
-    android:orientation="vertical"
     android:background="@android:color/white"
-    >
+    android:orientation="vertical"
+    tools:context="com.jhhy.cuiweitourism.ui.HotelMainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"/>
+        android:layout_height="200dp" />
 
     <!--定位地址-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        >
+        android:paddingRight="16dp">
+
         <TextView
             android:id="@+id/tv_location_name"
             android:layout_width="wrap_content"
-            android:layout_weight="1"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
             android:layout_height="wrap_content"
-            android:textSize="22sp"
-            android:text="北京"
-            android:textColor="@android:color/black"
+            android:layout_alignBottom="@+id/tv_location_icon"
             android:layout_alignParentLeft="true"
             android:layout_alignTop="@+id/tv_location_icon"
-            android:layout_alignBottom="@+id/tv_location_icon"
+            android:layout_weight="1"
             android:gravity="center"
-            />
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:text="北京"
+            android:textColor="@android:color/black"
+            android:textSize="22sp" />
+
         <TextView
             android:id="@+id/tv_location_icon"
             android:layout_width="wrap_content"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:drawableTop="@mipmap/icon_location_gray"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="12dp"
+            android:layout_marginTop="12dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_tv_border_cornet_dark"
             android:drawablePadding="8dp"
-            android:textColor="@color/colorActionBar"
+            android:drawableTop="@mipmap/icon_location_gray"
+            android:gravity="center_horizontal"
             android:padding="6dp"
             android:text="我的位置"
-            android:gravity="center_horizontal"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/bg_tv_border_cornet_dark"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="12dp"
-            />
+            android:textColor="@color/colorActionBar" />
+
         <View
-            android:layout_below="@+id/tv_location_icon"
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:background="@color/colorLineGray2"/>
+            android:layout_below="@+id/tv_location_icon"
+            android:background="@color/colorLineGray2" />
     </RelativeLayout>
 
     <!--入住日期-->
     <RelativeLayout
-        android:layout_marginTop="16dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
         android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        >
+        android:paddingRight="16dp">
+
         <TextView
             android:id="@+id/tv_hotel_check_into"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="10月14日"
-            android:textSize="16sp"
-            android:textColor="@android:color/black"
             android:layout_centerVertical="true"
-            />
+            android:text="10月14日"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+
         <TextView
-            android:paddingLeft="16dp"
-            android:layout_toRightOf="@+id/tv_hotel_check_into"
-            android:layout_toLeftOf="@+id/tv_select_check_into_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="今天入住"
             android:layout_centerVertical="true"
-            android:textSize="16sp"
-            />
+            android:layout_toLeftOf="@+id/tv_select_check_into_date"
+            android:layout_toRightOf="@+id/tv_hotel_check_into"
+            android:paddingLeft="16dp"
+            android:text="今天入住"
+            android:textSize="16sp" />
+
         <TextView
             android:id="@+id/tv_select_check_into_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:text="入住日期"
-            android:textSize="16sp"
-            android:paddingTop="12dp"
-            android:paddingBottom="12dp"
-            android:drawableRight="@mipmap/arrow_right_dark"
             android:drawablePadding="10dp"
-            />
+            android:drawableRight="@mipmap/arrow_right_dark"
+            android:paddingBottom="12dp"
+            android:paddingTop="12dp"
+            android:text="入住日期"
+            android:textSize="16sp" />
     </RelativeLayout>
 
     <!--离店日期-->
     <RelativeLayout
-        android:layout_marginBottom="16dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
         android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        >
+        android:paddingRight="16dp">
+
         <TextView
             android:id="@+id/tv_hotel_left_out"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="10月15日"
-            android:textSize="16sp"
-            android:textColor="@android:color/black"
             android:layout_centerVertical="true"
-            />
+            android:text="10月15日"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+
         <TextView
-            android:paddingLeft="16dp"
-            android:layout_toRightOf="@+id/tv_hotel_left_out"
-            android:layout_toLeftOf="@+id/tv_select_left_out_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="星期二住一晚"
             android:layout_centerVertical="true"
-            android:textSize="16sp"
-            />
+            android:layout_toLeftOf="@+id/tv_select_left_out_date"
+            android:layout_toRightOf="@+id/tv_hotel_left_out"
+            android:paddingLeft="16dp"
+            android:text="星期二住一晚"
+            android:textSize="16sp" />
+
         <TextView
             android:id="@+id/tv_select_left_out_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:text="离店日期"
-            android:textSize="16sp"
-            android:paddingTop="12dp"
-            android:paddingBottom="12dp"
-            android:drawableRight="@mipmap/arrow_right_dark"
             android:drawablePadding="10dp"
-            />
+            android:drawableRight="@mipmap/arrow_right_dark"
+            android:paddingBottom="12dp"
+            android:paddingTop="12dp"
+            android:text="离店日期"
+            android:textSize="16sp" />
 
     </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_above="@+id/et_hotel_search_text"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@color/colorLineGray2" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="16dp"
         android:paddingRight="16dp">
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:layout_alignParentTop="true"
-            android:background="@color/colorLineGray2"/>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:layout_alignParentBottom="true"
-            android:background="@color/colorLineGray2"
-            />
-        <TextView
+
+        <EditText
+            android:id="@+id/et_hotel_search_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
             android:hint="关键字/位置/品牌/酒店名等"
-            android:textSize="16sp"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp"
-            />
+            android:paddingBottom="12dp"
+            android:paddingTop="12dp"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@color/colorLineGray2" />
+
+    <Button
+        android:id="@+id/btn_commit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/bg_btn_regist_border_selector"
+        android:text="@string/hotel_hotel_search"
+        android:textColor="@android:color/white"
+        android:textSize="16sp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_above="@+id/layout_hotel_bottom_btns"
+            android:background="@color/colorLineGray2" />
+
+        <LinearLayout
+            android:id="@+id/layout_hotel_bottom_btns"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_to_my_order"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:text="@string/hotel_hotel_my_order"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="46dp"
+                android:background="@color/colorLineGray2" />
+
+            <Button
+                android:id="@+id/btn_to_my_hotel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:text="@string/hotel_hotel_my_hotel"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
     </RelativeLayout>
 
 </LinearLayout>

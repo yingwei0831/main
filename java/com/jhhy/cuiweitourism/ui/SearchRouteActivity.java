@@ -180,6 +180,7 @@ public class SearchRouteActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void addListener() {
+        ivTitleLeft.setOnClickListener(this);
         tvSortDefault.setOnClickListener(this);
         tvSortDays.setOnClickListener(this);
         tvStartTime.setOnClickListener(this);
@@ -214,6 +215,9 @@ public class SearchRouteActivity extends BaseActivity implements View.OnClickLis
     @Override
     public void onClick(View view) {
         switch (view.getId()){
+            case R.id.title_main_tv_left_location:
+                finish();
+                break;
             case R.id.tv_tab1_search_route_list_sort_default:
                 tag = 1;
 //                new InnerTravelPopupWindow(this, layout, tag);
