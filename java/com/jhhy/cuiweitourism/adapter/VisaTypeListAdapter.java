@@ -44,10 +44,16 @@ public class VisaTypeListAdapter extends MyBaseAdapter {
         return view;
     }
 
-    public void setData(List<VisaType> lists){
-        this.list = lists;
+    @Override
+    public void setData(List list) {
+        super.setData(list);
         notifyDataSetChanged();
     }
+
+//    public void setData(List<VisaType> lists){
+//        this.list = lists;
+//        notifyDataSetChanged();
+//    }
 
     public void setSelection(int position){
         this.selection = position;

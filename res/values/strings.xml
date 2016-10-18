@@ -43,6 +43,7 @@
     <!--签证-->
     <string name="visa_hot">热门签证国家</string>
     <string name="visa_hot_all_country">查看全部国家和地区</string>
+    <string name="visa_hot_all_country_title">全部国家和地区</string>
     <string name="visa_hot_any">热门签证</string>
     <string name="visa_deliver">发送材料至我的邮箱</string>
     <string name="visa_title">签证详情</string>
@@ -305,12 +306,15 @@
     <string name="visa_reserve_notice">预订须知</string>
 
     <!--酒店-->
+    <string name="hotel_title">酒店</string>
     <string name="hotel_hotel_search">搜索</string>
     <string name="hotel_hotel_my_order">我的订单</string>
     <string name="hotel_hotel_my_hotel">我的酒店</string>
     <string name="hotel_hotel_my_hotel_screen">筛选</string>
     <string name="hotel_hotel_my_hotel_area">位置区域</string>
     <string name="hotel_hotel_my_hotel_level">价格星级</string>
+    <string name="hotel_select_date">日期选择</string>
+    <string name="hotel_screen">筛选</string>
 
     <!--XScrollView-->
     <string name="header_hint_refresh_normal">下拉刷新</string>

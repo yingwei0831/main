@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
@@ -55,6 +56,7 @@ public class PriceCalendarReserveActivity extends BaseActivity implements View.O
     private TextView tvCountChild; //儿童数量
     private int countAdult = 1;
     private int countChild;
+    private LinearLayout layoutNumber; //数量布局
 
     private Button btnReserve; //下一步，填写订单
 
@@ -93,28 +95,28 @@ public class PriceCalendarReserveActivity extends BaseActivity implements View.O
         getData();
         setupView();
         addListener();
-
+        addCalendarListener();
     }
 
     private void getData() {
         Bundle bundle = getIntent().getExtras();
         id = bundle.getString("id");
         type = bundle.getInt("type");
-        if (type == 11 ){
+        if (type == 11 ){ //应该是废弃了
             hotActivityDetail = (ActivityHotDetailInfo) bundle.getSerializable("hotActivityDetail");
-        }else {
-            detail = (TravelDetail) bundle.getSerializable("detail");
+        } else if (type == 13){ //酒店选择住店、离店日期
+
         }
-
-
-        LoadingIndicator.show(PriceCalendarReserveActivity.this, getString(R.string.http_notice));
-        CalendarLineBiz biz = new CalendarLineBiz(getApplicationContext(), handler);
-        biz.getCalendarLine("14");
+        else {
+            detail = (TravelDetail) bundle.getSerializable("detail");
+            LoadingIndicator.show(PriceCalendarReserveActivity.this, getString(R.string.http_notice));
+            CalendarLineBiz biz = new CalendarLineBiz(getApplicationContext(), handler);
+            biz.getCalendarLine("14");
+        }
     }
 
     private void setupView() {
         tvTitleTop = (TextView) findViewById(R.id.tv_title_inner_travel);
-        tvTitleTop.setText("立即购买");
         ivTitleLeft = (ImageView) findViewById(R.id.title_main_tv_left_location);
 
         calendar = (KCalendar) findViewById(R.id.calendar);
@@ -131,6 +133,16 @@ public class PriceCalendarReserveActivity extends BaseActivity implements View.O
         tvCountAdult.setText(String.valueOf(countAdult));
         tvCountChild.setText(String.valueOf(countChild));
         btnReserve = (Button) findViewById(R.id.btn_price_calendar_reserve);
+
+        layoutNumber = (LinearLayout) findViewById(R.id.layout_number);
+
+        if (type == 13){
+            tvTitleTop.setText(getString(R.string.hotel_select_date));
+            layoutNumber.setVisibility(View.GONE);
+            btnReserve.setText(getString(R.string.tab1_inner_travel_pop_commit));
+        }else {
+            tvTitleTop.setText("立即购买");
+        }
     }
 
     private void addListener() {
@@ -152,6 +164,8 @@ public class PriceCalendarReserveActivity extends BaseActivity implements View.O
     private GroupDeadline selectGroupDeadLine; //选择某天的价格日历
 
     private boolean selectDay;
+    private boolean selectHotelInDate; //入住酒店时间
+    private boolean selectHotelOutDate; //离开酒店时间
 
     private void refreshView() {
         //设置团期
@@ -164,48 +178,52 @@ public class PriceCalendarReserveActivity extends BaseActivity implements View.O
             tvCurrentDate.setText(dateYear + "年" + dateMonth + "月");
             calendar.showCalendar(dateYear, dateMonth);//设置初始日子
         }
+    }
+
+    private void addCalendarListener() {
 
         //监听所选中的日期
         calendar.setOnCalendarClickListener(new KCalendar.OnCalendarClickListener() {
 
             public void onCalendarClick(int row, int col, String dateFormat) {
+                LogUtil.e(TAG, "---------------onCalendarClick-------------- row = " + row +", col = " + col);
+//                if (type == 13){
+//
+//                }else {
+                    int month = Integer.parseInt(dateFormat.substring(
+                            dateFormat.indexOf("-") + 1,
+                            dateFormat.lastIndexOf("-")));
 
-                int month = Integer.parseInt(dateFormat.substring(
-                        dateFormat.indexOf("-") + 1,
-                        dateFormat.lastIndexOf("-")));
+                    if (calendar.getCalendarMonth() - month == 1//跨年跳转
+                            || calendar.getCalendarMonth() - month == -11) {
+                        calendar.lastMonth();
 
-                if (calendar.getCalendarMonth() - month == 1//跨年跳转
-                        || calendar.getCalendarMonth() - month == -11) {
-                    calendar.lastMonth();
+                    } else if (month - calendar.getCalendarMonth() == 1 //跨年跳转
+                            || month - calendar.getCalendarMonth() == -11) {
+                        calendar.nextMonth();
 
-                } else if (month - calendar.getCalendarMonth() == 1 //跨年跳转
-                        || month - calendar.getCalendarMonth() == -11) {
-                    calendar.nextMonth();
-
-                } else {
-                    selectDay = true;
-                    //date = dateFormat; //最后返回给全局 date
-                    for (int i = 0; i < calendarPricesNew.size(); i++) {
-                        String positionDate = calendarPricesNew.get(i).getDate();
+                    } else {
+                        selectDay = true;
+                        //date = dateFormat; //最后返回给全局 date
+                        for (int i = 0; i < calendarPricesNew.size(); i++) {
+                            String positionDate = calendarPricesNew.get(i).getDate();
 
 //                        int stock = Integer.parseInt(calendarPrices.get(i).getStock()); //因为没有人数限制
 //                        LogUtil.e("SHF", "dateFormat--->" + dateFormat + ", date--->" + calendarPrices.get(i).getDate()); // + "peopleNumCur--->" + "stock--->" + stock);
-                        LogUtil.e("SHF", "dateFormat--->" + dateFormat + ", positionDate--->" + positionDate +", date = " + date); // + "peopleNumCur--->" + "stock--->" + stock);
-                        if (dateFormat.equals(positionDate) ){ //当前点击日期的背景色
+                            LogUtil.e("SHF", "dateFormat--->" + dateFormat + ", positionDate--->" + positionDate + ", date = " + date); // + "peopleNumCur--->" + "stock--->" + stock);
+                            if (dateFormat.equals(positionDate)) { //当前点击日期的背景色
 //                                && (stock) > 0) {
-                            //设置背景色
-                            calendar.removeAllBgColor();
-                            calendar.setCalendarDayBgColor(dateFormat, ContextCompat.getColor(getApplicationContext(), R.color.colorCalendarSelection)); //Color.parseColor("#45BDEF")
-//                            priceAdult = Integer.parseInt(calendarPricesNew.get(i).getSell_price_adult());
-//                            priceChild = Integer.parseInt(calendarPricesNew.get(i).getSell_price_children());
-                            selectGroupDeadLine = calendarPricesNew.get(i);
-                        } else if (date.equals(positionDate)){ //如果是选择今天的日期
+                                //设置背景色
+                                calendar.removeAllBgColor();
+                                calendar.setCalendarDayBgColor(dateFormat, ContextCompat.getColor(getApplicationContext(), R.color.colorActionBar)); //Color.parseColor("#45BDEF")
+                                selectGroupDeadLine = calendarPricesNew.get(i);
+                            } else if (date.equals(positionDate)) { //如果是选择今天的日期
 //                                && (stock) > 0) {
 //                            ToastCommon.toastShortShow(getApplicationContext(), null, "此团期剩余空位不足，请选择其他团期或减少参团人数");
+                            }
                         }
                     }
-
-                }
+//                }
             }
         });
         calendar.setOnCalendarDateChangedListener(new KCalendar.OnCalendarDateChangedListener() {
@@ -258,14 +276,12 @@ public class PriceCalendarReserveActivity extends BaseActivity implements View.O
                 tvCountChild.setText(Integer.toString(countChild));
                 break;
             case R.id.btn_price_calendar_reserve:
-                if (selectDay) {
-//                    if (type == 11){
-//
-//                    }else {
+                if (type == 13){
+
+                } else {
+                    if (selectDay) {
                         Intent intent = new Intent(getApplicationContext(), InnerTravelEditOrderActivity.class);
                         Bundle bundle = new Bundle();
-//                    bundle.putInt("priceAdult", priceAdult);
-//                    bundle.putInt("priceChild", priceChild);
                         bundle.putInt("countAdult", countAdult);
                         bundle.putInt("countChild", countChild);
                         bundle.putSerializable("detail", detail);
@@ -274,9 +290,9 @@ public class PriceCalendarReserveActivity extends BaseActivity implements View.O
                         bundle.putSerializable("priceCalendar", selectGroupDeadLine);
                         intent.putExtras(bundle);
                         startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_EDIT_ORDER);
-//                    }
-                }else{
-                    ToastCommon.toastShortShow(getApplicationContext(), null, "请选择出发日期");
+                    } else {
+                        ToastCommon.toastShortShow(getApplicationContext(), null, "请选择出发日期");
+                    }
                 }
                 break;
         }

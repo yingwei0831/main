@@ -30,16 +30,24 @@ public class DatePickerActivity extends Activity implements View.OnClickListener
     private Button btnCancel;
     private Button btnConfirm;
 
+    private int currentYear;
+    private int currentMonth;
+    private int currentDate;
+
     private int year;
     private int month;
     private int date;
     private String newString = null;
+
+    private int type = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_date_picker);
+
+        getData();
 
         tvDate = (TextView) findViewById(R.id.tv_date_picker_select_time);
         btnCancel = (Button) findViewById(R.id.btn_date_picker_cancel);
@@ -65,11 +73,26 @@ public class DatePickerActivity extends Activity implements View.OnClickListener
         addListener();
     }
 
+    private void getData() {
+        Intent intent = getIntent();
+        if (intent != null){
+            Bundle bundle = intent.getExtras();
+            if (bundle != null){
+                type = bundle.getInt("type");
+            }
+        }
+    }
+
     private void initData() {
         Calendar calendar = Calendar.getInstance();
         year = calendar.get(Calendar.YEAR);
         month = (calendar.get(Calendar.MONTH) + 1);
         date = calendar.get(Calendar.DAY_OF_MONTH);
+
+        currentYear = year;
+        currentMonth = month;
+        currentDate = date;
+
         newString = String.format("%d年%02d月%02d日 %s", year, month, date, Utils.getDayOfStr(calendar.get(Calendar.DAY_OF_WEEK))); //calendar.get(Calendar.DAY_OF_WEEK);
         npYear.setMaxValue(calendar.get(Calendar.YEAR) + 2);
         npYear.setMinValue(calendar.get(Calendar.YEAR));

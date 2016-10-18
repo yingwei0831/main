@@ -44,10 +44,16 @@ public class VisaConnection2ListAdapter extends MyBaseAdapter {
         return view;
     }
 
-    public void setData(List<ClassifyArea> area){
-        this.list = area;
+    @Override
+    public void setData(List list) {
+        super.setData(list);
         notifyDataSetChanged();
     }
+
+//    public void setData(List<ClassifyArea> area){
+//        this.list = area;
+//        notifyDataSetChanged();
+//    }
 
 //    public void setSelection(int selection){
 //        this.selection = selection;

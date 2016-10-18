@@ -32,10 +32,16 @@ public abstract class ContactsListAdapter extends MyBaseAdapter implements ICont
         drawableRightUncheck = ContextCompat.getDrawable(context, R.drawable.unchecked);
     }
 
-    public void setData(List<UserContacts> listNew){
-        list = listNew;
+    @Override
+    public void setData(List list) {
+        super.setData(list);
         notifyDataSetChanged();
     }
+
+//    public void setData(List<UserContacts> listNew){
+//        list = listNew;
+//        notifyDataSetChanged();
+//    }
 
     public void addSelection(int selection){
 //        if (listPosition.contains(selection)){

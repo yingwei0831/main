@@ -9,7 +9,7 @@
     android:paddingTop="8dp">
 
     <ImageView
-        android:id="@+id/iv_search_title_left"
+        android:id="@+id/iv_title_search_left"
         android:layout_width="40dp"
         android:layout_height="match_parent"
         android:src="@mipmap/arrow_left_green"
@@ -17,7 +17,7 @@
         />
 
     <EditText
-        android:layout_toRightOf="@+id/iv_search_title_left"
+        android:layout_toRightOf="@+id/iv_title_search_left"
         android:drawableLeft="@mipmap/edit_search"
         android:id="@+id/edit_search"
         android:layout_width="match_parent"

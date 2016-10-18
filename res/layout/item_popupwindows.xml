@@ -15,7 +15,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#ff495a" />
+            android:background="@color/colorLineGray2" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -55,7 +55,7 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="2dp"
+            android:layout_height="1dp"
             android:background="#f3f3f3" />
 
         <Button

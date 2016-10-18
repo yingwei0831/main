@@ -41,10 +41,16 @@ public class SearchShopGridAdapter extends MyBaseAdapter {
         return view;
     }
 
-    public void setData(List<ShopRecommend> lists) {
-        this.list = lists;
+    @Override
+    public void setData(List list) {
+        super.setData(list);
         notifyDataSetChanged();
     }
+
+    //    public void setData(List<ShopRecommend> lists) {
+//        this.list = lists;
+//        notifyDataSetChanged();
+//    }
 
     public void addData(List<ShopRecommend> lists){
         this.list.addAll(lists);

@@ -25,10 +25,16 @@ public class HotDestinationAdapter extends MyBaseAdapter {
         super(ct, list);
     }
 
-    public void setData(List<HotDestination> newDest){
-        this.list = newDest;
+    @Override
+    public void setData(List list) {
+        super.setData(list);
         notifyDataSetChanged();
     }
+
+    //    public void setData(List<HotDestination> newDest){
+//        this.list = newDest;
+//        notifyDataSetChanged();
+//    }
     @Override
     public View getView(int position, View view, ViewGroup viewGroup) {
         HotDestViewHolder holder = null;

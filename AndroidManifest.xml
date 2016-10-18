@@ -169,6 +169,7 @@
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".ui.PriceCalendarReserveActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
@@ -411,7 +412,17 @@
         <activity
             android:name=".ui.CommentAllActivity"
             android:theme="@style/ActionBarTheme" />
-
+        <activity
+            android:name=".ui.HotelMainActivity"
+            android:theme="@style/ActionBarTheme" />
+        <activity
+            android:name=".ui.HotelListActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+        <activity
+            android:name=".ui.HotelDetailActivity"
+            android:theme="@style/ActionBarTheme" />
+        <activity android:name=".ui.HotelScreenActivity" android:theme="@style/ActionBarTheme"/>
         <!-- ShareSDK 2、注意： tencent后面的appid要保持和您配置的QQ的appid一致 -->
         <activity
             android:name="com.mob.tools.MobUIShell"
@@ -467,16 +478,15 @@
             android:name="com.alipay.sdk.app.H5PayActivity"
             android:configChanges="orientation|keyboardHidden|navigation"
             android:exported="false"
-            android:screenOrientation="behind"></activity>
+            android:screenOrientation="behind" />
         <activity
             android:name="com.alipay.sdk.auth.AuthActivity"
             android:configChanges="orientation|keyboardHidden|navigation"
             android:exported="false"
-            android:screenOrientation="behind"></activity>
-        <activity android:name=".ui.HotelMainActivity" />
+            android:screenOrientation="behind" />
         <!-- 接入支付宝支付-end- -->
 
-        <activity android:name=".ui.HotelDetailActivity"></activity>
+
     </application>
 
 </manifest>

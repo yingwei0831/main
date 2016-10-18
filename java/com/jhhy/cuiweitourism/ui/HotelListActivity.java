@@ -33,6 +33,8 @@ import com.jhhy.cuiweitourism.net.models.ResponseModel.HoutelPropertiesInfo;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
+import com.jhhy.cuiweitourism.popupwindows.PopupWindowHotelLevel;
+import com.jhhy.cuiweitourism.popupwindows.PopupWindowHotelSort;
 import com.jhhy.cuiweitourism.popupwindows.PopupWindowSearchLine;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
@@ -45,14 +47,13 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
 
     private String TAG = HotelListActivity.class.getSimpleName();
 
-    private TextView tvTitle;
+//    private TextView tvTitle;
     private ImageView ivTitleLeft;
-
-    private ArrayList<HotelListInfo> listHotel = new ArrayList<>();
 
     private PullToRefreshListView pullToRefreshListView;
     private ListView listView;
     private HotelListAdapter adapter;
+    private ArrayList<HotelListInfo> listHotel = new ArrayList<>();
 
     private View layout;
     private TextView tvScreen; //筛选
@@ -62,49 +63,35 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
 
     private int tag = 0;
 
-    private List<String> listDays = new ArrayList<>();
-    private List<PriceArea> listPrices = new ArrayList<>();
+//    private List<String> listDays = new ArrayList<>();
+//    private List<PriceArea> listPrices = new ArrayList<>();
+
+//    private String fromCityId = "1";
+//    private String sort = ""; //排序
+//    private String sortCommit = ""; //排序
+//    private String day = ""; //行程天数
+//    private int pricePosition = -1; //价格位置
+//    private String earlyTime = ""; //最早出发时间
+//    private String tempEarlyTime = ""; //最早出发时间
+//    private String laterTime = ""; //最晚出发时间
+//    private String tempLaterTime = ""; //最晚出发时间
+
+//    private PhoneBean selectCity; //主页选择的城市
 
     private int page = 1;
-    private String fromCityId = "1";
-    private String sort = ""; //排序
-    private String sortCommit = ""; //排序
-    private String day = ""; //行程天数
+    private String areaId = "8"; //城市id，与主页不一样
+    private String startTime = "2016-09-16"; //2016-09-16
+    private String endTime = ""; //
+    private String keyWords = "";
+    private String order = "price desc";
     private String price = ""; //价格
-    private int pricePosition = -1; //价格位置
-    private String earlyTime = ""; //最早出发时间
-    private String tempEarlyTime = ""; //最早出发时间
-    private String laterTime = ""; //最晚出发时间
-    private String tempLaterTime = ""; //最晚出发时间
-
-    private PhoneBean selectCity; //主页选择的城市
-    private String areaId; //城市id
 
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
-                case Consts.MESSAGE_TRIP_DAYS:
-                    if (msg.arg1 == 0) {
-                        ToastUtil.show(getApplicationContext(), (String) msg.obj);
-                        return;
-                    }
-                    listDays = (List<String>) msg.obj;
-                    if (listDays == null || listDays.size() == 0) {
-                        ToastUtil.show(getApplicationContext(), "未获取到筛选天数");
-                    }
-                    break;
-                case Consts.MESSAGE_TRIP_PRICE:
-                    if (msg.arg1 == 0) {
-                        ToastUtil.show(getApplicationContext(), (String) msg.obj);
-                        return;
-                    }
-                    listPrices = (List<PriceArea>) msg.obj;
-                    if (listPrices == null || listPrices.size() == 0) {
-                        ToastUtil.show(getApplicationContext(), "未获取到筛选价格区间");
-                    }
-                    break;
+
             }
         }
     };
@@ -113,54 +100,54 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hotel_list);
-//        getData();
-        getInternetData();
+        getData();
         getHotelListData();
         setupView();
         addListener();
     }
 
-    private void getInternetData() {
-        LoadingIndicator.show(HotelListActivity.this, getString(R.string.http_notice));
-
-        HotelActionBiz hotelBiz = new HotelActionBiz();
-
-        // 获取酒店属性列表
-        hotelBiz.hotelGetPropertiesList(new BizGenericCallback<ArrayList<HoutelPropertiesInfo>>() {
-            @Override
-            public void onCompletion(GenericResponseModel<ArrayList<HoutelPropertiesInfo>> model) {
-                ArrayList<HoutelPropertiesInfo> array = model.body;
-                LogUtil.e(TAG,"hotelGetPropertiesList =" + array.toString());
-            }
-
-            @Override
-            public void onError(FetchError error) {
-                LogUtil.e(TAG, "hotelGetPropertiesList: " + error.toString());
-            }
-        });
+    private void getData() {
 
     }
 
     private void getHotelListData(){
+        LoadingIndicator.show(HotelListActivity.this, getString(R.string.http_notice));
         HotelActionBiz hotelBiz = new HotelActionBiz();
         //"areaid":"8","starttime":"2016-09-16","endtime":"","keyword":"","page":"1","offset":"10","order":"price desc","price":"","level":""
         //获取酒店列表
-        HotelListFetchRequest request = new HotelListFetchRequest("8","2016-09-16","","","1","offset","price desc","","");
+//        HotelListFetchRequest request = new HotelListFetchRequest(areaId, startTime, endTime, keyWords, String.valueOf(page), "10", String.valueOf(orderPosition), price, String.valueOf(levelPosition));
+        HotelListFetchRequest request = new HotelListFetchRequest(areaId, startTime, endTime, keyWords, String.valueOf(page), "10", order, price, "");
         hotelBiz.hotelGetInfoList(request, new BizGenericCallback<ArrayList<HotelListInfo>>() {
             @Override
             public void onCompletion(GenericResponseModel<ArrayList<HotelListInfo>> model) {
-                ArrayList<HotelListInfo> array = model.body;
-                LogUtil.e(TAG,"houtelGetInfoList =" + array.toString());
+                if ("0001".equals(model.headModel.res_code)){
+                    ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);
+                }else if ("0000".equals(model.headModel.res_code)){
+                    ArrayList<HotelListInfo> array = model.body;
+                    LogUtil.e(TAG,"houtelGetInfoList =" + array.toString());
+
+                    listHotel = array;
+                    refreshView();
+                }
+                LoadingIndicator.cancel();
             }
 
             @Override
             public void onError(FetchError error) {
-                LogUtil.e(TAG, "houtelGetInfoList: " + error.toString());
+                if (error.localReason != null){
+                    ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
+                }else {
+                    LogUtil.e(TAG, "houtelGetInfoList: " + error.toString());
+                }
+                LoadingIndicator.cancel();
             }
         });
     }
 
     private void setupView() {
+//        tvTitle = (TextView) findViewById(R.id.tv_title_inner_travel);
+        layout = findViewById(R.id.activity_hot_activity_list);
+        ivTitleLeft = (ImageView) findViewById(R.id.iv_title_search_left);
 
         pullToRefreshListView = (PullToRefreshListView) findViewById(R.id.activity_hot_activity_list_view);
         listView = pullToRefreshListView.getRefreshableView();
@@ -209,36 +196,88 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            case R.id.title_main_tv_left_location:
+            case R.id.iv_title_search_left:
                 finish();
                 break;
             case R.id.tv_tab1_hot_activity_list_sort_default: //筛选
-
+                Intent intentScreen = new Intent( getApplicationContext(), HotelScreenActivity.class);
+                startActivityForResult(intentScreen, SELECT_SCREEN);
                 break;
             case R.id.tv_tab1_hot_activity_list_trip_days: //位置区域
 
                 break;
             case R.id.tv_tab1_hot_activity_list_start_time: //价格星级
                 tag = 3;
-                showPopupWindow();
+                showPopupWindowLevel();
                 break;
             case R.id.tv_tab1_hot_activity_list_screen_price: //默认排序
                 tag = 4;
-                showPopupWindow();
+                showPopupWindowSort();
                 break;
 
         }
     }
 
-    private void showPopupWindow() {
-        if (popupWindowSearchLine == null) {
-            popupWindowSearchLine = new PopupWindowSearchLine(HotelListActivity.this, layout, tag, listDays, listPrices);
-            addPopListener();
+    private PopupWindowHotelSort popUpSort;
+    private int orderPosition = 0;
+
+    private void showPopupWindowSort() {
+        if (popUpSort == null){
+            popUpSort = new PopupWindowHotelSort(HotelListActivity.this, layout);
+            addSortListener();
         }else{
-            popupWindowSearchLine.showAtLocation(layout, Gravity.BOTTOM, 0, 0);
-            popupWindowSearchLine.refreshView(tag, sort, day, earlyTime, laterTime, pricePosition);
+            popUpSort.showAtLocation(layout, Gravity.BOTTOM, 0, 0);
+            popUpSort.refreshView(orderPosition);
         }
     }
+
+    private void addSortListener() {
+        popUpSort.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                int orderPositionNew = popUpSort.getSortPosition();
+                if (orderPosition != orderPositionNew){
+                    orderPosition = orderPositionNew;
+                    //TODO 重新获取数据
+
+                }
+            }
+        });
+    }
+
+    private PopupWindowHotelLevel popUpLevel;
+    private int levelPosition; //星级选择
+    private int priceMinPosition; //价格最低选择
+    private int priceMaxPosition; //价格最高选择
+
+    private void showPopupWindowLevel() {
+        if (popUpLevel == null){
+            popUpLevel = new PopupWindowHotelLevel(HotelListActivity.this, layout);
+            addLevelListener();
+        }else{
+            popUpLevel.showAtLocation(layout, Gravity.BOTTOM, 0, 0);
+            popUpLevel.refreshView(levelPosition, priceMinPosition, priceMaxPosition);
+        }
+    }
+
+    private void addLevelListener() {
+        popUpLevel.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                boolean commit = popUpLevel.getCommit();
+                if (commit){
+                    levelPosition = popUpLevel.getStarLevel();
+                    priceMinPosition = popUpLevel.getPriceMin();
+                    priceMaxPosition = popUpLevel.getPriceMax();
+                    //TODO 重新请求数据
+
+                }
+            }
+        });
+    }
+
+    private int VIEW_HOTEL_DETAIL = 3801; //查看酒店详情
+    private int SELECT_SCREEN = 5696; //筛选
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -247,60 +286,18 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
             if (resultCode == RESULT_OK){
 
             }
+        }else if(requestCode == SELECT_SCREEN){ //筛选
+            if (resultCode == RESULT_OK){
+
+            }
         }
     }
-
 
     private void refreshView(){
         adapter.setData(listHotel);
     }
 
-    private PopupWindowSearchLine popupWindowSearchLine;
 
-    private void addPopListener(){
-        popupWindowSearchLine.setOnDismissListener(new PopupWindow.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-                //获取相关参数值：摁了“确定”，返回按钮，摁了“取消”，BACK键
-                boolean commit = popupWindowSearchLine.getCommit();
-                if (commit) {
-                    String newSort = popupWindowSearchLine.getSort();
-                    if (newSort != null) {
-                        sort = newSort;
-                        if ("0".equals(newSort)){
-                            sortCommit = "";
-                        }else if ("1".equals(newSort)){
-                            sortCommit = "price asc";
-                        }else if ("2".equals(newSort)){
-                            sortCommit = "price desc"; //价格降序
-                        }
-                    }
-                    String newDay = popupWindowSearchLine.getDay();
-                    if (newDay != null) {
-                        day = newDay;
-                    }
-                    String newPrice = popupWindowSearchLine.getPrice();
-                    int newPricePosition = popupWindowSearchLine.getPricePosition();
-                    if (newPrice != null) {
-                        price = newPrice;
-                    }
-                    if (newPricePosition != -1){
-                        pricePosition = newPricePosition;
-                    }
-                    String newEarylTime = popupWindowSearchLine.getEarlyTime();
-                    if (newEarylTime != null) {
-                        earlyTime = newEarylTime;
-                    }
-                    String newLaterTime = popupWindowSearchLine.getLaterTime();
-                    if (newLaterTime != null) {
-                        laterTime = newLaterTime;
-                    }
-                    //TODO 重新请求数据
-                    getHotelListData();
-                }
-            }
-        });
-    }
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -313,7 +310,6 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
         startActivityForResult(intent, VIEW_HOTEL_DETAIL);
     }
 
-    private int VIEW_HOTEL_DETAIL = 3801; //查看酒店详情
 
 
 

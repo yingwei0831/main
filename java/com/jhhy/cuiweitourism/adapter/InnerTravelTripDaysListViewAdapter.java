@@ -50,7 +50,6 @@ public class InnerTravelTripDaysListViewAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-//        if(1 == type || 3 == type) {
             InnerTravelTripDaysViewHolder holder = null;
             if (null == view) {
                 view = inflater.inflate(R.layout.inner_trip_days_listview_item, viewGroup, false);

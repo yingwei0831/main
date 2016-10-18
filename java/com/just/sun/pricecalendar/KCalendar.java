@@ -562,11 +562,11 @@ public class KCalendar extends ViewFlipper implements
                     }
 
                 }else{
-
                     ToastCommon.toastShortShow(getContext(), null, groups.get(groups.size() - 1).getDate() + "之后无计划...");
                 }
             } else {
-                ToastCommon.toastShortShow(getContext(), null, groups.get(groups.size() - 1).getDate() + "之后无计划...");
+//                ToastCommon.toastShortShow(getContext(), null, groups.get(groups.size() - 1).getDate() + "之后无计划..."); //IndexOutOfBounds
+//                showNext();
             }
         }
     }
@@ -617,7 +617,7 @@ public class KCalendar extends ViewFlipper implements
                     ToastCommon.toastShortShow(getContext(), null, groups.get(0).getDate() + "之前无计划...");
                 }
             } else {
-                ToastCommon.toastShortShow(getContext(), null, groups.get(0).getDate() + "之前无计划...");
+//                ToastCommon.toastShortShow(getContext(), null, groups.get(0).getDate() + "之前无计划..."); //空指针
             }
         }
     }

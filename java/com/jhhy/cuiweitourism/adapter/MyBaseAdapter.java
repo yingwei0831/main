@@ -11,6 +11,9 @@ public abstract class MyBaseAdapter<T,Q> extends BaseAdapter {
 	public List<T> list;
 	public Q view;// 这里不一定是ListView,比如GridView,CustomListView
 
+	public void setData(List<T> list){
+		this.list = list;
+	}
 
 	public MyBaseAdapter(Context ct, List<T> list, Q view) {
 		super();
@@ -27,7 +30,7 @@ public abstract class MyBaseAdapter<T,Q> extends BaseAdapter {
 
 	@Override
 	public int getCount() {
-		if(list==null){
+		if(list == null){
 			return 0;
 		}else{
 			return list.size();

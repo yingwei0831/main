@@ -20,12 +20,14 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:paddingLeft="10dp"
-            android:paddingRight="10dp">
+            android:paddingRight="10dp"
+            android:orientation="vertical">
 
             <com.handmark.pulltorefresh.library.PullToRefreshListView
                 android:id="@+id/activity_hot_activity_list_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+
                 >
 
             </com.handmark.pulltorefresh.library.PullToRefreshListView>

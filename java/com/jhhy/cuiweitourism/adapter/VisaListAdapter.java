@@ -43,10 +43,16 @@ public class VisaListAdapter extends MyBaseAdapter {
         return view;
     }
 
-    public void setData(List<VisaHotCountryCity> listCity){
-        this.list = listCity;
+    @Override
+    public void setData(List list) {
+        super.setData(list);
         notifyDataSetChanged();
     }
+
+//    public void setData(List<VisaHotCountryCity> listCity){
+//        this.list = listCity;
+//        notifyDataSetChanged();
+//    }
 
     class ViewHolder {
         private TextView tvTitle;

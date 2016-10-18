@@ -496,6 +496,7 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
         tvInnerTravel.setOnClickListener(this);
         tvOutsideTravel.setOnClickListener(this);
         tvStartActivity.setOnClickListener(this);
+        tvHotel.setOnClickListener(this);
         tvRentCar.setOnClickListener(this);
         tvVisa.setOnClickListener(this);
         layoutPersionalizedCustom.setOnClickListener(this);
@@ -542,7 +543,7 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
                 VisaMainActivity.actionStart(getContext(), null);
                 break;
             case R.id.tv_tab1_hotel: //酒店
-                startActivity(new Intent(getContext(), HotelMainActivity.class));
+                HotelMainActivity.actionStart(getContext(), null);
                 break;
             case R.id.layout_personalized_custom: //个性定制
                 Bundle bundleCustom = new Bundle();

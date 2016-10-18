@@ -9,7 +9,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp" />
+        android:layout_height="140dp" />
 
     <!--定位地址-->
     <RelativeLayout
@@ -58,6 +58,7 @@
 
     <!--入住日期-->
     <RelativeLayout
+        android:id="@+id/layout_hotel_check_in"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
@@ -65,7 +66,7 @@
         android:paddingRight="16dp">
 
         <TextView
-            android:id="@+id/tv_hotel_check_into"
+            android:id="@+id/tv_hotel_check_into_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -74,11 +75,12 @@
             android:textSize="16sp" />
 
         <TextView
+            android:id="@+id/tv_hotel_check_in_notice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/tv_select_check_into_date"
-            android:layout_toRightOf="@+id/tv_hotel_check_into"
+            android:layout_toRightOf="@+id/tv_hotel_check_into_date"
             android:paddingLeft="16dp"
             android:text="今天入住"
             android:textSize="16sp" />
@@ -98,6 +100,7 @@
 
     <!--离店日期-->
     <RelativeLayout
+        android:id="@+id/layout_hotel_check_out"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp"
@@ -105,7 +108,7 @@
         android:paddingRight="16dp">
 
         <TextView
-            android:id="@+id/tv_hotel_left_out"
+            android:id="@+id/tv_hotel_left_out_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -114,13 +117,14 @@
             android:textSize="16sp" />
 
         <TextView
+            android:id="@+id/tv_hotel_check_out_notice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/tv_select_left_out_date"
-            android:layout_toRightOf="@+id/tv_hotel_left_out"
+            android:layout_toRightOf="@+id/tv_hotel_left_out_date"
             android:paddingLeft="16dp"
-            android:text="星期二住一晚"
+            android:text="星期五住一晚"
             android:textSize="16sp" />
 
         <TextView

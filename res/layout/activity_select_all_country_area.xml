@@ -3,22 +3,49 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.jhhy.cuiweitourism.ui.SelectAllCountryAreaActivity"
-    >
+    android:orientation="vertical"
+    tools:context="com.jhhy.cuiweitourism.ui.SelectAllCountryAreaActivity">
 
-    <ListView
-        android:id="@+id/list_father"
-        android:layout_width="100dp"
-        android:layout_height="match_parent"
-        android:background="#F2F3F4">
-
-    </ListView>
-
-    <ListView
-        android:background="@android:color/white"
-        android:id="@+id/list_son"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
 
-    </ListView>
+        <ListView
+            android:id="@+id/list_father"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:background="#F2F3F4">
+
+        </ListView>
+
+        <ListView
+            android:id="@+id/list_son"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/white">
+
+        </ListView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_hotel_commit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#F2F3F4"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/btn_commit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_btn_regist_border_selector"
+            android:text="@string/tab1_inner_travel_pop_commit"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+    </LinearLayout>
+
 </LinearLayout>

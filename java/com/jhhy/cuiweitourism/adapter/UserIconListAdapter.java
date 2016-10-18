@@ -24,10 +24,16 @@ public class UserIconListAdapter extends MyBaseAdapter {
         super(ct, list);
     }
 
-    public void setData(List<UserIcon> icons){
-        list = icons;
+    @Override
+    public void setData(List list) {
+        super.setData(list);
         notifyDataSetChanged();
     }
+
+//    public void setData(List<UserIcon> icons){
+//        list = icons;
+//        notifyDataSetChanged();
+//    }
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {

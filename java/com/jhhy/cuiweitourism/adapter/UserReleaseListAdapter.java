@@ -75,10 +75,15 @@ public abstract class UserReleaseListAdapter extends MyBaseAdapter implements Ar
         return view;
     }
 
-    public void setData(List<CustomActivity> lists) {
-        this.list = lists;
+    @Override
+    public void setData(List list) {
+        super.setData(list);
         notifyDataSetChanged();
     }
+//    public void setData(List<CustomActivity> lists) {
+//        this.list = lists;
+//        notifyDataSetChanged();
+//    }
 
     class CollectionViewHolder{
         private ImageView imageView;

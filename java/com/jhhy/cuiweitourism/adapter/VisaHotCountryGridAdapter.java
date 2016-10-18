@@ -43,10 +43,15 @@ public class VisaHotCountryGridAdapter extends MyBaseAdapter {
         return view;
     }
 
-    public void setData(List<CityRecommend> listHotCountry) {
-        this.list = listHotCountry;
+    @Override
+    public void setData(List list) {
+        super.setData(list);
         notifyDataSetChanged();
     }
+//    public void setData(List<CityRecommend> listHotCountry) {
+//        this.list = listHotCountry;
+//        notifyDataSetChanged();
+//    }
 
     class ViewHolder{
         private ImageView imageView;

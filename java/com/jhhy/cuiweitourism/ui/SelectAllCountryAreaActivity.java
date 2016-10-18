@@ -8,7 +8,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.VisaConnection2ListAdapter;
@@ -21,7 +23,11 @@ import com.just.sun.pricecalendar.ToastCommon;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SelectAllCountryAreaActivity extends BaseActivity {
+public class SelectAllCountryAreaActivity extends BaseActivity implements View.OnClickListener {
+
+    private ImageView ivTitleLeft;
+    private TextView tvTitle;
+    private ActionBar actionBar;
 
     private ListView listViewFirst;
     private ListView listViewSecond;
@@ -61,11 +67,14 @@ public class SelectAllCountryAreaActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //获取ActionBar对象
-        ActionBar bar =  getSupportActionBar();
+        actionBar =  getSupportActionBar();
         //自定义一个布局，并居中
-        bar.setDisplayShowCustomEnabled(true);
+        actionBar.setDisplayShowCustomEnabled(true);
         View v = LayoutInflater.from(getApplicationContext()).inflate(R.layout.title_tab1_inner_travel, null);
-        bar.setCustomView(v, new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT));
+        actionBar.setCustomView(v, new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT)); //自定义ActionBar布局);
+        actionBar.setElevation(0); //删除自带阴影
+
+
         setContentView(R.layout.activity_select_all_country_area);
         getData();
         setupView();
@@ -73,6 +82,7 @@ public class SelectAllCountryAreaActivity extends BaseActivity {
     }
 
     private void addListener() {
+        ivTitleLeft.setOnClickListener(this);
         listViewFirst.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -110,6 +120,10 @@ public class SelectAllCountryAreaActivity extends BaseActivity {
     }
 
     private void setupView() {
+        tvTitle = (TextView) actionBar.getCustomView().findViewById(R.id.tv_title_inner_travel);
+        tvTitle.setText(getString(R.string.visa_hot_all_country_title));
+        ivTitleLeft = (ImageView) actionBar.getCustomView().findViewById(R.id.title_main_tv_left_location);
+
         listViewFirst = (ListView) findViewById(R.id.list_father);
         adapterFirst = new VisaConnectionListAdapter(getApplicationContext(), listFirst);
         adapterFirst.setSelection(0);
@@ -123,5 +137,14 @@ public class SelectAllCountryAreaActivity extends BaseActivity {
     private void getData() {
         VisaBiz biz = new VisaBiz(getApplicationContext(), handler);
         biz.getAllHotCountry();
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.title_main_tv_left_location:
+                finish();
+                break;
+        }
     }
 }

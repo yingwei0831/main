@@ -47,10 +47,16 @@ public class SearchShopListAdapter extends MyBaseAdapter {
         return view;
     }
 
-    public void setData(List<Line> list) {
-        this.list = list;
+    @Override
+    public void setData(List list) {
+        super.setData(list);
         notifyDataSetChanged();
     }
+
+    //    public void setData(List<Line> list) {
+//        this.list = list;
+//        notifyDataSetChanged();
+//    }
 
     public void addData(List<Line> lists){
         this.list.addAll(lists);

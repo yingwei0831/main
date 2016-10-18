@@ -1,11 +1,43 @@
 package com.jhhy.cuiweitourism.net.models.ResponseModel;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by zhangguang on 16/10/17.
  */
-public class HoutelPropertiesInfo {
+public class HoutelPropertiesInfo implements Serializable {
+//    @Override
+//    public int describeContents() {
+//        return 0;
+//    }
+//
+//    @Override
+//    public void writeToParcel(Parcel out, int flag) {
+//        out.writeString(id);
+//        out.writeString(attrname);
+//        out.writeList(son);
+//    }
+//    private HoutelPropertiesInfo(Parcel in){
+//        id = in.readString();
+//        attrname = in.readString();
+////        son = in.readArrayList(son.getClass().getClassLoader());
+//    }
+//    public static final Parcelable.Creator<HoutelPropertiesInfo> CREATOR = new Creator<HoutelPropertiesInfo>() {
+//        @Override
+//        public HoutelPropertiesInfo createFromParcel(Parcel in) {
+//            return new HoutelPropertiesInfo(in);
+//        }
+//
+//        @Override
+//        public HoutelPropertiesInfo[] newArray(int size) {
+//            return new HoutelPropertiesInfo[size];
+//        }
+//    };
+
 
 //    {
 //        "id": "190",
@@ -19,7 +51,7 @@ public class HoutelPropertiesInfo {
 //    },
 
 
-    public static class Son{
+    public static class Son implements Parcelable{
         public String id;
         public String attrname;
 
@@ -54,6 +86,34 @@ public class HoutelPropertiesInfo {
                     ", attrname='" + attrname + '\'' +
                     '}';
         }
+
+        public static final Parcelable.Creator<Son> CREATOR = new Creator<Son>() {
+            @Override
+            public Son createFromParcel(Parcel in) {
+                return new Son(in);
+            }
+
+            @Override
+            public Son[] newArray(int size) {
+                return new Son[size];
+            }
+        };
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel parcel, int i) {
+            parcel.writeString(id);
+            parcel.writeString(attrname);
+        }
+        private Son(Parcel in){
+            id = in.readString();
+            attrname = in.readString();
+        }
+
     }
 
     public String id;

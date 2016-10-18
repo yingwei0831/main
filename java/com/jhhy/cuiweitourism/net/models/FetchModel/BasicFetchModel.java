@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,7 +16,7 @@ import java.util.Map;
 /**
  * Created by birney1 on 16/9/28.
  */
- public abstract class BasicFetchModel  {
+ public abstract class BasicFetchModel  implements Serializable{
 
     public String code;
 
