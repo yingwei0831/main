@@ -88,7 +88,7 @@ public class Tab1GridViewAdapter extends BaseAdapter {
             //TODO
             holder.tvTitle.setText(travel.getTravelTitle());
             holder.tvPrice.setText(travel.getTravelPrice());
-            ImageLoaderUtil.getInstance(context).displayImage(travel.getTravelIconPath(), holder.ivDestination);
+//            ImageLoaderUtil.getInstance(context).displayImage(travel.getTravelIconPath(), holder.ivDestination);
         }
         return view;
     }

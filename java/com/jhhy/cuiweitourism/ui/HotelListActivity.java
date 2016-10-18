@@ -61,22 +61,6 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
     private TextView tvPriceLevel; //价格星级
     private TextView tvSortDefault; //默认排序
 
-    private int tag = 0;
-
-//    private List<String> listDays = new ArrayList<>();
-//    private List<PriceArea> listPrices = new ArrayList<>();
-
-//    private String fromCityId = "1";
-//    private String sort = ""; //排序
-//    private String sortCommit = ""; //排序
-//    private String day = ""; //行程天数
-//    private int pricePosition = -1; //价格位置
-//    private String earlyTime = ""; //最早出发时间
-//    private String tempEarlyTime = ""; //最早出发时间
-//    private String laterTime = ""; //最晚出发时间
-//    private String tempLaterTime = ""; //最晚出发时间
-
-//    private PhoneBean selectCity; //主页选择的城市
 
     private int page = 1;
     private String areaId = "8"; //城市id，与主页不一样
@@ -115,8 +99,8 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
         HotelActionBiz hotelBiz = new HotelActionBiz();
         //"areaid":"8","starttime":"2016-09-16","endtime":"","keyword":"","page":"1","offset":"10","order":"price desc","price":"","level":""
         //获取酒店列表
-//        HotelListFetchRequest request = new HotelListFetchRequest(areaId, startTime, endTime, keyWords, String.valueOf(page), "10", String.valueOf(orderPosition), price, String.valueOf(levelPosition));
-        HotelListFetchRequest request = new HotelListFetchRequest(areaId, startTime, endTime, keyWords, String.valueOf(page), "10", order, price, "");
+        HotelListFetchRequest request = new HotelListFetchRequest(areaId, startTime, endTime, keyWords, String.valueOf(page), "10", String.valueOf(orderPosition), price, String.valueOf(levelPosition));
+//        HotelListFetchRequest request = new HotelListFetchRequest(areaId, startTime, endTime, keyWords, String.valueOf(page), "10", order, price, "");
         hotelBiz.hotelGetInfoList(request, new BizGenericCallback<ArrayList<HotelListInfo>>() {
             @Override
             public void onCompletion(GenericResponseModel<ArrayList<HotelListInfo>> model) {
@@ -207,11 +191,11 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
 
                 break;
             case R.id.tv_tab1_hot_activity_list_start_time: //价格星级
-                tag = 3;
+
                 showPopupWindowLevel();
                 break;
             case R.id.tv_tab1_hot_activity_list_screen_price: //默认排序
-                tag = 4;
+
                 showPopupWindowSort();
                 break;
 
