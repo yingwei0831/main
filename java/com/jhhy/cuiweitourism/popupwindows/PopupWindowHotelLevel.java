@@ -4,6 +4,7 @@ package com.jhhy.cuiweitourism.popupwindows;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,6 +26,7 @@ import com.jhhy.cuiweitourism.dialog.DatePickerActivity;
 import com.jhhy.cuiweitourism.moudle.PriceArea;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
+import com.yingwei.view.rangebar.RangeBar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +47,8 @@ public class PopupWindowHotelLevel extends PopupWindow implements OnClickListene
     private RadioButton rbHighGrade;
     private RadioButton rbLuxury;
 
+    private RangeBar rangeBar;
+
 //    private RadioGroup radioGroup;
 
 //    private boolean isClear;
@@ -53,6 +57,8 @@ public class PopupWindowHotelLevel extends PopupWindow implements OnClickListene
     private int starLevel;
     private int priceMin;
     private int priceMax;
+
+    private int count = 5;
 
     public PopupWindowHotelLevel(Activity activity, View parent) {
         super(activity);
@@ -116,12 +122,27 @@ public class PopupWindowHotelLevel extends PopupWindow implements OnClickListene
         rbLuxury = (RadioButton) view.findViewById(     R.id.rb_level_luxury);
 
 //        radioGroup = (RadioGroup) view.findViewById(R.id.radio_group_hotel_level);
+        int color = 0xFF28CE9D;
+        int colorGray = 0xFFd1d1d1;
+        rangeBar = (RangeBar) view.findViewById(R.id.rangebar1);
+        //设置间隔数
+        rangeBar.setTickCount(count);
+        //
+        rangeBar.setTickHeight(8);
+        //设置滑块的半径
+        rangeBar.setThumbRadius(8);
+        rangeBar.setBarWeight(1);
+        rangeBar.setConnectingLineWeight(3);
+//        rangeBar.setBarColor(color);
+        rangeBar.setConnectingLineColor(color);
+        rangeBar.setThumbColorNormal(color);
+        rangeBar.setThumbColorPressed(color);
 
         rbAll.setChecked(true);
-        rbPrice.setChecked(true);
-        rbComfort.setChecked(true);
-        rbHighGrade.setChecked(true);
-        rbLuxury.setChecked(true);
+//        rbPrice.setChecked(true);
+//        rbComfort.setChecked(true);
+//        rbHighGrade.setChecked(true);
+//        rbLuxury.setChecked(true);
     }
 
     private void addListener() {
@@ -134,6 +155,15 @@ public class PopupWindowHotelLevel extends PopupWindow implements OnClickListene
         rbComfort.setOnClickListener(this);
         rbHighGrade.setOnClickListener(this);
         rbLuxury.setOnClickListener(this);
+
+        rangeBar.setOnRangeBarChangeListener(new RangeBar.OnRangeBarChangeListener() {
+            @Override
+            public void onIndexChangeListener(RangeBar rangeBar, int leftThumbIndex, int rightThumbIndex) {
+                priceMin = leftThumbIndex;
+                priceMax = rightThumbIndex;
+                LogUtil.e(TAG, "leftThumbIndex =" + leftThumbIndex + "rightThumbIndex=" + rightThumbIndex); //0,1,2,3,4
+            }
+        });
     }
 
     @Override
@@ -147,17 +177,27 @@ public class PopupWindowHotelLevel extends PopupWindow implements OnClickListene
                     rbComfort.setChecked(false);
                     rbHighGrade.setChecked(false);
                     rbLuxury.setChecked(false);
+                }else{
+                    rbPrice.setChecked(false);
+                    rbComfort.setChecked(false);
+                    rbHighGrade.setChecked(false);
+                    rbLuxury.setChecked(false);
+                    rbAll.setChecked(true);
                 }
                 break;
             case R.id.rb_level_price:
                 boolean checkPrice = rbPrice.isChecked();
                 starLevel = 2;
                 if (checkPrice){
+                    rbAll.setChecked(false);
                     rbComfort.setChecked(false);
                     rbHighGrade.setChecked(false);
                     rbLuxury.setChecked(false);
                 }else{
-                    rbAll.setChecked(true);
+                    rbAll.setChecked(false);
+                    rbComfort.setChecked(false);
+                    rbHighGrade.setChecked(false);
+                    rbLuxury.setChecked(false);
                     rbPrice.setChecked(true);
                 }
                 break;
@@ -165,11 +205,15 @@ public class PopupWindowHotelLevel extends PopupWindow implements OnClickListene
                 boolean checkComfort = rbComfort.isChecked();
                 starLevel = 3;
                 if (checkComfort){
+                    rbAll.setChecked(false);
+                    rbPrice.setChecked(false);
                     rbHighGrade.setChecked(false);
                     rbLuxury.setChecked(false);
                 }else{
-                    rbAll.setChecked(true);
-                    rbPrice.setChecked(true);
+                    rbAll.setChecked(false);
+                    rbPrice.setChecked(false);
+                    rbHighGrade.setChecked(false);
+                    rbLuxury.setChecked(false);
                     rbComfort.setChecked(true);
                 }
                 break;
@@ -177,11 +221,15 @@ public class PopupWindowHotelLevel extends PopupWindow implements OnClickListene
                 boolean checkGrade = rbHighGrade.isChecked();
                 starLevel = 4;
                 if (checkGrade){
+                    rbAll.setChecked(false);
+                    rbPrice.setChecked(false);
+                    rbComfort.setChecked(false);
                     rbLuxury.setChecked(false);
                 }else{
-                    rbAll.setChecked(true);
-                    rbPrice.setChecked(true);
-                    rbComfort.setChecked(true);
+                    rbAll.setChecked(false);
+                    rbPrice.setChecked(false);
+                    rbComfort.setChecked(false);
+                    rbLuxury.setChecked(false);
                     rbHighGrade.setChecked(true);
                 }
                 break;
@@ -189,11 +237,15 @@ public class PopupWindowHotelLevel extends PopupWindow implements OnClickListene
                 boolean checkLuxury = rbLuxury.isChecked();
                 starLevel = 5;
                 if (checkLuxury){
+                    rbAll.setChecked(false);
+                    rbPrice.setChecked(false);
+                    rbComfort.setChecked(false);
+                    rbHighGrade.setChecked(false);
                 } else{
-                    rbAll.setChecked(true);
-                    rbPrice.setChecked(true);
-                    rbComfort.setChecked(true);
-                    rbHighGrade.setChecked(true);
+                    rbAll.setChecked(false);
+                    rbPrice.setChecked(false);
+                    rbComfort.setChecked(false);
+                    rbHighGrade.setChecked(false);
                     rbLuxury.setChecked(true);
                 }
                 break;
@@ -212,11 +264,13 @@ public class PopupWindowHotelLevel extends PopupWindow implements OnClickListene
     }
 
     private void clear() {
+        rbAll.setChecked(true);
         rbPrice.setChecked(false);
         rbComfort.setChecked(false);
         rbHighGrade.setChecked(false);
         rbLuxury.setChecked(false);
         starLevel = 1;
+        rangeBar.setThumbIndices(0, count - 1);
     }
 
     public void setCommit(boolean flag) {
@@ -238,4 +292,6 @@ public class PopupWindowHotelLevel extends PopupWindow implements OnClickListene
     public int getPriceMax() {
         return priceMax;
     }
+
+
 }

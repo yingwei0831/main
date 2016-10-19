@@ -36,20 +36,42 @@ public class HotelDetailInfo {
 //                "http://www.cwly1118.com/uploads/main/litimg/20160910/20160910173913.jpg"
 //        ],
 //        "price": "800"
+//    "breakfirst": "含",
+//            "roomstyle": "单床1.5米",
 //    }
 //    ]
 
     static public class Room{
         public String roomid;
         public String roomname;
+        public String breakfirst;
+        public String roomstyle;
         public String price;
         public ArrayList<String> imgs;
 
-        public Room(String roomid, String roomname, String price, ArrayList<String> imgs) {
+        public Room(String roomid, String roomname, String breakfirst, String roomstyle, String price, ArrayList<String> imgs) {
             this.roomid = roomid;
             this.roomname = roomname;
+            this.breakfirst = breakfirst;
+            this.roomstyle = roomstyle;
             this.price = price;
             this.imgs = imgs;
+        }
+
+        public String getBreakfirst() {
+            return breakfirst;
+        }
+
+        public void setBreakfirst(String breakfirst) {
+            this.breakfirst = breakfirst;
+        }
+
+        public String getRoomstyle() {
+            return roomstyle;
+        }
+
+        public void setRoomstyle(String roomstyle) {
+            this.roomstyle = roomstyle;
         }
 
         public Room() {

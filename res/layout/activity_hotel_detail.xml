@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.jhhy.cuiweitourism.ui.HotelDetailActivity">
+    tools:context="com.jhhy.cuiweitourism.ui.HotelDetailActivity"
+    android:orientation="vertical">
 
-</RelativeLayout>
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        android:id="@+id/listview_hotel_detail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        >
+
+    </com.handmark.pulltorefresh.library.PullToRefreshListView>
+
+</LinearLayout>

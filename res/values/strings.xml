@@ -315,6 +315,8 @@
     <string name="hotel_hotel_my_hotel_level">价格星级</string>
     <string name="hotel_select_date">日期选择</string>
     <string name="hotel_screen">筛选</string>
+    <string name="hotel_detail_title">酒店详情</string>
+    <string name="hotel_detail_reserve">预定</string>
 
     <!--XScrollView-->
     <string name="header_hint_refresh_normal">下拉刷新</string>
