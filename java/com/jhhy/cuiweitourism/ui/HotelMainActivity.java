@@ -98,22 +98,20 @@ public class HotelMainActivity extends BaseActivity implements View.OnClickListe
 
                 break;
             case R.id.layout_hotel_check_in: //选择入住日期
-//                Intent intentFromDate = new Intent( getApplicationContext(), PriceCalendarReserveActivity.class);
-//                Bundle bundleFrom = new Bundle();
-//                bundleFrom.putInt("type", 13);
-//                bundleFrom.putString("from", checkInDate);
-//                bundleFrom.putString("left", checkOutDate);
-//                intentFromDate.putExtras(bundleFrom);
-//                startActivityForResult(intentFromDate, SELECT_CHECK_IN_DATE);
+                Intent intentFromDate = new Intent( getApplicationContext(), HotelCalendarActivity.class);
+                Bundle bundleFrom = new Bundle();
+                bundleFrom.putString("from", checkInDate);
+                bundleFrom.putString("left", checkOutDate);
+                intentFromDate.putExtras(bundleFrom);
+                startActivityForResult(intentFromDate, SELECT_CHECK_IN_DATE);
                 break;
             case R.id.layout_hotel_check_out: //选择离店日期
-//                Intent intentLeftDate = new Intent( getApplicationContext(), PriceCalendarReserveActivity.class);
-//                Bundle bundleLeft = new Bundle();
-//                bundleLeft.putInt("type", 13);
-//                bundleLeft.putString("from", checkInDate);
-//                bundleLeft.putString("left", checkOutDate);
-//                intentLeftDate.putExtras(bundleLeft);
-//                startActivityForResult(intentLeftDate, SELECT_CHECK_IN_DATE);
+                Intent intentLeftDate = new Intent( getApplicationContext(), HotelCalendarActivity.class);
+                Bundle bundleLeft = new Bundle();
+                bundleLeft.putString("from", checkInDate);
+                bundleLeft.putString("left", checkOutDate);
+                intentLeftDate.putExtras(bundleLeft);
+                startActivityForResult(intentLeftDate, SELECT_CHECK_IN_DATE);
                 break;
             case R.id.btn_commit: //搜索
                 Intent intentSearch = new Intent(getApplicationContext(), HotelListActivity.class);

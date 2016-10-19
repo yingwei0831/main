@@ -76,7 +76,7 @@ public class GroupDeadline implements Serializable {
     private String tour_id; //产品ID
     private String date; //日期 2016-09-20
 //    private long dateLong; //日期的 秒
-//    private String stock; //团期数量
+    private String stock; //团期数量
     private String sell_price_adult; //成人价格
     private String trade_price_adult;
     private String sell_price_elder; //老人价格
@@ -104,9 +104,9 @@ public class GroupDeadline implements Serializable {
         this.date = date;
     }
 
-//    public void setStock(String stock) {
-//        this.stock = stock;
-//    }
+    public void setStock(String stock) {
+        this.stock = stock;
+    }
 
     public void setSell_price_adult(String sell_price_adult) {
         this.sell_price_adult = sell_price_adult;
@@ -176,9 +176,9 @@ public class GroupDeadline implements Serializable {
         return date;
     }
 
-//    public String getStock() {
-//        return stock;
-//    }
+    public String getStock() {
+        return stock;
+    }
 
     public String getSell_price_adult() {
         return sell_price_adult;

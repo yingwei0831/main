@@ -173,6 +173,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
+            android:name=".ui.HotelCalendarActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
             android:name=".ui.SettingInvoiceActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
@@ -414,65 +419,63 @@
             android:theme="@style/ActionBarTheme" />
         <activity
             android:name=".ui.HotelMainActivity"
-            android:theme="@style/ActionBarTheme" />
+            android:theme="@style/ActionBarTheme"
+            android:launchMode="singleTop"/>
         <activity
             android:name=".ui.HotelListActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:windowSoftInputMode="stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateHidden|adjustPan"
+            android:launchMode="singleTop"
+            />
         <activity
             android:name=".ui.HotelDetailActivity"
             android:theme="@style/ActionBarTheme" />
         <activity
             android:name=".ui.HotelScreenActivity"
             android:theme="@style/ActionBarTheme" />
-
-        <activity android:name=".ui.BaseActionBarActivity" android:theme="@style/ActionBarTheme"/>
+        <activity
+            android:name=".ui.BaseActionBarActivity"
+            android:theme="@style/ActionBarTheme" />
         <!-- ShareSDK 2、注意： tencent后面的appid要保持和您配置的QQ的appid一致 -->
-         <activity
-         android:name="com.mob.tools.MobUIShell"
-         android:configChanges="keyboardHidden|orientation|screenSize"
-         android:screenOrientation="portrait"
-         android:theme="@android:style/Theme.Translucent.NoTitleBar"
-         android:windowSoftInputMode="stateHidden|adjustResize">
-         <intent-filter>
-         <data android:scheme="tencent100371282" />
+        <activity
+            android:name="com.mob.tools.MobUIShell"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="stateHidden|adjustResize">
+            <intent-filter>
+                <data android:scheme="tencent100371282" />
 
+                <action android:name="android.intent.action.VIEW" />
 
-         <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
 
+            <!-- 调用新浪原生SDK，需要注册的回调activity -->
+            <intent-filter>
+                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
 
-         <category android:name="android.intent.category.BROWSABLE" />
-         <category android:name="android.intent.category.DEFAULT" />
-         </intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
+        <!-- ShareSDK 3、如果您集成了微信，易信，支付宝还需要添加下面回调的activity处理 -->
+        <!-- 微信分享回调 -->
+        <activity
+            android:name=".wxapi.WXEntryActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
-         <!-- 调用新浪原生SDK，需要注册的回调activity -->
-         <intent-filter>
-         <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
-
-
-         <category android:name="android.intent.category.DEFAULT" />
-         </intent-filter>
-         </activity>
-
-
-         <!--ShareSDK 3、如果您集成了微信，易信，支付宝还需要添加下面回调的activity处理 -->
-         <!--微信分享回调 -->
-         <activity
-         android:name=".wxapi.WXEntryActivity"
-         android:configChanges="keyboardHidden|orientation|screenSize"
-         android:exported="true"
-         android:screenOrientation="portrait"
-         android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-
-
-         <!--易信分享回调 -->
-         <!--<activity -->
-         <!--android:name=".yxapi.YXEntryActivity" -->
-         <!--android:theme="@android:style/Theme.Translucent.NoTitleBar" -->
-         <!--android:configChanges="keyboardHidden|orientation|screenSize" -->
-         <!--android:exported="true" -->
-         <!--android:screenOrientation="portrait" /> -->
+        <!-- 易信分享回调 -->
+        <!-- <activity -->
+        <!-- android:name=".yxapi.YXEntryActivity" -->
+        <!-- android:theme="@android:style/Theme.Translucent.NoTitleBar" -->
+        <!-- android:configChanges="keyboardHidden|orientation|screenSize" -->
+        <!-- android:exported="true" -->
+        <!-- android:screenOrientation="portrait" /> -->
 
 
         <!-- 支付宝分享回调 -->
@@ -484,19 +487,19 @@
 
 
         <!-- 接入支付宝支付-start- -->
-         <activity
-         android:name="com.alipay.sdk.app.H5PayActivity"
-         android:configChanges="orientation|keyboardHidden|navigation"
-         android:exported="false"
-         android:screenOrientation="behind" />
-         <activity
-         android:name="com.alipay.sdk.auth.AuthActivity"
-         android:configChanges="orientation|keyboardHidden|navigation"
-         android:exported="false"
-         android:screenOrientation="behind" />
-         <!--接入支付宝支付-end- -->
+        <activity
+            android:name="com.alipay.sdk.app.H5PayActivity"
+            android:configChanges="orientation|keyboardHidden|navigation"
+            android:exported="false"
+            android:screenOrientation="behind" />
+        <activity
+            android:name="com.alipay.sdk.auth.AuthActivity"
+            android:configChanges="orientation|keyboardHidden|navigation"
+            android:exported="false"
+            android:screenOrientation="behind" />
+        <!-- 接入支付宝支付-end- -->
 
-
+        <activity android:name=".ui.HotelEditOrderActivity"></activity>
     </application>
 
 </manifest>

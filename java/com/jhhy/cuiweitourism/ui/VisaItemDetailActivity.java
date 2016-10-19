@@ -20,6 +20,7 @@ import com.jhhy.cuiweitourism.moudle.VisaDetail;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.utils.ImageLoaderUtil;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
+import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.utils.Utils;
 import com.jhhy.cuiweitourism.view.MyScrollViewIS;
 import com.just.sun.pricecalendar.ToastCommon;
@@ -80,6 +81,9 @@ public class VisaItemDetailActivity extends BaseActivity implements View.OnClick
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what){
+                case Consts.NET_ERROR:
+                    ToastCommon.toastShortShow(getApplicationContext(), null, "网络无连接，请检查网络");
+                    break;
                 case Consts.MESSAGE_VISA_DETAIL: //签证详情
                     if (msg.arg1 == 1){
                         VisaDetail visaDetail = (VisaDetail) msg.obj;
@@ -101,6 +105,7 @@ public class VisaItemDetailActivity extends BaseActivity implements View.OnClick
                     }
                     break;
             }
+            LoadingIndicator.cancel();
         }
     };
 

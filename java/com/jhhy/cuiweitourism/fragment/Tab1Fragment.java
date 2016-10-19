@@ -309,7 +309,7 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
         getBannerData();
         setupView(view);
         addListener();
-        getData(0);
+//        getData(0);
         return view;
     }
 
@@ -348,13 +348,13 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
         if(type == 0) {
             //此处获取全部
             Tab1RecommendBiz biz = new Tab1RecommendBiz(getContext(), handler);
-            biz.getRecommendForYou("", "", Consts.MESSAGE_TAB1_RECOMMEND);
+            biz.getRecommendForYou("", "北京", Consts.MESSAGE_TAB1_RECOMMEND);
         }else if(1 == type){ //国内游
             Tab1RecommendBiz biz = new Tab1RecommendBiz(getContext(), handler);
-            biz.getRecommendForYou("1", "", Consts.MESSAGE_TAB1_RECOMMEND_INNER);
+            biz.getRecommendForYou("1", "北京", Consts.MESSAGE_TAB1_RECOMMEND_INNER);
         }else if(2 == type){ //出境游
             Tab1RecommendBiz biz = new Tab1RecommendBiz(getContext(), handler);
-            biz.getRecommendForYou("2", "", Consts.MESSAGE_TAB1_RECOMMEND_OUTSIDE);
+            biz.getRecommendForYou("2", "北京", Consts.MESSAGE_TAB1_RECOMMEND_OUTSIDE);
         }else if(3 == type){ //周边游
             Tab1RecommendBiz biz = new Tab1RecommendBiz(getContext(), handler);
             biz.getRecommendForYou("", "北京", Consts.MESSAGE_TAB1_RECOMMEND_NEARBY);

@@ -52,29 +52,29 @@ public class KCalendar extends ViewFlipper implements
     public static final int COLOR_TX_PRICE = Color.parseColor("#ff991d");//橙色的价格颜色
 
     private GestureDetector gd; // 手势监听器
-    private Animation push_left_in; // 动画-左进
-    private Animation push_left_out; // 动画-左出
-    private Animation push_right_in; // 动画-右进
-    private Animation push_right_out; // 动画-右出
+    protected Animation push_left_in; // 动画-左进
+    protected Animation push_left_out; // 动画-左出
+    protected Animation push_right_in; // 动画-右进
+    protected Animation push_right_out; // 动画-右出
 
     private int ROWS_TOTAL = 6; // 日历的行数
     private int COLS_TOTAL = 7; // 日历的列数
     private String[][] dates = new String[6][7];
     private float tb;
 
-    private OnCalendarClickListener onCalendarClickListener; // 日历点击回调
-    private OnCalendarDateChangedListener onCalendarDateChangedListener; // 日历点击回调
+    protected OnCalendarClickListener onCalendarClickListener; // 日历点击回调
+    protected OnCalendarDateChangedListener onCalendarDateChangedListener; // 日历点击回调
 
     private String[] weekday = new String[]{"日", "一", "二", "三", "四", "五", "六"}; // 星期标题
 
-    private int calendarYear; // 日历年份
-    private int calendarMonth; // 日历月份
+    protected int calendarYear; // 日历年份
+    protected int calendarMonth; // 日历月份
     private Date thisday = new Date(); // 今天
-    private Date calendarday; // 日历这个月第一天(1号)
+    protected Date calendarday; // 日历这个月第一天(1号)
 
-    private LinearLayout firstCalendar; // 第一个日历
-    private LinearLayout secondCalendar; // 第二个日历
-    private LinearLayout currentCalendar; // 当前显示的日历
+    protected LinearLayout firstCalendar; // 第一个日历
+    protected LinearLayout secondCalendar; // 第二个日历
+    protected LinearLayout currentCalendar; // 当前显示的日历
 
     private Map<String, Integer> marksMap = new HashMap<String, Integer>(); // 储存某个日子被标注(Integer)
 
@@ -223,7 +223,7 @@ public class KCalendar extends ViewFlipper implements
     /**
      * 填充日历(包含日期、标记、背景等)
      */
-    private void setCalendarDate() {
+    protected void setCalendarDate() {
         // 根据日历的日子获取这一天是星期几
         int weekday = calendarday.getDay();
         // 每个月第一天
@@ -384,12 +384,11 @@ public class KCalendar extends ViewFlipper implements
                                     //if (thisMonths.get(d).getState() == 0) {
                                     //  txtvPrice.setText("");
                                     //} else
-//                                    if (Integer.parseInt(thisMonths.get(d).getStock()) > 0) { //因为没有人数限制
-
+                                    if (Integer.parseInt(thisMonths.get(d).getStock()) > 0) { //因为没有人数限制
                                         txtvPrice.setText("￥" + thisMonths.get(d).getSell_price_adult());
-//                                    } else {
+                                    } else {
 //                                        txtvPrice.setText("售罄");
-//                                    }
+                                    }
                                 }
                             }
                         }
@@ -890,18 +889,18 @@ public class KCalendar extends ViewFlipper implements
         return "" + i;
     }
 
-    private int getDay(String date) {
+    protected int getDay(String date) {
         return Integer.parseInt(date.substring(
                 date.lastIndexOf("-") + 1, date.length()));
     }
 
-    private int getMonth(String date) {
+    protected int getMonth(String date) {
         return Integer.parseInt(date.substring(
                 date.indexOf("-") + 1,
                 date.lastIndexOf("-")));
     }
 
-    private int getYear(String date) {
+    protected int getYear(String date) {
         return Integer.parseInt(date.substring(0, date.indexOf("-")));
     }
 

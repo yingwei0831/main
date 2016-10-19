@@ -317,6 +317,8 @@
     <string name="hotel_screen">筛选</string>
     <string name="hotel_detail_title">酒店详情</string>
     <string name="hotel_detail_reserve">预定</string>
+    <string name="hotel_detail_map">地图</string>
+    <string name="hotel_order_title">订单填写</string>
 
     <!--XScrollView-->
     <string name="header_hint_refresh_normal">下拉刷新</string>

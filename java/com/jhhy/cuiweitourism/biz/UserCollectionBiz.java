@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 
+import com.jhhy.cuiweitourism.http.NetworkUtil;
 import com.jhhy.cuiweitourism.net.netcallback.HttpUtils;
 import com.jhhy.cuiweitourism.http.ResponseResult;
 import com.jhhy.cuiweitourism.moudle.Collection;
@@ -56,18 +57,17 @@ public class UserCollectionBiz {
 //    typeid 1.线路、2.酒店、3租车、8签证、14私人定制；
     private String CODE_COLLECTION = "Publics_shoucang";
     public void doCollection(final String mid, final String typeId, final String productId){
-        new Thread() {
-            @Override
-            public void run() {
-                Map<String, Object> headMap = new HashMap<>();
-                headMap.put(Consts.KEY_CODE, CODE_COLLECTION);
-                Map<String, Object> fieldMap = new HashMap<>();
-                fieldMap.put("memberid", mid);
-                fieldMap.put("typeid", typeId);
-                fieldMap.put("productaid", productId);
-                HttpUtils.executeXutils(headMap, fieldMap, doCollectionCallback);
-            }
-        }.start();
+        if (NetworkUtil.checkNetwork(context)) {
+            Map<String, Object> headMap = new HashMap<>();
+            headMap.put(Consts.KEY_CODE, CODE_COLLECTION);
+            Map<String, Object> fieldMap = new HashMap<>();
+            fieldMap.put("memberid", mid);
+            fieldMap.put("typeid", typeId);
+            fieldMap.put("productaid", productId);
+            HttpUtils.executeXutils(headMap, fieldMap, doCollectionCallback);
+        }else{
+            handler.sendEmptyMessage(Consts.NET_ERROR);
+        }
     }
 
     private ResponseResult doCollectionCallback = new ResponseResult() {

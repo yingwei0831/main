@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.jhhy.cuiweitourism.ui.PriceCalendarReserveActivity"
+    android:orientation="vertical"
+    >
+    <include layout="@layout/title_tab1_inner_travel"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="#F0F0F0"
+                >
+
+                <ImageView
+                    android:id="@+id/imgv_calendar_last_month"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:src="@mipmap/arrow_left_green"
+                    android:layout_toLeftOf="@+id/tv_calendar_month">
+
+                </ImageView>
+
+                <TextView
+                    android:id="@+id/tv_calendar_month"
+                    android:layout_width="wrap_content"
+                    android:paddingLeft="30dp"
+                    android:paddingRight="30dp"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:textColor="@android:color/black"/>
+
+                <ImageView
+                    android:id="@+id/imgv_calendar_next_month"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:src="@mipmap/arrow_right_green"
+                    android:layout_toRightOf="@+id/tv_calendar_month">
+
+                </ImageView>
+            </RelativeLayout>
+
+            <com.just.sun.pricecalendar.KCalendarDate
+                android:visibility="visible"
+                android:id="@+id/calendar_date"
+                android:layout_width="match_parent"
+                android:layout_height="360dp"
+                >
+
+            </com.just.sun.pricecalendar.KCalendarDate>
+
+
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/btn_hotel_calendar_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/tab1_inner_travel_pop_commit"
+        android:textColor="@android:color/white"
+        android:background="@drawable/bg_btn_price_calendar_selector"
+        android:textSize="16sp"
+        android:visibility="visible"
+        />
+
+</LinearLayout>

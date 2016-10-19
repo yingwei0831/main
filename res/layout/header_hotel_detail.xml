@@ -1,6 +1,180 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/iv_hotel_detail_imgs"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/travel_icon" />
+
+        <ImageView
+            android:id="@+id/iv_collection_hotel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|right"
+            android:paddingRight="20dp"
+            android:paddingTop="10dp"
+            android:src="@mipmap/icon_collection_hotel" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="#77000000"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/tv_hotel_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:text="北京鸿坤国际大酒店"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_hotel_level"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/tv_hotel_name"
+                android:layout_toLeftOf="@+id/tv_hotel_imgs"
+                android:layout_toRightOf="@+id/tv_hotel_name"
+                android:maxLines="1"
+                android:paddingLeft="4dp"
+                android:text="五星级酒店"
+                android:textColor="@color/colorLineGray2" />
+
+            <TextView
+                android:id="@+id/tv_hotel_imgs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:maxLines="1"
+                android:text="59张图片"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+        </RelativeLayout>
+
+
+    </FrameLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_hotel_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white">
+
+        <TextView
+            android:id="@+id/tv_hotel_detail_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/tv_hotel_detail_map"
+            android:lineSpacingMultiplier="1.2"
+            android:gravity="left"
+            android:maxLines="2"
+            android:padding="16dp"
+            android:text="海淀区中关村北大街127号（毗邻北京大学东门往北600米）"
+            android:textColor="@android:color/black" />
+
+        <TextView
+            android:id="@+id/tv_hotel_detail_map"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:drawablePadding="6dp"
+            android:drawableRight="@mipmap/arrow_right_dark"
+            android:padding="16dp"
+            android:text="@string/hotel_detail_map"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorLineGray2" />
+
+    <RelativeLayout
+        android:id="@+id/layout_hotel_opening"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white">
+
+        <TextView
+            android:id="@+id/tv_hotel_detail_opening"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/tv_hotel_detail_info"
+            android:maxLines="1"
+            android:padding="16dp"
+            android:text="1985-01开业 2008-07装修" />
+
+        <TextView
+            android:id="@+id/tv_hotel_detail_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:drawablePadding="6dp"
+            android:drawableRight="@mipmap/arrow_right_dark"
+            android:padding="16dp"
+            android:text="@string/hotel_detail_title"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@color/colorTab2Space" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <TextView
+            android:id="@+id/tv_check_in_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="10月19日"
+            android:textColor="@android:color/black" />
+
+        <TextView
+            android:id="@+id/tv_check_in_days"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/tv_screen_room_type"
+            android:layout_toRightOf="@+id/tv_check_in_date"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:paddingLeft="6dp"
+            android:text="入住一晚" />
+
+        <TextView
+            android:visibility="invisible"
+            android:id="@+id/tv_screen_room_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:drawableLeft="@mipmap/icon_location_green"
+            android:drawablePadding="6dp"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
+            android:text="筛选房型"
+            android:textColor="@color/colorActionBar"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
 </LinearLayout>

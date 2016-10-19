@@ -19,6 +19,7 @@ import com.jhhy.cuiweitourism.biz.UserCollectionBiz;
 import com.jhhy.cuiweitourism.fragment.VisaMaterialFragment;
 import com.jhhy.cuiweitourism.moudle.VisaDetail;
 import com.jhhy.cuiweitourism.net.utils.Consts;
+import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.just.sun.pricecalendar.ToastCommon;
 
 import java.util.ArrayList;
@@ -52,6 +53,9 @@ public class VisaNeedMaterialActivity extends BaseActivity implements View.OnCli
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
+                case Consts.NET_ERROR:
+                    ToastCommon.toastShortShow(getApplicationContext(), null, "网络无连接，请检查网络");
+                    break;
                 case Consts.MESSAGE_DO_COLLECTION: //收藏
                     ToastCommon.toastShortShow(getApplicationContext(), null, String.valueOf(msg.obj));
                     if (msg.arg1 == 1) {
@@ -60,6 +64,7 @@ public class VisaNeedMaterialActivity extends BaseActivity implements View.OnCli
                     }
                     break;
             }
+            LoadingIndicator.cancel();
         }
     };
 

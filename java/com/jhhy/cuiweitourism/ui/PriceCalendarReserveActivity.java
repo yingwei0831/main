@@ -140,7 +140,7 @@ public class PriceCalendarReserveActivity extends BaseActivity implements View.O
             tvTitleTop.setText(getString(R.string.hotel_select_date));
             layoutNumber.setVisibility(View.GONE);
             btnReserve.setText(getString(R.string.tab1_inner_travel_pop_commit));
-        }else {
+        } else {
             tvTitleTop.setText("立即购买");
         }
     }

@@ -30,6 +30,7 @@ import android.view.inputmethod.InputMethodManager;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 
 import java.lang.reflect.Field;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -267,6 +268,43 @@ public class Utils {
     }
 
     /**
+     * 转为毫秒
+     * @param date 2016-10-19
+     * @return
+     */
+    private long getTime(String date){
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date time =  format.parse(date);
+            return time.getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+       return 0;
+    }
+
+    /**
+     * 获取两个日期相隔的天数
+     * @param beginDateStr
+     * @param endDateStr
+     * @return
+     */
+    public static long getDiff(String beginDateStr, String endDateStr){
+        SimpleDateFormat format = new java.text.SimpleDateFormat("yyyy-MM-dd");
+        Date beginDate= null;
+        Date endDate= null;
+        long day = 0;
+        try {
+            beginDate = format.parse(beginDateStr);
+            endDate = format.parse(endDateStr);
+            day = (endDate.getTime() - beginDate.getTime()) / (24*60*60*1000);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+//        System.out.println("相隔的天数="+day);
+        return day;
+    }
+    /**
      * 获取现在时间的短时间格式
      * @return 返回短时间格式 yyyy-MM-dd
      */
@@ -275,20 +313,6 @@ public class Utils {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String dateString = formatter.format(currentTime);
         LogUtil.e(TAG, "dateStringCurrent = " + dateString);
-//        ParsePosition pos = new ParsePosition(8);
-
-//        Date currentTime_2 = formatter.parse(dateString, pos); //当天日期
-
-        //给定的日期 >= 当前日期
-//        Date dateOther2 = new Date(dateOther);
-//        String dateString2 = formatter.format(dateOther2);
-//        LogUtil.e(TAG, "dateString = " + dateString2);
-//        Date date2 = formatter.parse(dateString2, pos); //给定的日期
-//        if (currentTime_2.getTime() <= date2.getTime()){
-//            LogUtil.e(TAG, "true!");
-//            return true;
-//        }
-//        return false;
         return dateString;
     }
 
@@ -332,6 +356,7 @@ public class Utils {
             Intent intent = new Intent();
             intent.setAction("android.intent.action.DIAL");
             intent.setData(Uri.parse("tel:"+mobile));
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
         }
     }
