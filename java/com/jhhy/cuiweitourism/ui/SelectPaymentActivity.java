@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.moudle.Order;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.ActivityOrderInfo;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelOrderInfo;
 
 public class SelectPaymentActivity extends BaseActivity implements View.OnClickListener {
 
@@ -22,8 +23,9 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
     private TextView tvAliPay;
     private TextView tvWeChatPay;
 
-    private int type; //11:热门活动支付
+    private int type; //11:热门活动支付,21:酒店支付
     private ActivityOrderInfo hotInfo; //热门活动订单
+    private HotelOrderInfo hotelInfo; //酒店订单
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +42,10 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
             type = bundle.getInt("type");
             if (type == 11){
                 hotInfo = (ActivityOrderInfo) bundle.getSerializable("order");
-            }else {
+            }else if (type == 21){ //酒店
+                hotelInfo = (HotelOrderInfo) bundle.getSerializable("order");
+            }
+            else {
                 order = (Order) bundle.getSerializable("order");
             }
         }
@@ -58,7 +63,12 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
             if (hotInfo != null){
                 tvOrderPrice.setText(hotInfo.getPrice());
             }
-        }else{
+        } else if (type == 21){
+            if (hotelInfo != null){
+                tvOrderPrice.setText(hotelInfo.getPrice());
+            }
+        }
+        else{
             if (order != null) {
                 tvOrderPrice.setText(order.getPrice());
             }

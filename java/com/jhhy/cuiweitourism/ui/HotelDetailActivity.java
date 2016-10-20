@@ -18,6 +18,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.HotelDetailInnerListAdapter;
 import com.jhhy.cuiweitourism.biz.UserCollectionBiz;
+import com.jhhy.cuiweitourism.moudle.PhoneBean;
 import com.jhhy.cuiweitourism.net.biz.HotelActionBiz;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelDetailRequest;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
@@ -27,6 +28,7 @@ import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelListInfo;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
+import com.jhhy.cuiweitourism.utils.ImageLoaderUtil;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.utils.Utils;
 import com.just.sun.pricecalendar.ToastCommon;
@@ -61,6 +63,11 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
     private TextView tvCheckInDays; //住宿时间
     private TextView tvScreenRoom; //筛选房型
 
+    private String checkInDate ;
+    private String checkOutDate;
+    private int    stayDays    ;
+    private PhoneBean selectCity;
+
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -83,8 +90,8 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_hotel_detail);
-        super.onCreate(savedInstanceState);
         getData();
+        super.onCreate(savedInstanceState);
         getInternetData();
     }
 
@@ -94,6 +101,12 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
             Bundle bundle = intent.getExtras();
             if (bundle != null){
                 id = bundle.getString("id");
+
+                checkInDate = bundle.getString("checkInDate");
+                checkOutDate = bundle.getString("checkOutDate");
+                stayDays    = bundle.getInt("stayDays");
+                selectCity = (PhoneBean) bundle.getSerializable("selectCity");
+                LogUtil.e(TAG, "checkInDate = " + checkInDate +", checkOutDate = " + checkOutDate +", stayDays = " + stayDays +", selectCity = " + selectCity +", id = " + id);
             }
         }
     }
@@ -118,7 +131,13 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
 
             @Override
             public void onError(FetchError error) {
+                if (error.localReason != null){
+                    ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
+                }else{
+                    ToastCommon.toastShortShow(getApplicationContext(), null, "请求酒店详细信息出错，请返回重试");
+                }
                 LogUtil.e(TAG, "hotelGetDetailInfo: " + error.toString());
+                LoadingIndicator.cancel();
             }
         });
     }
@@ -131,11 +150,13 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
         tvHotelImgs.setText(hotelDetail.getPiclist().size()+"张图片");
         tvHotelAddress.setText(hotelDetail.getAddress());
         tvOpening.setText(hotelDetail.getOpentime()+"开业 "+hotelDetail.getDecoratetime()+"装修");
+        ImageLoaderUtil.getInstance(getApplicationContext()).displayImage(hotelDetail.getPiclist().get(0), ivMainImgs);
     }
 
     @Override
     protected void setupView() {
         super.setupView();
+        LogUtil.e(TAG, "-----setupView------");
         tvTitle.setText(getString(R.string.hotel_detail_title));
         ivTitleRight.setImageResource(R.mipmap.icon_telephone_hollow);
         ivTitleRight.setVisibility(View.VISIBLE);
@@ -169,7 +190,16 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
             public void goToArgument(View view, View viewGroup, int position, int which) {
                 HotelDetailInfo.Room room = hotelDetail.getRoom().get(position);
                 //TODO 生成订单
-
+                Intent intent = new Intent(getApplicationContext(), HotelEditOrderActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("hotelDetail", hotelDetail);
+                bundle.putString("checkInDate", checkInDate);
+                bundle.putString("checkOutDate", checkOutDate);
+                bundle.putInt("stayDays", stayDays);
+                bundle.putInt("position", position);
+                bundle.putSerializable("selectCity", selectCity);
+                intent.putExtras(bundle);
+                startActivityForResult(intent, EDIT_HOTEL_ORDER);
             }
         };
         hotelListView.setAdapter(adapter);
@@ -191,6 +221,9 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
         tvCheckInDays = (TextView) headerView.findViewById(R.id.tv_check_in_days);
         tvScreenRoom  = (TextView) headerView.findViewById(R.id.tv_screen_room_type);
         listView.addHeaderView(headerView);
+
+        tvCheckInDate.setText(String.format("%s月%s日", checkInDate.substring(checkInDate.indexOf("-") + 1, checkInDate.lastIndexOf("-")), checkInDate.substring(checkInDate.lastIndexOf("-"))));
+        tvCheckInDays.setText(String.format("入住%d晚", stayDays));
     }
 
     @Override
@@ -226,9 +259,7 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        Intent intent = new Intent(getApplicationContext(), HotelEditOrderActivity.class);
 
-        startActivityForResult(intent, EDIT_HOTEL_ORDER);
     }
 
     private int EDIT_HOTEL_ORDER = 6522; //编辑酒店订单

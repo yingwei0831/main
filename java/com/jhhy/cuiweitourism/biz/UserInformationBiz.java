@@ -307,21 +307,24 @@ public class UserInformationBiz {
                     msg.obj = resArg;
                 } else if ("0000".equals(resCode)) {
                     msg.arg1 = 1;
-//                    "body": [
-//                        {
-//                            "id": "1",
-//                                "memberid": "1",
-//                                "content": "注册赠送旅游币",
-//                                "addtime": "1469176131",
-//                                "type": "2",
-//                                "jifen": "2"
-//                        }]
-                    JSONArray bodyAry = resultObj.getJSONArray(Consts.KEY_BODY);
+//                    "0": [
+//                    {
+//                        "id": "6",
+//                        "memberid": "1",
+//                        "content": "注册赠送旅游币",
+//                        "addtime": "1469178070",
+//                        "type": "2",
+//                        "jifen": "2"
+//                    }
+//                    ],
+//                    "lvb": "24010"
+                    JSONObject bodyObj = resultObj.getJSONObject(Consts.KEY_BODY);
+                    JSONArray recordAry = bodyObj.getJSONArray("0");
                     List<UserIcon> listIcon = null;
-                    if (bodyAry.length() > 0){
+                    if (recordAry.length() > 0){
                         listIcon = new ArrayList<>();
-                        for(int i = 0; i < bodyAry.length(); i++){
-                            JSONObject iconObj = bodyAry.getJSONObject(i);
+                        for(int i = 0; i < recordAry.length(); i++){
+                            JSONObject iconObj = recordAry.getJSONObject(i);
                             UserIcon icon = new UserIcon();
                             icon.setId(iconObj.getString(Consts.KEY_ID));
                             icon.setMemberId(iconObj.getString("memberid"));
@@ -332,7 +335,9 @@ public class UserInformationBiz {
                             listIcon.add(icon);
                         }
                     }
+                    String iconNum = bodyObj.getString("lvb");
                     msg.obj = listIcon;
+                    msg.arg2 = Integer.parseInt(iconNum);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

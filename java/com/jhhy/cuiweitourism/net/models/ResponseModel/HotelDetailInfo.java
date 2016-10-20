@@ -1,11 +1,12 @@
 package com.jhhy.cuiweitourism.net.models.ResponseModel;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by zhangguang on 16/10/10.
  */
-public class HotelDetailInfo {
+public class HotelDetailInfo implements Serializable{
 //    "title": "九寨沟喜来登大酒店",
 //    "piclist": [
 //                "http://www.cwly1118.com/uploads/2016/0607/573731e76d913a5c3f1c58eaea3f3d18.jpg",
@@ -49,7 +50,7 @@ public class HotelDetailInfo {
 //            }
 //    ]
 
-    static public class Room{
+    static public class Room implements Serializable{
         public String roomid;
         public String roomname;
         public String breakfirst;

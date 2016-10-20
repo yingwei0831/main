@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.dialog.DatePickerActivity;
+import com.jhhy.cuiweitourism.moudle.PhoneBean;
 import com.jhhy.cuiweitourism.utils.Utils;
 import com.just.sun.pricecalendar.ToastCommon;
 
@@ -42,6 +44,9 @@ public class HotelMainActivity extends BaseActivity implements View.OnClickListe
 
     private String checkInDate;
     private String checkOutDate;
+    private int stayDays;
+
+    private PhoneBean selectCity; //首页城市
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +59,17 @@ public class HotelMainActivity extends BaseActivity implements View.OnClickListe
         actionBar.setCustomView(v, new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT)); //自定义ActionBar布局);
         actionBar.setElevation(0); //删除自带阴影
         setContentView(R.layout.activity_hotel_main);
+        getData();
         setupView();
         addListener();
+    }
+
+    private void getData() {
+        selectCity = (PhoneBean) getIntent().getExtras().getSerializable("selectCity");
+        if (selectCity == null){
+            selectCity = new PhoneBean();
+            selectCity.setName("北京");
+        }
     }
 
     private void setupView() {
@@ -67,10 +81,17 @@ public class HotelMainActivity extends BaseActivity implements View.OnClickListe
         tvLocation = (TextView) findViewById(R.id.tv_location_icon);
         layoutCheckIn = (RelativeLayout) findViewById( R.id.layout_hotel_check_in);
         layoutCheckOut = (RelativeLayout) findViewById(R.id.layout_hotel_check_out);
-        btnSearch = (Button) findViewById(R.id.btn_commit);
+        tvCheckInNotice = (TextView) findViewById(R.id.tv_hotel_check_in_notice);
+        tvCheckOutNotice = (TextView) findViewById(R.id.tv_hotel_check_out_notice);
+        tvCheckInDate = (TextView) findViewById(R.id.tv_hotel_check_into_date);
+        tvCheckOutDate = (TextView) findViewById(R.id.tv_hotel_left_out_date);
+
+        etSearchText = (EditText) findViewById(R.id.et_hotel_search_text);
         btnSearch = (Button) findViewById(R.id.btn_commit);
         btnMyOrder = (Button) findViewById(R.id.btn_to_my_order);
         btnMyHotel = (Button) findViewById(R.id.btn_to_my_hotel);
+
+        tvAddress.setText(selectCity.getName());
     }
 
     private void addListener() {
@@ -82,8 +103,6 @@ public class HotelMainActivity extends BaseActivity implements View.OnClickListe
         btnMyOrder.setOnClickListener(this);
         btnMyHotel.setOnClickListener(this);
     }
-
-
 
     @Override
     public void onClick(View view) {
@@ -114,8 +133,7 @@ public class HotelMainActivity extends BaseActivity implements View.OnClickListe
                 startActivityForResult(intentLeftDate, SELECT_CHECK_IN_DATE);
                 break;
             case R.id.btn_commit: //搜索
-                Intent intentSearch = new Intent(getApplicationContext(), HotelListActivity.class);
-                startActivity(intentSearch);
+                search();
                 break;
             case R.id.btn_to_my_order: //我的订单
 
@@ -133,16 +151,40 @@ public class HotelMainActivity extends BaseActivity implements View.OnClickListe
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SELECT_CHECK_IN_DATE){ //选择入住日期
             if (resultCode == RESULT_OK){
-//                Bundle bundle = data.getExtras();
-//                checkInDate = bundle.getString("selectDate");
-//                if (Utils.getCurrentTimeYMD().equals(checkInDate)){
-//                    tvCheckInNotice.setText("今天入住");
-//                }else{
-//                    tvCheckInNotice.setText("今天入住");
-//                }
-//                tvCheckInDate.setText(checkInDate);
+                Bundle bundle = data.getExtras();
+                checkInDate = bundle.getString("hotelInDate");
+                checkOutDate = bundle.getString("hotelOutDate");
+                stayDays = bundle.getInt("stayDays");
+                if (Utils.getCurrentTimeYMD().equals(checkInDate)){
+                    tvCheckInNotice.setText("今天入住");
+                } else {
+                    tvCheckInNotice.setText("入住");
+                }
+                tvCheckOutNotice.setText(String.format("离店 住%d晚", stayDays));
+                tvCheckInDate.setText(String.format("%s月%s日", checkInDate.substring(checkInDate.indexOf("-") + 1, checkInDate.lastIndexOf("-")), checkInDate.substring(checkInDate.lastIndexOf("-"))));
+                tvCheckOutDate.setText(String.format("%s月%s日", checkOutDate.substring(checkOutDate.indexOf("-") + 1, checkOutDate.lastIndexOf("-")), checkOutDate.substring(checkOutDate.lastIndexOf("-"))));
+//                tvCheckOutDate.setText(checkOutDate);
             }
         }
+    }
+
+    private void search() {
+        if (checkInDate == null || checkOutDate == null || stayDays == 0){
+            ToastCommon.toastShortShow(getApplicationContext(), null, "请选择住店时间");
+            return;
+        }
+        Intent intentSearch = new Intent(getApplicationContext(), HotelListActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("checkInDate", checkInDate);
+        bundle.putString("checkOutDate", checkOutDate);
+        bundle.putInt("stayDays", stayDays);
+        bundle.putSerializable("selectCity", selectCity);
+        String keyWords = etSearchText.getText().toString();
+        if (!TextUtils.isEmpty(keyWords)){
+            bundle.putString("keyWords", keyWords);
+        }
+        intentSearch.putExtras(bundle);
+        startActivity(intentSearch);
     }
 
     public static void actionStart(Context context, Bundle bundle){

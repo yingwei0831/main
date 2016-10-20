@@ -82,7 +82,7 @@
             android:layout_toLeftOf="@+id/tv_select_check_into_date"
             android:layout_toRightOf="@+id/tv_hotel_check_into_date"
             android:paddingLeft="16dp"
-            android:text="今天入住"
+            android:text="入住"
             android:textSize="16sp" />
 
         <TextView
@@ -124,7 +124,7 @@
             android:layout_toLeftOf="@+id/tv_select_left_out_date"
             android:layout_toRightOf="@+id/tv_hotel_left_out_date"
             android:paddingLeft="16dp"
-            android:text="星期五住一晚"
+            android:text="离店 住一晚"
             android:textSize="16sp" />
 
         <TextView

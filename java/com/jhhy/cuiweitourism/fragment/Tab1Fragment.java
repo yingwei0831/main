@@ -46,6 +46,7 @@ import com.jhhy.cuiweitourism.ui.PersonalizedCustomActivity;
 import com.jhhy.cuiweitourism.ui.SearchRouteActivity;
 import com.jhhy.cuiweitourism.ui.SearchShopActivity;
 import com.jhhy.cuiweitourism.ui.StartActivityEditActivity;
+import com.jhhy.cuiweitourism.ui.TrainMainActivity;
 import com.jhhy.cuiweitourism.ui.VisaMainActivity;
 import com.jhhy.cuiweitourism.ui.easemob.EasemobLoginActivity;
 import com.jhhy.cuiweitourism.net.utils.Consts;
@@ -115,6 +116,7 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
     private TextView tvOutsideTravel; //出境游
     private TextView tvStartActivity; //发起活动
     private TextView tvRentCar; //租车
+    private TextView tvTrain; //火车票
     private TextView tvHotel; //酒店
     private TextView tvVisa; //签证
 
@@ -417,6 +419,7 @@ layoutTabRecommendForYou2 = (LinearLayout) view.findViewById(R.id.layout_tab_rec
 
             tvStartActivity = (TextView) content.findViewById(R.id.tv_tab1_start_activity); //发起活动
             tvRentCar = (TextView) content.findViewById(R.id.tv_tab1_rent_car); //发起活动
+            tvTrain = (TextView) content.findViewById(R.id.tv_tab1_train); //火车票
             tvHotel = (TextView) content.findViewById(R.id.tv_tab1_hotel); //酒店
             tvVisa = (TextView) content.findViewById(R.id.tv_tab1_visa); //签证
 
@@ -496,6 +499,7 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
         tvInnerTravel.setOnClickListener(this);
         tvOutsideTravel.setOnClickListener(this);
         tvStartActivity.setOnClickListener(this);
+        tvTrain.setOnClickListener(this);
         tvHotel.setOnClickListener(this);
         tvRentCar.setOnClickListener(this);
         tvVisa.setOnClickListener(this);
@@ -542,8 +546,13 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
             case R.id.tv_tab1_visa: //签证
                 VisaMainActivity.actionStart(getContext(), null);
                 break;
+            case R.id.tv_tab1_train: //火车票
+                TrainMainActivity.actionStart(getContext(), null);
+                break;
             case R.id.tv_tab1_hotel: //酒店
-                HotelMainActivity.actionStart(getContext(), null);
+                Bundle bundleHotel = new Bundle();
+                bundleHotel.putSerializable("selectCity", selectCity);
+                HotelMainActivity.actionStart(getContext(), bundleHotel);
                 break;
             case R.id.layout_personalized_custom: //个性定制
                 Bundle bundleCustom = new Bundle();

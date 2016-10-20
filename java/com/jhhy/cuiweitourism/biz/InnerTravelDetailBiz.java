@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 
+import com.jhhy.cuiweitourism.net.models.ResponseModel.MemberCenterMsgInfo;
 import com.jhhy.cuiweitourism.net.netcallback.HttpUtils;
 import com.jhhy.cuiweitourism.http.ResponseResult;
 import com.jhhy.cuiweitourism.moudle.TravelDetail;
@@ -54,15 +55,45 @@ public class InnerTravelDetailBiz {
             }
         }.start();
     }
-
-//{"head":{"res_code":"0000","res_msg":"success","res_arg":"获取成功"},"body":
-//{"piclist":["http:\/\/cwly.taskbees.cn:8083"],
-// "features":"",
-// "price":null,
-// "needjifen":null,
-// "xcms":null,
-// "typeid":1,
-// "plcount":"0"}}
+//    "id": "12",
+//    "title": "北京5日游",
+//    "price": "4800",
+//    "beizu": "",
+//    "feeinclude": "",
+//    "features": "北京五日游",
+//    "transport": "火车",
+//    "xlxq": "北京五日游",
+//    "fybubh": "",
+//    "piclist": [
+//                  "http://www.cwly1118.com/uploads/2016/0607/9329dff285092f3874aed5e814d437c3.jpg"
+//              ],
+//    "supplierlist": "1",
+//    "needjifen": "100",
+//    "xcms": [
+//    {
+//        "day": "1",
+//            "title": " 从鞍山出发",
+//            "jieshao": "从鞍山出发，"
+//    },
+//    {
+//        "day": "5",
+//            "title": "清华大学",
+//            "jieshao": "清华大学"
+//    }
+//    ],
+//    "comment": {
+//                  "content": "郭德纲大幅度的似懂非懂福德宫的风格丰富的地方",
+//                  "pllist": [
+//                              "http://www.cwly1118.com/uploads/comment/2016/1013/57fefe5ca3711.png"
+//                              ],
+//                  "nickname": "18710***",
+//                  "face": "http://www.cwly1118.com/uploads/member/131476932407.jpg",
+//                  "addtime": "1476329056"
+//              },
+//    "typeid": 1,
+//    "plcount": "8",
+//    "group": "东",
+//    "sjmc": "易搜学"
     private ResponseResult travelDetailCallback = new ResponseResult() {
         @Override
         public void responseSuccess(String result) {
@@ -118,10 +149,10 @@ public class InnerTravelDetailBiz {
                             }
                         }
                         detail.setTripDescribe(tripDetail);
-                        String comment = (String) bodyObj.get("comment");
-                        if (comment != null && !"null".equals(comment) && !"[]".equals(comment) && comment.trim().length() != 0){
-                            JSONObject commentObj = new JSONObject(comment);
-//                            JSONObject commentObj = bodyObj.getJSONObject("comment");
+                        Object comment = bodyObj.get("comment");
+                        if (comment != null && !"null".equals(comment) && !"[]".equals(comment) && !"".equals(comment)){
+//                            JSONObject commentObj = new JSONObject(comment);
+                            JSONObject commentObj = bodyObj.getJSONObject("comment");
                             UserComment userComment = null;
                             if (commentObj != null){
                                 userComment = new UserComment();

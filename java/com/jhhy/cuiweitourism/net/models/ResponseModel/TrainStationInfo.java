@@ -1,11 +1,12 @@
 package com.jhhy.cuiweitourism.net.models.ResponseModel;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by zhangguang on 16/10/11.
  */
-public class TrainStationInfo {
+public class TrainStationInfo implements Serializable{
 
     public ArrayList<ArrayList<String>> stations;
 

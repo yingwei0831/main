@@ -49,7 +49,7 @@ public class KCalendarDate extends KCalendar {
             for (int i = 0; i < groups.size(); i++) {
                 GroupDeadline g = groups.get(i);
                 if (thisYear <= getYear(g.getDate())) {
-                    if (/*g.getState() == 1 && */Integer.parseInt(g.getStock()) == -1) {
+                    if (/*g.getState() == 1 && */Integer.parseInt(g.getStock()) >= -1) {
                         int year = getYear(g.getDate());
                         int month = getMonth(g.getDate());
                         Months.add(new GroupDate(year, month));
@@ -112,17 +112,16 @@ public class KCalendarDate extends KCalendar {
             if(groups.size() == 0){
                 for(int i = 1; i <= 6; i++){
                     GroupDeadline currentLine = new GroupDeadline();
-                    String dataString = String.format("%d-%02d-%02d",thisYear,i,1);
+                    String dataString = String.format("%d-%02d-%02d", thisYear, i, 1);
                     currentLine.setDate(dataString);
                     currentLine.setStock("-1");
                     groups.add(currentLine);
                 }
-
             }
             for (int i = 0; i < groups.size(); i++) {
                 GroupDeadline g = groups.get(i);
                 if (thisYear >= getYear(g.getDate())) {
-                    if (/*g.getState() == 1 && */Integer.parseInt(g.getStock()) > -1) {
+                    if (/*g.getState() == 1 && */Integer.parseInt(g.getStock()) >= -1) {
                         int year = getYear(g.getDate());
                         int month = getMonth(g.getDate());
                         Months.add(new GroupDate(year, month));
@@ -163,6 +162,6 @@ public class KCalendarDate extends KCalendar {
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
 //        return super.onFling(e1, e2, velocityX, velocityY);
-        return false;
+        return true;
     }
 }

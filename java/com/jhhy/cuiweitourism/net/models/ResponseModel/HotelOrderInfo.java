@@ -1,9 +1,11 @@
 package com.jhhy.cuiweitourism.net.models.ResponseModel;
 
+import java.io.Serializable;
+
 /**
  * Created by birney1 on 16/10/10.
  */
-public class HotelOrderInfo {
+public class HotelOrderInfo implements Serializable{
 
     public String ordersn;
     public String productname;

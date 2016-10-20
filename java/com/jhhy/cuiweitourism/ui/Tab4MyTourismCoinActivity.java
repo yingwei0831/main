@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -23,15 +25,18 @@ import com.just.sun.pricecalendar.ToastCommon;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Tab4MyTourismCoinActivity extends BaseActivity {
+public class Tab4MyTourismCoinActivity extends BaseActivity implements View.OnClickListener {
 
 //    private MyListView lvTourismCoinRecord;
 //    private PullToRefreshScrollView pullScrollView;
 //    private ScrollView mScrollView;
+    private TextView tvTitle;
+    private ImageView ivTitleLeft;
 
     private PullToRefreshListView pullListview;
     private ListView listView;
     private UserIconListAdapter adapter;
+    private TextView tvIcons;
 
     private List<UserIcon> lists = new ArrayList<>();
 
@@ -48,8 +53,8 @@ public class Tab4MyTourismCoinActivity extends BaseActivity {
                         }else{
                             //TODO
                             adapter.setData(lists);
+                            tvIcons.setText(String.valueOf(msg.arg2));
                         }
-
                     } else {
                         ToastCommon.toastShortShow(getApplicationContext(), null, String.valueOf(msg.obj));
                     }
@@ -68,10 +73,13 @@ public class Tab4MyTourismCoinActivity extends BaseActivity {
 
     private void getData() {
         UserInformationBiz biz = new UserInformationBiz(getApplicationContext(), handler);
-        biz.getUserCoin(MainActivity.user.getUserId());
+        biz.getUserCoin("1"); //MainActivity.user.getUserId()
     }
 
     private void setupView() {
+        tvTitle = (TextView) findViewById(R.id.tv_title_inner_travel);
+        tvTitle.setText(getString(R.string.fragment_mine_my_travel_money));
+        ivTitleLeft = (ImageView) findViewById(R.id.title_main_tv_left_location);
         //这几个刷新Label的设置
         pullListview = (PullToRefreshListView) findViewById(R.id.mylistview_tab4_tourism_coin);
         pullListview.getLoadingLayoutProxy().setLastUpdatedLabel("lastUpdateLabel");
@@ -80,7 +88,7 @@ public class Tab4MyTourismCoinActivity extends BaseActivity {
         pullListview.getLoadingLayoutProxy().setReleaseLabel("releaseLabel");
 
         //上拉、下拉设定
-        pullListview.setMode(PullToRefreshBase.Mode.BOTH);
+        pullListview.setMode(PullToRefreshBase.Mode.DISABLED);
 
         //上拉、下拉监听函数
         pullListview.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
@@ -102,8 +110,8 @@ public class Tab4MyTourismCoinActivity extends BaseActivity {
 
         listView = pullListview.getRefreshableView();
         LinearLayout header = (LinearLayout) LayoutInflater.from(getApplicationContext()).inflate(R.layout.header_tab4_my_icon, null);
-        TextView tvIcons = (TextView) header.findViewById(R.id.tv_tab4_my_tourism_coin_number);
-        tvIcons.setText(MainActivity.user.getUserScore());
+        tvIcons = (TextView) header.findViewById(R.id.tv_tab4_my_tourism_coin_number);
+//        tvIcons.setText(MainActivity.user.getUserScore());
         listView.addHeaderView(header);
         adapter = new UserIconListAdapter(getApplicationContext(), lists);
         listView.setAdapter(adapter);
@@ -111,7 +119,7 @@ public class Tab4MyTourismCoinActivity extends BaseActivity {
     }
 
     private void addListener() {
-
+        ivTitleLeft.setOnClickListener(this);
     }
 
     public static void actionStart(Context context, Bundle bundle){
@@ -121,5 +129,14 @@ public class Tab4MyTourismCoinActivity extends BaseActivity {
         }
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.title_main_tv_left_location:
+                finish();
+                break;
+        }
     }
 }

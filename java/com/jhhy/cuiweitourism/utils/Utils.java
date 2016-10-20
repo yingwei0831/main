@@ -272,7 +272,7 @@ public class Utils {
      * @param date 2016-10-19
      * @return
      */
-    private long getTime(String date){
+    public static long getTime(String date){
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date time =  format.parse(date);

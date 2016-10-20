@@ -30,9 +30,9 @@ public class DatePickerActivity extends Activity implements View.OnClickListener
     private Button btnCancel;
     private Button btnConfirm;
 
-    private int currentYear;
-    private int currentMonth;
-    private int currentDate;
+//    private int currentYear;
+//    private int currentMonth;
+//    private int currentDate;
 
     private int year;
     private int month;
@@ -89,9 +89,9 @@ public class DatePickerActivity extends Activity implements View.OnClickListener
         month = (calendar.get(Calendar.MONTH) + 1);
         date = calendar.get(Calendar.DAY_OF_MONTH);
 
-        currentYear = year;
-        currentMonth = month;
-        currentDate = date;
+//        currentYear = year;
+//        currentMonth = month;
+//        currentDate = date;
 
         newString = String.format("%d年%02d月%02d日 %s", year, month, date, Utils.getDayOfStr(calendar.get(Calendar.DAY_OF_WEEK))); //calendar.get(Calendar.DAY_OF_WEEK);
         npYear.setMaxValue(calendar.get(Calendar.YEAR) + 2);

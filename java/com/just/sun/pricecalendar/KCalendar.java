@@ -384,11 +384,11 @@ public class KCalendar extends ViewFlipper implements
                                     //if (thisMonths.get(d).getState() == 0) {
                                     //  txtvPrice.setText("");
                                     //} else
-                                    if (Integer.parseInt(thisMonths.get(d).getStock()) > 0) { //因为没有人数限制
+//                                    if (Integer.parseInt(thisMonths.get(d).getStock()) > 0) { //因为没有人数限制
                                         txtvPrice.setText("￥" + thisMonths.get(d).getSell_price_adult());
-                                    } else {
+//                                    } else {
 //                                        txtvPrice.setText("售罄");
-                                    }
+//                                    }
                                 }
                             }
                         }

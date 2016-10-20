@@ -85,6 +85,7 @@
             android:layout_marginTop="14dp">
 
             <TextView
+                android:id="@+id/tv_tab1_train"
                 style="@style/Tab1TableLayoutItem"
                 android:drawableTop="@mipmap/tab1_5_hcp"
                 android:text="@string/tab1_tablelayout_item5" />

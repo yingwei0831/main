@@ -457,6 +457,11 @@ public class InnerTravelEditOrderActivity extends BaseActivity implements View.O
 
                 @Override
                 public void onError(FetchError error) {
+                    if (error.localReason != null){
+                        ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
+                    }else{
+                        ToastCommon.toastShortShow(getApplicationContext(), null, "请求出错，请重试");
+                    }
                     LogUtil.e(TAG, "activitiesOrderSubmit: " + error.toString());
                     LoadingIndicator.cancel();
                 }

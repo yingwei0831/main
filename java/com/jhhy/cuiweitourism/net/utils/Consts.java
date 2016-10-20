@@ -226,4 +226,14 @@ public class Consts {
     public static final int MESSAGE_GET_CITY = 130; //获取城市列表
     public static final int REQUEST_CODE_SELECT_CITY = 1130; //选择城市
 
+    /** Database version */
+    public static final int DATABASE_VERSION = 1;
+    /** Database file name */
+    public static final String DATABASE_NAME = "cuiwei_tourism.db";
+    /**
+     * 火车表
+     */
+    public static final String TABLE_TRAIN_STATION = "cuiwei_tourism_station";
+    public static final String TABLE_CITY_RECORD = "cuiwei_city_record";
+
 }

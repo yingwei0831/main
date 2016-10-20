@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -63,12 +64,15 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
 
 
     private int page = 1;
-    private String areaId = "8"; //城市id，与主页不一样
-    private String startTime = "2016-09-16"; //2016-09-16
-    private String endTime = ""; //
-    private String keyWords = "";
+    private String areaId = "北京"; //城市名字，与主页一样
     private String order = "price desc";
     private String price = ""; //价格
+
+    private String checkInDate ;
+    private String checkOutDate;
+    private int    stayDays    ;
+    private PhoneBean selectCity;
+    private String keyWords;
 
     private Handler handler = new Handler(){
         @Override
@@ -91,7 +95,20 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void getData() {
-
+        Intent intent = getIntent();
+        if (intent != null) {
+            Bundle bundle = intent.getExtras();
+            if (bundle != null) {
+                checkInDate = bundle.getString("checkInDate");
+                checkOutDate = bundle.getString("checkOutDate");
+                stayDays    = bundle.getInt("stayDays");
+                selectCity = (PhoneBean) bundle.getSerializable("selectCity");
+                keyWords = bundle.getString("keyWords");
+                if (keyWords == null){
+                    keyWords = "";
+                }
+            }
+        }
     }
 
     private void getHotelListData(){
@@ -99,7 +116,7 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
         HotelActionBiz hotelBiz = new HotelActionBiz();
         //"areaid":"8","starttime":"2016-09-16","endtime":"","keyword":"","page":"1","offset":"10","order":"price desc","price":"","level":""
         //获取酒店列表
-        HotelListFetchRequest request = new HotelListFetchRequest(areaId, startTime, endTime, keyWords, String.valueOf(page), "10", String.valueOf(orderPosition), price, String.valueOf(levelPosition));
+        HotelListFetchRequest request = new HotelListFetchRequest(selectCity.getName(), checkInDate, checkOutDate, keyWords, String.valueOf(page), "10", String.valueOf(orderPosition), price, String.valueOf(levelPosition));
 //        HotelListFetchRequest request = new HotelListFetchRequest(areaId, startTime, endTime, keyWords, String.valueOf(page), "10", order, price, "");
         hotelBiz.hotelGetInfoList(request, new BizGenericCallback<ArrayList<HotelListInfo>>() {
             @Override
@@ -284,10 +301,15 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
 
 
     @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
         //TODO 进入酒店详情页
-        LogUtil.e(TAG, "i = " + i +", l = " + l);
+        LogUtil.e(TAG, "i = " + position +", l = " + l);
         Bundle bundle = new Bundle();
+        bundle.putString("checkInDate", checkInDate);
+        bundle.putString("checkOutDate", checkOutDate);
+        bundle.putInt("stayDays", stayDays);
+        bundle.putSerializable("selectCity", selectCity);
+
         bundle.putString("id", listHotel.get((int)l).getId());
         Intent intent = new Intent(getApplicationContext(), HotelDetailActivity.class);
         intent.putExtras(bundle);

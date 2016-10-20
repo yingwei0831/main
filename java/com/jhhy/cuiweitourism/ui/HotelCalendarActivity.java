@@ -101,18 +101,19 @@ public class HotelCalendarActivity extends BaseActivity implements View.OnClickL
 
     private boolean selectFromDay = true; //选择入住时间
     private boolean selectEndDay = true; //选择离开时间
-    private boolean selectDay;
+//    private boolean selectDay;
 
     private String hotelInDate; //入住酒店时间
     private String hotelOutDate; //离开酒店时间
+    private long stayDays; //住宿天数
 
-    private int fromYear; //开始的年
-    private int fromMonth; //开始的月
-    private int fromDay; //开始的日期
-
-    private int toYear; //开始的年
-    private int toMonth; //开始的月
-    private int toDay; //开始的日期
+//    private int fromYear; //开始的年
+//    private int fromMonth; //开始的月
+//    private int fromDay; //开始的日期
+//
+//    private int toYear; //开始的年
+//    private int toMonth; //开始的月
+//    private int toDay; //开始的日期
 
 
     private void addCalendarListener() {
@@ -131,7 +132,7 @@ public class HotelCalendarActivity extends BaseActivity implements View.OnClickL
                 } else {
                     //不可以选择今天之前的日期
                     int daySelect = Integer.parseInt(dateFormat.substring(dateFormat.lastIndexOf("-") + 1, dateFormat.length()));
-                    if (yearCalendar == yearCalendar){
+                    if (yearCurrent == yearCalendar){
                         if (monthCurrent == monthCalendar){ //本月，切记不能选择当前日期之前的日期
                             if (dayCurrent > daySelect){
                                 return;
@@ -143,125 +144,43 @@ public class HotelCalendarActivity extends BaseActivity implements View.OnClickL
                         calendar.setCalendarDayBgColor(dateFormat, ContextCompat.getColor(getApplicationContext(), R.color.colorActionBar)); //Color.parseColor("#45BDEF")
                         selectFromDay = false;
 
-                        fromYear = yearCalendar;
-                        fromMonth = monthCalendar;
-                        fromDay = daySelect;
+//                        fromYear = yearCalendar;
+//                        fromMonth = monthCalendar;
+//                        fromDay = daySelect;
                     }else if (!selectFromDay && selectEndDay){ //选择离开时间,不能选择比入住时间小的时间,28天以内
                         long diff = Utils.getDiff(hotelInDate, dateFormat);
+                        LogUtil.e(TAG, "相差天数：diff = " + diff);
+                        List<String> dates = new ArrayList<>();
                         if (diff <= 28 && diff > 0){
-                            List<String> dates = new ArrayList<String>();
-
+                            //本月，加下个月 将字符串转为毫秒？
+                            long time = Utils.getTime(hotelInDate);
+                            dates.add(hotelInDate);
+                            for (int i = 1; i <= diff; i++) {
+                                String laterDate = Utils.getTimeStrYMD(time + (long) i * 24 * 60 * 60 * 1000);
+                                dates.add(laterDate);
+                            }
+                            LogUtil.e(TAG, "相差天数：dates = " + dates);
                         } else {
                             return;
                         }
-//                        if (yearCalendar < fromYear){
-//                            return;
-//                        }else if (yearCalendar == fromYear){
-//                            if (monthCalendar < fromMonth){
-//                                return;
-//                            }else{
-//                                if (monthCalendar == fromMonth){ //本月
-//                                    if (daySelect - fromDay > 28){
-//                                        return;
-//                                    }else{
-//                                        int addDay = fromDay;
-//                                        for (int i = 0; i <= (toDay - fromDay); i++){
-//                                            String date = String.format("%d-%02d-%02d", toYear, toMonth, addDay++);
-//                                            LogUtil.e(TAG, "date = " + date);
-//                                            dates.add(date);
-//                                        }
-//                                    }
-//                                }else if (monthCalendar - fromMonth == 1 && Utils.getDiff(hotelInDate, dateFormat) <= 28){ //下个月 当前日期加28天的日期，比较
-//                                    long diff = Utils.getDiff(hotelInDate, dateFormat);
-//                                    LogUtil.e(TAG, "相差天数 diff = " + diff);
-//                                    Date date = new Date();
-////                                    if (diff <= 28){
-//                                        //本月，加下个月 将字符串转为毫秒？
-//                                        dates.add(Utils.getTimeStrYMD(date.getTime()));
-//                                        for (int i = 1; i < diff; i++){
-//                                            String laterDate = Utils.getTimeStrYMD(date.getTime() + (long)(i * 24 * 60 * 60 * 1000));
-//                                            dates.add(laterDate);
-//                                        }
-////                                    }else{
-////                                        return;
-////                                    }
-//                                } else {
-//                                    return;
-//                                }
-//                            }
-//                        }else if (yearCalendar - fromYear == 1 && fromMonth == 12 && monthCalendar == 1 && Utils.getDiff(hotelInDate, dateFormat) <= 28){ //下一年 //只有12月份可以下一年 //只有1月份可以选择
-//                            long diff = Utils.getDiff(hotelInDate, dateFormat);
-//                            LogUtil.e(TAG, "相差天数 diff = " + diff);
-//                            Date date = new Date();
-//                            dates.add(Utils.getTimeStrYMD(date.getTime()));
-//                            for (int i = 1; i < diff; i++){
-//                                String laterDate = Utils.getTimeStrYMD(date.getTime() + (long)(i * 24 * 60 * 60 * 1000));
-//                                dates.add(laterDate);
-//                            }
-//                        } else {
-//                            return;
-//                        }
-                        toYear  = yearCalendar;
-                        toMonth = monthCalendar;
-                        toDay   = daySelect;
-                        List<GroupDeadline> groups = calendar.getGroups();
+//                        toYear  = yearCalendar;
+//                        toMonth = monthCalendar;
+//                        toDay   = daySelect;
 
-
-//                        if (fromYear < toYear){ //翻过年了
-//
-//                        }else{ //本年
-//                            if (fromMonth < toMonth){ //跨月了
-//                                int addMonth = fromMonth;
-//                                int addDay = fromDay;
-//                                if (fromMonth == 1 || fromMonth == 3 || fromMonth == 5 || fromMonth == 7 || fromMonth == 8 || fromMonth == 10 || fromMonth == 12){ //31天
-//
-//                                }else if (fromMonth == 4 || fromMonth == 6 || fromMonth == 9 || fromMonth == 11){ //30天
-//
-//                                }else if(fromMonth == 2){ //平年28天，闰年29天
-//
-//                                }
-//                                for (int i = 0; i <= (toMonth - fromMonth); i++){ //外层为月遍历
-//                                    for (int j = 0; j <= (toDay - fromDay); j++){ //内层为日期遍历
-//
-//                                    }
-//                                }
-//                            }else{ //本月
-//                                int addDay = fromDay;
-//                                for (int i = 0; i <= (toDay - fromDay); i++){
-//                                    String date = String.format("%d-%02d-%02d", toYear, toMonth, addDay++);
-//                                    LogUtil.e(TAG, "date = " + date);
-//                                    dates.add(date);
-//                                }
-//                            }
-//                        }
-
+                        stayDays = diff;
                         hotelOutDate = dateFormat;
-                        calendar.setCalendarDayBgColor(dateFormat, ContextCompat.getColor(getApplicationContext(), R.color.colorActionBar));
+                        calendar.setCalendarDaysBgColor(dates, ContextCompat.getColor(getApplicationContext(), R.color.colorActionBar));
                         selectEndDay = false;
-                    }else if (!selectFromDay && !selectEndDay){ //重新选择,选择入住时间
+                    } else if (!selectFromDay && !selectEndDay) { //重新选择,选择入住时间
                         calendar.removeAllBgColor();
+                        stayDays = 0;
                         selectFromDay = true;
                         selectEndDay = true;
                         hotelInDate = dateFormat;
+                        hotelOutDate = null;
                         calendar.setCalendarDayBgColor(dateFormat, ContextCompat.getColor(getApplicationContext(), R.color.colorActionBar)); //Color.parseColor("#45BDEF")
                         selectFromDay = false;
                     }
-
-//                    for (int i = 0; i < calendarPricesNew.size(); i++) {
-//                        String positionDate = calendarPricesNew.get(i).getDate();
-//                        LogUtil.e("SHF", "dateFormat--->" + dateFormat + ", date--->" + calendarPrices.get(i).getDate()); // + "peopleNumCur--->" + "stock--->" + stock);
-//                        LogUtil.e("SHF", "dateFormat--->" + dateFormat + ", positionDate--->" + positionDate + ", date = " + date); // + "peopleNumCur--->" + "stock--->" + stock);
-//                        if (dateFormat.equals(positionDate)) { //当前点击日期的背景色
-////                                && (stock) > 0) {
-//                            //设置背景色
-//                            calendar.removeAllBgColor();
-//                            calendar.setCalendarDayBgColor(dateFormat, ContextCompat.getColor(getApplicationContext(), R.color.colorActionBar)); //Color.parseColor("#45BDEF")
-//                            selectGroupDeadLine = calendarPricesNew.get(i);
-//                        } else if (date.equals(positionDate)) { //如果是选择今天的日期
-////                                && (stock) > 0) {
-////                            ToastCommon.toastShortShow(getApplicationContext(), null, "此团期剩余空位不足，请选择其他团期或减少参团人数");
-//                        }
-//                    }
                 }
             }
         });
@@ -297,14 +216,25 @@ public class HotelCalendarActivity extends BaseActivity implements View.OnClickL
             case R.id.imgv_calendar_next_month: //下个月
                 nextMonth();
                 break;
-            case R.id.btn_price_calendar_reserve:
+            case R.id.btn_hotel_calendar_confirm:
                 commit();
                 break;
         }
     }
 
     private void commit() {
-//        if ()
+        if (!selectFromDay && !selectEndDay){
+            Intent intent = new Intent();
+            Bundle bundle = new Bundle();
+            bundle.putString("hotelInDate", hotelInDate);
+            bundle.putString("hotelOutDate", hotelOutDate);
+            bundle.putInt("stayDays", (int) stayDays);
+            intent.putExtras(bundle);
+            setResult(RESULT_OK, intent);
+            finish();
+        }else{
+            ToastCommon.toastShortShow(getApplicationContext(), null, "请选择离店日期");
+        }
     }
 
     private int yearCurrent; //本年
