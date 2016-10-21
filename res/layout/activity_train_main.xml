@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     tools:context="com.jhhy.cuiweitourism.ui.TrainMainActivity"
     android:orientation="vertical"
-    android:background="@android:color/white">
+    android:background="@android:color/white"
+    android:id="@+id/view_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,7 +20,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:scrollbars="none">
         <LinearLayout
             android:layout_width="match_parent"
@@ -29,7 +31,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp">
+                android:padding="12dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -50,7 +52,7 @@
                         android:layout_height="0dp"
                         android:layout_weight="1"
                         android:text="北京市"
-                        android:paddingTop="20dp"
+                        android:paddingTop="16dp"
                         android:textSize="24sp"
                         android:textColor="@android:color/black"
                         />
@@ -85,7 +87,7 @@
                         android:layout_gravity="right"
                         android:textSize="24sp"
                         android:textColor="@android:color/black"
-                        android:paddingTop="20dp"
+                        android:paddingTop="16dp"
                         />
                 </LinearLayout>
             </RelativeLayout>
@@ -94,13 +96,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/colorLineGray2"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"/>
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
+                android:padding="12dp"
                 android:orientation="vertical">
                 <TextView
                     android:layout_width="wrap_content"
@@ -112,8 +114,8 @@
                     />
                 <TextView
                     android:id="@+id/tv_train_from_time"
-                    android:layout_marginTop="20dp"
-                    android:layout_width="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="10-21明天"
                     android:drawablePadding="8dp"
@@ -125,12 +127,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/colorLineGray2"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"/>
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
+                android:padding="12dp"
                 android:orientation="vertical">
                 <TextView
                     android:layout_width="wrap_content"
@@ -142,8 +144,8 @@
                     />
                 <TextView
                     android:id="@+id/tv_train_type"
-                    android:layout_marginTop="20dp"
-                    android:layout_width="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="不限"
                     android:drawablePadding="8dp"
@@ -155,12 +157,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/colorLineGray2"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"/>
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
+                android:padding="12dp"
                 android:orientation="vertical">
                 <TextView
                     android:layout_width="wrap_content"
@@ -172,8 +174,8 @@
                     />
                 <TextView
                     android:id="@+id/tv_train_seat_type"
-                    android:layout_marginTop="20dp"
-                    android:layout_width="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="不限"
                     android:drawablePadding="8dp"
@@ -185,23 +187,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/colorLineGray2"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"/>
-
-            <Button
-                android:id="@+id/btn_train_search"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
-                android:background="@drawable/bg_btn_regist_border_selector"
-                android:text="@string/hotel_hotel_search"
-                android:textColor="@android:color/white"
-                android:textSize="16sp"
-                />
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"/>
         </LinearLayout>
     </ScrollView>
-
+    <Button
+        android:id="@+id/btn_train_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/bg_btn_regist_border_selector"
+        android:text="@string/hotel_hotel_search"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:layout_gravity="bottom"
+        />
 </LinearLayout>

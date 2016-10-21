@@ -6,37 +6,13 @@ import java.util.ArrayList;
  * Created by zhangguang on 16/10/11.
  */
 public class TrainTicketOrderFetch extends BasicFetchModel {
-
-//    "FromStation": "北京",
-//            "ToStation": "凌源",
-//            "TrainCode": "2257",
-//            "TrainDate": "2016-09-30",
-//            "FromTime": "12:20",
-//            "ToDate": "2016-09-30",
-//            "ToTime": "21:11",
-//            "goupiaoren": [
-//    {
-//        "PsgName": "人1",
-//            "CardType": "2",
-//            "CardNo": "211382198608262687",
-//            "TicketType": "0",
-//            "SeatType": "6",
-//            "TicketPrice": "121.50"
-//    },
-//    {
-//        "PsgName": "人2",
-//            "CardType": "2",
-//            "CardNo": "211382198608262698",
-//            "TicketType": "0",
-//            "SeatType": "6",
-//            "TicketPrice": "121.50"
-//    }
-//    ],
-//            "SeatType": "6",
-//            "SumPrice": "243"
-
-
-    static public class TicketInfo{
+    //        "PsgName": "人1",
+    //        "CardType": "2",
+    //        "CardNo": "211382198608262687",
+    //        "TicketType": "0",
+    //        "SeatType": "6",
+    //        "TicketPrice": "121.50"
+    static public class TicketInfo extends BasicFetchModel{
         public String PsgName;
         public String CardType;
         public String CardNo;
@@ -106,10 +82,41 @@ public class TrainTicketOrderFetch extends BasicFetchModel {
     }
 
 
+//    "memberid": "",
+//            "linkman": "",
+//            "linktel": "",
+//            "FromStation": "北京",
+//            "ToStation": "凌源",
+//            "TrainCode": "2257",
+//            "TrainDate": "2016-09-30",
+//            "FromTime": "12:20",
+//            "ToDate": "2016-09-30",
+//            "ToTime": "21:11",
+//            "goupiaoren": [
+//    {
+//        "PsgName": "人1",
+//            "CardType": "2",
+//            "CardNo": "211382198608262687",
+//            "TicketType": "0",
+//            "SeatType": "6",
+//            "TicketPrice": "121.50"
+//    },
+//    {
+//        "PsgName": "人2",
+//            "CardType": "2",
+//            "CardNo": "211382198608262698",
+//            "TicketType": "0",
+//            "SeatType": "6",
+//            "TicketPrice": "121.50"
+//    }
+//    ],
+//            "SeatType": "6",
+//            "SumPrice": "243"
 
 
-
-
+    public String memberid;
+    public String linkman;
+    public String linktel;
     public String FromStation;
     public String ToStation;
     public String TrainCode;
@@ -121,7 +128,10 @@ public class TrainTicketOrderFetch extends BasicFetchModel {
     public String SeatType;
     public String SumPrice;
 
-    public TrainTicketOrderFetch(String fromStation, String toStation, String trainCode, String trainDate, String fromTime, String toDate, String toTime, ArrayList<TicketInfo> goupiaoren, String seatType, String sumPrice) {
+    public TrainTicketOrderFetch(String memberid, String linkman, String linktel, String fromStation, String toStation, String trainCode, String trainDate, String fromTime, String toDate, String toTime, ArrayList<TicketInfo> goupiaoren, String seatType, String sumPrice) {
+        this.memberid = memberid;
+        this.linkman = linkman;
+        this.linktel = linktel;
         FromStation = fromStation;
         ToStation = toStation;
         TrainCode = trainCode;
@@ -135,6 +145,30 @@ public class TrainTicketOrderFetch extends BasicFetchModel {
     }
 
     public TrainTicketOrderFetch() {
+    }
+
+    public String getMemberid() {
+        return memberid;
+    }
+
+    public void setMemberid(String memberid) {
+        this.memberid = memberid;
+    }
+
+    public String getLinkman() {
+        return linkman;
+    }
+
+    public void setLinkman(String linkman) {
+        this.linkman = linkman;
+    }
+
+    public String getLinktel() {
+        return linktel;
+    }
+
+    public void setLinktel(String linktel) {
+        this.linktel = linktel;
     }
 
     public String getFromStation() {

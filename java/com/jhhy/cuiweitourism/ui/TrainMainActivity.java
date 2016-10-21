@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -19,16 +20,25 @@ import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.just.sun.pricecalendar.ToastCommon;
 
+import java.util.ArrayList;
+
+import cn.jeesoft.ArrayDataDemo;
+import cn.jeesoft.OptionsWindowHelper;
+import cn.jeesoft.widget.pickerview.CharacterPickerWindow;
+
 public class TrainMainActivity extends BaseActionBarActivity {
 
     private String TAG = TrainMainActivity.class.getSimpleName();
-    private TrainStationInfo stations; //火车站
+    private View parent;
+    private ArrayList<TrainStationInfo> stations; //火车站
 
     private TextView tvFromCity;
     private TextView tvToCity;
     private TextView tvFromDate;
     private TextView tvTrainType;
     private TextView tvSeatType;
+
+    private CharacterPickerWindow window; //车次类型，席别类型
 
     private Button btnSearch;
 
@@ -44,6 +54,7 @@ public class TrainMainActivity extends BaseActionBarActivity {
     @Override
     protected void setupView() {
         super.setupView();
+        parent = findViewById(R.id.view_parent);
         tvFromCity =    (TextView) findViewById(R.id.tv_train_from_city);
         tvToCity =      (TextView) findViewById(R.id.tv_train_to_city);
         tvFromDate =    (TextView) findViewById(R.id.tv_train_from_time);
@@ -77,27 +88,64 @@ public class TrainMainActivity extends BaseActionBarActivity {
                 selectToCity();
                 break;
             case R.id.tv_train_from_time: //出发时间
-
+                selectFromTime();
                 break;
             case R.id.tv_train_type: //车次类型
-
+                selectSeatType();
                 break;
             case R.id.tv_train_seat_type: //席别类型
-
+                selectSeatType();
                 break;
         }
     }
+    //选择席别类型，弹窗
+    private void selectSeatType() {
+        if (window == null) {
+            //初始化
+            window = OptionsWindowHelper.builder(TrainMainActivity.this, new OptionsWindowHelper.OnOptionsSelectListener() {
+                @Override
+                public void onOptionsSelect(String province, String city, String area) {
+                    LogUtil.e("main", province + "," + city + ", " + area);
+                    provinceS = province;
+                    cityS = city;
+                }
+            });
+        }
+        if (window.isShowing()){
+            window.dismiss();
+        }else{
+            // 弹出
+            window.showAtLocation(parent, Gravity.BOTTOM, 0, 0);
+            if (provinceS == null || cityS == null){
+                window.setSelectOptions(0, 0);
+            }else {
+                window.setSelectOptions(provinceS, cityS);
+            }
+        }
+    }
+    private String provinceS; //名字
+    private String cityS; //名字
 
+    private String provinceE; //代码
+    private String cityE; //代码
+
+
+
+    //选择出发时间
+    private void selectFromTime() {
+
+    }
+//    选择出发城市
     private void selectFromCity() {
 
     }
-
+    //选择到达城市
     private void selectToCity() {
 
     }
-
+    //搜索火车票
     private void search() {
-
+        //打开另外车票列表页
     }
 
     /**
@@ -107,10 +155,9 @@ public class TrainMainActivity extends BaseActionBarActivity {
         LoadingIndicator.show(TrainMainActivity.this, getString(R.string.http_notice));
         //火车站
         TrainTicketActionBiz trainBiz = new TrainTicketActionBiz();
-        TrainStationFetch stationFetch = new TrainStationFetch();
-        trainBiz.trainStationInfo(stationFetch, new BizGenericCallback<TrainStationInfo>() {
+        trainBiz.trainStationInfo(new BizGenericCallback<ArrayList<TrainStationInfo>>() {
             @Override
-            public void onCompletion(GenericResponseModel<TrainStationInfo> model) {
+            public void onCompletion(GenericResponseModel<ArrayList<TrainStationInfo>> model) {
                 if ("0001".equals(model.headModel.res_code)){
                     ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);
                 }else if ("0000".equals(model.headModel.res_code)){
@@ -131,6 +178,7 @@ public class TrainMainActivity extends BaseActionBarActivity {
                 LoadingIndicator.cancel();
             }
         });
+
     }
 
 

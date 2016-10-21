@@ -3,6 +3,7 @@ package com.jhhy.cuiweitourism.net.biz;
 import android.content.Context;
 import android.os.Handler;
 
+import com.jhhy.cuiweitourism.net.models.FetchModel.NullArrayFetchModel;
 import com.jhhy.cuiweitourism.net.models.FetchModel.TrainStationFetch;
 import com.jhhy.cuiweitourism.net.models.FetchModel.TrainStopsFetch;
 import com.jhhy.cuiweitourism.net.models.FetchModel.TrainTicketFetch;
@@ -13,6 +14,7 @@ import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainStationInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainStopsInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainTicketDetailInfo;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainTicketOrderInfo;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.netcallback.FetchGenericCallback;
 import com.jhhy.cuiweitourism.net.netcallback.FetchGenericResponse;
@@ -107,14 +109,26 @@ public class TrainTicketActionBiz extends BasicActionBiz {
      *  火车站
      */
 
-    public void trainStationInfo(TrainStationFetch fetch, BizGenericCallback<TrainStationInfo> callback){
-        fetch.code = "Train_station";
-        FetchGenericResponse<TrainStationInfo> fetchResponse = new FetchGenericResponse<TrainStationInfo>(callback) {
+    public void trainStationInfo(BizGenericCallback<ArrayList<TrainStationInfo>> callback){
+        NullArrayFetchModel fetchModel = new NullArrayFetchModel();
+        fetchModel.code = "Train_station";
+        FetchGenericResponse<ArrayList<TrainStationInfo>> fetchResponse = new FetchGenericResponse<ArrayList<TrainStationInfo>>(callback) {
             @Override
             public void onCompletion(FetchResponseModel response) {
                 ArrayList<ArrayList<String>> array = parseJsonTotwoLevelArray(response);
-                TrainStationInfo stationInfo = new TrainStationInfo(array);
-                GenericResponseModel<TrainStationInfo> model = new GenericResponseModel<>(response.head,stationInfo);
+                ArrayList<TrainStationInfo> statios = new ArrayList<TrainStationInfo>();
+                for (ArrayList<String> station : array){
+                    TrainStationInfo itemStation = new TrainStationInfo();
+                    itemStation.id = station.get(0);
+                    itemStation.name = station.get(1);
+                    itemStation.fullPY = station.get(2);
+                    itemStation.shortPY = station.get(3);
+                    itemStation.isHot = Integer.parseInt(station.get(4)) > 0 ? true : false;
+                    itemStation.type = 0;
+                    statios.add(itemStation);
+                }
+
+                GenericResponseModel<ArrayList<TrainStationInfo>> model = new GenericResponseModel<>(response.head,statios);
                 this.bizCallback.onCompletion(model);
             }
 
@@ -124,7 +138,7 @@ public class TrainTicketActionBiz extends BasicActionBiz {
             }
         };
 
-        HttpUtils.executeXutils(fetch,new FetchGenericCallback<>(fetchResponse));
+        HttpUtils.executeXutils(fetchModel,new FetchGenericCallback<>(fetchResponse));
     }
 
     /**
@@ -152,16 +166,16 @@ public class TrainTicketActionBiz extends BasicActionBiz {
     }
 
     /**
-     *  火车票订单提交
+     *  火车票订单提交,下单到平台
      */
 
-    public void trainTicketOrderSubmit(TrainTicketOrderFetch fetch, BizGenericCallback<ArrayList<Object>> callback){
-        fetch.code = "Order_trainorder";
-        FetchGenericResponse<ArrayList<Object>> fetchResponse = new FetchGenericResponse<ArrayList<Object>>(callback) {
+    public void trainTicketOrderSubmit(TrainTicketOrderFetch fetch, BizGenericCallback<TrainTicketOrderInfo> callback){
+        fetch.code = "Train_traininto";
+        FetchGenericResponse<TrainTicketOrderInfo> fetchResponse = new FetchGenericResponse<TrainTicketOrderInfo>(callback) {
             @Override
             public void onCompletion(FetchResponseModel response) {
-                ArrayList<Object> array = parseJsonToObjectArray(response,Object.class);
-                GenericResponseModel<ArrayList<Object>> returnModel = new GenericResponseModel<ArrayList<Object>>(response.head,array);
+                TrainTicketOrderInfo info = parseJsonToObject(response,TrainTicketOrderInfo.class);
+                GenericResponseModel<TrainTicketOrderInfo> returnModel = new GenericResponseModel<TrainTicketOrderInfo>(response.head,info);
                 this.bizCallback.onCompletion(returnModel);
             }
 
