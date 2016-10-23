@@ -158,7 +158,7 @@
                     android:paddingTop="16dp"
                     android:text="房间数" />
             </RelativeLayout>
-
+            <!--联系人-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

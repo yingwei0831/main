@@ -428,33 +428,32 @@
             android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".ui.HotelDetailActivity"
-            android:theme="@style/ActionBarTheme"
-            android:launchMode="singleTop"/>
+            android:launchMode="singleTop"
+            android:theme="@style/ActionBarTheme" />
         <activity
             android:name=".ui.HotelScreenActivity"
-            android:theme="@style/ActionBarTheme"
-            android:launchMode="singleTop"/>
+            android:launchMode="singleTop"
+            android:theme="@style/ActionBarTheme" />
         <activity
             android:name=".ui.BaseActionBarActivity"
             android:screenOrientation="portrait"
             android:theme="@style/ActionBarTheme" />
         <activity
             android:name=".ui.HotelEditOrderActivity"
-            android:theme="@style/ActionBarTheme"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustPan"
-            android:launchMode="singleTop"/>
-
+            android:theme="@style/ActionBarTheme"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".ui.TrainMainActivity"
-            android:theme="@style/ActionBarTheme"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:launchMode="singleTop"/>
+            android:theme="@style/ActionBarTheme" />
         <activity
             android:name=".dialog.NumberPickerActivity"
-            android:theme="@style/SampleTheme.Light2"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:launchMode="singleTop"/>
+            android:theme="@style/SampleTheme.Light2" />
 
         <!-- ShareSDK 2、注意： tencent后面的appid要保持和您配置的QQ的appid一致 -->
         <activity
@@ -519,7 +518,8 @@
             android:screenOrientation="behind" />
         <!-- 接入支付宝支付-end- -->
 
-
+        <activity android:name=".ui.TrainListActivity" />
+        <activity android:name=".ui.TrainEditOrderActivity"></activity>
     </application>
 
 </manifest>
