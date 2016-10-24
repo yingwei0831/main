@@ -92,4 +92,17 @@ public class TrainTicketFetch extends BasicFetchModel {
     public void setOnlylowprice(String onlylowprice) {
         this.onlylowprice = onlylowprice;
     }
+
+    @Override
+    public String toString() {
+        return "TrainTicketFetch{" +
+                "fromstation='" + fromstation + '\'' +
+                ", arrivestation='" + arrivestation + '\'' +
+                ", traveltime='" + traveltime + '\'' +
+                ", traincode='" + traincode + '\'' +
+                ", traintype='" + traintype + '\'' +
+                ", trainseattype='" + trainseattype + '\'' +
+                ", onlylowprice='" + onlylowprice + '\'' +
+                '}';
+    }
 }

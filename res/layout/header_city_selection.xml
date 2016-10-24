@@ -6,54 +6,90 @@
     android:padding="16dp"
     android:background="@android:color/white"
     >
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/tab1_city_selection_recommend"
-        android:textSize="16sp"
-        />
-
+    <!--定位-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="4"
-        android:layout_marginTop="10dp"
-        >
+        android:orientation="vertical">
         <TextView
-            android:id="@+id/tv_current_city"
-            android:layout_marginRight="3dp"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="@string/tab1_city_selection_recommend"
             android:textSize="16sp"
-            android:textColor="@color/colorTab1RecommendForYouArgument"
-            android:text="北京"
-            android:gravity="center"
-            android:paddingTop="6dp"
-            android:paddingBottom="6dp"
-            android:background="@drawable/bg_et_city_selected_corner_border"
             />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="4"
+            android:layout_marginTop="10dp"
+            >
+            <TextView
+                android:id="@+id/tv_current_city"
+                android:layout_marginRight="3dp"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/colorTab1RecommendForYouArgument"
+                android:text="北京"
+                android:gravity="center"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:background="@drawable/bg_et_city_selected_corner_border"
+                />
+        </LinearLayout>
     </LinearLayout>
 
-
-    <TextView
-        android:id="@+id/tv_visa_select_city_record"
-        android:layout_marginTop="12dp"
+    <!--历史记录-->
+    <LinearLayout
+        android:id="@+id/layout_history"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/tab1_city_selection_record"
-        android:textSize="16sp"
-        />
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/tv_visa_select_city_record"
+            android:layout_marginTop="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/tab1_city_selection_record"
+            android:textSize="16sp"
+            />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="4"
+            android:layout_marginTop="10dp"
+            >
+            <com.jhhy.cuiweitourism.view.MyGridView
+                android:id="@+id/gv_header_city_selection_record"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="8dp"
+                android:numColumns="4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:verticalSpacing="8dp"
+                android:horizontalSpacing="6dp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!--热门城市-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="4"
-        android:layout_marginTop="10dp"
-        >
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/tv_visa_select_city_hot"
+            android:layout_marginTop="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/tab1_city_selection_hot"
+            android:textSize="16sp"
+            />
+
         <com.jhhy.cuiweitourism.view.MyGridView
-            android:id="@+id/gv_header_city_selection_record"
+            android:id="@+id/gv_header_city_selection_hot"
             android:layout_marginTop="10dp"
             android:layout_marginRight="8dp"
             android:numColumns="4"
@@ -64,23 +100,5 @@
     </LinearLayout>
 
 
-    <TextView
-        android:id="@+id/tv_visa_select_city_hot"
-        android:layout_marginTop="12dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/tab1_city_selection_hot"
-        android:textSize="16sp"
-        />
-
-    <com.jhhy.cuiweitourism.view.MyGridView
-        android:id="@+id/gv_header_city_selection_hot"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="8dp"
-        android:numColumns="4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:verticalSpacing="8dp"
-        android:horizontalSpacing="6dp"/>
 
 </LinearLayout>

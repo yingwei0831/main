@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.moudle.CityRecordTrain;
 import com.jhhy.cuiweitourism.moudle.PhoneBean;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainStationInfo;
 import com.jhhy.cuiweitourism.ui.CitySelectionActivity;
 import com.jhhy.cuiweitourism.view.PinnedSectionListView;
 
@@ -22,13 +23,13 @@ public class TrainStationAdapter extends BaseAdapter implements PinnedSectionLis
     /**
      * 数据集
      */
-    private ArrayList<CityRecordTrain> list;
+    private ArrayList<TrainStationInfo> list;
     /**
      * 首字母
      */
     public HashMap<String, Integer> map_IsHead;
 
-    public TrainStationAdapter(Context context, ArrayList<CityRecordTrain> list, HashMap<String, Integer> map_IsHead) {
+    public TrainStationAdapter(Context context, ArrayList<TrainStationInfo> list, HashMap<String, Integer> map_IsHead) {
         this.list = list;
         this.map_IsHead = map_IsHead;
         layoutInflater = LayoutInflater.from(context);
@@ -80,7 +81,7 @@ public class TrainStationAdapter extends BaseAdapter implements PinnedSectionLis
                 }
 
                 //设置名字
-                viewHolder.txt.setText(list.get(i).getCityName());
+                viewHolder.txt.setText(list.get(i).getName());
                 break;
             case CitySelectionActivity.TITLE:
                 if (view == null) {

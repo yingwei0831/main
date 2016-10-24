@@ -18,7 +18,7 @@
             android:id="@+id/tv_train_preference"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:drawableLeft="@mipmap/arrow_left_green"
+            android:drawableLeft="@mipmap/arrow_left_dark"
             android:drawablePadding="8dp"
             android:gravity="center_vertical"
             android:paddingLeft="16dp"
@@ -29,15 +29,17 @@
             />
 
         <TextView
+            android:id="@+id/tv_train_ticket_day"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
             android:gravity="center"
-            android:text="2016-09-03 周六"
+            android:text="2016-10-24 星期一"
             android:textColor="@color/colorActionBar"
             android:textSize="16sp" />
 
         <TextView
+            android:id="@+id/tv_train_next_day"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"

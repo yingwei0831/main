@@ -246,6 +246,12 @@ public class Utils {
         SimpleDateFormat formate = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
         return formate.format(date);
     }
+     public static String getCurrentTimeMD(){
+        Date date = new Date();
+        SimpleDateFormat formate = new SimpleDateFormat("MM-dd", Locale.CHINA);
+        return formate.format(date);
+    }
+
     /**
      * 时间的格式化：yyyy-MM-dd HH:mm:ss
      * @param time 时间毫秒值

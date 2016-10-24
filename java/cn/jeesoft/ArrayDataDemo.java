@@ -12,7 +12,7 @@ import java.util.Random;
  */
 public class ArrayDataDemo {
 
-    private static final Map<String, Map<String, String>> DATAs = new LinkedHashMap<>();
+    public static final Map<String, Map<String, String>> DATAs = new LinkedHashMap<>();
 
     public static final Map<String, String> TRAIN = new LinkedHashMap<>();
 

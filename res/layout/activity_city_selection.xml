@@ -31,6 +31,13 @@
             android:layout_height="match_parent"
             android:layout_alignParentRight="true" />
 
+        <ListView
+            android:id="@+id/list_search"
+            android:visibility="gone"
+            android:background="@android:color/white"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
     </RelativeLayout>
 
     <TextView

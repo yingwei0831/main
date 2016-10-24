@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainStationInfo;
 
 import java.util.List;
 
@@ -15,26 +16,24 @@ import java.util.List;
  */
 public class CitySelectionGridViewAdapter extends MyBaseAdapter {
 
-    private LayoutInflater inflater;
-
-    public CitySelectionGridViewAdapter(Context ct, List<String> list) {
+    public CitySelectionGridViewAdapter(Context ct, List list) {
         super(ct, list);
-        inflater = LayoutInflater.from(ct);
     }
+
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
         if (convertView == null) {
             holder = new ViewHolder();
-            convertView = inflater.inflate(R.layout.item_gridview_city_selection, null);
+            convertView = LayoutInflater.from(context).inflate(R.layout.item_gridview_city_selection, null);
             holder.tvCityName = (TextView) convertView.findViewById(R.id.tv_item_gridview_city_selection);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        String info = (String) getItem(position);
-        holder.tvCityName.setText(info);
+        TrainStationInfo info = (TrainStationInfo) getItem(position);
+        holder.tvCityName.setText(info.getName());
         return convertView;
     }
 

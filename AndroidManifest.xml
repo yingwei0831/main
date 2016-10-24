@@ -138,6 +138,12 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
         <activity
+            android:name=".ui.TrainCitySelectionActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:windowSoftInputMode="adjustPan"
+            android:launchMode="singleTop"/>
+        <activity
             android:name=".ui.InnerTravelCityActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
@@ -455,6 +461,15 @@
             android:screenOrientation="portrait"
             android:theme="@style/SampleTheme.Light2" />
 
+        <activity
+            android:name=".ui.TrainListActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/ActionBarTheme"/>
+
+        <activity android:name=".ui.TrainEditOrderActivity" />
+        <activity android:name=".ui.BaseTitleActivity"></activity>
+
         <!-- ShareSDK 2、注意： tencent后面的appid要保持和您配置的QQ的appid一致 -->
         <activity
             android:name="com.mob.tools.MobUIShell"
@@ -518,8 +533,6 @@
             android:screenOrientation="behind" />
         <!-- 接入支付宝支付-end- -->
 
-        <activity android:name=".ui.TrainListActivity" />
-        <activity android:name=".ui.TrainEditOrderActivity"></activity>
     </application>
 
 </manifest>

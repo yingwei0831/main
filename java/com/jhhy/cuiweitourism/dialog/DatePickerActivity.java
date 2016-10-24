@@ -38,8 +38,9 @@ public class DatePickerActivity extends Activity implements View.OnClickListener
     private int month;
     private int date;
     private String newString = null;
+    private String week;
 
-    private int type = -1;
+    private int type = -1; //2:火车票选时间
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,8 +93,8 @@ public class DatePickerActivity extends Activity implements View.OnClickListener
 //        currentYear = year;
 //        currentMonth = month;
 //        currentDate = date;
-
-        newString = String.format("%d年%02d月%02d日 %s", year, month, date, Utils.getDayOfStr(calendar.get(Calendar.DAY_OF_WEEK))); //calendar.get(Calendar.DAY_OF_WEEK);
+        week = Utils.getDayOfStr(calendar.get(Calendar.DAY_OF_WEEK));
+        newString = String.format("%d年%02d月%02d日 %s", year, month, date, week); //calendar.get(Calendar.DAY_OF_WEEK);
         npYear.setMaxValue(calendar.get(Calendar.YEAR) + 2);
         npYear.setMinValue(calendar.get(Calendar.YEAR));
 
@@ -167,7 +168,8 @@ public class DatePickerActivity extends Activity implements View.OnClickListener
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        newString = String.format("%d年%02d月%02d日 %s", year, month, date, Utils.getDayOfStr(c.get(Calendar.DAY_OF_WEEK)));
+        week = Utils.getDayOfStr(c.get(Calendar.DAY_OF_WEEK));
+        newString = String.format("%d年%02d月%02d日 %s", year, month, date, week);
         tvDate.setText(newString);
     }
 
@@ -178,13 +180,21 @@ public class DatePickerActivity extends Activity implements View.OnClickListener
                 finish();
                 break;
             case R.id.btn_date_picker_comfirm:
-                Intent intent = new Intent();
-                Bundle bundle = new Bundle();
-                bundle.putString("selectDate", String.format("%d-%02d-%02d", year, month, date));
-                intent.putExtras(bundle);
-                setResult(RESULT_OK, intent);
-                finish();
+                confirm();
                 break;
         }
+    }
+
+    private void confirm() {
+        Intent intent = new Intent();
+        Bundle bundle = new Bundle();
+        if (type == 2) {
+            bundle.putString("selectDate", String.format("%d-%02d-%02d %s", year, month, date, week));
+        }else{
+            bundle.putString("selectDate", String.format("%d-%02d-%02d", year, month, date));
+        }
+        intent.putExtras(bundle);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 }
