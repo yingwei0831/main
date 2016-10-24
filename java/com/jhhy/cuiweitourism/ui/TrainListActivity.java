@@ -3,8 +3,12 @@ package com.jhhy.cuiweitourism.ui;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.bumptech.glide.util.Util;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.net.biz.TrainTicketActionBiz;
 import com.jhhy.cuiweitourism.net.models.FetchModel.TrainTicketFetch;
@@ -14,6 +18,7 @@ import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainTicketDetailInfo;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
+import com.jhhy.cuiweitourism.utils.Utils;
 import com.just.sun.pricecalendar.ToastCommon;
 
 import java.text.ParseException;
@@ -38,13 +43,20 @@ public class TrainListActivity extends BaseActionBarActivity {
     private TextView tvPreDay; //前一天
     private TextView tvNextDay; //后一天
     private TextView tvCurrentDay; //今天 2016-10-24 星期一
+    private PullToRefreshListView pullListView;
+    private ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_train_list);
-        getData();
-        super.onCreate(savedInstanceState);
-        getInternetData();
+        try {
+            setContentView(R.layout.activity_train_list);
+            getData();
+            super.onCreate(savedInstanceState);
+            getInternetData();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     private void getData() {
@@ -75,7 +87,33 @@ public class TrainListActivity extends BaseActionBarActivity {
         tvPreDay = (TextView) findViewById( R.id.tv_train_preference);
         tvNextDay = (TextView) findViewById(R.id.tv_train_next_day);
         tvCurrentDay = (TextView) findViewById(R.id.tv_train_ticket_day);
-//        tvCurrentDay.setText(String.format("%s %s", trainTime, ));
+        tvCurrentDay.setText(trainTime);
+
+        pullListView = (PullToRefreshListView) findViewById(R.id.list_train_detail);
+        //这几个刷新Label的设置
+        pullListView.getLoadingLayoutProxy().setLastUpdatedLabel(Utils.getCurrentTime());
+        pullListView.getLoadingLayoutProxy().setPullLabel("PULLLABLE");
+        pullListView.getLoadingLayoutProxy().setRefreshingLabel("refreshingLabel");
+        pullListView.getLoadingLayoutProxy().setReleaseLabel("releaseLabel");
+
+        //上拉、下拉设定
+        pullListView.setMode(PullToRefreshBase.Mode.DISABLED);
+        listView = pullListView.getRefreshableView();
+
+        //上拉、下拉监听函数
+        pullListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+
+            }
+        });
+
+
     }
 
     @Override
@@ -83,11 +121,11 @@ public class TrainListActivity extends BaseActionBarActivity {
         super.onClick(view);
         switch (view.getId()){
             case R.id.tv_train_preference: //前一天
-                trainTime = getDateStr(trainTime, -1);
+                trainTime = getDateStr(trainTime.substring(0, trainTime.indexOf(" ")), -1);
                 getInternetData();
                 break;
             case R.id.tv_train_next_day: //后一天
-                trainTime = getDateStr(trainTime, 1);
+                trainTime = getDateStr(trainTime.substring(0, trainTime.indexOf(" ")), 1);
                 getInternetData();
                 break;
         }
@@ -103,7 +141,7 @@ public class TrainListActivity extends BaseActionBarActivity {
 
     private void getInternetData() {
         //火车票
-        TrainTicketFetch fetch = new TrainTicketFetch(ticket.getFromstation(), ticket.getArrivestation(), trainTime, trainCode, trainType, seatType, trainLowPrice);
+        TrainTicketFetch fetch = new TrainTicketFetch(ticket.getFromstation(), ticket.getArrivestation(), trainTime.substring(0, trainTime.indexOf(" ")), trainCode, trainType, seatType, trainLowPrice);
         trainBiz.trainTicketInfo(fetch, new BizGenericCallback<ArrayList<TrainTicketDetailInfo>>() {
             @Override
             public void onCompletion(GenericResponseModel<ArrayList<TrainTicketDetailInfo>> model) {
