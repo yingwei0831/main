@@ -92,4 +92,7 @@
     <color name="colorBorderCitySelection">#DBDBDB</color>
     <color name="colorBgTab2LeftNormal">#F0F0F0</color>
 
+    <color name="colorGrayLight">#979797</color>
+    <color name="colorGrayDark">#777777</color>
+
 </resources>

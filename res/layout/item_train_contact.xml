@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    >
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/colorLineGray2"/>
+        android:background="@color/colorLineGray2"
+        />
 
     <ImageView
         android:layout_marginTop="1dp"
@@ -16,10 +18,42 @@
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:paddingTop="16dp"
-        android:paddingBottom="16dp"/>
+        android:paddingBottom="16dp"
+        android:layout_centerVertical="true"
+        android:id="@+id/iv_train_trash"/>
 
     <LinearLayout
+        android:id="@+id/layout_contact"
+        android:layout_toRightOf="@+id/iv_train_trash"
+        android:layout_toLeftOf="@+id/iv_contact_view_detail"
+        android:layout_marginTop="1dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        ></LinearLayout>
+        android:layout_centerVertical="true"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="姓名"
+            android:paddingTop="12dp"
+            android:paddingBottom="4dp"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="4dp"
+            android:paddingBottom="12dp"
+            android:text="身份证：111222199909092222"/>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_contact_view_detail"
+        android:layout_marginTop="1dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/arrow_right_dark"
+        android:layout_alignParentRight="true"
+        android:padding="16dp"
+        android:layout_centerVertical="true"/>
 </RelativeLayout>

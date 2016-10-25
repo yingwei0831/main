@@ -7,7 +7,7 @@
     android:orientation="vertical"
     tools:context="com.jhhy.cuiweitourism.ui.TrainEditOrderActivity">
 
-    <include layout="@layout/title_simple" />
+    <!--<include layout="@layout/title_simple" android:visibility="gone"/>-->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -118,7 +118,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
-
+        android:gravity="center_vertical"
         >
 
         <TextView
@@ -137,6 +137,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="￥1748.00"
+            android:textSize="18sp"
             android:textColor="@android:color/holo_red_light" />
 
         <TextView
@@ -147,7 +148,8 @@
             android:drawablePadding="6dp"
             android:drawableRight="@mipmap/arrow_right_dark"
             android:padding="16dp"
-            android:text="坐席" />
+            android:text="坐席"
+            android:textSize="16sp"/>
     </LinearLayout>
 
     <ScrollView
@@ -179,7 +181,7 @@
                         android:id="@+id/tv_train_passenger_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="成人1人"
+                        android:text="成人0人"
                         android:textColor="@android:color/black"
                         android:textSize="16sp" />
 
@@ -238,7 +240,8 @@
                         android:maxLines="1"
                         android:paddingBottom="16dp"
                         android:paddingTop="16dp"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"
+                        android:inputType="text"/>
                 </LinearLayout>
 
                 <View
@@ -282,7 +285,8 @@
                         android:maxLines="1"
                         android:paddingBottom="16dp"
                         android:paddingTop="16dp"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"
+                        />
                 </LinearLayout>
 
             </LinearLayout>

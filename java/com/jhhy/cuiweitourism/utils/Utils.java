@@ -252,6 +252,14 @@ public class Utils {
         return formate.format(date);
     }
 
+    //将分钟数转化为XX时XX分
+    public static String getDuration(String minute){
+        int mi = Integer.parseInt(minute);
+        int ho = mi / 60;
+        mi = mi % 60;
+        return String.format("%d小时%02d分钟", ho, mi);
+    }
+
     /**
      * 时间的格式化：yyyy-MM-dd HH:mm:ss
      * @param time 时间毫秒值
