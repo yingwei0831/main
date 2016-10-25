@@ -2,6 +2,8 @@ package com.jhhy.cuiweitourism.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -178,7 +180,6 @@ public class TrainMainActivity extends BaseActionBarActivity {
     //选择出发城市
     private void selectFromCity() {
         try {
-            LoadingIndicator.show(TrainMainActivity.this, "请稍后...");
             Intent intent = new Intent(getApplicationContext(), TrainCitySelectionActivity.class);
 //            Bundle bundle = new Bundle();
 //            bundle.putParcelableArrayList("stations", stations);
@@ -190,7 +191,6 @@ public class TrainMainActivity extends BaseActionBarActivity {
     }
     //选择到达城市
     private void selectToCity() {
-        LoadingIndicator.show(TrainMainActivity.this, "请稍后...");
         Intent intent = new Intent(getApplicationContext(), TrainCitySelectionActivity.class);
 //        Bundle bundle = new Bundle();
 //        bundle.putParcelableArrayList("stations", stations);
@@ -199,7 +199,6 @@ public class TrainMainActivity extends BaseActionBarActivity {
     }
     //搜索火车票
     private void search() {
-        //TODO 打开另外车票列表页：先打开再搜？
         if (fromCtiy == null || toCity == null){
             ToastCommon.toastShortShow(getApplicationContext(), null, "请选择出发城市或到达城市");
             return;
@@ -306,7 +305,10 @@ public class TrainMainActivity extends BaseActionBarActivity {
             @Override
             public void onCompletion(GenericResponseModel<ArrayList<TrainStationInfo>> model) {
                 if ("0001".equals(model.headModel.res_code)){
-                    ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);
+                    Message msg = new Message();
+                    msg.what = -1;
+                    msg.obj = model.headModel.res_arg;
+                    handler.sendMessage(msg);
                 }else if ("0000".equals(model.headModel.res_code)){
                     stations = model.body;
                     LogUtil.e(TAG,"trainStationInfo =" + stations.toString());
@@ -317,9 +319,14 @@ public class TrainMainActivity extends BaseActionBarActivity {
             @Override
             public void onError(FetchError error) {
                 if (error.localReason != null){
-                    ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
+                    Message msg = new Message();
+                    msg.what = -1;
+                    msg.obj = error.localReason;
+                    handler.sendMessage(msg);
+//                    ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
                 }else{
-                    ToastCommon.toastShortShow(getApplicationContext(), null, "请求火车站信息出错，请返回重试");
+//                    ToastCommon.toastShortShow(getApplicationContext(), null, "请求火车站信息出错，请返回重试");
+                    handler.sendEmptyMessage(-2);
                 }
                 LogUtil.e(TAG, "trainStationInfo: " + error.toString());
                 LoadingIndicator.cancel();
@@ -328,6 +335,26 @@ public class TrainMainActivity extends BaseActionBarActivity {
 
     }
 
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case -1:
+                    ToastCommon.toastShortShow(getApplicationContext(), null, String.valueOf(msg.obj));
+                    break;
+                case -2:
+                    ToastCommon.toastShortShow(getApplicationContext(), null, "请求火车站信息出错，请返回重试");
+                    break;
+            }
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stations = null;
+    }
 
 
     public static void actionStart(Context context, Bundle bundle){

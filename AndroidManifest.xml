@@ -102,7 +102,8 @@
             android:name=".ui.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:windowSoftInputMode="adjustPan|stateHidden" />
+            android:windowSoftInputMode="adjustPan|stateHidden"
+            android:launchMode="singleTask"/>
         <!-- android:theme="@style/MyCustomWindowTitle" -->
 
         <activity
@@ -139,10 +140,10 @@
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.TrainCitySelectionActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:windowSoftInputMode="adjustPan"
-            android:launchMode="singleTop"/>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.InnerTravelCityActivity"
             android:screenOrientation="portrait"
@@ -460,15 +461,20 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/SampleTheme.Light2" />
-
         <activity
             android:name=".ui.TrainListActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/ActionBarTheme"/>
-
+            android:theme="@style/ActionBarTheme" />
         <activity android:name=".ui.TrainEditOrderActivity" />
-        <activity android:name=".ui.BaseTitleActivity"></activity>
+        <activity android:name=".ui.BaseTitleActivity" />
+
+
+        <activity
+            android:name=".ui.TrainListItemInfoActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/ActionBarTheme"/>
 
         <!-- ShareSDK 2、注意： tencent后面的appid要保持和您配置的QQ的appid一致 -->
         <activity

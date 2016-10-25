@@ -100,9 +100,16 @@ public class ArrayDataDemo {
 //        init();
 //        return DATA_SEAT;
 //    }
-//    public static List<String> getSeat() {
-//        init();
-//        return SEAT;
-//    }
+    public static  Map<String, String> getSeat(int tag) {
+        init();
+        if (tag == 1) {
+            return SEAT1;
+        }else if (tag == 2) {
+            return SEAT2;
+        }else if(tag == 3) {
+            return SEAT3;
+        }
+        return null;
+    }
 
 }

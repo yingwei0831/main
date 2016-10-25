@@ -320,6 +320,12 @@
     <string name="hotel_detail_map">地图</string>
     <string name="hotel_order_title">订单填写</string>
 
+    <!--火车票-->
+    <string name="train_screen_start_time">发车时段</string>
+    <string name="train_screen_arrival_time">到达时段</string>
+    <string name="train_screen_type_train">车型</string>
+    <string name="train_screen_type_seat">席别类型</string>
+
     <!--XScrollView-->
     <string name="header_hint_refresh_normal">下拉刷新</string>
     <string name="header_hint_refresh_ready">松开刷新</string>

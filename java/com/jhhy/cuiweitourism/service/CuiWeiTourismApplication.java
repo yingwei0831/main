@@ -18,6 +18,7 @@ public class CuiWeiTourismApplication extends Application {
         x.Ext.init(this); // 这一步之后, 我们就可以在任何地方使用x.app()来获取Application的实例了.
         x.Ext.setDebug(true); // 是否输出debug日志
 
+
         // 初始化ImageLoader
 //        DisplayImageOptions options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.icon_stub) // 设置图片下载期间显示的图片
 //                .showImageForEmptyUri(R.drawable.icon_empty) // 设置图片Uri为空或是错误的时候显示的图片

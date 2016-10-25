@@ -2,13 +2,15 @@ package com.jhhy.cuiweitourism.net.models.ResponseModel;
 
 import android.app.SearchableInfo;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by birney on 2016-10-11.
  */
-public class TrainTicketDetailInfo {
-    static public class SeatInfo{
+public class TrainTicketDetailInfo implements Serializable{
+
+    static public class SeatInfo implements Comparable<SeatInfo>, Serializable{
         public String seatType;//"座位类型",
         public String seatName;//"座位名称",
         public String seatCode;//"座位代码",
@@ -30,6 +32,16 @@ public class TrainTicketDetailInfo {
                     ", midBedprice='" + midBedprice + '\'' +
                     ", downBenPrice='" + downBenPrice + '\'' +
                     '}';
+        }
+
+        @Override
+        public int compareTo(SeatInfo o) {
+            if (Float.parseFloat(this.floorPrice) > Float.parseFloat(o.floorPrice)){
+                return 1;
+            }else if (Float.parseFloat(this.floorPrice) < Float.parseFloat(o.floorPrice)){
+                return -1;
+            }
+            return 0;
         }
     }
 

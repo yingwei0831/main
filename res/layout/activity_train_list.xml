@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/train_list_parent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
@@ -67,53 +68,78 @@
         <com.handmark.pulltorefresh.library.PullToRefreshListView
             android:id="@+id/list_train_detail"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            />
+            android:layout_height="match_parent"
+            android:scrollbars="none" />
 
     </LinearLayout>
 
-    <RadioGroup
-        android:background="@color/colorInnerTravelBottomBar"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:background="@color/colorInnerTravelBottomBar"
         android:orientation="horizontal">
-        <RadioButton
-            android:checked="true"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:button="@null"
-            android:text="筛选"
-            android:textColor="@drawable/bg_rb_train_text_selector"
-            android:gravity="center"
-            />
 
         <RadioButton
+            android:id="@+id/rb_train_screen"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_weight="1"
             android:button="@null"
-            android:text="出发时间"
-            android:textColor="@drawable/bg_rb_train_text_selector"
+            android:drawablePadding="6dp"
+            android:drawableTop="@mipmap/icon_screen_train"
             android:gravity="center"
-            />
-        <RadioButton
+            android:text="筛选"
+            android:textColor="@android:color/white" />
+
+        <RadioGroup
+            android:id="@+id/rg_train_list"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:button="@null"
-            android:text="耗时"
-            android:textColor="@drawable/bg_rb_train_text_selector"
-            android:gravity="center"
-            />
-        <RadioButton
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:button="@null"
-            android:text="到达时间"
-            android:textColor="@drawable/bg_rb_train_text_selector"
-            android:gravity="center"
-            />
-    </RadioGroup>
+            android:layout_weight="3"
+            android:orientation="horizontal">
+
+            <!--android:background="@drawable/bg_rb_train_time_selector"-->
+
+            <RadioButton
+                android:id="@+id/rb_train_start_time"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:button="@null"
+                android:drawablePadding="6dp"
+                android:drawableTop="@drawable/bg_rb_train_start_time_selector"
+                android:gravity="center"
+                android:text="出发时间"
+                android:textColor="@drawable/bg_rb_train_text_selector" />
+
+            <RadioButton
+                android:id="@+id/rb_train_time_consuming"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:button="@null"
+                android:drawablePadding="6dp"
+                android:drawableTop="@drawable/bg_rb_train_consuming_time_selector"
+                android:gravity="center"
+                android:text="耗时"
+                android:textColor="@drawable/bg_rb_train_text_selector" />
+
+            <RadioButton
+                android:id="@+id/rb_train_arrival_time"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:button="@null"
+                android:drawablePadding="6dp"
+                android:drawableTop="@drawable/bg_rb_train_arrival_time_selector"
+                android:gravity="center"
+                android:text="到达时间"
+                android:textColor="@drawable/bg_rb_train_text_selector" />
+        </RadioGroup>
+    </LinearLayout>
+
 </LinearLayout>
