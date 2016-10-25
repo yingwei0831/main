@@ -226,8 +226,10 @@ public class TrainCitySelectionActivity extends BaseActivity implements View.OnC
         Bundle bundle = getIntent().getExtras();
         if (bundle != null){
             currentCity = bundle.getParcelable("currentCity");
-            list_all = bundle.getParcelableArrayList("stations");
+//            list_all = bundle.getParcelableArrayList("stations");
         }
+        //ArrayList<TrainStationInfo> array = getIntent().getParcelableArrayListExtra("text");
+        list_all = TrainMainActivity.stations;
     }
 
     /**
@@ -262,7 +264,7 @@ public class TrainCitySelectionActivity extends BaseActivity implements View.OnC
                 list_show.clear();
                 map_IsHead.clear();
                 //把输入的字符改成大写
-                String search = editable.toString().trim().toUpperCase();
+                String search = editable.toString().trim().toLowerCase();
                 LogUtil.e(TAG, "search = " + search);
 
                 if (TextUtils.isEmpty(search)) {

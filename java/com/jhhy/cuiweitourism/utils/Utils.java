@@ -246,9 +246,9 @@ public class Utils {
         SimpleDateFormat formate = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
         return formate.format(date);
     }
-     public static String getCurrentTimeMD(){
+     public static String getCurrentTimeYMDE(){
         Date date = new Date();
-        SimpleDateFormat formate = new SimpleDateFormat("MM-dd", Locale.CHINA);
+        SimpleDateFormat formate = new SimpleDateFormat("yyyy-MM-dd E", Locale.CHINA);
         return formate.format(date);
     }
 
