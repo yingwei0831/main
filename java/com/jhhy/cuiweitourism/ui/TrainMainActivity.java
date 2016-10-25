@@ -37,7 +37,7 @@ public class TrainMainActivity extends BaseActionBarActivity {
 
     private String TAG = TrainMainActivity.class.getSimpleName();
     private View parent;
-    private ArrayList<TrainStationInfo> stations; //火车站
+    public static ArrayList<TrainStationInfo> stations; //火车站
 
     private ImageView ivExchange; //交换出发地和目的地
     private TextView tvFromCity;
@@ -80,6 +80,18 @@ public class TrainMainActivity extends BaseActionBarActivity {
         tvSeatType =    (TextView) findViewById(R.id.tv_train_seat_type);
         btnSearch = (Button) findViewById(R.id.btn_train_search);
         ivExchange = (ImageView) findViewById(R.id.iv_train_exchange);
+        tvFromCity.setText("北京");
+        tvToCity.setText("上海");
+        selectDate = Utils.getCurrentTimeYMDE();
+        tvFromDate.setText(selectDate.substring(selectDate.indexOf("-") + 1, selectDate.indexOf(" ")));
+        fromCtiy = new TrainStationInfo();
+        fromCtiy.setName("北京");
+        toCity = new TrainStationInfo();
+        toCity.setName("上海");
+        tvTrainType.setText("不限");
+        typeTrain = "";
+        tvSeatType.setText("不限");
+        typeSeat = "";
     }
 
     @Override
@@ -165,20 +177,24 @@ public class TrainMainActivity extends BaseActionBarActivity {
     }
     //选择出发城市
     private void selectFromCity() {
-        LoadingIndicator.show(TrainMainActivity.this, "请稍后...");
-        Intent intent = new Intent(getApplicationContext(), TrainCitySelectionActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList("stations", stations);
-        intent.putExtras(bundle);
-        startActivityForResult(intent, SELECT_FROM_CITY);
+        try {
+            LoadingIndicator.show(TrainMainActivity.this, "请稍后...");
+            Intent intent = new Intent(getApplicationContext(), TrainCitySelectionActivity.class);
+//            Bundle bundle = new Bundle();
+//            bundle.putParcelableArrayList("stations", stations);
+//            intent.putExtras(bundle);
+            startActivityForResult(intent, SELECT_FROM_CITY);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     //选择到达城市
     private void selectToCity() {
         LoadingIndicator.show(TrainMainActivity.this, "请稍后...");
         Intent intent = new Intent(getApplicationContext(), TrainCitySelectionActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList("stations", stations);
-        intent.putExtras(bundle);
+//        Bundle bundle = new Bundle();
+//        bundle.putParcelableArrayList("stations", stations);
+//        intent.putExtras(bundle);
         startActivityForResult(intent, SELECT_TO_CITY);
     }
     //搜索火车票
@@ -197,33 +213,41 @@ public class TrainMainActivity extends BaseActionBarActivity {
         trainTicket.setArrivestation(toCity.getName());
         trainTicket.setTraveltime(selectDate);
         if (typeTrain != null){
-            Iterator it = ArrayDataDemo.TRAIN.entrySet().iterator();
-            while (it.hasNext()){
-                Map.Entry<String, String> entry = (Map.Entry<String, String>) it.next();
-                if (typeTrain.equals(entry.getKey())) {
-                    codeTrain = entry.getValue();
+            if ("不限".equals(typeTrain)){
+                trainTicket.setTraintype(codeTrain);
+            }else {
+                Iterator it = ArrayDataDemo.TRAIN.entrySet().iterator();
+                while (it.hasNext()) {
+                    Map.Entry<String, String> entry = (Map.Entry<String, String>) it.next();
+                    if (typeTrain.equals(entry.getKey())) {
+                        codeTrain = entry.getValue();
 //                    trainTicket.setTraintype(codeTrain);
-                    trainTicket.setTraintype("");
-                    break;
+                        trainTicket.setTraintype("");
+                        break;
+                    }
                 }
             }
         }
         if (typeSeat != null && typeTrain != null){
-            Iterator it = ArrayDataDemo.DATAs.entrySet().iterator();
-            while (it.hasNext()){
-                Map.Entry<String, Map<String, String>> entry = (Map.Entry<String, Map<String, String>>) it.next();
-                if (typeTrain.equals(entry.getKey())) {
-                    Map<String, String> value = entry.getValue();
-                    Iterator valueInner = value.entrySet().iterator();
-                    while(valueInner.hasNext()){
-                        Map.Entry<String, String> entryInner = (Map.Entry<String, String>) valueInner.next();
-                        if (typeSeat.equals(entryInner.getKey())) {
-                            codeSeat = entryInner.getValue();
-                            trainTicket.setTrainseattype(codeSeat);
-                            break;
+            if ("不限".equals(typeSeat)){
+                trainTicket.setTrainseattype(codeSeat);
+            }else {
+                Iterator it = ArrayDataDemo.DATAs.entrySet().iterator();
+                while (it.hasNext()) {
+                    Map.Entry<String, Map<String, String>> entry = (Map.Entry<String, Map<String, String>>) it.next();
+                    if (typeTrain.equals(entry.getKey())) {
+                        Map<String, String> value = entry.getValue();
+                        Iterator valueInner = value.entrySet().iterator();
+                        while (valueInner.hasNext()) {
+                            Map.Entry<String, String> entryInner = (Map.Entry<String, String>) valueInner.next();
+                            if (typeSeat.equals(entryInner.getKey())) {
+                                codeSeat = entryInner.getValue();
+                                trainTicket.setTrainseattype(codeSeat);
+                                break;
+                            }
                         }
-                    }
 
+                    }
                 }
             }
         }

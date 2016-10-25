@@ -121,8 +121,8 @@ public class TrainTicketActionBiz extends BasicActionBiz {
                     TrainStationInfo itemStation = new TrainStationInfo();
                     itemStation.id = station.get(0);
                     itemStation.name = station.get(1);
-                    itemStation.fullPY = station.get(2).toUpperCase();
-                    itemStation.shortPY = station.get(3).toUpperCase();
+                    itemStation.fullPY = station.get(2);
+                    itemStation.shortPY = station.get(3);
                     itemStation.isHot = Integer.parseInt(station.get(4)) > 0 ;
                     itemStation.headChar = itemStation.fullPY.substring(0,1).toUpperCase();
                     itemStation.type = 0;
