@@ -14,6 +14,7 @@ import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainTicketDetailInfo;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
+import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.just.sun.pricecalendar.ToastCommon;
 
 import java.text.ParseException;
@@ -108,7 +109,7 @@ public class TrainListActivity extends BaseActionBarActivity {
             @Override
             public void onCompletion(GenericResponseModel<ArrayList<TrainTicketDetailInfo>> model) {
                 if ("0001".equals(model.headModel.res_code)){
-                    ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);
+                    ToastUtil.show(getApplicationContext(), model.headModel.res_arg);
                 }else if ("0000".equals(model.headModel.res_code)){
                     ArrayList<TrainTicketDetailInfo> array = model.body;
                     LogUtil.e(TAG,"trainTicketInfo =" + array.toString());
@@ -119,9 +120,9 @@ public class TrainListActivity extends BaseActionBarActivity {
             @Override
             public void onError(FetchError error) {
                 if (error.localReason != null){
-                    ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
+                    ToastUtil.show(getApplicationContext(), error.localReason);
                 }else{
-                    ToastCommon.toastShortShow(getApplicationContext(), null, "请求火车票信息出错，请返回重试");
+                    ToastUtil.show(getApplicationContext(), "请求火车票信息出错，请返回重试");
                 }
                 LogUtil.e(TAG, "trainTicketInfo: " + error.toString());
                 LoadingIndicator.cancel();
