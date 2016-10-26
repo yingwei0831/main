@@ -67,6 +67,7 @@
                 android:text="@string/tab1_tablelayout_item2" />
 
             <TextView
+                android:id="@+id/tv_tab1_plane_ticket"
                 style="@style/Tab1TableLayoutItem"
                 android:drawableTop="@mipmap/tab1_3_jp"
                 android:text="@string/tab1_tablelayout_item3" />

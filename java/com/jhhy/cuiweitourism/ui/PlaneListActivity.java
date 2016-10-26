@@ -2,11 +2,10 @@ package com.jhhy.cuiweitourism.ui;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -16,7 +15,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.bumptech.glide.util.Util;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.jhhy.cuiweitourism.R;
@@ -25,16 +23,15 @@ import com.jhhy.cuiweitourism.net.biz.TrainTicketActionBiz;
 import com.jhhy.cuiweitourism.net.models.FetchModel.TrainTicketFetch;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.PlanTicketCityInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainTicketDetailInfo;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.popupwindows.PopupWindowScreenTrain;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
-import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.jhhy.cuiweitourism.utils.Utils;
 import com.just.sun.pricecalendar.ToastCommon;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -43,12 +40,12 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-public class TrainListActivity extends BaseActionBarActivity implements  AdapterView.OnItemClickListener //,RadioGroup.OnCheckedChangeListener
+public class PlaneListActivity extends BaseActionBarActivity implements  AdapterView.OnItemClickListener //,RadioGroup.OnCheckedChangeListener
 {
 
-    private String TAG = TrainListActivity.class.getSimpleName();
+    private String TAG = PlaneListActivity.class.getSimpleName();
 
-    private TrainTicketFetch ticket;
+//    private PlanTicketCityInfo ticket; //飞机票请求信息
     private TrainTicketActionBiz trainBiz;
 
     private String trainCode; //列车代码
@@ -72,19 +69,12 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
     private RadioGroup bottomRg; //底部筛选组合
     private RadioButton rbScreen;       //筛选
     private RadioButton rbStartTime;    //出发时间
-    private RadioButton rbConsumingTime; //耗时
-    private RadioButton rbArrivalTime;  //到达时间
 
     private Drawable drawableStartTimeIncrease; //从早到晚，升序，默认
     private Drawable drawableStartTimeDecrease; //从晚到早，降序
-    private Drawable drawableConsumingIncrease; //耗时：从早到晚，升序
-    private Drawable drawableConsumingDecrease; //耗时：从晚到早，降序
-    private Drawable drawableArrivalTimeIncrease; //到达时间：从早到晚，升序，默认
-    private Drawable drawableArrivalTimeDecrease; //到达时间：从晚到早，降序
 
     private Drawable startTimeDrawable; //初始图片
-    private Drawable consumingTimeDrawable; //初始图片
-    private Drawable arrivalTimeDrawable; //初始图片
+
 
     private Handler handler = new Handler(){
         @Override
@@ -95,7 +85,7 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
                     ToastCommon.toastShortShow(getApplicationContext(), null, String.valueOf(msg.obj));
                     break;
                 case -2:
-                    ToastCommon.toastShortShow(getApplicationContext(), null, "请求火车票信息出错，请返回重试");
+                    ToastCommon.toastShortShow(getApplicationContext(), null, "请求飞机票信息出错，请返回重试");
                     break;
                 case 1:
                     tvCurrentDay.setText(trainTime);
@@ -108,35 +98,23 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_train_list);
+        setContentView(R.layout.activity_plane_list);
         getData();
         super.onCreate(savedInstanceState);
-        getInternetData();
+
     }
 
     private void getData() {
         Bundle bundle = getIntent().getExtras();
-        ticket = (TrainTicketFetch) bundle.getSerializable("ticket");
-        if (ticket.getTraincode() == null){
-            trainCode = "";
-        }
-        if (ticket.getOnlylowprice() == null){
-            trainLowPrice = "";
-        }
-        if (ticket.getTraintype() == null){
-            trainType = "";
-        }
-        if (ticket.getTrainseattype() == null){
-            seatType = "";
-        }
-        trainTime = ticket.getTraveltime();
-        LogUtil.e(TAG, "ticket = " + ticket);
+//        ticket = (PlanTicketCityInfo) bundle.getSerializable("ticket");
+
+//        LogUtil.e(TAG, "ticket = " + ticket);
     }
 
     @Override
     protected void setupView() {
         super.setupView();
-        tvTitle.setText(String.format("%s—%s", ticket.getFromstation(), ticket.getArrivestation()));
+//        tvTitle.setText(String.format("%s—%s", ticket.get(), ticket.getArrivestation()));
         trainBiz = new TrainTicketActionBiz();
 
         tvPreDay = (TextView) findViewById( R.id.tv_train_preference);
@@ -177,30 +155,16 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
 
         bottomRg = (RadioGroup) findViewById(R.id.rg_train_list);
         rbStartTime = (RadioButton) findViewById(R.id.rb_train_start_time);
-        rbConsumingTime = (RadioButton) findViewById(R.id.rb_train_time_consuming);
-        rbArrivalTime = (RadioButton) findViewById(R.id.rb_train_arrival_time);
 
-        drawableStartTimeIncrease = ContextCompat.getDrawable(TrainListActivity.this, R.mipmap.icon_train_start_time_increase);
+        drawableStartTimeIncrease = ContextCompat.getDrawable(PlaneListActivity.this, R.mipmap.icon_train_start_time_increase);
         drawableStartTimeDecrease = ContextCompat.getDrawable(getApplicationContext(), R.mipmap.icon_train_start_time_decrease);
-        drawableConsumingIncrease = ContextCompat.getDrawable(TrainListActivity.this, R.mipmap.icon_train_consuming_increase);
-        drawableConsumingDecrease = ContextCompat.getDrawable(getApplicationContext(), R.mipmap.icon_train_consuming_decrease);
-        drawableArrivalTimeIncrease = ContextCompat.getDrawable(TrainListActivity.this, R.mipmap.icon_train_arrival_time_increase);
-        drawableArrivalTimeDecrease = ContextCompat.getDrawable(getApplicationContext(), R.mipmap.icon_train_arrival_time_decrease);
 
         startTimeDrawable = ContextCompat.getDrawable(getApplicationContext(), R.drawable.icon_train_start_time);
-        consumingTimeDrawable = ContextCompat.getDrawable(getApplicationContext(), R.drawable.icon_train_consuming_time);
-        arrivalTimeDrawable = ContextCompat.getDrawable(getApplicationContext(), R.drawable.icon_train_arrival_time);
 
         drawableStartTimeIncrease.setBounds(0, 0, drawableStartTimeIncrease.getMinimumWidth(), drawableStartTimeIncrease.getMinimumHeight());
         drawableStartTimeDecrease.setBounds(0, 0, drawableStartTimeDecrease.getMinimumWidth(), drawableStartTimeDecrease.getMinimumHeight());
-        drawableConsumingIncrease.setBounds(0, 0, drawableConsumingIncrease.getMinimumWidth(), drawableConsumingIncrease.getMinimumHeight());
-        drawableConsumingDecrease.setBounds(0, 0, drawableConsumingDecrease.getMinimumWidth(), drawableConsumingDecrease.getMinimumHeight());
-        drawableArrivalTimeIncrease.setBounds(0, 0, drawableArrivalTimeIncrease.getMinimumWidth(), drawableArrivalTimeIncrease.getMinimumHeight());
-        drawableArrivalTimeDecrease.setBounds(0, 0, drawableArrivalTimeDecrease.getMinimumWidth(), drawableArrivalTimeDecrease.getMinimumHeight());
 
         startTimeDrawable.setBounds(0, 0, startTimeDrawable.getMinimumWidth(), startTimeDrawable.getMinimumHeight());
-        consumingTimeDrawable.setBounds(0, 0, consumingTimeDrawable.getMinimumWidth(), consumingTimeDrawable.getMinimumHeight());
-        arrivalTimeDrawable.setBounds(0, 0, arrivalTimeDrawable.getMinimumWidth(), arrivalTimeDrawable.getMinimumHeight());
 
     }
 
@@ -211,14 +175,14 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
         switch (view.getId()){
             case R.id.tv_train_preference: //前一天
                 tempTime = getDateStr(trainTime.substring(0, trainTime.indexOf(" ")), -1);
-                getInternetData();
+
                 break;
             case R.id.tv_train_next_day: //后一天
                 tempTime = getDateStr(trainTime.substring(0, trainTime.indexOf(" ")), 1);
-                getInternetData();
+
                 break;
             case R.id.rb_train_screen: //筛选
-                screenTrain();
+
                 break;
             case R.id.rb_train_start_time: //出发时间
                 setRbBg();
@@ -226,25 +190,13 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
                 adapter.setData(list);
                 adapter.notifyDataSetChanged();
                 break;
-            case R.id.rb_train_time_consuming: //耗时
-                setRbBg();
-                sortByConsuming();
-                adapter.setData(list);
-                adapter.notifyDataSetChanged();
-                break;
-            case R.id.rb_train_arrival_time: //到达时间
-                setRbBg();
-                sortByArrivalTime();
-                adapter.setData(list);
-                adapter.notifyDataSetChanged();
-                break;
+
         }
     }
 
     private void setRbBg() {
         rbStartTime.setCompoundDrawables(null, startTimeDrawable, null, null);
-        rbConsumingTime.setCompoundDrawables(null, consumingTimeDrawable, null, null);
-        rbArrivalTime.setCompoundDrawables(null,   arrivalTimeDrawable, null, null);
+
     }
 
     @Override
@@ -255,58 +207,8 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
 
         rbScreen.setOnClickListener(this);
         rbStartTime.setOnClickListener(this);
-        rbConsumingTime.setOnClickListener(this);
-        rbArrivalTime.setOnClickListener(this);
 
-//        bottomRg.setOnCheckedChangeListener(this);
         listView.setOnItemClickListener(this);
-    }
-
-    private void getInternetData() {
-        LoadingIndicator.show(TrainListActivity.this, getString(R.string.http_notice));
-        //火车票
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                TrainTicketFetch fetch = new TrainTicketFetch(ticket.getFromstation(), ticket.getArrivestation(), tempTime.substring(0, tempTime.indexOf(" ")), trainCode, trainType, seatType, trainLowPrice);
-                trainBiz.trainTicketInfo(fetch, new BizGenericCallback<ArrayList<TrainTicketDetailInfo>>() {
-                    @Override
-                    public void onCompletion(GenericResponseModel<ArrayList<TrainTicketDetailInfo>> model) {
-                        if ("0001".equals(model.headModel.res_code)){
-//                    ToastUtil.show(getApplicationContext(), model.headModel.res_arg);
-                            Message msg = new Message();
-                            msg.what = -1;
-                            msg.obj = model.headModel.res_arg;
-                            handler.sendMessage(msg);
-                        }else if ("0000".equals(model.headModel.res_code)){
-                            trainTime = tempTime;
-                            list = model.body;
-                            handler.sendEmptyMessage(1);
-                            LogUtil.e(TAG,"trainTicketInfo =" + list.toString());
-                        }
-                        LoadingIndicator.cancel();
-                    }
-
-                    @Override
-                    public void onError(FetchError error) {
-                        if (error.localReason != null){
-//                    ToastUtil.show(getApplicationContext(), error.localReason);
-                            Message msg = new Message();
-                            msg.what = -1;
-                            msg.obj = error.localReason;
-                            handler.sendMessage(msg);
-                        }else{
-//                    ToastUtil.show(getApplicationContext(), "请求火车票信息出错，请返回重试");
-                            handler.sendEmptyMessage(-2);
-                        }
-                        LogUtil.e(TAG, "trainTicketInfo: " + error.toString());
-                        LoadingIndicator.cancel();
-                    }
-                });
-            }
-        }.start();
-
     }
 
 
@@ -334,96 +236,7 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
 //        }
 //    }
 
-    //筛选列车
-    private void screenTrain() {
-        if (popupWindow == null) {
-            popupWindow = new PopupWindowScreenTrain(TrainListActivity.this, parent);
-            popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                @Override
-                public void onDismiss() {
-                    boolean commit = popupWindow.getCommit();
-                    if (commit){
-                        startTimePosition = popupWindow.getStartTime();
-                        arrivalTimePosition = popupWindow.getSelectionArrivalTime();
-                        typeTrainPosition = popupWindow.getSelectionTypeTrain();
-                        typeSeatPosition = popupWindow.getSelectionTypeSeat();
-                        //TODO 重新请求数据
 
-                    }
-                }
-            });
-        }else{
-            if(popupWindow.isShowing()){
-                popupWindow.dismiss();
-            }else{
-                popupWindow.showAtLocation(parent, Gravity.BOTTOM, 0, 0);
-                popupWindow.refreshView(startTimePosition, arrivalTimePosition, typeTrainPosition, typeSeatPosition);
-            }
-        }
-    }
-
-    private PopupWindowScreenTrain popupWindow;
-    private int startTimePosition = 0, arrivalTimePosition = -1, typeTrainPosition = -1, typeSeatPosition = -1;
-    private String startTime, arrivalTime, typeTrain, typeSeat;
-
-    private void sortByArrivalTime() {
-        Collections.sort(list, new Comparator<TrainTicketDetailInfo>(){
-            public int compare(TrainTicketDetailInfo arg0, TrainTicketDetailInfo arg1) {
-                //14:00
-                int hour1 = Integer.parseInt(arg0.arrivalTime.substring(0, arg0.arrivalTime.indexOf(":")));
-                int hour2 = Integer.parseInt(arg1.arrivalTime.substring(0, arg1.arrivalTime.indexOf(":")));
-                if (hour1 > hour2){
-                    return 1;
-                }else if (hour1 == hour2){
-                    int minute1 = Integer.parseInt(arg0.arrivalTime.substring(arg0.arrivalTime.indexOf(":") + 1));
-                    int minute2 = Integer.parseInt(arg1.arrivalTime.substring(arg1.arrivalTime.indexOf(":") + 1 ));
-                    if (minute1 > minute2){
-                        return 1;
-                    }else if (minute1 == minute2){
-                        return 0;
-                    }else{
-                        return -1;
-                    }
-                }else{
-                    return -1;
-                }
-            }
-        });
-        if (sortArrivalTimeIncrease){ //如果当前到大时间是升序排列，则倒序
-            Collections.reverse(list);
-            sortArrivalTimeIncrease = false;
-            rbArrivalTime.setCompoundDrawables(null, drawableArrivalTimeDecrease, null, null);
-        }else{
-            sortArrivalTimeIncrease = true;
-            rbArrivalTime.setCompoundDrawables(null, drawableArrivalTimeIncrease, null, null);
-        }
-    }
-
-    private void sortByConsuming() {
-        Collections.sort(list, new Comparator<TrainTicketDetailInfo>(){
-            public int compare(TrainTicketDetailInfo arg0, TrainTicketDetailInfo arg1) {
-                //666分钟
-                int hour1 = Integer.parseInt(arg0.duration);
-                int hour2 = Integer.parseInt(arg1.duration);
-                if (hour1 > hour2){
-                    return 1;
-                }else if (hour1 == hour2){
-                    return 0;
-                }else{
-                    return -1;
-                }
-            }
-        });
-        if(sortConsumingIncrease){ //如果当前耗时是从短到长，则改变倒序
-            Collections.reverse(list);
-            sortConsumingIncrease = false;
-            rbConsumingTime.setCompoundDrawables(null, drawableConsumingDecrease, null, null);
-        }else{
-            sortConsumingIncrease = true;
-            rbConsumingTime.setCompoundDrawables(null, drawableConsumingIncrease, null, null);
-        }
-
-    }
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -449,8 +262,7 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
     }
 
     private boolean sortStartTimeIncrease = true; //从早到晚,出发时间（默认从早到晚）
-    private boolean sortConsumingIncrease = false; //耗时，从短到长
-    private boolean sortArrivalTimeIncrease = false; //到达时间，从早到晚
+
 
     //按出发时间排序
     private void sortByStartTime() {

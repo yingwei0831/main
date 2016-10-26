@@ -7,11 +7,11 @@ import java.util.ArrayList;
  */
 public class TrainTicketOrderFetch extends BasicFetchModel {
     //        "PsgName": "人1",
-    //        "CardType": "2",
+    //        "CardType": "2", //1:1代身份证 2:2代身份证 3：港澳通信证 4：台湾通行证 5：护照
     //        "CardNo": "211382198608262687",
-    //        "TicketType": "0",
-    //        "SeatType": "6",
-    //        "TicketPrice": "121.50"
+    //        "TicketType": "0", //0：成人票 1：儿童票
+    //        "SeatType": "6", //0：商务座 1：特等座 2：一等座 3：二等座 4：高级软卧 5：软卧 6：硬卧 7：软座 8：硬座 9：无座
+    //        "TicketPrice": "121.50" //车票单价
     static public class TicketInfo extends BasicFetchModel{
         public String PsgName;
         public String CardType;

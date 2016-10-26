@@ -93,8 +93,8 @@ public class DatePickerActivity extends Activity implements View.OnClickListener
 //        currentYear = year;
 //        currentMonth = month;
 //        currentDate = date;
-        week = Utils.getDayOfStr(calendar.get(Calendar.DAY_OF_WEEK));
-        newString = String.format("%d年%02d月%02d日 %s", year, month, date, week); //calendar.get(Calendar.DAY_OF_WEEK);
+        week = Utils.getDayOfStrE(calendar.get(Calendar.DAY_OF_WEEK));
+        newString = String.format("%d年%02d月%02d日 %s", year, month, date, Utils.getDayOfStr(calendar.get(Calendar.DAY_OF_WEEK))); //calendar.get(Calendar.DAY_OF_WEEK);
         npYear.setMaxValue(calendar.get(Calendar.YEAR) + 2);
         npYear.setMinValue(calendar.get(Calendar.YEAR));
 
@@ -168,8 +168,8 @@ public class DatePickerActivity extends Activity implements View.OnClickListener
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        week = Utils.getDayOfStr(c.get(Calendar.DAY_OF_WEEK));
-        newString = String.format("%d年%02d月%02d日 %s", year, month, date, week);
+        week = Utils.getDayOfStrE(c.get(Calendar.DAY_OF_WEEK));
+        newString = String.format("%d年%02d月%02d日 %s", year, month, date, Utils.getDayOfStr(c.get(Calendar.DAY_OF_WEEK)));
         tvDate.setText(newString);
     }
 

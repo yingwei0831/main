@@ -37,6 +37,8 @@ public class SelectCustomActivity extends BaseActivity implements View.OnClickLi
     private int totalNumber; //最多可选择的联系人个数
     private List<Integer> listSelectionCont; //已选择的联系人位置
 
+    private int type; // 13:火车票选择联系人
+
     private ListView listViewContact;
     private ContactsListAdapter adapter;
     private List<UserContacts> listContacts = new ArrayList<>();
@@ -79,9 +81,14 @@ public class SelectCustomActivity extends BaseActivity implements View.OnClickLi
 
     private void getData() {
         Bundle bundle = getIntent().getExtras();
+        type = bundle.getInt("type");
         totalNumber = bundle.getInt("number");
+        if (type == 13){
+            if (totalNumber > 10) {
+                totalNumber = 10;
+            }
+        }
         getInternetData();
-
     }
 
     private void getInternetData() {

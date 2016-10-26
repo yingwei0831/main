@@ -156,6 +156,33 @@ public class Utils {
     }
 
 
+    public static String getDayOfStrE(int day){
+        String week = null;
+        switch (day){
+            case 1:
+                week = "周日";
+                break;
+            case 2:
+                week ="周一";
+                break;
+            case 3:
+                week ="周二";
+                break;
+            case 4:
+                week ="周三";
+                break;
+            case 5:
+                week ="周四";
+                break;
+            case 6:
+                week ="周五";
+                break;
+            case 7:
+                week ="周六";
+                break;
+        }
+        return week;
+    }
     public static String getDayOfStr(int day){
         String week = null;
         switch (day){
@@ -180,7 +207,6 @@ public class Utils {
             case 7:
                 week ="星期六";
                 break;
-
         }
         return week;
     }
@@ -295,6 +321,24 @@ public class Utils {
             e.printStackTrace();
         }
        return 0;
+    }
+
+    /**
+     * 获取日期 的星期
+     * @param day 2016-10-26
+     * @return
+     */
+    public static String getDateStrYMDE(String day) {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        Date nowDate = null;
+        try {
+            nowDate = df.parse(day);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd E");
+        String dateOk = simpleDateFormat.format(nowDate);
+        return dateOk;
     }
 
     /**

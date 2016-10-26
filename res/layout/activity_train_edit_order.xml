@@ -52,8 +52,10 @@
                 android:layout_centerInParent="true"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
-                android:text="6小时2分钟"
-                android:textColor="@android:color/white" />
+                android:textColor="@android:color/white"
+                android:text="6时2分"
+                android:gravity="center"
+                android:drawableBottom="@mipmap/arrow_right_white"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"

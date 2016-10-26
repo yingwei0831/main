@@ -163,6 +163,10 @@ public class TrainEditOrderActivity extends AppCompatActivity implements View.On
                 break;
             case R.id.tv_train_add_passenger: //添加乘客
                 Intent intent = new Intent(getApplicationContext(), SelectCustomActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putInt("type", 13);
+                bundle.putInt("number", Integer.parseInt(seatInfo.seatCount));
+                intent.putExtras(bundle);
                 startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_SELECT_CONTACT);
                 break;
             case R.id.btn_edit_order_pay: //立即支付
@@ -178,14 +182,22 @@ public class TrainEditOrderActivity extends AppCompatActivity implements View.On
             if (requestCode == Consts.REQUEST_CODE_RESERVE_SELECT_CONTACT){ //选择常用联系人
                 Bundle bundle = data.getExtras();
                 ArrayList<UserContacts> listSelection = bundle.getParcelableArrayList("selection");
-
 //                listContact.clear();
-//                listContact.addAll(listSelection);
+                for (UserContacts contact : listSelection) {
+                    TrainTicketOrderFetch.TicketInfo contactTrain = new TrainTicketOrderFetch.TicketInfo(
+                            contact.getContactsName(), "2", contact.getContactsIdCard(), "1", seatInfo.seatCode, seatInfo.floorPrice);
+                    listContact.add(contactTrain);
+                }
+                tvAdultCount.setText(String.format("成人%d人", listContact.size()));
+                tvPriceTotal.setText(String.format("%f", Float.parseFloat(seatInfo.floorPrice) * listContact.size()));
+
+
             }
         }
     }
 
-    private List<TrainTicketOrderFetch.TicketInfo> listContact = new ArrayList<>(); //乘车人列表
+    private ArrayList<TrainTicketOrderFetch.TicketInfo> listContact = new ArrayList<>(); //乘车人列表
+
     /**
      * 去支付页面
      */
@@ -214,12 +226,12 @@ public class TrainEditOrderActivity extends AppCompatActivity implements View.On
 //                useIcon, detail.getJifentprice(), String.valueOf(priceIcon));
 
         TrainTicketOrderFetch.TicketInfo ticketInfo1 = new TrainTicketOrderFetch.TicketInfo("人1","2","211382198608262687","0","6","121.50");
-        TrainTicketOrderFetch.TicketInfo ticketInfo2 = new TrainTicketOrderFetch.TicketInfo("人2","2","211382198608262698","0","6","121.50");
-        ArrayList<TrainTicketOrderFetch.TicketInfo> array = new ArrayList<TrainTicketOrderFetch.TicketInfo>();
-        array.add(ticketInfo1);
-        array.add(ticketInfo2);
+//        TrainTicketOrderFetch.TicketInfo ticketInfo2 = new TrainTicketOrderFetch.TicketInfo("人2","2","211382198608262698","0","6","121.50");
+//        ArrayList<TrainTicketOrderFetch.TicketInfo> array = new ArrayList<TrainTicketOrderFetch.TicketInfo>();
+//        array.add(ticketInfo1);
+//        array.add(ticketInfo2);
 
-        TrainTicketOrderFetch ticketOrderFetch = new TrainTicketOrderFetch("","","","北京","凌源","2257","2016-09-30","12:20","2016-09-30","21:11",array,"6","243");
+        TrainTicketOrderFetch ticketOrderFetch = new TrainTicketOrderFetch("","","","北京","凌源","2257","2016-09-30","12:20","2016-09-30","21:11",listContact,"6","243");
 
         TrainTicketActionBiz trainBiz = new TrainTicketActionBiz();
         trainBiz.trainTicketOrderSubmit(ticketOrderFetch, new BizGenericCallback<TrainTicketOrderInfo>() {

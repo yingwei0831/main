@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="8dp"
+    android:paddingTop="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+            <!--出发机场-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@+id/iv_arrow_plane"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_plane_start_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="6dp"
+                    android:paddingTop="6dp"
+                    android:text="18:00"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/tv_plane_from_airport"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="南苑机场" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/iv_arrow_plane"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@mipmap/arrow_right_green_single" />
+            <!--android:src="@mipmap/"-->
+            <!--到达机场-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_toRightOf="@+id/iv_arrow_plane"
+                android:gravity="right"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_plane_arrival_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingBottom="6dp"
+                    android:paddingTop="6dp"
+                    android:text="18:00"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/tv_plane_arrival_airport"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="南苑机场" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <!--价格和舱位-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:gravity="right"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_plane_ticket_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="6dp"
+                android:paddingTop="6dp"
+                android:text="￥1210"
+                android:textColor="@color/colorTab1RecommendForYouMoney"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/tv_plane_ticket_class"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="经济舱" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_plane_info"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="MU5003空客A320" />
+
+        <TextView
+            android:id="@+id/tv_plane_ticket_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1张"
+            android:textColor="@android:color/holo_red_light" />
+    </LinearLayout>
+</LinearLayout>

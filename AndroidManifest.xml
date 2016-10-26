@@ -100,10 +100,10 @@
 
         <activity
             android:name=".ui.MainActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:windowSoftInputMode="adjustPan|stateHidden"
-            android:launchMode="singleTask"/>
+            android:windowSoftInputMode="adjustPan|stateHidden" />
         <!-- android:theme="@style/MyCustomWindowTitle" -->
 
         <activity
@@ -466,20 +466,30 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/ActionBarTheme" />
-        <activity
-            android:name=".ui.TrainEditOrderActivity"
-            android:theme="@style/ActionBarTheme"
+         <activity
+            android:name=".ui.PlaneListActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|stateHidden"/>
+            android:theme="@style/ActionBarTheme" />
+
+        <activity
+            android:name=".ui.TrainEditOrderActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/ActionBarTheme"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity android:name=".ui.BaseTitleActivity" />
-
-
         <activity
             android:name=".ui.TrainListItemInfoActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/ActionBarTheme"/>
+            android:theme="@style/ActionBarTheme" />
+        <activity
+            android:name=".ui.PlaneMainActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/ActionBarTheme"
+            />
 
         <!-- ShareSDK 2、注意： tencent后面的appid要保持和您配置的QQ的appid一致 -->
         <activity
@@ -543,6 +553,7 @@
             android:exported="false"
             android:screenOrientation="behind" />
         <!-- 接入支付宝支付-end- -->
+
 
     </application>
 

@@ -48,10 +48,10 @@ public class TrainTicketActionBiz extends BasicActionBiz {
         FetchGenericResponse<ArrayList<TrainTicketDetailInfo>> fetchResponse = new FetchGenericResponse<ArrayList<TrainTicketDetailInfo>>(callback) {
             @Override
             public void onCompletion(final FetchResponseModel response) {
-                new Thread(){
-                    @Override
-                    public void run() {
-                        super.run();
+//                new Thread(){
+//                    @Override
+//                    public void run() {
+//                        super.run();
                         ArrayList array = parseJsonTotwoLevelArray(response);
                         ArrayList ticketsArray = new ArrayList<TrainTicketDetailInfo>();
                         for(int i = 0; i < array.size(); i++){
@@ -97,8 +97,8 @@ public class TrainTicketActionBiz extends BasicActionBiz {
                         }
                         GenericResponseModel model = new GenericResponseModel<>(response.head,ticketsArray);
                         bizCallback.onCompletion(model);
-                    }
-                }.start();
+//                    }
+//                }.start();
 
             }
 
@@ -122,10 +122,10 @@ public class TrainTicketActionBiz extends BasicActionBiz {
         FetchGenericResponse<ArrayList<TrainStationInfo>> fetchResponse = new FetchGenericResponse<ArrayList<TrainStationInfo>>(callback) {
             @Override
             public void onCompletion(final FetchResponseModel response) {
-                new Thread(){
-                    @Override
-                    public void run() {
-                        super.run();
+//                new Thread(){
+//                    @Override
+//                    public void run() {
+//                        super.run();
                         ArrayList<ArrayList<String>> array = parseJsonTotwoLevelArray(response);
                         ArrayList<TrainStationInfo> statios = new ArrayList<TrainStationInfo>();
                         for (ArrayList<String> station : array){
@@ -142,8 +142,8 @@ public class TrainTicketActionBiz extends BasicActionBiz {
 
                         GenericResponseModel<ArrayList<TrainStationInfo>> model = new GenericResponseModel<>(response.head,statios);
                         bizCallback.onCompletion(model);
-                    }
-                }.start();
+//                    }
+//                }.start();
 
             }
 

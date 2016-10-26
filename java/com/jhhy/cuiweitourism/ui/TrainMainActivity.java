@@ -62,6 +62,21 @@ public class TrainMainActivity extends BaseActionBarActivity {
     private String codeSeat; //席别类型代码
 
 
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case -1:
+                    ToastCommon.toastShortShow(getApplicationContext(), null, String.valueOf(msg.obj));
+                    break;
+                case -2:
+                    ToastCommon.toastShortShow(getApplicationContext(), null, "请求火车站信息出错，请返回重试");
+                    break;
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_train_main);
@@ -73,8 +88,8 @@ public class TrainMainActivity extends BaseActionBarActivity {
     @Override
     protected void setupView() {
         super.setupView();
-        tvTitle.setText(getString(R.string.tab1_tablelayout_item5));
         parent = findViewById(R.id.view_parent);
+        tvTitle.setText(getString(R.string.tab1_tablelayout_item5));
         tvFromCity =    (TextView) findViewById(R.id.tv_train_from_city);
         tvToCity =      (TextView) findViewById(R.id.tv_train_to_city);
         tvFromDate =    (TextView) findViewById(R.id.tv_train_from_time);
@@ -160,7 +175,7 @@ public class TrainMainActivity extends BaseActionBarActivity {
         }else{
             // 弹出
             window.showAtLocation(parent, Gravity.BOTTOM, 0, 0);
-            if (typeTrain == null || typeSeat == null){
+            if (typeTrain == null || typeSeat == null || typeTrain.length() == 0 || typeSeat.length() == 0){
                 window.setSelectOptions(0, 0);
             }else {
                 window.setSelectOptions(typeTrain, typeSeat);
@@ -270,7 +285,8 @@ public class TrainMainActivity extends BaseActionBarActivity {
             if (resultCode == RESULT_OK){
                 Bundle bundle = data.getExtras();
                 selectDate = bundle.getString("selectDate");
-                tvFromDate.setText(selectDate);
+//                tvFromDate.setText(selectDate);
+                tvFromDate.setText(selectDate.substring(0, selectDate.indexOf(" ")));
             }
         }else if (requestCode == SELECT_FROM_CITY){ //选择出发城市
             if (resultCode == RESULT_OK){
@@ -299,56 +315,49 @@ public class TrainMainActivity extends BaseActionBarActivity {
      */
     private void getInternetData() {
         LoadingIndicator.show(TrainMainActivity.this, getString(R.string.http_notice));
-        //火车站
-        TrainTicketActionBiz trainBiz = new TrainTicketActionBiz();
-        trainBiz.trainStationInfo(new BizGenericCallback<ArrayList<TrainStationInfo>>() {
+        new Thread(){
             @Override
-            public void onCompletion(GenericResponseModel<ArrayList<TrainStationInfo>> model) {
-                if ("0001".equals(model.headModel.res_code)){
-                    Message msg = new Message();
-                    msg.what = -1;
-                    msg.obj = model.headModel.res_arg;
-                    handler.sendMessage(msg);
-                }else if ("0000".equals(model.headModel.res_code)){
-                    stations = model.body;
-                    LogUtil.e(TAG,"trainStationInfo =" + stations.toString());
-                }
-                LoadingIndicator.cancel();
-            }
+            public void run() {
+                super.run();
+                //火车站
+                TrainTicketActionBiz trainBiz = new TrainTicketActionBiz();
+                trainBiz.trainStationInfo(new BizGenericCallback<ArrayList<TrainStationInfo>>() {
+                    @Override
+                    public void onCompletion(GenericResponseModel<ArrayList<TrainStationInfo>> model) {
+                        if ("0001".equals(model.headModel.res_code)){
+                            Message msg = new Message();
+                            msg.what = -1;
+                            msg.obj = model.headModel.res_arg;
+                            handler.sendMessage(msg);
+                        }else if ("0000".equals(model.headModel.res_code)){
+                            stations = model.body;
+                            LogUtil.e(TAG,"trainStationInfo =" + stations.toString());
+                        }
+                        LoadingIndicator.cancel();
+                    }
 
-            @Override
-            public void onError(FetchError error) {
-                if (error.localReason != null){
-                    Message msg = new Message();
-                    msg.what = -1;
-                    msg.obj = error.localReason;
-                    handler.sendMessage(msg);
+                    @Override
+                    public void onError(FetchError error) {
+                        if (error.localReason != null){
+                            Message msg = new Message();
+                            msg.what = -1;
+                            msg.obj = error.localReason;
+                            handler.sendMessage(msg);
 //                    ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
-                }else{
+                        }else{
 //                    ToastCommon.toastShortShow(getApplicationContext(), null, "请求火车站信息出错，请返回重试");
-                    handler.sendEmptyMessage(-2);
-                }
-                LogUtil.e(TAG, "trainStationInfo: " + error.toString());
-                LoadingIndicator.cancel();
+                            handler.sendEmptyMessage(-2);
+                        }
+                        LogUtil.e(TAG, "trainStationInfo: " + error.toString());
+                        LoadingIndicator.cancel();
+                    }
+                });
+
             }
-        });
+        }.start();
 
     }
 
-    private Handler handler = new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what){
-                case -1:
-                    ToastCommon.toastShortShow(getApplicationContext(), null, String.valueOf(msg.obj));
-                    break;
-                case -2:
-                    ToastCommon.toastShortShow(getApplicationContext(), null, "请求火车站信息出错，请返回重试");
-                    break;
-            }
-        }
-    };
 
     @Override
     protected void onDestroy() {

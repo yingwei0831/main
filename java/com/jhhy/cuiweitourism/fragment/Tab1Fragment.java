@@ -43,6 +43,7 @@ import com.jhhy.cuiweitourism.ui.HotelMainActivity;
 import com.jhhy.cuiweitourism.ui.InnerActivity4;
 import com.jhhy.cuiweitourism.ui.InnerTravelDetailActivity;
 import com.jhhy.cuiweitourism.ui.PersonalizedCustomActivity;
+import com.jhhy.cuiweitourism.ui.PlaneMainActivity;
 import com.jhhy.cuiweitourism.ui.SearchRouteActivity;
 import com.jhhy.cuiweitourism.ui.SearchShopActivity;
 import com.jhhy.cuiweitourism.ui.StartActivityEditActivity;
@@ -114,6 +115,7 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
 
     private TextView tvInnerTravel; //国内游
     private TextView tvOutsideTravel; //出境游
+    private TextView tvPlaneTicket; //飞机票
     private TextView tvStartActivity; //发起活动
     private TextView tvRentCar; //租车
     private TextView tvTrain; //火车票
@@ -416,7 +418,7 @@ layoutTabRecommendForYou2 = (LinearLayout) view.findViewById(R.id.layout_tab_rec
 
             tvInnerTravel = (TextView) content.findViewById(R.id.tv_tab1_inner_travel); //国内游
             tvOutsideTravel = (TextView) content.findViewById(R.id.tv_tab1_outside); //出境游
-
+            tvPlaneTicket = (TextView) content.findViewById(R.id.tv_tab1_plane_ticket); //飞机游
             tvStartActivity = (TextView) content.findViewById(R.id.tv_tab1_start_activity); //发起活动
             tvRentCar = (TextView) content.findViewById(R.id.tv_tab1_rent_car); //发起活动
             tvTrain = (TextView) content.findViewById(R.id.tv_tab1_train); //火车票
@@ -498,6 +500,7 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
         tvLocationCity.setOnClickListener(this);
         tvInnerTravel.setOnClickListener(this);
         tvOutsideTravel.setOnClickListener(this);
+        tvPlaneTicket.setOnClickListener(this);
         tvStartActivity.setOnClickListener(this);
         tvTrain.setOnClickListener(this);
         tvHotel.setOnClickListener(this);
@@ -534,6 +537,12 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
                 Bundle bundleOut = new Bundle();
                 bundleOut.putInt("type", 2);
                 InnerActivity4.actionStart(getContext(), bundleOut);
+                break;
+            case R.id.tv_tab1_plane_ticket: //飞机票
+                Bundle bundlePlane = new Bundle();
+                bundlePlane.putInt("type", 2);
+
+                PlaneMainActivity.actionStart(getContext(), bundlePlane);
                 break;
             case R.id.tv_tab1_start_activity: //发起活动
                 StartActivityEditActivity.actionStart(getContext(), null);
