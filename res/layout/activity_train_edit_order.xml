@@ -200,7 +200,13 @@
                         android:textSize="16sp" />
                 </LinearLayout>
                 <!--此处是动态添加乘车人-->
+                <LinearLayout
+                    android:id="@+id/layout_contacts"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
+                </LinearLayout>
             </LinearLayout>
             <!--联系人-->
             <LinearLayout
