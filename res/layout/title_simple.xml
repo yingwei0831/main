@@ -13,7 +13,8 @@
         android:paddingLeft="6dp"
         android:paddingRight="6dp"
         android:text="titleSimple"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:textColor="@android:color/black"/>
 
     <TextView
         android:id="@+id/tv_title_simple_title_left"

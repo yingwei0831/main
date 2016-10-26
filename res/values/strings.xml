@@ -325,6 +325,7 @@
     <string name="train_screen_arrival_time">到达时段</string>
     <string name="train_screen_type_train">车型</string>
     <string name="train_screen_type_seat">席别类型</string>
+    <string name="train_order_edit">订单填写</string>
 
     <!--XScrollView-->
     <string name="header_hint_refresh_normal">下拉刷新</string>

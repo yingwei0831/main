@@ -75,6 +75,16 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
     private RadioButton rbConsumingTime; //耗时
     private RadioButton rbArrivalTime;  //到达时间
 
+    private Drawable drawableStartTimeIncrease; //从早到晚，升序，默认
+    private Drawable drawableStartTimeDecrease; //从晚到早，降序
+    private Drawable drawableConsumingIncrease; //耗时：从早到晚，升序
+    private Drawable drawableConsumingDecrease; //耗时：从晚到早，降序
+    private Drawable drawableArrivalTimeIncrease; //到达时间：从早到晚，升序，默认
+    private Drawable drawableArrivalTimeDecrease; //到达时间：从晚到早，降序
+
+    private Drawable startTimeDrawable; //初始图片
+    private Drawable consumingTimeDrawable; //初始图片
+    private Drawable arrivalTimeDrawable; //初始图片
 
     private Handler handler = new Handler(){
         @Override
@@ -177,19 +187,23 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
         drawableArrivalTimeIncrease = ContextCompat.getDrawable(TrainListActivity.this, R.mipmap.icon_train_arrival_time_increase);
         drawableArrivalTimeDecrease = ContextCompat.getDrawable(getApplicationContext(), R.mipmap.icon_train_arrival_time_decrease);
 
+        startTimeDrawable = ContextCompat.getDrawable(getApplicationContext(), R.drawable.icon_train_start_time);
+        consumingTimeDrawable = ContextCompat.getDrawable(getApplicationContext(), R.drawable.icon_train_consuming_time);
+        arrivalTimeDrawable = ContextCompat.getDrawable(getApplicationContext(), R.drawable.icon_train_arrival_time);
+
         drawableStartTimeIncrease.setBounds(0, 0, drawableStartTimeIncrease.getMinimumWidth(), drawableStartTimeIncrease.getMinimumHeight());
         drawableStartTimeDecrease.setBounds(0, 0, drawableStartTimeDecrease.getMinimumWidth(), drawableStartTimeDecrease.getMinimumHeight());
         drawableConsumingIncrease.setBounds(0, 0, drawableConsumingIncrease.getMinimumWidth(), drawableConsumingIncrease.getMinimumHeight());
         drawableConsumingDecrease.setBounds(0, 0, drawableConsumingDecrease.getMinimumWidth(), drawableConsumingDecrease.getMinimumHeight());
         drawableArrivalTimeIncrease.setBounds(0, 0, drawableArrivalTimeIncrease.getMinimumWidth(), drawableArrivalTimeIncrease.getMinimumHeight());
         drawableArrivalTimeDecrease.setBounds(0, 0, drawableArrivalTimeDecrease.getMinimumWidth(), drawableArrivalTimeDecrease.getMinimumHeight());
+
+        startTimeDrawable.setBounds(0, 0, startTimeDrawable.getMinimumWidth(), startTimeDrawable.getMinimumHeight());
+        consumingTimeDrawable.setBounds(0, 0, consumingTimeDrawable.getMinimumWidth(), consumingTimeDrawable.getMinimumHeight());
+        arrivalTimeDrawable.setBounds(0, 0, arrivalTimeDrawable.getMinimumWidth(), arrivalTimeDrawable.getMinimumHeight());
+
     }
-    private Drawable drawableStartTimeIncrease; //从早到晚，升序，默认
-    private Drawable drawableStartTimeDecrease; //从晚到早，降序
-    private Drawable drawableConsumingIncrease; //耗时：从早到晚，升序
-    private Drawable drawableConsumingDecrease; //耗时：从晚到早，降序
-    private Drawable drawableArrivalTimeIncrease; //到达时间：从早到晚，升序，默认
-    private Drawable drawableArrivalTimeDecrease; //到达时间：从晚到早，降序
+
 
     @Override
     public void onClick(View view) {
@@ -207,21 +221,30 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
                 screenTrain();
                 break;
             case R.id.rb_train_start_time: //出发时间
+                setRbBg();
                 sortByStartTime();
                 adapter.setData(list);
                 adapter.notifyDataSetChanged();
                 break;
             case R.id.rb_train_time_consuming: //耗时
+                setRbBg();
                 sortByConsuming();
                 adapter.setData(list);
                 adapter.notifyDataSetChanged();
                 break;
             case R.id.rb_train_arrival_time: //到达时间
+                setRbBg();
                 sortByArrivalTime();
                 adapter.setData(list);
                 adapter.notifyDataSetChanged();
                 break;
         }
+    }
+
+    private void setRbBg() {
+        rbStartTime.setCompoundDrawables(null, startTimeDrawable, null, null);
+        rbConsumingTime.setCompoundDrawables(null, consumingTimeDrawable, null, null);
+        rbArrivalTime.setCompoundDrawables(null,   arrivalTimeDrawable, null, null);
     }
 
     @Override
@@ -359,6 +382,14 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
                 }
             }
         });
+        if (sortArrivalTimeIncrease){ //如果当前到大时间是升序排列，则倒序
+            Collections.reverse(list);
+            sortArrivalTimeIncrease = false;
+            rbArrivalTime.setCompoundDrawables(null, drawableArrivalTimeDecrease, null, null);
+        }else{
+            sortArrivalTimeIncrease = true;
+            rbArrivalTime.setCompoundDrawables(null, drawableArrivalTimeIncrease, null, null);
+        }
     }
 
     private void sortByConsuming() {
@@ -376,6 +407,15 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
                 }
             }
         });
+        if(sortConsumingIncrease){ //如果当前耗时是从短到长，则改变倒序
+            Collections.reverse(list);
+            sortConsumingIncrease = false;
+            rbConsumingTime.setCompoundDrawables(null, drawableConsumingDecrease, null, null);
+        }else{
+            sortConsumingIncrease = true;
+            rbConsumingTime.setCompoundDrawables(null, drawableConsumingIncrease, null, null);
+        }
+
     }
 
     @Override
@@ -434,10 +474,10 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
             Collections.reverse(list);
             //更换图标
             sortStartTimeIncrease = false; //任何一个顺序改变，都变为false
-            rbStartTime.setCompoundDrawables(null, drawableStartTimeIncrease, null, null);
-
+            rbStartTime.setCompoundDrawables(null, drawableStartTimeDecrease, null, null);
         }else{
-
+            sortStartTimeIncrease = true;
+            rbStartTime.setCompoundDrawables(null, drawableStartTimeIncrease, null, null);
         }
     }
 

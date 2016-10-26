@@ -50,7 +50,9 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:text="6小时2分钟"
-                android:textColor="@android:color/white" />
+                android:textColor="@android:color/white"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"

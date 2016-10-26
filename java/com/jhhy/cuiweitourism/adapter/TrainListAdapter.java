@@ -29,7 +29,6 @@ public class TrainListAdapter extends MyBaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        LogUtil.e(TAG, "------getView------- i = " + i);
         ViewHolder holder = null;
         if (view == null){
             holder = new ViewHolder();
@@ -55,7 +54,7 @@ public class TrainListAdapter extends MyBaseAdapter {
             holder.tvTrainName.setText(info.trainNum);
             holder.tvTrainFromTime.setText(info.departureTime);
             holder.tvTrainFromStation.setText(info.departureStation);
-            holder.tvConsumingTime.setText(getDuration(info.duration));
+            holder.tvConsumingTime.setText(Utils.getDuration(info.duration));
             holder.tvArrivalTime.setText(info.arrivalTime);
             holder.tvArrivalStation.setText(info.arrivalStation);
             ArrayList<TrainTicketDetailInfo.SeatInfo> ticketKinds = info.seatInfoArray;
@@ -63,26 +62,21 @@ public class TrainListAdapter extends MyBaseAdapter {
             TrainTicketDetailInfo.SeatInfo seatInfo = ticketKinds.get(0);
             holder.tvTicketPrice.setText(String.format("￥%s", seatInfo.floorPrice));
             holder.tvSeatType.setText(seatInfo.seatName);
-            if (Integer.parseInt(seatInfo.seatCount) == 0){
+            if (Integer.parseInt(info.numberOfRemainingSeats) == 0){
                 holder.tvTicketNumber.setText("无票");
                 holder.tvTicketNumber.setTextColor(Color.RED);
-            }else if (Integer.parseInt(seatInfo.seatCount) <= 9){
-                holder.tvTicketNumber.setText(String.format("仅剩%s张", seatInfo.seatCount));
+            }else if (Integer.parseInt(info.numberOfRemainingSeats) <= 9){
+                holder.tvTicketNumber.setText(String.format("仅剩%s张", info.numberOfRemainingSeats));
                 holder.tvTicketNumber.setTextColor(Color.RED);
             } else {
-                holder.tvTicketNumber.setText(String.format("%s张",seatInfo.seatCount));
+                holder.tvTicketNumber.setText(String.format("%s张", info.numberOfRemainingSeats));
                 holder.tvTicketNumber.setTextColor(Color.GRAY);
             }
         }
         return view;
     }
 
-    private String getDuration(String minute){
-        int mi = Integer.parseInt(minute);
-        int ho = mi / 60;
-        mi = mi % 60;
-        return String.format("%d时%02d分", ho, mi);
-    }
+
 
     class ViewHolder{
         private TextView tvTrainName;
