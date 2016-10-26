@@ -466,12 +466,11 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/ActionBarTheme" />
-         <activity
+        <activity
             android:name=".ui.PlaneListActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/ActionBarTheme" />
-
         <activity
             android:name=".ui.TrainEditOrderActivity"
             android:launchMode="singleTop"
@@ -488,8 +487,7 @@
             android:name=".ui.PlaneMainActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/ActionBarTheme"
-            />
+            android:theme="@style/ActionBarTheme" />
 
         <!-- ShareSDK 2、注意： tencent后面的appid要保持和您配置的QQ的appid一致 -->
         <activity
@@ -554,7 +552,8 @@
             android:screenOrientation="behind" />
         <!-- 接入支付宝支付-end- -->
 
-
+        <activity android:name=".ui.TrainPaySuccessActivity" />
+        <activity android:name=".ui.PlaneItemInfoActivity"></activity>
     </application>
 
 </manifest>

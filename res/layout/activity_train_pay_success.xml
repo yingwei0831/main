@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.jhhy.cuiweitourism.ui.TrainPaySuccessActivity"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"
+        android:textColor="@color/colorActionBar"
+        android:gravity="center_horizontal"
+        android:text="恭喜您，支付成功"
+        />
+    <TextView
+        android:id="@+id/tv_order_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="订单号：02520851126"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/colorTab1RecommendForYouMoney"
+        android:textSize="18sp"
+        />
+    <TextView
+        android:id="@+id/tv_seat_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="座位号：G110次 15车12F、12E"
+        android:layout_marginTop="16dp"
+        android:textColor="@color/colorTab1RecommendForYouMoney"
+        android:gravity="center_horizontal"
+        android:textSize="18sp"
+        />
+
+    <Button
+        android:id="@+id/btn_view_return_ticket"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="30dp"
+        android:text="查看返程车票"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:background="@drawable/bg_btn_regist_border_selector"
+        />
+
+    <Button
+        android:id="@+id/btn_view_order_detail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="20dp"
+        android:text="查看订单详情"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        />
+
+</LinearLayout>
