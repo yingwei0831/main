@@ -16,6 +16,11 @@ public class PlanTicketCityInfo {
     public String  airportname;
     public String  isdomc;
 
+    public String fullPY; //车站名全拼
+    public String shortPY; //车站名简拼
+    public String headChar;//
+    public int type ; //是否是标题
+
     public PlanTicketCityInfo(String id, String code, String name, String airportname, String isdomc) {
         this.id = id;
         this.code = code;
@@ -75,6 +80,10 @@ public class PlanTicketCityInfo {
                 ", name='" + name + '\'' +
                 ", airportname='" + airportname + '\'' +
                 ", isdomc='" + isdomc + '\'' +
+                ", fullPY='" + fullPY + '\'' +
+                ", shortPY='" + shortPY + '\'' +
+                ", headChar='" + headChar + '\'' +
+                ", type=" + type +
                 '}';
     }
 }

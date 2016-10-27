@@ -38,6 +38,13 @@ public class PlaneTicketActionBiz extends BasicActionBiz {
             @Override
             public void onCompletion(FetchResponseModel response) {
                 ArrayList<PlanTicketCityInfo> array = parseJsonToObjectArray(response,PlanTicketCityInfo.class);
+                HanziToPinyin hzToPyConvertor = HanziToPinyin.getInstance();
+                for (PlanTicketCityInfo itemInfo : array){
+                    HanziToPinyin.PinYinCollection collection = hzToPyConvertor.getPinYin(itemInfo.name);
+                    itemInfo.fullPY = collection.fullPY;
+                    itemInfo.shortPY = collection.shortPY;
+                    itemInfo.headChar = String.valueOf(collection.headChar);
+                }
                 GenericResponseModel<ArrayList<PlanTicketCityInfo>> returnModel = new GenericResponseModel<ArrayList<PlanTicketCityInfo>>(response.head,array);
                 this.bizCallback.onCompletion(returnModel);
             }

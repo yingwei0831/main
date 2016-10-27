@@ -11,6 +11,7 @@ import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.moudle.Order;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.ActivityOrderInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelOrderInfo;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainTicketOrderInfo;
 
 public class SelectPaymentActivity extends BaseActivity implements View.OnClickListener {
 
@@ -26,6 +27,7 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
     private int type; //11:热门活动支付,21:酒店支付
     private ActivityOrderInfo hotInfo; //热门活动订单
     private HotelOrderInfo hotelInfo; //酒店订单
+    private TrainTicketOrderInfo trainInfo; //火车票订单
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,8 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
                 hotInfo = (ActivityOrderInfo) bundle.getSerializable("order");
             }else if (type == 21){ //酒店
                 hotelInfo = (HotelOrderInfo) bundle.getSerializable("order");
+            }else if (type == 14){ //火车票
+                trainInfo = (TrainTicketOrderInfo) bundle.getSerializable("order");
             }
             else {
                 order = (Order) bundle.getSerializable("order");
@@ -66,6 +70,10 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
         } else if (type == 21){
             if (hotelInfo != null){
                 tvOrderPrice.setText(hotelInfo.getPrice());
+            }
+        } else if (type ==  14){
+            if (trainInfo != null){
+                tvOrderPrice.setText(trainInfo.getPrice());
             }
         }
         else{
