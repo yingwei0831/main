@@ -46,19 +46,15 @@ public abstract class PlaneItemInfoListAdapter extends MyBaseAdapter implements 
             }
         });
 
-//        if (seatInfo != null){
-//            holder.tvTypeSeat.setText(seatInfo.seatName);
-//            holder.tvTicketPrice.setText(String.format("￥%s", seatInfo.floorPrice));
-//            if ("0".equals(seatInfo.seatCount)){
-//                holder.tvTicketNum.setText("无票");
-//                holder.btnReserveTicket.setClickable(false);
-//                holder.btnReserveTicket.setBackground(context.getResources().getDrawable(R.drawable.bg_btn_reserve_not_border_selector));
-//            }else {
-//                holder.tvTicketNum.setText(String.format("%s张", seatInfo.seatCount));
-//                holder.btnReserveTicket.setClickable(true);
-//                holder.btnReserveTicket.setBackground(context.getResources().getDrawable(R.drawable.bg_btn_reserve_border_selector));
-//            }
-//        }
+        final TextView tvRefundInfo = holder.tvRefundNotice;
+        final int tvId = holder.tvRefundNotice.getId();
+        holder.tvRefundNotice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onItemTextViewClick(i, tvRefundInfo, tvId);
+            }
+        });
+
 
         return view;
     }

@@ -45,7 +45,7 @@ public class CarRentSelectTypeActivity extends BaseActivity implements View.OnCl
 
     private void setupView() {
         tvTitle = (TextView) findViewById(R.id.tv_title_inner_travel);
-        tvTitle.setText("租车");
+        tvTitle.setText(getString(R.string.car_rent_title));
         ivTitleLeft = (ImageView) findViewById(R.id.title_main_tv_left_location);
 
         tvRentCar = (TextView) findViewById(R.id.tv_rent_car);

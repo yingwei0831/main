@@ -3,7 +3,7 @@ package com.jhhy.cuiweitourism.net.models.FetchModel;
 /**
  * Created by birney on 2016-10-10.
  */
-public class PlanTicketInfoForHomeRequest extends BasicFetchModel {
+public class PlaneTicketInfoForChinalRequest extends BasicFetchModel {
 //    {
 //        "startcity": "PEK",
 //            "endcity": "DLC",
@@ -14,13 +14,13 @@ public class PlanTicketInfoForHomeRequest extends BasicFetchModel {
     public String endcity;
     public String flydate;
 
-    public PlanTicketInfoForHomeRequest(String startcity, String endcity, String flydate) {
+    public PlaneTicketInfoForChinalRequest(String startcity, String endcity, String flydate) {
         this.startcity = startcity;
         this.endcity = endcity;
         this.flydate = flydate;
     }
 
-    public PlanTicketInfoForHomeRequest() {
+    public PlaneTicketInfoForChinalRequest() {
     }
 
     public String getStartcity() {

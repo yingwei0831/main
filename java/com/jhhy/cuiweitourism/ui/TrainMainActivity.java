@@ -20,6 +20,7 @@ import com.jhhy.cuiweitourism.net.models.FetchModel.TrainStationFetch;
 import com.jhhy.cuiweitourism.net.models.FetchModel.TrainTicketFetch;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketCityInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainStationInfo;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
@@ -53,7 +54,7 @@ public class TrainMainActivity extends BaseActionBarActivity {
     private Button btnSearch;
 
     private String selectDate; //选择的出发时间
-    private TrainStationInfo fromCtiy; //出发城市
+    private TrainStationInfo fromCity; //出发城市
     private TrainStationInfo toCity; //到达城市
     private String typeTrain; //车型
     private String typeSeat; //座位类型
@@ -101,8 +102,8 @@ public class TrainMainActivity extends BaseActionBarActivity {
         tvToCity.setText("上海");
         selectDate = Utils.getCurrentTimeYMDE();
         tvFromDate.setText(selectDate.substring(selectDate.indexOf("-") + 1, selectDate.indexOf(" ")));
-        fromCtiy = new TrainStationInfo();
-        fromCtiy.setName("北京");
+        fromCity = new TrainStationInfo();
+        fromCity.setName("北京");
         toCity = new TrainStationInfo();
         toCity.setName("上海");
         tvTrainType.setText("不限");
@@ -150,9 +151,14 @@ public class TrainMainActivity extends BaseActionBarActivity {
                 break;
         }
     }
-    //交换出发地和目的地
+    //交换出发城市和目的城市
     private void exchange() {
-
+        TrainStationInfo tempCity;
+        tempCity = toCity;
+        toCity = fromCity;
+        fromCity = tempCity;
+        tvFromCity.setText(fromCity.getName());
+        tvToCity.setText(toCity.getName());
     }
 
     //选择席别类型，弹窗
@@ -214,7 +220,7 @@ public class TrainMainActivity extends BaseActionBarActivity {
     }
     //搜索火车票
     private void search() {
-        if (fromCtiy == null || toCity == null){
+        if (fromCity == null || toCity == null){
             ToastCommon.toastShortShow(getApplicationContext(), null, "请选择出发城市或到达城市");
             return;
         }
@@ -223,7 +229,7 @@ public class TrainMainActivity extends BaseActionBarActivity {
             return;
         }
         TrainTicketFetch trainTicket = new TrainTicketFetch();
-        trainTicket.setFromstation(fromCtiy.getName());
+        trainTicket.setFromstation(fromCity.getName());
         trainTicket.setArrivestation(toCity.getName());
         trainTicket.setTraveltime(selectDate);
         if (typeTrain != null){
@@ -292,7 +298,7 @@ public class TrainMainActivity extends BaseActionBarActivity {
             if (resultCode == RESULT_OK){
                 TrainStationInfo city = (TrainStationInfo) data.getExtras().getSerializable("selectCity");
                 LogUtil.e(TAG, "selectCity = " + city);
-                fromCtiy = city;
+                fromCity = city;
                 tvFromCity.setText(city.getName());
             }
         } else if (requestCode == SELECT_TO_CITY){ //选择到达城市

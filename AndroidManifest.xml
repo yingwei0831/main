@@ -145,6 +145,13 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
         <activity
+            android:name=".ui.PlaneCitySelectionActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
+
+        <activity
             android:name=".ui.InnerTravelCityActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
@@ -484,6 +491,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/ActionBarTheme" />
         <activity
+            android:name=".ui.PlaneItemInfoActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/ActionBarTheme" />
+
+        <activity
             android:name=".ui.PlaneMainActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
@@ -553,7 +566,7 @@
         <!-- 接入支付宝支付-end- -->
 
         <activity android:name=".ui.TrainPaySuccessActivity" />
-        <activity android:name=".ui.PlaneItemInfoActivity"></activity>
+
     </application>
 
 </manifest>

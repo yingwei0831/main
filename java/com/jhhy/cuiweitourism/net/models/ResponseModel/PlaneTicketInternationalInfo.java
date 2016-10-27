@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * Created by birney on 2016-10-11.
  */
-public class PlanTicketAboardInfo {
+public class PlaneTicketInternationalInfo {
 
     public static class AirportInfo{
         public String airportCode;      //        "机场三字码"

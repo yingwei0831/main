@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.jhhy.cuiweitourism.ui.PlaneItemInfoActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context="com.jhhy.cuiweitourism.ui.PlaneItemInfoActivity">
 
     <!--顶部当前航班信息-->
     <LinearLayout
@@ -12,123 +12,157 @@
         android:layout_height="wrap_content"
         android:background="@color/colorActionBar"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:paddingBottom="16dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="16dp">
         <!--始发车站，时间，终点车站，时间，耗时-->
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
-
-            <LinearLayout
-                android:id="@+id/layout_plane_from_info"
-                android:gravity="right"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toLeftOf="@+id/tv_train_order_time_consuming"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/tv_train_start_station"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="北京首都国际机场T3"
-                    android:textColor="@android:color/white"
-                    android:gravity="right"/>
-
-                <TextView
-                    android:id="@+id/tv_train_start_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:text="22:00"
-                    android:textColor="@android:color/white"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tv_plane_start_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="09-07 周三"
-                    android:textColor="@android:color/white" />
-            </LinearLayout>
+            android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/tv_train_order_time_consuming"
+                android:id="@+id/tv_plane_start_station"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@+id/tv_plane_order_time_consuming_second"
+                android:gravity="right"
+                android:text="北京首都国际机场T3"
+                android:textColor="@android:color/white" />
+
+            <TextView
+                android:id="@+id/tv_plane_order_time_consuming_second"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
+                android:drawableBottom="@mipmap/arrow_right_white"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:visibility="invisible" />
+
+            <TextView
+                android:id="@+id/tv_plane_end_station"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_toRightOf="@+id/tv_plane_order_time_consuming_second"
+                android:text="上海虹桥机场T2"
+                android:textColor="@android:color/white" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_plane_start_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="6dp"
+                android:layout_toLeftOf="@+id/tv_plane_order_time_consuming"
+                android:gravity="right"
+                android:paddingBottom="4dp"
+                android:text="22:00"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_plane_order_time_consuming"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_marginLeft="6dp"
                 android:layout_marginRight="6dp"
-                android:textColor="@android:color/white"
-                android:text="6时2分"
+                android:drawableBottom="@mipmap/arrow_right_white"
                 android:gravity="center"
-                android:drawableBottom="@mipmap/arrow_right_white"/>
+                android:text="6时2分"
+                android:textColor="@android:color/white" />
 
-            <LinearLayout
-                android:id="@+id/layout_plane_arrival_info"
+            <TextView
+                android:id="@+id/tv_plane_end_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/tv_train_order_time_consuming"
-                android:orientation="vertical">
+                android:layout_alignParentRight="true"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="6dp"
+                android:layout_toRightOf="@+id/tv_plane_order_time_consuming"
+                android:paddingBottom="4dp"
+                android:text="00:35"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/tv_train_end_station"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="上海虹桥机场T2"
-                    android:textColor="@android:color/white" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/tv_train_end_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:text="00：35"
-                    android:textColor="@android:color/white"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+            <TextView
+                android:id="@+id/tv_plane_start_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@+id/tv_plane_order_time_consuming_third"
+                android:gravity="right"
+                android:text="09-07 周三"
+                android:textColor="@android:color/white" />
 
-                <TextView
-                    android:id="@+id/tv_plane_arrival_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="09-07 周三"
-                    android:textColor="@android:color/white" />
-            </LinearLayout>
+            <TextView
+                android:id="@+id/tv_plane_order_time_consuming_third"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
+                android:drawableBottom="@mipmap/arrow_right_white"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:visibility="invisible" />
+
+            <TextView
+                android:id="@+id/tv_plane_arrival_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_toRightOf="@+id/tv_plane_order_time_consuming_third"
+                android:text="09-07 周三"
+                android:textColor="@android:color/white" />
+
         </RelativeLayout>
         <!--车型，车号，日期，星期-->
-        <RelativeLayout
-            android:layout_width="wrap_content"
+
+        <TextView
+            android:id="@+id/tv_plane_order_plane_date"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal">
+            android:layout_marginTop="8dp"
+            android:gravity="center_horizontal"
+            android:text="南方航空CZ6132 | 空客A320 (窄体) 有餐饮"
+            android:textColor="@android:color/white" />
 
-            <TextView
-                android:id="@+id/tv_train_order_train_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingRight="8dp"
-                android:text="南方航空CZ6132"
-                android:textColor="@android:color/white" />
+    </LinearLayout>
 
-            <View
-                android:layout_width="1dp"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/tv_train_order_train_name"
-                android:layout_alignTop="@+id/tv_train_order_train_name"
-                android:layout_toRightOf="@+id/tv_train_order_train_name"
-                android:background="@android:color/white" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@android:color/white"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
 
-            <TextView
-                android:id="@+id/tv_train_order_train_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="1dp"
-                android:layout_toRightOf="@+id/tv_train_order_train_name"
-                android:paddingLeft="8dp"
-                android:text="空客A320（窄体）有餐饮"
-                android:textColor="@android:color/white" />
-        </RelativeLayout>
+        <com.handmark.pulltorefresh.library.PullToRefreshListView
+            android:id="@+id/list_plane_detail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:scrollbars="none" />
     </LinearLayout>
 
 </LinearLayout>

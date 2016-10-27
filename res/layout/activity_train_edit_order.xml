@@ -9,155 +9,11 @@
 
     <!--<include layout="@layout/title_simple" android:visibility="gone"/>-->
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorActionBar"
-        android:orientation="vertical"
-        android:padding="16dp">
-        <!--始发车站，时间，终点车站，时间，耗时-->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="16dp">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toLeftOf="@+id/tv_train_order_time_consuming"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/tv_train_start_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:text="22:00"
-                    android:textColor="@android:color/white"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tv_train_start_station"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="北京南"
-                    android:textColor="@android:color/white" />
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/tv_train_order_time_consuming"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:textColor="@android:color/white"
-                android:text="6时2分"
-                android:gravity="center"
-                android:drawableBottom="@mipmap/arrow_right_white"/>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/tv_train_order_time_consuming"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/tv_train_end_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:text="00：35"
-                    android:textColor="@android:color/white"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tv_train_end_station"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="上海虹桥"
-                    android:textColor="@android:color/white" />
-            </LinearLayout>
-        </RelativeLayout>
-        <!--车型，车号，日期，星期-->
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal">
-
-            <TextView
-                android:id="@+id/tv_train_order_train_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingRight="8dp"
-                android:text="高铁G135"
-                android:textColor="@android:color/white" />
-
-            <View
-                android:layout_width="1dp"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/tv_train_order_train_name"
-                android:layout_alignTop="@+id/tv_train_order_train_name"
-                android:layout_toRightOf="@+id/tv_train_order_train_name"
-                android:background="@android:color/white" />
-
-            <TextView
-                android:id="@+id/tv_train_order_train_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="1dp"
-                android:layout_toRightOf="@+id/tv_train_order_train_name"
-                android:paddingLeft="8dp"
-                android:text="10月23日 周日"
-                android:textColor="@android:color/white" />
-        </RelativeLayout>
-    </LinearLayout>
-
-    <!--座位类型，车费-->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:gravity="center_vertical"
-        >
-
-        <TextView
-            android:id="@+id/tv_train_seat_type"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="16dp"
-            android:paddingRight="8dp"
-            android:text="商务座"
-            android:textColor="@android:color/black"
-            android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/tv_train_cost_total"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="￥1748.00"
-            android:textSize="18sp"
-            android:textColor="@android:color/holo_red_light" />
-
-        <TextView
-            android:id="@+id/tv_train_seat_info"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:drawablePadding="6dp"
-            android:drawableRight="@mipmap/arrow_right_dark"
-            android:padding="16dp"
-            android:text="坐席"
-            android:textSize="16sp"/>
-    </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="10dp"
         android:layout_weight="1"
         android:background="@color/colorLineGray3">
 
@@ -165,6 +21,150 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorActionBar"
+                android:orientation="vertical"
+                android:padding="16dp">
+                <!--始发车站，时间，终点车站，时间，耗时-->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toLeftOf="@+id/tv_train_order_time_consuming"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tv_train_start_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:text="22:00"
+                            android:textColor="@android:color/white"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tv_train_start_station"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="北京南"
+                            android:textColor="@android:color/white" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tv_train_order_time_consuming"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:textColor="@android:color/white"
+                        android:text="6时2分"
+                        android:gravity="center"
+                        android:drawableBottom="@mipmap/arrow_right_white"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@+id/tv_train_order_time_consuming"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tv_train_end_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:text="00：35"
+                            android:textColor="@android:color/white"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tv_train_end_station"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="上海虹桥"
+                            android:textColor="@android:color/white" />
+                    </LinearLayout>
+                </RelativeLayout>
+                <!--车型，车号，日期，星期-->
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_train_order_train_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="8dp"
+                        android:text="高铁G135"
+                        android:textColor="@android:color/white" />
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/tv_train_order_train_name"
+                        android:layout_alignTop="@+id/tv_train_order_train_name"
+                        android:layout_toRightOf="@+id/tv_train_order_train_name"
+                        android:background="@android:color/white" />
+
+                    <TextView
+                        android:id="@+id/tv_train_order_train_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="1dp"
+                        android:layout_toRightOf="@+id/tv_train_order_train_name"
+                        android:paddingLeft="8dp"
+                        android:text="10月23日 周日"
+                        android:textColor="@android:color/white" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <!--座位类型，车费-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:gravity="center_vertical"
+                >
+
+                <TextView
+                    android:id="@+id/tv_train_seat_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="8dp"
+                    android:text="商务座"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_train_cost_total"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="￥1748.00"
+                    android:textSize="18sp"
+                    android:textColor="@android:color/holo_red_light" />
+
+                <TextView
+                    android:id="@+id/tv_train_seat_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:drawablePadding="6dp"
+                    android:drawableRight="@mipmap/arrow_right_dark"
+                    android:padding="16dp"
+                    android:text="坐席"
+                    android:textSize="16sp"/>
+            </LinearLayout>
             <!--联系人-->
             <LinearLayout
                 android:id="@+id/layout_train_add_contacts"
@@ -175,6 +175,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:background="@android:color/white"
                     android:paddingLeft="16dp"
                     android:paddingRight="16dp">
@@ -204,7 +205,8 @@
                     android:id="@+id/layout_contacts"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:background="@android:color/white">
 
                 </LinearLayout>
             </LinearLayout>

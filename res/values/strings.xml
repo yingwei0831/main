@@ -328,6 +328,17 @@
     <string name="train_screen_type_seat">席别类型</string>
     <string name="train_order_edit">订单填写</string>
 
+    <!--飞机票-->
+    <string name="plane_screen_start_time">起飞时间</string>
+    <string name="plane_screen_from_airport">机场</string>
+    <string name="plane_screen_aircraft_model">机型</string>
+    <string name="plane_screen_airline_company">航空公司</string>
+
+    <string name="plane_sort_time_increase">时间从早到晚</string>
+    <string name="plane_sort_time_decrease">时间从晚到早</string>
+    <string name="plane_sort_price_increase">价格从低到高</string>
+    <string name="plane_sort_price_decrease">价格从高到低</string>
+
     <!--XScrollView-->
     <string name="header_hint_refresh_normal">下拉刷新</string>
     <string name="header_hint_refresh_ready">松开刷新</string>

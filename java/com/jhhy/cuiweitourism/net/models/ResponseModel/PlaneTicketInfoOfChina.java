@@ -2,18 +2,19 @@ package com.jhhy.cuiweitourism.net.models.ResponseModel;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by zhangguang on 16/10/25.
  */
-public class PlaneTicketInfoOfChina {
+public class PlaneTicketInfoOfChina implements Serializable{
 
-
+    //TODO 第四层
     public static class PolicyDataInfo{
         //"comment": "B2B电子客票请不要做RR，否则可能无法出票。  ",
-        //"commisionMoney": 10,
-        //"commisionPoint": "0.0",
+        //"commisionMoney": 10,     //定额
+        //"commisionPoint": "0.0",  //政策返点
         //"commisionType": 0,
         //"policyBelongTo": 2,
         //"policyId": 178285482,
@@ -146,17 +147,18 @@ public class PlaneTicketInfoOfChina {
         }
     }
 
-    public static class SeatItemInfo{
-        //"discount": 0.46,
-        //"flightNo": "CZ6132",
-        //"parPrice": 330,
+    //TODO 第三层 舱位信息
+    public static class SeatItemInfo implements Comparable<SeatItemInfo>, Serializable{
+        //"discount": 0.46, //折扣
+        //"flightNo": "CZ6132", //航班号
+        //"parPrice": 330,  //票面价格
         //"param2": "3",
         //"policyData": {},
         //"seatCode": "V",
-        //"seatMsg": "经济舱",
-        //"seatStatus": "A",
-        //"seatType": 1,
-        //"settlePrice": 320
+        //"seatMsg": "经济舱", //舱位说明
+        //"seatStatus": "A", //舱位状态
+        //"seatType": 1, //是否特价舱位（1 普通舱位  3 特价舱位）
+        //"settlePrice": 320    //成人的结算价（根据 commisionPoint 和commisionMoney算出来的净价）
 
         public String discount;
         public String flightNo;
@@ -280,32 +282,43 @@ public class PlaneTicketInfoOfChina {
                     ", settlePrice='" + settlePrice + '\'' +
                     '}';
         }
+
+        @Override
+        public int compareTo(SeatItemInfo seatItemInfo) {
+            //价格排序
+            if (Integer.parseInt(this.parPrice) > Integer.parseInt(seatItemInfo.parPrice)){
+                return 1;
+            }else if (Integer.parseInt(this.parPrice) < Integer.parseInt(seatItemInfo.parPrice)){
+                return -1;
+            }
+            return 0;
+        }
     }
 
 
-
-    public static class FlightInfo{
-        //"airportTax": 50,
-        //"arriModifyTime": "",
+    //TODO 第二层 航班详细信息
+    public static class FlightInfo implements Serializable{
+        //"airportTax": 50,     //成人基建费
+        //"arriModifyTime": "", //降落修正时间
         //"arriTime": "0930",
         //"codeShare": false,
         //"depTime": "0805",
         //"dstCity": "DLC",
-        //"dstJetquay": "--",
+        //"dstJetquay": "--",   //到达航站楼
         //"flightNo": "CZ6132",
-        //"fuelTax": 0,
-        //"isElectronicTicket": true,
+        //"fuelTax": 0,     //成人燃油费
+        //"isElectronicTicket": true, //是否电子客票
         //"link": "DS#",
-        //"meal": "true",
+        //"meal": "true", //餐食标识
         //"orgCity": "PEK",
-        //"orgJetquay": "T2",
-        //"param1": "2016-11-17",
+        //"orgJetquay": "T2",   //始发航站楼
+        //"param1": "2016-11-17",   //抵达日期
         //"param2": "0.0",
         //"param3": "0.0",
         //"planeType": "321",
-        //"seatItems": [],
+        //"seatItems": [], //舱位信息
         //"shareNum": "",
-        //"stopnum": 0
+        //"stopnum": 0  //经停次数
 
         public String airportTax;
         public String arriModifyTime;
@@ -555,16 +568,16 @@ public class PlaneTicketInfoOfChina {
 
 
 
-
+    //TODO 第一层
     public  static  class  FlightItemsInfo{
-//        "audletAirportTax": 50,
-//                "audletFuelTax": 0,
-//                "basePrice": 710,
-//                "date": "2016-11-17",
-//                "distance": 579,
-//                "dstCity": "DLC",
-//                "flights": [],
-//                "orgCity": "PEK"
+//        "audletAirportTax": 50, //成人记减肥
+//        "audletFuelTax": 0,   //成人燃油费
+//        "basePrice": 710,     //Y舱价格
+//        "date": "2016-11-17", //出行日期
+//        "distance": 579,
+//        "dstCity": "DLC", //目的城市
+//        "flights": [],    //航班详细信息{座位信息...}
+//        "orgCity": "PEK"  //出发城市
 
         public  String audletAirportTax;
         public  String audletFuelTax;

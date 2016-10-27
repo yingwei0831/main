@@ -17,10 +17,10 @@ import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.dialog.DatePickerActivity;
 import com.jhhy.cuiweitourism.moudle.Line;
 import com.jhhy.cuiweitourism.net.biz.PlaneTicketActionBiz;
-import com.jhhy.cuiweitourism.net.models.FetchModel.PlanTicketCityFetch;
+import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketCityFetch;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
-import com.jhhy.cuiweitourism.net.models.ResponseModel.PlanTicketCityInfo;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketCityInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainStationInfo;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
@@ -45,14 +45,14 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
     private Button btnSearch; //搜索
 
 //    private String selectDate; //当前时间
-    private String selectFromDate; //选择的出发时间，显示在Textview 上
-    private String selectReturnDate; //选择的返程时间，显示在Textview 上
-    private PlanTicketCityInfo fromCity; //出发城市
-    private PlanTicketCityInfo toCity; //到达城市
+    private String dateFrom; //选择的出发时间，显示在Textview 上
+    private String dateReturn; //选择的返程时间，显示在Textview 上
+    private PlaneTicketCityInfo fromCity; //出发城市
+    private PlaneTicketCityInfo toCity; //到达城市
 
     private PlaneTicketActionBiz planeBiz;
-    private ArrayList<PlanTicketCityInfo> airportInner; //国内飞机场
-    private ArrayList<PlanTicketCityInfo> airportOuter; //国际飞机场
+    public static ArrayList<PlaneTicketCityInfo> airportInner; //国内飞机场
+    public static ArrayList<PlaneTicketCityInfo> airportOuter; //国际飞机场
 
     private Handler handler = new Handler(){
         @Override
@@ -98,14 +98,19 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
 
         tvFromCity.setText("北京");
         tvToCity.setText("大连");
-        selectFromDate = Utils.getCurrentTimeYMDE();
-        selectReturnDate = selectFromDate;
-        tvFromDate.setText(selectFromDate.substring(selectFromDate.indexOf("-") + 1, selectFromDate.indexOf(" ")));
-        tvReturnDate.setText(selectReturnDate.substring(selectReturnDate.indexOf("-") + 1, selectReturnDate.indexOf(" ")));
-        fromCity = new PlanTicketCityInfo();
+        dateFrom = Utils.getCurrentTimeYMDE();
+        dateReturn = dateFrom;
+        tvFromDate.setText(dateFrom.substring(dateFrom.indexOf("-") + 1, dateFrom.indexOf(" ")));
+        tvReturnDate.setText(dateReturn.substring(dateReturn.indexOf("-") + 1, dateReturn.indexOf(" ")));
+
+        fromCity = new PlaneTicketCityInfo();
         fromCity.setName("北京");
-        toCity = new PlanTicketCityInfo();
+        fromCity.setCode("PEK");
+        fromCity.setAirportname("北京首都国际机场");
+        toCity = new PlaneTicketCityInfo();
         toCity.setName("大连");
+        toCity.setCode("DLC");
+        toCity.setAirportname("大连周水子国际机场");
     }
 
     @Override
@@ -147,17 +152,39 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
 
     //搜索
     private void search() {
-
+        Intent intent = new Intent(getApplicationContext(), PlaneListActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("fromCity", fromCity);
+        bundle.putSerializable("toCity", toCity);
+        bundle.putString("dateFrom", dateFrom);
+        bundle.putInt("type", type);
+        if (type == 2) {
+            bundle.putString("dateReturn", dateReturn);
+        }
+        intent.putExtras(bundle);
+        startActivityForResult(intent, VIEW_PLANE_LIST);
     }
 
     //出发城市
     private void selectFromCity() {
+        Intent intent = new Intent(getApplicationContext(), PlaneCitySelectionActivity.class);
+        Bundle bundle = new Bundle();
+        //根据当前是单程/往返/询价，传入type; 1:国内 2:国际
 
+        bundle.putInt("type", type);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, SELECT_FROM_CITY);
     }
 
     //目的城市
     private void selectToCity() {
+        Intent intent = new Intent(getApplicationContext(), PlaneCitySelectionActivity.class);
+        Bundle bundle = new Bundle();
+        //根据当前是单程/往返/询价，传入type; 1:国内 2:国际 3:询价
 
+        bundle.putInt("type", type);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, SELECT_TO_CITY);
     }
 
     //返程时间
@@ -180,6 +207,9 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
 
     private int SELECT_START_TIME = 6528; //选择出发时间 10-24
     private int SELECT_RETURN_TIME = 6529; //选择返程时间 10-25
+    private int SELECT_FROM_CITY = 6526; //选择出发城市
+    private int SELECT_TO_CITY = 6527; //选择到达城市
+    private int VIEW_PLANE_LIST = 6530; //选择到达城市
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -187,14 +217,31 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
         if (requestCode == SELECT_START_TIME){ //选择出发时间
             if (resultCode == RESULT_OK){
                 Bundle bundle = data.getExtras();
-                selectFromDate = bundle.getString("selectDate");
-                tvFromDate.setText(selectFromDate.substring(0, selectFromDate.indexOf(" ")));
+                dateFrom = bundle.getString("selectDate");
+                tvFromDate.setText(dateFrom.substring(0, dateFrom.indexOf(" ")));
             }
         }else if (requestCode == SELECT_RETURN_TIME){ //选择返程时间
             if (resultCode == RESULT_OK){
                 Bundle bundle = data.getExtras();
-                selectReturnDate = bundle.getString("selectDate");
-                tvReturnDate.setText(selectReturnDate.substring(0, selectReturnDate.indexOf(" ")));
+                dateReturn = bundle.getString("selectDate");
+                tvReturnDate.setText(dateReturn.substring(0, dateReturn.indexOf(" ")));
+            }
+        }else if (requestCode == SELECT_FROM_CITY){ //选择出发城市
+            if (resultCode == RESULT_OK){
+                PlaneTicketCityInfo city = (PlaneTicketCityInfo) data.getExtras().getSerializable("selectCity");
+                LogUtil.e(TAG, "selectCity = " + city);
+                fromCity = city;
+                tvFromCity.setText(city.getName());
+            }
+        } else if (requestCode == SELECT_TO_CITY){ //选择到达城市
+            if (resultCode == RESULT_OK){
+                PlaneTicketCityInfo city = (PlaneTicketCityInfo) data.getExtras().getSerializable("selectCity");
+                LogUtil.e(TAG, "selectCity = " + city);
+                toCity = city;
+                tvToCity.setText(city.getName());
+            }
+        }else if (requestCode == VIEW_PLANE_LIST){ //搜索
+            if (resultCode == RESULT_OK){
             }
         }
     }
@@ -205,32 +252,46 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
         switch (i){
             case R.id.rb_plane_one_way: //单程
                 layoutReturnDate.setVisibility(View.GONE);
+                type = 1;
                 break;
             case R.id.rb_plane_return: //往返
                 layoutReturnDate.setVisibility(View.VISIBLE);
+                type = 2;
                 break;
             case R.id.rb_plane_inquiry: //询价
                 layoutReturnDate.setVisibility(View.GONE);
+                tvFromCity.setText("请选择");
+                tvToCity.setText("请选择");
+                type = 3;
                 break;
         }
     }
 
     //交换出发城市和目的城市
     private void exchange() {
-
+        PlaneTicketCityInfo tempCity;
+        tempCity = toCity;
+        toCity = fromCity;
+        fromCity = tempCity;
+        tvFromCity.setText(fromCity.getName());
+        tvToCity.setText(toCity.getName());
     }
 
-    //获取机场列表
+    private int type = 1; //1：单程 2：往返 3：询价
+    private boolean inner;
+    private boolean outer;
+
+    //获取国内机场列表
     private void getInternetData() {
         //飞机出发城市、到达城市
         new Thread(){
             @Override
             public void run() {
                 super.run();
-                PlanTicketCityFetch fetch = new PlanTicketCityFetch("D"); //国内飞机场
-                planeBiz.getPlaneTicketCityInfo(fetch, new BizGenericCallback<ArrayList<PlanTicketCityInfo>>() {
+                PlaneTicketCityFetch fetch = new PlaneTicketCityFetch("D"); //国内飞机场
+                planeBiz.getPlaneTicketCityInfo(fetch, new BizGenericCallback<ArrayList<PlaneTicketCityInfo>>() {
                     @Override
-                    public void onCompletion(GenericResponseModel<ArrayList<PlanTicketCityInfo>> model) {
+                    public void onCompletion(GenericResponseModel<ArrayList<PlaneTicketCityInfo>> model) {
                         if ("0001".equals(model.headModel.res_code)){
                             Message msg = new Message();
                             msg.what = -1;
@@ -241,7 +302,10 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
                             airportInner = model.body;
                             LogUtil.e(TAG,"getPlaneTicketCityInfo =" + airportInner.toString());
                         }
-                        LoadingIndicator.cancel();
+                        inner = true;
+                        if (inner && outer) {
+                            LoadingIndicator.cancel();
+                        }
                     }
 
                     @Override
@@ -255,24 +319,27 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
                             handler.sendEmptyMessage(-2);
                         }
                         LogUtil.e(TAG, "getPlaneTicketCityInfo: " + error.toString());
-                        LoadingIndicator.cancel();
+                        inner = true;
+                        if (inner && outer) {
+                            LoadingIndicator.cancel();
+                        }
                     }
                 });
             }
         }.start();
     }
 
-    //获取机场列表
+    //获取国际机场列表
     private void getInternetDataOut() {
         //飞机出发城市、到达城市
         new Thread(){
             @Override
             public void run() {
                 super.run();
-                PlanTicketCityFetch fetch = new PlanTicketCityFetch("I"); //国际飞机场
-                planeBiz.getPlaneTicketCityInfo(fetch, new BizGenericCallback<ArrayList<PlanTicketCityInfo>>() {
+                PlaneTicketCityFetch fetch = new PlaneTicketCityFetch("I"); //国际飞机场
+                planeBiz.getPlaneTicketCityInfo(fetch, new BizGenericCallback<ArrayList<PlaneTicketCityInfo>>() {
                     @Override
-                    public void onCompletion(GenericResponseModel<ArrayList<PlanTicketCityInfo>> model) {
+                    public void onCompletion(GenericResponseModel<ArrayList<PlaneTicketCityInfo>> model) {
                         if ("0001".equals(model.headModel.res_code)){
                             Message msg = new Message();
                             msg.what = -1;
@@ -283,7 +350,10 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
                             airportOuter = model.body;
                             LogUtil.e(TAG,"getPlaneTicketCityInfo =" + airportOuter.toString());
                         }
-                        LoadingIndicator.cancel();
+                        outer = true;
+                        if (inner && outer) {
+                            LoadingIndicator.cancel();
+                        }
                     }
 
                     @Override
@@ -297,7 +367,10 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
                             handler.sendEmptyMessage(-3);
                         }
                         LogUtil.e(TAG, "getPlaneTicketCityInfo: " + error.toString());
-                        LoadingIndicator.cancel();
+                        outer = true;
+                        if (inner && outer) {
+                            LoadingIndicator.cancel();
+                        }
                     }
                 });
             }

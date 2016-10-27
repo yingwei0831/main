@@ -1,14 +1,17 @@
 package com.jhhy.cuiweitourism.net.models.ResponseModel;
 
+import java.io.Serializable;
+
 /**
  * Created by birney on 2016-10-24.
  */
-public class PlanTicketCityInfo {
+public class PlaneTicketCityInfo implements Serializable {
+
 //    "id": "1",
-//            "code": "PEK",
-//            "name": "北京",
-//            "airportname": "北京首都国际机场",
-//            "isdomc": "D"
+//    "code": "PEK",
+//    "name": "北京",
+//    "airportname": "北京首都国际机场",
+//    "isdomc": "D"
 
     public String  id;
     public String  code;
@@ -21,7 +24,7 @@ public class PlanTicketCityInfo {
     public String headChar;//
     public int type ; //是否是标题
 
-    public PlanTicketCityInfo(String id, String code, String name, String airportname, String isdomc) {
+    public PlaneTicketCityInfo(String id, String code, String name, String airportname, String isdomc) {
         this.id = id;
         this.code = code;
         this.name = name;
@@ -29,7 +32,7 @@ public class PlanTicketCityInfo {
         this.isdomc = isdomc;
     }
 
-    public PlanTicketCityInfo() {
+    public PlaneTicketCityInfo() {
     }
 
     public String getId() {
@@ -74,7 +77,7 @@ public class PlanTicketCityInfo {
 
     @Override
     public String toString() {
-        return "PlanTicketCityInfo{" +
+        return "PlaneTicketCityInfo{" +
                 "id='" + id + '\'' +
                 ", code='" + code + '\'' +
                 ", name='" + name + '\'' +

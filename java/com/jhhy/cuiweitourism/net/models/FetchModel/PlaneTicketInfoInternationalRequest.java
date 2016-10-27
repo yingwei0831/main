@@ -3,7 +3,7 @@ package com.jhhy.cuiweitourism.net.models.FetchModel;
 /**
  * Created by birney on 2016-10-11.
  */
-public class PlanTicketInfoAbroadRequest extends BasicFetchModel {
+public class PlaneTicketInfoInternationalRequest extends BasicFetchModel {
 
 //    {
 //        "traveltype": "RT",
@@ -25,7 +25,7 @@ public class PlanTicketInfoAbroadRequest extends BasicFetchModel {
     public String carrier;
 
 
-    public PlanTicketInfoAbroadRequest(String traveltype, String boardpoint, String offPoint, String departuredate, String returndate, String stoptype, String carrier) {
+    public PlaneTicketInfoInternationalRequest(String traveltype, String boardpoint, String offPoint, String departuredate, String returndate, String stoptype, String carrier) {
         this.traveltype = traveltype;
         this.boardpoint = boardpoint;
         this.offPoint = offPoint;
@@ -35,7 +35,7 @@ public class PlanTicketInfoAbroadRequest extends BasicFetchModel {
         this.carrier = carrier;
     }
 
-    public PlanTicketInfoAbroadRequest() {
+    public PlaneTicketInfoInternationalRequest() {
     }
 
     public String getTraveltype() {

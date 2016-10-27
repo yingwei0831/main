@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.jhhy.cuiweitourism.utils;
+package com.jhhy.cuiweitourism.net.utils;
 
 import android.text.TextUtils;
 
@@ -454,5 +454,40 @@ public class HanziToPinyin {
         String str = sb.toString();
         tokens.add(new Token(tokenType, str, str));
         sb.setLength(0);
+    }
+
+
+    /**
+     * 汉字转换拼音，字母原样返回，都转换为小写
+     */
+
+    public  static  class PinYinCollection{
+        public String fullPY; //车站名全拼
+        public String shortPY; //车站名简拼
+        public char headChar;//
+    }
+
+    public PinYinCollection getPinYin(String input) {
+        ArrayList<HanziToPinyin.Token> tokens = HanziToPinyin.getInstance().get(input);
+        StringBuilder sbFull = new StringBuilder();
+        StringBuilder sbShort = new StringBuilder();
+        if (tokens != null && tokens.size() > 0) {
+            for (HanziToPinyin.Token token : tokens) {
+                if (token.type == HanziToPinyin.Token.PINYIN) {
+                    sbFull.append(token.target);
+                    sbShort.append(token.target.charAt(0));
+                } else {
+                    sbFull.append(token.source);
+                    sbShort.append(token.source.charAt(0));
+                }
+            }
+        }
+        PinYinCollection collection = new PinYinCollection();
+        collection.headChar = sbFull.toString().charAt(0);
+        collection.fullPY = sbFull.toString();
+        collection.shortPY = sbShort.toString();
+
+        return collection;
+        //return sb.toString();
     }
 }

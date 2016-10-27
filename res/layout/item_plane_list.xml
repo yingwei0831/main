@@ -16,15 +16,17 @@
             android:layout_height="wrap_content"
             android:layout_weight="1">
             <!--出发机场-->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_toLeftOf="@+id/iv_arrow_plane"
-                android:orientation="vertical">
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_alignParentLeft="true"-->
+                <!--android:layout_toLeftOf="@+id/iv_arrow_plane"-->
+                <!--android:orientation="vertical">-->
 
                 <TextView
                     android:id="@+id/tv_plane_start_time"
+                    android:layout_toLeftOf="@+id/iv_arrow_plane"
+                    android:layout_alignParentLeft="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingBottom="6dp"
@@ -35,10 +37,13 @@
 
                 <TextView
                     android:id="@+id/tv_plane_from_airport"
+                    android:layout_toLeftOf="@+id/iv_arrow_plane"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@+id/tv_plane_start_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="南苑机场" />
-            </LinearLayout>
+                    android:text="大连周水子国际机场" />
+            <!--</LinearLayout>-->
 
             <ImageView
                 android:id="@+id/iv_arrow_plane"
@@ -48,16 +53,18 @@
                 android:src="@mipmap/arrow_right_green_single" />
             <!--android:src="@mipmap/"-->
             <!--到达机场-->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_toRightOf="@+id/iv_arrow_plane"
-                android:gravity="right"
-                android:orientation="vertical">
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_alignParentRight="true"-->
+                <!--android:layout_toRightOf="@+id/iv_arrow_plane"-->
+                <!--android:gravity="right"-->
+                <!--android:orientation="vertical">-->
 
                 <TextView
                     android:id="@+id/tv_plane_arrival_time"
+                    android:layout_toRightOf="@+id/iv_arrow_plane"
+                    android:layout_alignParentRight="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -69,11 +76,15 @@
 
                 <TextView
                     android:id="@+id/tv_plane_arrival_airport"
+                    android:layout_toRightOf="@+id/iv_arrow_plane"
+                    android:layout_below="@+id/tv_plane_arrival_time"
+                    android:layout_alignParentRight="true"
+
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:text="南苑机场" />
-            </LinearLayout>
+                    android:text="大连周水子国际机场北京首都国际机场" />
+            <!--</LinearLayout>-->
         </RelativeLayout>
 
         <!--价格和舱位-->
@@ -121,6 +132,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="1张"
+            android:visibility="gone"
             android:textColor="@android:color/holo_red_light" />
     </LinearLayout>
 </LinearLayout>

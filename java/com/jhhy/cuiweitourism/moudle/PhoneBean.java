@@ -5,7 +5,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
-import com.jhhy.cuiweitourism.utils.HanziToPinyin;
+
+import com.jhhy.cuiweitourism.net.utils.HanziToPinyin;
 
 import java.io.Serializable;
 import java.util.ArrayList;

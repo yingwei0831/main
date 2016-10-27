@@ -26,7 +26,7 @@
             android:paddingRight="16dp"
             android:text="前一天"
             android:textSize="16sp"
-
+            android:textColor="@android:color/black"
             />
 
         <TextView
@@ -36,6 +36,7 @@
             android:layout_centerInParent="true"
             android:gravity="center"
             android:text="2016-10-26 周三"
+            android:textStyle="bold"
             android:textColor="@color/colorActionBar"
             android:textSize="16sp" />
 
@@ -50,7 +51,8 @@
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:text="后一天"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textColor="@android:color/black"/>
     </RelativeLayout>
 
     <View
@@ -80,47 +82,47 @@
         android:orientation="horizontal">
 
         <RadioButton
-            android:id="@+id/rb_train_screen"
+            android:id="@+id/rb_plane_screen"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
             android:button="@null"
-            android:drawablePadding="6dp"
+            android:drawablePadding="4dp"
             android:drawableTop="@mipmap/icon_screen_train"
             android:gravity="center"
             android:text="筛选"
             android:textColor="@android:color/white" />
 
         <RadioGroup
-            android:id="@+id/rg_train_list"
+            android:id="@+id/rg_plane_list"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
             android:orientation="horizontal">
 
             <RadioButton
-                android:id="@+id/rb_train_start_time"
+                android:id="@+id/rb_plane_start_time"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:button="@null"
-                android:drawablePadding="6dp"
+                android:drawablePadding="4dp"
                 android:drawableTop="@drawable/bg_rb_train_start_time_selector"
                 android:gravity="center"
                 android:text="时间排序"
                 android:textColor="@drawable/bg_rb_train_text_selector" />
 
             <RadioButton
-                android:id="@+id/rb_train_time_consuming"
+                android:id="@+id/rb_plane_price"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:button="@null"
-                android:drawablePadding="6dp"
-                android:drawableTop="@drawable/bg_rb_train_consuming_time_selector"
+                android:drawablePadding="4dp"
+                android:drawableTop="@mipmap/icon_price_plane"
                 android:gravity="center"
                 android:text="价格排序"
                 android:textColor="@drawable/bg_rb_train_text_selector" />

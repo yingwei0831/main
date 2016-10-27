@@ -199,7 +199,12 @@ public class TrainEditOrderActivity extends AppCompatActivity implements View.On
                 Intent intent = new Intent(getApplicationContext(), SelectCustomActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putInt("type", 13);
-                bundle.putInt("number", Integer.parseInt(seatInfo.seatCount));
+//                if (listContact.size()== 0 && Integer.parseInt(seatInfo.seatCount))
+                if (listContact.size() == 0){
+                    bundle.putInt("number", 10);
+                }else{
+                    bundle.putInt("number", 10 - listContact.size());
+                }
                 intent.putExtras(bundle);
                 startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_SELECT_CONTACT);
                 break;
@@ -228,10 +233,10 @@ public class TrainEditOrderActivity extends AppCompatActivity implements View.On
                     ivTrash.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            onItemTextViewClick(listContact.size(), ivTrash, ivTrash.getId());
+                            onItemTextViewClick(listContact.size() - 1, ivTrash, ivTrash.getId());
                         }
                     });
-                    ivTrash.setOnClickListener(new View.OnClickListener() {
+                    ivDetail.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                         }
@@ -242,7 +247,7 @@ public class TrainEditOrderActivity extends AppCompatActivity implements View.On
                     listContact.add(contactTrain);
                 }
                 tvAdultCount.setText(String.format("成人%d人", listContact.size()));
-                tvPriceTotal.setText(String.format("%f", Float.parseFloat(seatInfo.floorPrice) * listContact.size()));
+                tvPriceTotal.setText(String.format("%.2f", Float.parseFloat(seatInfo.floorPrice) * listContact.size()));
             }else if (requestCode == Consts.REQUEST_CODE_RESERVE_PAY){ //去支付，支付成功
 
             }
@@ -256,7 +261,7 @@ public class TrainEditOrderActivity extends AppCompatActivity implements View.On
         listContact.remove(position);
         layoutContacts.removeViewAt(position);
         tvAdultCount.setText(String.format("成人%d人", listContact.size()));
-        tvPriceTotal.setText(String.format("%f", Float.parseFloat(seatInfo.floorPrice) * listContact.size()));
+        tvPriceTotal.setText(String.format("%.2f", Float.parseFloat(seatInfo.floorPrice) * listContact.size()));
     }
 
     /**
