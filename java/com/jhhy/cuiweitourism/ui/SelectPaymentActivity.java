@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,8 +22,8 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
     private TextView tvOrderPrice;
     private Order order;
 
-    private TextView tvAliPay;
-    private TextView tvWeChatPay;
+    private Button tvAliPay;
+    private Button tvWeChatPay;
 
     private int type; //11:热门活动支付,21:酒店支付
     private ActivityOrderInfo hotInfo; //热门活动订单
@@ -61,8 +62,8 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
         ivTitleLeft = (ImageView) findViewById(R.id.title_main_tv_left_location);
 
         tvOrderPrice = (TextView) findViewById(R.id.tv_order_price);
-        tvAliPay = (TextView) findViewById(R.id.tv_ali_pay);
-        tvWeChatPay = (TextView) findViewById(R.id.tv_wechat_pay);
+        tvAliPay = (Button) findViewById(R.id.tv_ali_pay);
+        tvWeChatPay = (Button) findViewById(R.id.tv_wechat_pay);
         if (type == 11){
             if (hotInfo != null){
                 tvOrderPrice.setText(hotInfo.getPrice());
@@ -97,7 +98,7 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
                 finish();
                 break;
             case R.id.tv_ali_pay:
-
+                aliPay();
                 break;
             case R.id.tv_wechat_pay:
 
@@ -105,9 +106,16 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
         }
     }
 
+    //{"head":{"code":"Alipay_index"},"field":{"ordersn":"80489619661756"}}
+    private void aliPay() {
+
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
     }
+
+
 }

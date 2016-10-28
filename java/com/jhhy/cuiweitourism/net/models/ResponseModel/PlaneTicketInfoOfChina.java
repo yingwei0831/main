@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class PlaneTicketInfoOfChina implements Serializable{
 
     //TODO 第四层
-    public static class PolicyDataInfo{
+    public class PolicyDataInfo implements Serializable{
         //"comment": "B2B电子客票请不要做RR，否则可能无法出票。  ",
         //"commisionMoney": 10,     //定额
         //"commisionPoint": "0.0",  //政策返点
@@ -148,7 +148,7 @@ public class PlaneTicketInfoOfChina implements Serializable{
     }
 
     //TODO 第三层 舱位信息
-    public static class SeatItemInfo implements Comparable<SeatItemInfo>, Serializable{
+    public class SeatItemInfo implements Comparable<SeatItemInfo>, Serializable{
         //"discount": 0.46, //折扣
         //"flightNo": "CZ6132", //航班号
         //"parPrice": 330,  //票面价格
@@ -297,7 +297,7 @@ public class PlaneTicketInfoOfChina implements Serializable{
 
 
     //TODO 第二层 航班详细信息
-    public static class FlightInfo implements Serializable{
+    public class FlightInfo implements Serializable{
         //"airportTax": 50,     //成人基建费
         //"arriModifyTime": "", //降落修正时间
         //"arriTime": "0930",
@@ -568,8 +568,8 @@ public class PlaneTicketInfoOfChina implements Serializable{
 
 
 
-    //TODO 第一层
-    public  static  class  FlightItemsInfo{
+    //TODO 第一层 航线信息
+    public class  FlightItemsInfo implements Serializable{
 //        "audletAirportTax": 50, //成人记减肥
 //        "audletFuelTax": 0,   //成人燃油费
 //        "basePrice": 710,     //Y舱价格
@@ -682,7 +682,7 @@ public class PlaneTicketInfoOfChina implements Serializable{
     }
 
 
-    public static class ReturnInfo{
+    public class ReturnInfo{
 //        "returnCode": "S",
 //        "flightItems": {}
 

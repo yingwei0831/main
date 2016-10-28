@@ -57,8 +57,9 @@
         android:orientation="vertical"
         >
 
-        <TextView
+        <Button
             android:id="@+id/tv_ali_pay"
+            android:background="@android:color/white"
             android:paddingTop="14dp"
             android:paddingBottom="14dp"
             android:paddingLeft="16dp"
@@ -77,8 +78,9 @@
             android:layout_height="1.2px"
             android:background="@color/colorLineGray2" />
 
-        <TextView
+        <Button
             android:id="@+id/tv_wechat_pay"
+            android:background="@android:color/white"
             android:paddingTop="14dp"
             android:paddingBottom="14dp"
             android:paddingLeft="16dp"

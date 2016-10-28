@@ -167,6 +167,9 @@ public class Consts {
     public static final int MESSAGE_ORDER_COMMENT = 1138; //取消退款
     public static final int MESSAGE_ORDER_CANCEL = 1139; //取消订单
 
+    //支付宝
+    public static final int MESSAGE_PAY_ALI = 1215; //
+
     public static final String ORDER_TYPE = "type";  //
     public static final String ORDER_PRODUCT_NAME = "productname";
     public static final String ORDER_ADD_TIME = "addtime";

@@ -125,8 +125,6 @@ public class PlaneListActivity extends BaseActionBarActivity implements  Adapter
         if (type == 2){
             dateReturn = bundle.getString("dateReturn");
         }
-
-        LogUtil.e(TAG, "fromCity = " + fromCity +", toCity = " + toCity);
     }
 
     @Override

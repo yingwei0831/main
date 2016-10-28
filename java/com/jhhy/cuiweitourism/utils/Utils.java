@@ -272,6 +272,11 @@ public class Utils {
         SimpleDateFormat formate = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
         return formate.format(date);
     }
+
+    /**
+     * 格式：yyyy-MM-dd 周六
+     * @return
+     */
      public static String getCurrentTimeYMDE(){
         Date date = new Date();
         SimpleDateFormat formate = new SimpleDateFormat("yyyy-MM-dd E");
@@ -283,7 +288,7 @@ public class Utils {
         int mi = Integer.parseInt(minute);
         int ho = mi / 60;
         mi = mi % 60;
-        return String.format("%d小时%02d分钟", ho, mi);
+        return String.format("%d时%02d分", ho, mi);
     }
 
     /**
@@ -324,7 +329,7 @@ public class Utils {
     }
 
     /**
-     * 获取日期 的星期
+     * 获取日期 的星期 2016-10-26 周三
      * @param day 2016-10-26
      * @return
      */
@@ -351,17 +356,38 @@ public class Utils {
         SimpleDateFormat format = new java.text.SimpleDateFormat("yyyy-MM-dd");
         Date beginDate= null;
         Date endDate= null;
-        long day = 0;
+        long minute = 0;
         try {
             beginDate = format.parse(beginDateStr);
             endDate = format.parse(endDateStr);
-            day = (endDate.getTime() - beginDate.getTime()) / (24*60*60*1000);
+            minute = (endDate.getTime() - beginDate.getTime()) / (24*60*60*1000);
         } catch (ParseException e) {
             e.printStackTrace();
         }
 //        System.out.println("相隔的天数="+day);
-        return day;
+        return minute;
     }
+
+    //起飞时间，到达时间
+    public static String getDiffMinute(String beginDateStr, String endDateStr){
+        SimpleDateFormat format = new java.text.SimpleDateFormat("HHmm");
+        Date beginDate= null;
+        Date endDate= null;
+        long day = 0;
+        try {
+            beginDate = format.parse(beginDateStr);
+            endDate = format.parse(endDateStr);
+            day = (endDate.getTime() - beginDate.getTime()) / (60*1000);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+//        String date1 = getTimeStr(beginDate.getTime());
+//        String date2 = getTimeStr(endDate.getTime());
+//        LogUtil.e(TAG, "date1 = " + date1 +", date2 = " + date2);
+//        LogUtil.e(TAG, "minute = " + day);
+        return getDuration(String.valueOf(day));
+    }
+
     /**
      * 获取现在时间的短时间格式
      * @return 返回短时间格式 yyyy-MM-dd

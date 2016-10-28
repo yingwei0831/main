@@ -14,16 +14,35 @@ public class PlaneTicketInternationalInfo {
         public String city;             //        "机场所在城市",
         public String cityCode;         //        "城市三字码"
 
+        @Override
+        public String toString() {
+            return "AirportInfo{" +
+                    "airportCode='" + airportCode + '\'' +
+                    ", abbreviation='" + abbreviation + '\'' +
+                    ", fullName='" + fullName + '\'' +
+                    ", city='" + city + '\'' +
+                    ", cityCode='" + cityCode + '\'' +
+                    '}';
+        }
     }
     public ArrayList<AirportInfo> P; //机场信息列表
 
 
     public static class AirlineCompanyInfo{
         public String airlineCompanyCode;//航空公司二字码"" +
-        public String CompanyName;//""航空公司名称","
+        public String companyName;//""航空公司名称","
         public String shortName;//""航空公司简称","
         public String isOnlineCheckin;//""是否有网上值机"
 
+        @Override
+        public String toString() {
+            return "AirlineCompanyInfo{" +
+                    "airlineCompanyCode='" + airlineCompanyCode + '\'' +
+                    ", CompanyName='" + companyName + '\'' +
+                    ", shortName='" + shortName + '\'' +
+                    ", isOnlineCheckin='" + isOnlineCheckin + '\'' +
+                    '}';
+        }
     }
 
     public ArrayList<AirlineCompanyInfo> A; //航空公司列表信息
@@ -37,6 +56,17 @@ public class PlaneTicketInternationalInfo {
         public String minNum;  //    最少人数,
         public String maxNum;  //    最多人数
 
+        @Override
+        public String toString() {
+            return "AircraftTypeInfo{" +
+                    "typeCode='" + typeCode + '\'' +
+                    ", typeName='" + typeName + '\'' +
+                    ", typeNum='" + typeNum + '\'' +
+                    ", airframe='" + airframe + '\'' +
+                    ", minNum='" + minNum + '\'' +
+                    ", maxNum='" + maxNum + '\'' +
+                    '}';
+        }
     }
 
     public ArrayList<AircraftTypeInfo> J; //机型列表
@@ -45,12 +75,37 @@ public class PlaneTicketInternationalInfo {
     public static class AircraftCabinInfo{
         public String levelCode;//"舱位级别代码"
         public String levelDescription;//"舱位级别描述"
+
+        @Override
+        public String toString() {
+            return "AircraftCabinInfo{" +
+                    "levelCode='" + levelCode + '\'' +
+                    ", levelDescription='" + levelDescription + '\'' +
+                    '}';
+        }
     }
 
     public ArrayList<AircraftCabinInfo> R;//舱位级别列表
 
+    public static class AirLegInfo{
+        public String LegSequenceNum; //航段序号
+        public String voyageSequenceNum;//航程序号
+    }
 
-//    "F": {
+    public ArrayList<AirLegInfo> F; // 航段列表
+
+    @Override
+    public String toString() {
+        return "PlaneTicketInternationalInfo{" +
+                "P=" + P +
+                ", A=" + A +
+                ", J=" + J +
+                ", R=" + R +
+                '}';
+    }
+
+
+    //    "F": {
 //        "航段序号(F1、F2、F3…)":{
 //            "航程序号(S1:去程;S2:返程)":[
 //            [

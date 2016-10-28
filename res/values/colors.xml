@@ -56,6 +56,11 @@
     <!--租车-->
     <color name="colorBorderCar">#FFB69B</color>
 
+    <!--飞机票-->
+    <color name="colorMeal">#EAF625</color>
+    <color name="colorPlanePrice">#EB7F06</color>
+    <color name="colorPlaneInfo">#FFCC00</color>
+
     <!--价格日历-->
     <color name="colorNumberBorder">#D8D8D8</color>
     <color name="colorCalendarSelection">#45BDEF</color>
@@ -68,7 +73,7 @@
     <color name="colorLineGray">#EAEAEA</color>
     <color name="colorLineGray2">#d1d1d1</color>
     <color name="colorLineGray3">#EFF2F7</color>
-    <color name="colorActionBar">#28CE9D</color>
+    <color name="colorActionBar">#28ce9d</color>
     <color name="colorCircleBorder">#94E7CE</color>
     <color name="colorMoneySolid">#3BB591</color>
     <color name="colorMoneySolidDark">#329879</color>

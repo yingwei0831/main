@@ -1,7 +1,11 @@
 package com.jhhy.cuiweitourism.ui;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -31,7 +35,7 @@ public class PlaneItemInfoActivity extends BaseActionBarActivity {
     private TextView tvArrivalDate; //降落日期
 
     private TextView tvTimeConsuming; //耗时
-    private TextView tvPlineInfo;   //飞机信息，餐饮
+    private TextView tvPlaneInfo;   //飞机信息，餐饮
 
     private PullToRefreshListView pullListView;
     private ListView listView;
@@ -73,16 +77,20 @@ public class PlaneItemInfoActivity extends BaseActionBarActivity {
         tvStartDate = (TextView) findViewById(R.id.tv_plane_start_date);
         tvArrivalDate = (TextView) findViewById(R.id.tv_plane_arrival_time);
         tvTimeConsuming = (TextView) findViewById(R.id.tv_plane_order_time_consuming);
-        tvPlineInfo = (TextView) findViewById(R.id.tv_plane_order_plane_date);
+        tvPlaneInfo = (TextView) findViewById(R.id.tv_plane_order_plane_date);
 
         tvFromAirport.setText(fromCity.getAirportname());
         tvToAirport.setText(toCity.getAirportname());
-        tvStartTime.setText(flight.depTime);
-        tvArrivalTime.setText(flight.arriTime);
+        tvStartTime.setText(String.format("%s:%s", flight.depTime.substring(0, 2), flight.depTime.substring(2)));
+        tvArrivalTime.setText(String.format("%s:%s", flight.arriTime.substring(0, 2), flight.arriTime.substring(2)));
         tvStartDate.setText(dateFrom);
-        tvArrivalDate.setText(flight.param1);
-        tvTimeConsuming.setText("耗时");
-        tvPlineInfo.setText(String.format("%s | %s %s", flight.flightNo, flight.planeType, flight.meal.equals("true")?"有餐饮":"无餐饮"));
+        tvArrivalDate.setText(Utils.getDateStrYMDE(flight.param1));
+        tvTimeConsuming.setText(Utils.getDiffMinute(flight.depTime, flight.arriTime));
+        String info = String.format("%s | %s %s", flight.flightNo, flight.planeType, flight.meal.equals("true")?"有餐饮":"无餐饮");
+        SpannableStringBuilder sb = new SpannableStringBuilder(info);
+        ForegroundColorSpan mealSpan = new ForegroundColorSpan(getResources().getColor(R.color.colorMeal));
+        sb.setSpan(mealSpan, info.lastIndexOf(" ") + 1, info.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        tvPlaneInfo.setText(sb);
 
         pullListView = (PullToRefreshListView) findViewById(R.id.list_plane_detail);
         //这几个刷新Label的设置
@@ -129,8 +137,33 @@ public class PlaneItemInfoActivity extends BaseActionBarActivity {
 
                 break;
             case R.id.btn_plane_ticket_reserve: //预定
-
+                reserveTicker(position);
                 break;
+        }
+    }
+
+    private void reserveTicker(int position) {
+        Intent intent = new Intent(getApplicationContext(), PlaneEditOrderActivity.class);
+        Bundle bundle = new Bundle();
+//        PlaneTicketInfoOfChina.SeatItemInfo seat = list.get(position);
+        bundle.putSerializable("flight", flight);
+        bundle.putInt("positionSeat", position);
+        bundle.putString("dateFrom", dateFrom);
+        bundle.putSerializable("fromCity", fromCity);
+        bundle.putSerializable("toCity", toCity);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, EDIT_PLANE_ORDER); //查看某趟列车
+    }
+
+    private int EDIT_PLANE_ORDER = 9632; //编辑机票订单
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (RESULT_OK == resultCode){
+            if (requestCode == EDIT_PLANE_ORDER){ //机票订单成功
+
+            }
         }
     }
 

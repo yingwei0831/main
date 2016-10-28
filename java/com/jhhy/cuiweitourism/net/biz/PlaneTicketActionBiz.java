@@ -141,6 +141,40 @@ public class PlaneTicketActionBiz extends BasicActionBiz {
                     info.J = aircrafts;
                 }
 
+
+                if(map.containsKey("A")) {
+                    LinkedTreeMap<String, LinkedTreeMap<String, ArrayList<String>>> content = (LinkedTreeMap<String, LinkedTreeMap<String, ArrayList<String>>>) map.get("A");
+                    ;
+                    Iterator iter = content.entrySet().iterator();
+                    ArrayList<PlaneTicketInternationalInfo.AirlineCompanyInfo> airlineCompanyInfos = new ArrayList<>();
+                    while (iter.hasNext()) {
+                        Map.Entry<String, ArrayList<String>> entry = (Map.Entry<String, ArrayList<String>>) iter.next();
+                        ArrayList<String> value = entry.getValue();
+                        PlaneTicketInternationalInfo.AirlineCompanyInfo airlineCompany = new PlaneTicketInternationalInfo.AirlineCompanyInfo();
+                        airlineCompany.airlineCompanyCode = entry.getKey();
+                        airlineCompany.companyName = value.get(0);
+                        airlineCompany.shortName = value.get(1);
+                        airlineCompany.isOnlineCheckin = value.get(2);
+                        airlineCompanyInfos.add(airlineCompany);
+                    }
+                    info.A = airlineCompanyInfos;
+                }
+
+                if (map.containsKey("R")){
+                    LinkedTreeMap<String, LinkedTreeMap<String, String>> content = (LinkedTreeMap<String, LinkedTreeMap<String, String>>) map.get("R");
+                    Iterator iter = content.entrySet().iterator();
+                    ArrayList<PlaneTicketInternationalInfo.AircraftCabinInfo> aircraftCabinInfos = new ArrayList<>();
+                    while (iter.hasNext()) {
+                        Map.Entry<String, String> entry = (Map.Entry<String, String>) iter.next();
+                        PlaneTicketInternationalInfo.AircraftCabinInfo aircraftCabinInfo = new PlaneTicketInternationalInfo.AircraftCabinInfo();
+                        aircraftCabinInfo.levelCode = entry.getKey();
+                        aircraftCabinInfo.levelDescription = entry.getValue();
+                        aircraftCabinInfos.add(aircraftCabinInfo);
+                    }
+                    info.R = aircraftCabinInfos;
+                }
+
+
                 GenericResponseModel<PlaneTicketInternationalInfo> returnModel = new GenericResponseModel<PlaneTicketInternationalInfo>(response.head, info);
                 this.bizCallback.onCompletion(returnModel);
 

@@ -58,7 +58,7 @@ public abstract class PlaneItemInfoListAdapter extends MyBaseAdapter implements 
 
         PlaneTicketInfoOfChina.SeatItemInfo seatItem = (PlaneTicketInfoOfChina.SeatItemInfo) getItem(i);
         holder.tvTypeSeat.setText(String.format("%s%s折", seatItem.seatMsg, seatItem.discount));
-        holder.tvTicketPrice.setText(seatItem.parPrice);
+        holder.tvTicketPrice.setText(String.format("￥%s", seatItem.parPrice));
 
         return view;
     }
