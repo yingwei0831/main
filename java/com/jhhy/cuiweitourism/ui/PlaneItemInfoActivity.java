@@ -81,7 +81,8 @@ public class PlaneItemInfoActivity extends BaseActionBarActivity {
         tvArrivalTime.setText(flight.arriTime);
         tvStartDate.setText(dateFrom);
         tvArrivalDate.setText(flight.param1);
-//        tvTimeConsuming.setText();
+        tvTimeConsuming.setText("耗时");
+        tvPlineInfo.setText(String.format("%s | %s %s", flight.flightNo, flight.planeType, flight.meal.equals("true")?"有餐饮":"无餐饮"));
 
         pullListView = (PullToRefreshListView) findViewById(R.id.list_plane_detail);
         //这几个刷新Label的设置

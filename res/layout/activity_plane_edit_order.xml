@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorLineGray3"
+    android:orientation="vertical"
+    tools:context="com.jhhy.cuiweitourism.ui.TrainEditOrderActivity">
+
+    <!--<include layout="@layout/title_simple" android:visibility="gone"/>-->
+
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/colorLineGray3">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <!--顶部当前航班信息-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorActionBar"
+                android:orientation="vertical"
+                android:paddingBottom="16dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="16dp">
+                <!--始发车站，时间，终点车站，时间，耗时-->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/tv_plane_start_station"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_toLeftOf="@+id/tv_plane_order_time_consuming_second"
+                        android:gravity="right"
+                        android:text="北京首都国际机场T3"
+                        android:textColor="@android:color/white" />
+
+                    <TextView
+                        android:id="@+id/tv_plane_order_time_consuming_second"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginLeft="6dp"
+                        android:layout_marginRight="6dp"
+                        android:drawableBottom="@mipmap/arrow_right_white"
+                        android:gravity="center"
+                        android:textColor="@android:color/white"
+                        android:visibility="invisible" />
+
+                    <TextView
+                        android:id="@+id/tv_plane_end_station"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_toRightOf="@+id/tv_plane_order_time_consuming_second"
+                        android:text="上海虹桥机场T2"
+                        android:textColor="@android:color/white" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/tv_plane_start_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginTop="6dp"
+                        android:layout_toLeftOf="@+id/tv_plane_order_time_consuming"
+                        android:gravity="right"
+                        android:paddingBottom="4dp"
+                        android:text="22:00"
+                        android:textColor="@android:color/white"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_plane_order_time_consuming"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_marginLeft="6dp"
+                        android:layout_marginRight="6dp"
+                        android:drawableBottom="@mipmap/arrow_right_white"
+                        android:gravity="center"
+                        android:text="6时2分"
+                        android:textColor="@android:color/white" />
+
+                    <TextView
+                        android:id="@+id/tv_plane_end_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginTop="6dp"
+                        android:layout_toRightOf="@+id/tv_plane_order_time_consuming"
+                        android:paddingBottom="4dp"
+                        android:text="00:35"
+                        android:textColor="@android:color/white"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/tv_plane_start_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_toLeftOf="@+id/tv_plane_order_time_consuming_third"
+                        android:gravity="right"
+                        android:text="09-07 周三"
+                        android:textColor="@android:color/white" />
+
+                    <TextView
+                        android:id="@+id/tv_plane_order_time_consuming_third"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginLeft="6dp"
+                        android:layout_marginRight="6dp"
+                        android:drawableBottom="@mipmap/arrow_right_white"
+                        android:gravity="center"
+                        android:textColor="@android:color/white"
+                        android:visibility="invisible" />
+
+                    <TextView
+                        android:id="@+id/tv_plane_arrival_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_toRightOf="@+id/tv_plane_order_time_consuming_third"
+                        android:text="09-07 周三"
+                        android:textColor="@android:color/white" />
+
+                </RelativeLayout>
+                <!--车型，车号，日期，星期-->
+
+                <TextView
+                    android:id="@+id/tv_plane_order_plane_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center_horizontal"
+                    android:text="南方航空CZ6132 | 空客A320 (窄体) 有餐饮"
+                    android:textColor="@android:color/white" />
+
+            </LinearLayout>
+
+            <!--座位类型，车费-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:gravity="center_vertical"
+                >
+
+                <TextView
+                    android:id="@+id/tv_train_seat_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="8dp"
+                    android:text="票价"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_train_cost_total"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="￥1748.00"
+                    android:textSize="18sp"
+                    android:textColor="@android:color/holo_red_light" />
+
+
+
+                <TextView
+                    android:id="@+id/tv_train_seat_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:drawablePadding="6dp"
+                    android:drawableRight="@mipmap/arrow_right_dark"
+                    android:padding="16dp"
+                    android:text="坐席"
+                    android:textSize="16sp"/>
+            </LinearLayout>
+            <!--联系人-->
+            <LinearLayout
+                android:id="@+id/layout_train_add_contacts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <!--添加联系人-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@android:color/white"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp">
+
+                    <TextView
+                        android:id="@+id/tv_train_passenger_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="成人0人"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/tv_train_add_passenger"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="right"
+                        android:paddingBottom="16dp"
+                        android:paddingTop="16dp"
+                        android:text="添加乘客"
+                        android:textColor="@color/colorActionBar"
+                        android:textSize="16sp" />
+                </LinearLayout>
+                <!--此处是动态添加乘车人-->
+                <LinearLayout
+                    android:id="@+id/layout_contacts"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@android:color/white">
+
+                </LinearLayout>
+            </LinearLayout>
+            <!--联系人-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@android:color/white"
+                android:orientation="vertical">
+                <!--联系人-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="联系人姓名："
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:text="*"
+                        android:textColor="@android:color/holo_red_light" />
+
+                    <EditText
+                        android:id="@+id/et_train_order_link_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:background="@android:color/white"
+                        android:gravity="center_vertical"
+                        android:hint="必填"
+                        android:maxLines="1"
+                        android:paddingBottom="16dp"
+                        android:paddingTop="16dp"
+                        android:textSize="14sp"
+                        android:inputType="text"/>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1.2px"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:background="@color/colorLineGray2" />
+                <!--手机号码-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/line_inner_order_contact"
+                        android:text="手机号码："
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:text="*"
+                        android:textColor="@android:color/holo_red_light" />
+
+                    <EditText
+                        android:id="@+id/et_train_link_mobile"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:background="@android:color/white"
+                        android:gravity="center_vertical"
+                        android:hint="必填"
+                        android:inputType="number"
+                        android:maxLength="11"
+                        android:maxLines="1"
+                        android:paddingBottom="16dp"
+                        android:paddingTop="16dp"
+                        android:textSize="14sp"
+                        />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorLineGray2" />
+
+    <include layout="@layout/layout_bottom_edit_order" />
+</LinearLayout>

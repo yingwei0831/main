@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.OnItemTextViewClick;
 import com.jhhy.cuiweitourism.R;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketInfoOfChina;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainTicketDetailInfo;
 
 import java.util.List;
@@ -55,6 +56,9 @@ public abstract class PlaneItemInfoListAdapter extends MyBaseAdapter implements 
             }
         });
 
+        PlaneTicketInfoOfChina.SeatItemInfo seatItem = (PlaneTicketInfoOfChina.SeatItemInfo) getItem(i);
+        holder.tvTypeSeat.setText(String.format("%s%s折", seatItem.seatMsg, seatItem.discount));
+        holder.tvTicketPrice.setText(seatItem.parPrice);
 
         return view;
     }
