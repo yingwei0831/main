@@ -89,6 +89,9 @@ public class InnerTravelMainActivity2 extends BaseActivity implements XScrollVie
 
                     }
                     break;
+                case Consts.NET_ERROR:
+                    ToastUtil.show(getApplicationContext(), "请检查网络后重试");
+                    break;
             }
         }
     };

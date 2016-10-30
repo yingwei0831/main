@@ -18,6 +18,7 @@ import com.jhhy.cuiweitourism.biz.ContactsBiz;
 import com.jhhy.cuiweitourism.moudle.UserContacts;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
+import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.just.sun.pricecalendar.ToastCommon;
 
 import java.util.ArrayList;
@@ -49,23 +50,27 @@ public class SelectCustomActivity extends BaseActivity implements View.OnClickLi
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            if (msg.arg1 == 0) {
-                ToastCommon.toastShortShow(getApplicationContext(), null, (String) msg.obj);
-            } else {
-                switch (msg.what) {
-                    case Consts.MESSAGE_GET_CONTACTS:
+            switch (msg.what) {
+                case Consts.MESSAGE_GET_CONTACTS:
+                    if (msg.arg1 == 1) {
                         listContacts = (List<UserContacts>) msg.obj;
                         if (listContacts == null || listContacts.size() == 0) {
                             ToastCommon.toastShortShow(getApplicationContext(), null, "联系人列表为空，请添加联系人");
                         } else {
                             adapter.setData(listContacts);
                         }
-                        break;
-                    case Consts.MESSAGE_DELETE_CONTACTS:
-                        getInternetData();
-                        break;
-                }
+                    } else {
+                        ToastCommon.toastShortShow(getApplicationContext(), null, (String) msg.obj);
+                    }
+                    break;
+                case Consts.MESSAGE_DELETE_CONTACTS:
+                    getInternetData();
+                    break;
+                case Consts.NET_ERROR:
+                    ToastUtil.show(getApplicationContext(), "请检查网络后重试");
+                    break;
             }
+
             LoadingIndicator.cancel();
         }
     };
@@ -83,7 +88,7 @@ public class SelectCustomActivity extends BaseActivity implements View.OnClickLi
         Bundle bundle = getIntent().getExtras();
         type = bundle.getInt("type");
         totalNumber = bundle.getInt("number");
-        if (type == 13){
+        if (type == 13) {
             if (totalNumber > 10) {
                 totalNumber = 10;
             }

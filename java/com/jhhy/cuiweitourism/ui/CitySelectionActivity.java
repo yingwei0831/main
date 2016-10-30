@@ -24,6 +24,7 @@ import com.jhhy.cuiweitourism.moudle.PhoneBean;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
+import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.jhhy.cuiweitourism.view.LetterIndexView;
 import com.jhhy.cuiweitourism.view.PinnedSectionListView;
 import com.just.sun.pricecalendar.ToastCommon;
@@ -115,6 +116,9 @@ public class CitySelectionActivity extends BaseActivity implements View.OnClickL
                         }
                     }
                     ToastCommon.toastShortShow(getApplicationContext(), null, "获取城市列表失败");
+                    break;
+                case Consts.NET_ERROR:
+                    ToastUtil.show(getApplicationContext(), "请检查网络后重试");
                     break;
                 default:
                     adapter.notifyDataSetChanged();

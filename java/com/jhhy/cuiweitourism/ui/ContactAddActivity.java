@@ -14,6 +14,7 @@ import com.jhhy.cuiweitourism.biz.ContactsBiz;
 import com.jhhy.cuiweitourism.moudle.UserContacts;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
+import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.just.sun.pricecalendar.ToastCommon;
 
 public class ContactAddActivity extends BaseActivity implements View.OnClickListener {
@@ -35,17 +36,27 @@ public class ContactAddActivity extends BaseActivity implements View.OnClickList
             super.handleMessage(msg);
             LoadingIndicator.cancel();
             commit = false;
-            if (msg.arg1 == 0) {
-                ToastCommon.toastShortShow(getApplicationContext(), null, (String) msg.obj);
-            } else {
                 switch (msg.what) {
                     case Consts.MESSAGE_ADD_CONTACTS: //添加联系人成功
+                        if (msg.arg1 == 1) {
+                            setResult(RESULT_OK);
+                            finish();
+                        }else{
+                            ToastCommon.toastShortShow(getApplicationContext(), null, (String) msg.obj);
+                        }
+                        break;
                     case Consts.MESSAGE_MODIFY_CONTACTS: //修改联系人成功
-                        setResult(RESULT_OK);
-                        finish();
+                        if (msg.arg1 == 1) {
+                            setResult(RESULT_OK);
+                            finish();
+                        }else{
+                            ToastCommon.toastShortShow(getApplicationContext(), null, (String) msg.obj);
+                        }
+                        break;
+                    case Consts.NET_ERROR:
+                        ToastUtil.show(getApplicationContext(), "请检查网络后重试");
                         break;
                 }
-            }
         }
     };
 

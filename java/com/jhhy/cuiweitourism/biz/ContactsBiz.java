@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 
+import com.jhhy.cuiweitourism.http.NetworkUtil;
 import com.jhhy.cuiweitourism.net.netcallback.HttpUtils;
 import com.jhhy.cuiweitourism.http.ResponseResult;
 import com.jhhy.cuiweitourism.moudle.UserContacts;
@@ -35,18 +36,22 @@ public class ContactsBiz {
         this.handler = handler;
     }
 
-//    {"head":{"code":"User_contacts"},"field":{"mid":"1"}}
-    public void getContacts(final String mid){
-        new Thread() {
-            @Override
-            public void run() {
-                Map<String, Object> headMap = new HashMap<>();
-                headMap.put(Consts.KEY_CODE, CODE_GET_CONTACTS);
-                Map<String, Object> fieldMap = new HashMap<>();
-                fieldMap.put(Consts.KEY_USER_USER_MID, mid);
-                HttpUtils.executeXutils(headMap, fieldMap, getContactsCallback);
-            }
-        }.start();
+    //    {"head":{"code":"User_contacts"},"field":{"mid":"1"}}
+    public void getContacts(final String mid) {
+        if (NetworkUtil.checkNetwork(context)) {
+            new Thread() {
+                @Override
+                public void run() {
+                    Map<String, Object> headMap = new HashMap<>();
+                    headMap.put(Consts.KEY_CODE, CODE_GET_CONTACTS);
+                    Map<String, Object> fieldMap = new HashMap<>();
+                    fieldMap.put(Consts.KEY_USER_USER_MID, mid);
+                    HttpUtils.executeXutils(headMap, fieldMap, getContactsCallback);
+                }
+            }.start();
+        } else {
+            handler.sendEmptyMessage(Consts.NET_ERROR);
+        }
     }
 
     private ResponseResult getContactsCallback = new ResponseResult() {
@@ -72,9 +77,9 @@ public class ContactsBiz {
 // {"id":"20","memberid":"1","linkman":"李小妹","mobile":"15252525425","idcard":"图的","cardtype":"身份证","sex":"0","passport":null}]}
                     JSONArray bodyAry = resultObj.getJSONArray(Consts.KEY_BODY);
                     List<UserContacts> listContacts = null;
-                    if (bodyAry != null && bodyAry.length() != 0){
+                    if (bodyAry != null && bodyAry.length() != 0) {
                         listContacts = new ArrayList<>();
-                        for (int i = 0; i < bodyAry.length(); i++){
+                        for (int i = 0; i < bodyAry.length(); i++) {
                             JSONObject contactsObj = bodyAry.getJSONObject(i);
                             UserContacts contacts = new UserContacts();
                             contacts.setContactsId(contactsObj.getString(Consts.KEY_ID));
@@ -97,25 +102,30 @@ public class ContactsBiz {
     };
 
     private String CODE_SAVE_CONTACTS = "User_contactsadd";
-//    {"head":{"code":"User_contactsadd"},"field":{"mid":"1","linkman":"张三","mobile":"13865826547","idcard":"211382198908205489","passport":"BJ123456"}}
-    public void saveContacts(final UserContacts contacts){
-        new Thread() {
-            @Override
-            public void run() {
-                Map<String, Object> headMap = new HashMap<>();
-                headMap.put(Consts.KEY_CODE, CODE_SAVE_CONTACTS);
-                Map<String, Object> fieldMap = new HashMap<>();
-                fieldMap.put(Consts.KEY_USER_USER_MID, contacts.getContactsMemberId());
-                fieldMap.put("linkman", contacts.getContactsName());
-                fieldMap.put(Consts.KEY_USER_MOBILE, contacts.getContactsMobile());
-                fieldMap.put("idcard", contacts.getContactsIdCard());
-                String pass = contacts.getContactsPassport();
-                if (pass != null){
-                    fieldMap.put("passport", pass);
+
+    //    {"head":{"code":"User_contactsadd"},"field":{"mid":"1","linkman":"张三","mobile":"13865826547","idcard":"211382198908205489","passport":"BJ123456"}}
+    public void saveContacts(final UserContacts contacts) {
+        if (NetworkUtil.checkNetwork(context)) {
+            new Thread() {
+                @Override
+                public void run() {
+                    Map<String, Object> headMap = new HashMap<>();
+                    headMap.put(Consts.KEY_CODE, CODE_SAVE_CONTACTS);
+                    Map<String, Object> fieldMap = new HashMap<>();
+                    fieldMap.put(Consts.KEY_USER_USER_MID, contacts.getContactsMemberId());
+                    fieldMap.put("linkman", contacts.getContactsName());
+                    fieldMap.put(Consts.KEY_USER_MOBILE, contacts.getContactsMobile());
+                    fieldMap.put("idcard", contacts.getContactsIdCard());
+                    String pass = contacts.getContactsPassport();
+                    if (pass != null) {
+                        fieldMap.put("passport", pass);
+                    }
+                    HttpUtils.executeXutils(headMap, fieldMap, addContactsCallback);
                 }
-                HttpUtils.executeXutils(headMap, fieldMap, addContactsCallback);
-            }
-        }.start();
+            }.start();
+        } else {
+            handler.sendEmptyMessage(Consts.NET_ERROR);
+        }
     }
 
     private ResponseResult addContactsCallback = new ResponseResult() {
@@ -151,26 +161,29 @@ public class ContactsBiz {
 
     private String CODE_MODIFY_CONTACTS = "User_contactseditdo";
 
-    public void modifyContacts(final UserContacts contacts){
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                Map<String, Object> headMap = new HashMap<>();
-                headMap.put(Consts.KEY_CODE, CODE_MODIFY_CONTACTS);
-                Map<String, Object> fieldMap = new HashMap<>();
-                fieldMap.put(Consts.KEY_ID, contacts.getContactsId());
-                fieldMap.put("linkman", contacts.getContactsName());
-                fieldMap.put(Consts.KEY_USER_MOBILE, contacts.getContactsMobile());
-                fieldMap.put("idcard", contacts.getContactsIdCard());
-                String pass = contacts.getContactsPassport();
-                if (pass != null){
-                    fieldMap.put("passport", pass);
+    public void modifyContacts(final UserContacts contacts) {
+        if (NetworkUtil.checkNetwork(context)) {
+            new Thread() {
+                @Override
+                public void run() {
+                    super.run();
+                    Map<String, Object> headMap = new HashMap<>();
+                    headMap.put(Consts.KEY_CODE, CODE_MODIFY_CONTACTS);
+                    Map<String, Object> fieldMap = new HashMap<>();
+                    fieldMap.put(Consts.KEY_ID, contacts.getContactsId());
+                    fieldMap.put("linkman", contacts.getContactsName());
+                    fieldMap.put(Consts.KEY_USER_MOBILE, contacts.getContactsMobile());
+                    fieldMap.put("idcard", contacts.getContactsIdCard());
+                    String pass = contacts.getContactsPassport();
+                    if (pass != null) {
+                        fieldMap.put("passport", pass);
+                    }
+                    HttpUtils.executeXutils(headMap, fieldMap, modifyContactsCallback);
                 }
-                HttpUtils.executeXutils(headMap, fieldMap, modifyContactsCallback);
-            }
-        }.start();
-
+            }.start();
+        } else {
+            handler.sendEmptyMessage(Consts.NET_ERROR);
+        }
     }
 
     private ResponseResult modifyContactsCallback = new ResponseResult() {
@@ -201,19 +214,24 @@ public class ContactsBiz {
         }
     };
 
-//    {"head":{"code":"User_contactsdel"},"field":{"id":"1"}}
+    //    {"head":{"code":"User_contactsdel"},"field":{"id":"1"}}
     private String CODE_DELETE_CONTACTS = "User_contactsdel";
-    public void deleteContacts(final String id){
-        new Thread() {
-            @Override
-            public void run() {
-                Map<String, Object> headMap = new HashMap<>();
-                headMap.put(Consts.KEY_CODE, CODE_DELETE_CONTACTS);
-                Map<String, Object> fieldMap = new HashMap<>();
-                fieldMap.put(Consts.KEY_ID, id);
-                HttpUtils.executeXutils(headMap, fieldMap, deleteContactsCallback);
-            }
-        }.start();
+
+    public void deleteContacts(final String id) {
+        if (NetworkUtil.checkNetwork(context)) {
+            new Thread() {
+                @Override
+                public void run() {
+                    Map<String, Object> headMap = new HashMap<>();
+                    headMap.put(Consts.KEY_CODE, CODE_DELETE_CONTACTS);
+                    Map<String, Object> fieldMap = new HashMap<>();
+                    fieldMap.put(Consts.KEY_ID, id);
+                    HttpUtils.executeXutils(headMap, fieldMap, deleteContactsCallback);
+                }
+            }.start();
+        } else {
+            handler.sendEmptyMessage(Consts.NET_ERROR);
+        }
     }
 
     private ResponseResult deleteContactsCallback = new ResponseResult() {

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 
+import com.jhhy.cuiweitourism.http.NetworkUtil;
 import com.jhhy.cuiweitourism.net.netcallback.HttpUtils;
 import com.jhhy.cuiweitourism.http.ResponseResult;
 import com.jhhy.cuiweitourism.moudle.ClassifyArea;
@@ -36,32 +37,40 @@ public class ClassifyBiz {
     }
 
     //{"head":{"code":"Publics_classify"},"field":{"type":"1"}} //type:1国内、2出境、102周边
-    public void getAreaList(final String type, int requestType){
+    public void getAreaList(final String type, int requestType) {
         this.requestType = requestType;
-        new Thread() {
-            @Override
-            public void run() {
-                Map<String, Object> headMap = new HashMap<>();
-                headMap.put(Consts.KEY_CODE, CODE_CLASSIFY);
-                Map<String, Object> fieldMap = new HashMap<>();
-                fieldMap.put(Consts.KEY_TYPE, type);
-                HttpUtils.executeXutils(headMap, fieldMap, classifyCallback);
-            }
-        }.start();
+        if (NetworkUtil.checkNetwork(context)) {
+            new Thread() {
+                @Override
+                public void run() {
+                    Map<String, Object> headMap = new HashMap<>();
+                    headMap.put(Consts.KEY_CODE, CODE_CLASSIFY);
+                    Map<String, Object> fieldMap = new HashMap<>();
+                    fieldMap.put(Consts.KEY_TYPE, type);
+                    HttpUtils.executeXutils(headMap, fieldMap, classifyCallback);
+                }
+            }.start();
+        } else {
+            handler.sendEmptyMessage(Consts.NET_ERROR);
+        }
     }
 
-    public void getAreaListNearBy(final String type, int requestType){
+    public void getAreaListNearBy(final String type, int requestType) {
         this.requestType = requestType;
-        new Thread() {
-            @Override
-            public void run() {
-                Map<String, Object> headMap = new HashMap<>();
-                headMap.put(Consts.KEY_CODE, CODE_CLASSIFY);
-                Map<String, Object> fieldMap = new HashMap<>();
-                fieldMap.put(Consts.KEY_TYPE, type);
-                HttpUtils.executeXutils(headMap, fieldMap, nearByCallback);
-            }
-        }.start();
+        if (NetworkUtil.checkNetwork(context)) {
+            new Thread() {
+                @Override
+                public void run() {
+                    Map<String, Object> headMap = new HashMap<>();
+                    headMap.put(Consts.KEY_CODE, CODE_CLASSIFY);
+                    Map<String, Object> fieldMap = new HashMap<>();
+                    fieldMap.put(Consts.KEY_TYPE, type);
+                    HttpUtils.executeXutils(headMap, fieldMap, nearByCallback);
+                }
+            }.start();
+        } else {
+            handler.sendEmptyMessage(Consts.NET_ERROR);
+        }
     }
 
     private ResponseResult nearByCallback = new ResponseResult() {
@@ -85,9 +94,9 @@ public class ClassifyBiz {
                     List<ClassifyArea> listArea = null;
                     JSONArray bodyAry = resultObj.getJSONArray(Consts.KEY_BODY);
                     List<String> areaNameList = new ArrayList<>(); //左侧地区名字列表
-                    if(bodyAry != null){
+                    if (bodyAry != null) {
                         listArea = new ArrayList<>(); //所有地区数据集合
-                        for (int i = 0; i < bodyAry.length(); i++){
+                        for (int i = 0; i < bodyAry.length(); i++) {
                             JSONObject areaObj = (JSONObject) bodyAry.get(i);
                             ClassifyArea area = new ClassifyArea();
                             area.setAreaId(areaObj.getString(Consts.KEY_ID));
@@ -146,9 +155,9 @@ public class ClassifyBiz {
                     List<ClassifyArea> listArea = null;
                     JSONArray bodyAry = resultObj.getJSONArray(Consts.KEY_BODY);
                     List<String> areaNameList = new ArrayList<>(); //左侧地区名字列表
-                    if(bodyAry != null){
+                    if (bodyAry != null) {
                         listArea = new ArrayList<>(); //所有地区数据集合
-                        for (int i = 0; i < bodyAry.length(); i++){
+                        for (int i = 0; i < bodyAry.length(); i++) {
                             JSONObject areaObj = (JSONObject) bodyAry.get(i);
                             ClassifyArea area = new ClassifyArea();
                             area.setAreaId(areaObj.getString(Consts.KEY_ID));
@@ -156,9 +165,9 @@ public class ClassifyBiz {
                             areaNameList.add(areaObj.getString(Consts.KEY_KIND_NAME));
                             JSONArray provinceAry = areaObj.getJSONArray(Consts.KEY_SON);
                             List<ClassifyArea> listProvince = null; //右侧省市列表
-                            if(provinceAry != null){
+                            if (provinceAry != null) {
                                 listProvince = new ArrayList<>();
-                                for (int j = 0; j < provinceAry.length(); j++){
+                                for (int j = 0; j < provinceAry.length(); j++) {
                                     JSONObject provinceObj = (JSONObject) provinceAry.get(j);
                                     ClassifyArea province = new ClassifyArea();
                                     province.setAreaId(provinceObj.getString(Consts.KEY_ID));

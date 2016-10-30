@@ -84,10 +84,10 @@ public class PayActionBiz {
                     JSONArray infoAry = resultObj.getJSONArray(Consts.KEY_BODY);
                     String info = null;
                     if (infoAry.length() != 0){
-                        for (int i = 0; i < infoAry.length(); i ++){
-                            JSONObject colObj = infoAry.getJSONObject(i);
+//                        for (int i = 0; i < infoAry.length(); i ++){
+                            JSONObject colObj = infoAry.getJSONObject(0);
                             info = colObj.getString("partner");
-                        }
+//                        }
                     }
                     msg.obj = info;
                 }

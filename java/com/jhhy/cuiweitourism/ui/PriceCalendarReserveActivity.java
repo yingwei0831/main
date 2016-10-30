@@ -60,17 +60,15 @@ public class PriceCalendarReserveActivity extends BaseActivity implements View.O
 
     private Button btnReserve; //下一步，填写订单
 
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            if (msg.arg1 == 0){
-                ToastUtil.show(getApplicationContext(), (String) msg.obj);
-            }else {
-                switch (msg.what) {
-                    case Consts.MESSAGE_CALENDAR_PRICE:
-                        List[] ary = (List[]) msg.obj;
 
+            switch (msg.what) {
+                case Consts.MESSAGE_CALENDAR_PRICE:
+                    if (msg.arg1 == 1) {
+                        List[] ary = (List[]) msg.obj;
                         List<GroupDeadline> calendarPrices = ary[0];
                         calendarPricesNew = ary[1];
 
@@ -79,10 +77,16 @@ public class PriceCalendarReserveActivity extends BaseActivity implements View.O
                         } else {
                             ToastUtil.show(getApplicationContext(), "价格日历获取为空");
                         }
-                        break;
-                }
-                LoadingIndicator.cancel();
+                    } else {
+                        ToastUtil.show(getApplicationContext(), (String) msg.obj);
+                    }
+                    break;
+                case Consts.NET_ERROR:
+                    ToastUtil.show(getApplicationContext(), "请检查网络后重试");
+                    break;
             }
+            LoadingIndicator.cancel();
+
         }
     };
     private TextView tvTitleTop;
@@ -102,12 +106,11 @@ public class PriceCalendarReserveActivity extends BaseActivity implements View.O
         Bundle bundle = getIntent().getExtras();
         id = bundle.getString("id");
         type = bundle.getInt("type");
-        if (type == 11 ){ //应该是废弃了
+        if (type == 11) { //应该是废弃了
             hotActivityDetail = (ActivityHotDetailInfo) bundle.getSerializable("hotActivityDetail");
-        } else if (type == 13){ //酒店选择住店、离店日期
+        } else if (type == 13) { //酒店选择住店、离店日期
 
-        }
-        else {
+        } else {
             detail = (TravelDetail) bundle.getSerializable("detail");
             LoadingIndicator.show(PriceCalendarReserveActivity.this, getString(R.string.http_notice));
             CalendarLineBiz biz = new CalendarLineBiz(getApplicationContext(), handler);
@@ -123,10 +126,10 @@ public class PriceCalendarReserveActivity extends BaseActivity implements View.O
         tvCurrentDate = (TextView) findViewById(R.id.tv_calendar_month);
         ivLastMonth = (ImageView) findViewById(R.id.imgv_calendar_last_month);
         ivNextMonth = (ImageView) findViewById(R.id.imgv_calendar_next_month);
-        ivReduceChild   = (ImageView) findViewById(R.id.tv_price_calendar_number_reduce     );
-        ivPlusChild     = (ImageView) findViewById(R.id.tv_price_calendar_number_add        );
-        ivReduceAdult   = (ImageView) findViewById(R.id.tv_price_calendar_number_reduce_child);
-        ivPlusAdult     = (ImageView) findViewById(R.id.tv_price_calendar_number_add_child  );
+        ivReduceChild = (ImageView) findViewById(R.id.tv_price_calendar_number_reduce);
+        ivPlusChild = (ImageView) findViewById(R.id.tv_price_calendar_number_add);
+        ivReduceAdult = (ImageView) findViewById(R.id.tv_price_calendar_number_reduce_child);
+        ivPlusAdult = (ImageView) findViewById(R.id.tv_price_calendar_number_add_child);
 
         tvCountAdult = (TextView) findViewById(R.id.tv_price_calendar_number);
         tvCountChild = (TextView) findViewById(R.id.tv_price_calendar_number_child);
@@ -136,7 +139,7 @@ public class PriceCalendarReserveActivity extends BaseActivity implements View.O
 
         layoutNumber = (LinearLayout) findViewById(R.id.layout_number);
 
-        if (type == 13){
+        if (type == 13) {
             tvTitleTop.setText(getString(R.string.hotel_select_date));
             layoutNumber.setVisibility(View.GONE);
             btnReserve.setText(getString(R.string.tab1_inner_travel_pop_commit));
@@ -151,15 +154,16 @@ public class PriceCalendarReserveActivity extends BaseActivity implements View.O
         ivLastMonth.setOnClickListener(this);
         ivNextMonth.setOnClickListener(this);
         ivReduceChild.setOnClickListener(this);
-        ivPlusChild  .setOnClickListener(this);
+        ivPlusChild.setOnClickListener(this);
         ivReduceAdult.setOnClickListener(this);
-        ivPlusAdult  .setOnClickListener(this);
-        btnReserve  .setOnClickListener(this);
+        ivPlusAdult.setOnClickListener(this);
+        btnReserve.setOnClickListener(this);
     }
+
     private int dateYear; //第一天
     private int dateMonth; //第一天
 
-//    private int priceAdult; //选择的成人价格
+    //    private int priceAdult; //选择的成人价格
 //    private int priceChild; //选择的儿童价格
     private GroupDeadline selectGroupDeadLine; //选择某天的价格日历
 
@@ -186,43 +190,43 @@ public class PriceCalendarReserveActivity extends BaseActivity implements View.O
         calendar.setOnCalendarClickListener(new KCalendar.OnCalendarClickListener() {
 
             public void onCalendarClick(int row, int col, String dateFormat) {
-                LogUtil.e(TAG, "---------------onCalendarClick-------------- row = " + row +", col = " + col);
+                LogUtil.e(TAG, "---------------onCalendarClick-------------- row = " + row + ", col = " + col);
 //                if (type == 13){
 //
 //                }else {
-                    int month = Integer.parseInt(dateFormat.substring(
-                            dateFormat.indexOf("-") + 1,
-                            dateFormat.lastIndexOf("-")));
+                int month = Integer.parseInt(dateFormat.substring(
+                        dateFormat.indexOf("-") + 1,
+                        dateFormat.lastIndexOf("-")));
 
-                    if (calendar.getCalendarMonth() - month == 1//跨年跳转
-                            || calendar.getCalendarMonth() - month == -11) {
-                        calendar.lastMonth();
+                if (calendar.getCalendarMonth() - month == 1//跨年跳转
+                        || calendar.getCalendarMonth() - month == -11) {
+                    calendar.lastMonth();
 
-                    } else if (month - calendar.getCalendarMonth() == 1 //跨年跳转
-                            || month - calendar.getCalendarMonth() == -11) {
-                        calendar.nextMonth();
+                } else if (month - calendar.getCalendarMonth() == 1 //跨年跳转
+                        || month - calendar.getCalendarMonth() == -11) {
+                    calendar.nextMonth();
 
-                    } else {
-                        selectDay = true;
-                        //date = dateFormat; //最后返回给全局 date
-                        for (int i = 0; i < calendarPricesNew.size(); i++) {
-                            String positionDate = calendarPricesNew.get(i).getDate();
+                } else {
+                    selectDay = true;
+                    //date = dateFormat; //最后返回给全局 date
+                    for (int i = 0; i < calendarPricesNew.size(); i++) {
+                        String positionDate = calendarPricesNew.get(i).getDate();
 
 //                        int stock = Integer.parseInt(calendarPrices.get(i).getStock()); //因为没有人数限制
 //                        LogUtil.e("SHF", "dateFormat--->" + dateFormat + ", date--->" + calendarPrices.get(i).getDate()); // + "peopleNumCur--->" + "stock--->" + stock);
-                            LogUtil.e("SHF", "dateFormat--->" + dateFormat + ", positionDate--->" + positionDate + ", date = " + date); // + "peopleNumCur--->" + "stock--->" + stock);
-                            if (dateFormat.equals(positionDate)) { //当前点击日期的背景色
+                        LogUtil.e("SHF", "dateFormat--->" + dateFormat + ", positionDate--->" + positionDate + ", date = " + date); // + "peopleNumCur--->" + "stock--->" + stock);
+                        if (dateFormat.equals(positionDate)) { //当前点击日期的背景色
 //                                && (stock) > 0) {
-                                //设置背景色
-                                calendar.removeAllBgColor();
-                                calendar.setCalendarDayBgColor(dateFormat, ContextCompat.getColor(getApplicationContext(), R.color.colorActionBar)); //Color.parseColor("#45BDEF")
-                                selectGroupDeadLine = calendarPricesNew.get(i);
-                            } else if (date.equals(positionDate)) { //如果是选择今天的日期
+                            //设置背景色
+                            calendar.removeAllBgColor();
+                            calendar.setCalendarDayBgColor(dateFormat, ContextCompat.getColor(getApplicationContext(), R.color.colorActionBar)); //Color.parseColor("#45BDEF")
+                            selectGroupDeadLine = calendarPricesNew.get(i);
+                        } else if (date.equals(positionDate)) { //如果是选择今天的日期
 //                                && (stock) > 0) {
 //                            ToastCommon.toastShortShow(getApplicationContext(), null, "此团期剩余空位不足，请选择其他团期或减少参团人数");
-                            }
                         }
                     }
+                }
 //                }
             }
         });
@@ -234,9 +238,9 @@ public class PriceCalendarReserveActivity extends BaseActivity implements View.O
         });
     }
 
-    public static void actionStart(Context context, Bundle bundle){
+    public static void actionStart(Context context, Bundle bundle) {
         Intent intent = new Intent(context, PriceCalendarReserveActivity.class);
-        if(bundle != null){
+        if (bundle != null) {
             intent.putExtras(bundle);
         }
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -245,7 +249,7 @@ public class PriceCalendarReserveActivity extends BaseActivity implements View.O
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.title_main_tv_left_location:
                 finish();
                 break;
@@ -276,7 +280,7 @@ public class PriceCalendarReserveActivity extends BaseActivity implements View.O
                 tvCountChild.setText(Integer.toString(countChild));
                 break;
             case R.id.btn_price_calendar_reserve:
-                if (type == 13){
+                if (type == 13) {
 
                 } else {
                     if (selectDay) {
@@ -301,10 +305,10 @@ public class PriceCalendarReserveActivity extends BaseActivity implements View.O
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_CANCELED){
+        if (resultCode == RESULT_CANCELED) {
 
-        }else{
-            if (requestCode == Consts.REQUEST_CODE_RESERVE_EDIT_ORDER){ //填写订单
+        } else {
+            if (requestCode == Consts.REQUEST_CODE_RESERVE_EDIT_ORDER) { //填写订单
 
             }
         }

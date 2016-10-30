@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 
+import com.jhhy.cuiweitourism.http.NetworkUtil;
 import com.jhhy.cuiweitourism.net.netcallback.HttpUtils;
 import com.jhhy.cuiweitourism.http.ResponseResult;
 import com.jhhy.cuiweitourism.net.utils.Consts;
@@ -30,21 +31,20 @@ public class CheckCodeBiz {
     }
 
     public void getCheckCode(final String mobile){
-        new Thread() {
-            @Override
-            public void run() {
-                try {
-                    sleep(1500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+        if (NetworkUtil.checkNetwork(context)) {
+            new Thread() {
+                @Override
+                public void run() {
+                    Map<String, Object> headMap = new HashMap<>();
+                    headMap.put(Consts.KEY_CODE, CODE_GET_CHECK_CODE);
+                    Map<String, Object> fieldMap = new HashMap<>();
+                    fieldMap.put(Consts.KEY_TEL, mobile);
+                    HttpUtils.executeXutils(headMap, fieldMap, checkCodeCallback);
                 }
-                Map<String, Object> headMap = new HashMap<>();
-                headMap.put(Consts.KEY_CODE, CODE_GET_CHECK_CODE);
-                Map<String, Object> fieldMap = new HashMap<>();
-                fieldMap.put(Consts.KEY_TEL, mobile);
-                HttpUtils.executeXutils(headMap, fieldMap, checkCodeCallback);
-            }
-        }.start();
+            }.start();
+        }else{
+            handler.sendEmptyMessage(Consts.NET_ERROR);
+        }
     }
 
     private ResponseResult checkCodeCallback = new ResponseResult() {
