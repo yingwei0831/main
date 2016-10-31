@@ -58,9 +58,9 @@
             android:drawableLeft="@mipmap/activity_login_password"
             android:background="@android:color/white"
             android:hint="@string/activity_login_password"
-            android:inputType="textVisiblePassword"
             android:drawablePadding="22dp"
             android:textSize="16sp"
+            android:inputType="textPassword"
             />
         <Button
             android:id="@+id/btn_login_login"

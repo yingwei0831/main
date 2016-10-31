@@ -159,8 +159,6 @@ public class InnerTravelCityFollowFragment extends Fragment implements AdapterVi
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
         if(id < 0)  return; //此处点击的是Header或Footer
-        ToastUtil.show(getContext(), "~~跟团游，详情~~");
-
         Travel travel = list.get((int) id);
         LogUtil.i(TAG, "position = " + position + ", id = " + id +", " + travel.getId()); //1,0  2,1
 

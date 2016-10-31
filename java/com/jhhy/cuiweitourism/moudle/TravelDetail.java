@@ -12,19 +12,22 @@ public class TravelDetail implements Serializable{
     private String id;
     private String title;
     private String price;
-    private String remark; //备注beizhu
-    private String priceInclude; //费用包含feeinclude
-    private String features; //features
-    private String transport; //交通工具
-    private String lineDetails; //线路详情xlxq
-    private String priceNotContain; //费用不含fybubh
+//    private String priceInclude; //费用包含feeinclude
+//    private String priceNotContain; //费用不含fybubh
+//    private String features; //features
+//    private String transport; //交通工具
+    private String lineDetails; //线路特色xlxq
+    private List<TravelDetailDay> tripDescribe; //行程安排xcms
+    private String standard; //标准
+    private String remark; //预订须知beizhu
     private List<String> pictureList; //图片列表piclist
     private String businessId; //商家id supplierlist
     private String needScore; //需要积分needjifen
-    private List<TravelDetailDay> tripDescribe; //行程描述xcms
     private UserComment comment;
     private String typeId;
     private String commentCount; //评论总数
+
+
 
     public TravelDetail() {
     }
@@ -61,29 +64,29 @@ public class TravelDetail implements Serializable{
         this.remark = remark;
     }
 
-    public String getPriceInclude() {
-        return priceInclude;
-    }
-
-    public void setPriceInclude(String priceInclude) {
-        this.priceInclude = priceInclude;
-    }
-
-    public String getFeatures() {
-        return features;
-    }
-
-    public void setFeatures(String features) {
-        this.features = features;
-    }
-
-    public String getTransport() {
-        return transport;
-    }
-
-    public void setTransport(String transport) {
-        this.transport = transport;
-    }
+//    public String getPriceInclude() {
+//        return priceInclude;
+//    }
+//
+//    public void setPriceInclude(String priceInclude) {
+//        this.priceInclude = priceInclude;
+//    }
+//
+//    public String getFeatures() {
+//        return features;
+//    }
+//
+//    public void setFeatures(String features) {
+//        this.features = features;
+//    }
+//
+//    public String getTransport() {
+//        return transport;
+//    }
+//
+//    public void setTransport(String transport) {
+//        this.transport = transport;
+//    }
 
     public String getLineDetails() {
         return lineDetails;
@@ -93,13 +96,13 @@ public class TravelDetail implements Serializable{
         this.lineDetails = lineDetails;
     }
 
-    public String getPriceNotContain() {
-        return priceNotContain;
-    }
-
-    public void setPriceNotContain(String priceNotContain) {
-        this.priceNotContain = priceNotContain;
-    }
+//    public String getPriceNotContain() {
+//        return priceNotContain;
+//    }
+//
+//    public void setPriceNotContain(String priceNotContain) {
+//        this.priceNotContain = priceNotContain;
+//    }
 
     public List<String> getPictureList() {
         return pictureList;
@@ -155,5 +158,32 @@ public class TravelDetail implements Serializable{
 
     public void setCommentCount(String commentCount) {
         this.commentCount = commentCount;
+    }
+
+    public String getStandard() {
+        return standard;
+    }
+
+    public void setStandard(String standard) {
+        this.standard = standard;
+    }
+
+    @Override
+    public String toString() {
+        return "TravelDetail{" +
+                "id='" + id + '\'' +
+                ", title='" + title + '\'' +
+                ", price='" + price + '\'' +
+                ", lineDetails='" + lineDetails + '\'' +
+                ", tripDescribe=" + tripDescribe +
+                ", standard='" + standard + '\'' +
+                ", remark='" + remark + '\'' +
+                ", pictureList=" + pictureList +
+                ", businessId='" + businessId + '\'' +
+                ", needScore='" + needScore + '\'' +
+                ", comment=" + comment +
+                ", typeId='" + typeId + '\'' +
+                ", commentCount='" + commentCount + '\'' +
+                '}';
     }
 }

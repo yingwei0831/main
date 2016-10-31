@@ -114,7 +114,7 @@
                 android:layout_height="wrap_content"
                 android:drawableLeft="@mipmap/icon_safe"
                 android:drawablePadding="2dp"
-                android:paddingLeft="18dp"
+                android:paddingLeft="8dp"
                 android:text="安全交易"
                 android:textSize="12sp" />
 
@@ -123,7 +123,7 @@
                 android:layout_height="wrap_content"
                 android:drawableLeft="@mipmap/icon_trueth"
                 android:drawablePadding="2dp"
-                android:paddingLeft="18dp"
+                android:paddingLeft="8dp"
                 android:text="如实描述"
                 android:textSize="12sp" />
 
@@ -132,7 +132,7 @@
                 android:layout_height="wrap_content"
                 android:drawableLeft="@mipmap/icon_guarantee"
                 android:drawablePadding="2dp"
-                android:paddingLeft="18dp"
+                android:paddingLeft="8dp"
                 android:text="出行保障"
                 android:textSize="12sp" />
 
@@ -163,7 +163,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/colorLineGray" />
-
+        <!--评论-->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -329,8 +329,9 @@
                 android:layout_height="4dp"
                 android:background="@color/colorBgIndicator" />
         </LinearLayout>
+
     </LinearLayout>
-    <!--商品详情-->
+    <!--线路特写-->
     <WebView
         android:id="@+id/webview_inner_travel_detail_content_product"
         android:layout_width="match_parent"
@@ -343,57 +344,7 @@
         android:layout_height="10dp"
         android:background="@color/colorLineGray2" />
 
-    <!--费用说明-->
-    <LinearLayout
-        android:id="@+id/layout_travel_price"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:orientation="vertical"
-        android:padding="16dp">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="费用说明"
-            android:textColor="@android:color/black"
-            android:textSize="16sp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="费用包含"
-            android:textColor="@android:color/black" />
-
-        <TextView
-            android:id="@+id/tv_travel_price_include"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:text="我是费用包含" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="费用不包含"
-            android:textColor="@android:color/black" />
-
-        <TextView
-            android:id="@+id/tv_travel_price_not_include"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:text="我是费用不包含" />
-
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:background="@color/colorLineGray2" />
-    <!--行程描述-->
+    <!--行程安排-->
     <LinearLayout
         android:id="@+id/layout_travel_describe"
         android:layout_width="match_parent"
@@ -412,6 +363,59 @@
 
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@color/colorLineGray2" />
+
+    <!--标准-->
+    <LinearLayout
+        android:id="@+id/layout_travel_price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="标准"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+
+        <TextView
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="费用包含"
+            android:textColor="@android:color/black" />
+
+        <TextView
+            android:id="@+id/tv_travel_price_include"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:text="我是空标准" />
+
+        <TextView
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="费用不包含"
+            android:textColor="@android:color/black" />
+
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/tv_travel_price_not_include"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:text="我是费用不包含" />
+
+    </LinearLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="10dp"

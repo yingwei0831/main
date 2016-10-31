@@ -126,15 +126,15 @@ public class PopupWindowSearchLine extends PopupWindow implements OnClickListene
         }
         if (dayPosition != null && dayPosition.length() != 0){
             selectionDays = Integer.parseInt(dayPosition);
-            day = secondListDaysS.get(selectionDays);
+            if (selectionDays != -1){
+                day = secondListDaysS.get(selectionDays);
+            }
         }else{
             selectionDays = -1;
         }
+        selectionPrice = pricePosition;
         if (pricePosition != -1) {
-            selectionPrice = pricePosition;
             price = secondListPriceS.get(selectionPrice).getPriceLower() + "," + secondListPriceS.get(selectionPrice).getPriceHigh();
-        }else{
-            selectionPrice = -1;
         }
 
         if (earlyTime != null && earlyTime.length() != 0){
@@ -360,7 +360,7 @@ public class PopupWindowSearchLine extends PopupWindow implements OnClickListene
         laterTime = "";
         tvEarlyTime.setText(earlyTime);
         tvLaterTime.setText(laterTime);
-        LogUtil.e(TAG, "清空--------------- earlyTime = " + earlyTime + ", laterTime = " + laterTime);
+        LogUtil.e(TAG, "清空--------------- earlyTime = " + earlyTime + ", laterTime = " + laterTime+", selectionPrice = " + selectionPrice +", ------" + firstAdapter.getCurrentPositionItem());
 
         if (mActivity.getResources().getString(R.string.tab1_inner_travel_sort_default).equals(firstAdapter.getCurrentPositionItem())) { //弹出排序选择
             selectionSort = 0;

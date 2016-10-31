@@ -72,7 +72,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
         tvToRegister = (TextView) findViewById(R.id.tv_login_to_register);
         tvToForgetPassword = (TextView) findViewById(R.id.tv_login_to_forget_password);
-        etUserName.setText("15210656918");
+        etUserName.setText("15210656919");
         etPassword.setText("admin123");
     }
 

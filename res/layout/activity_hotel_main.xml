@@ -43,7 +43,7 @@
             android:layout_weight="1"
             android:background="@drawable/bg_tv_border_cornet_dark"
             android:drawablePadding="8dp"
-            android:drawableTop="@mipmap/icon_location_gray"
+            android:drawableTop="@mipmap/icon_location_green"
             android:gravity="center_horizontal"
             android:padding="6dp"
             android:text="我的位置"

@@ -95,174 +95,177 @@
                     android:drawablePadding="10dp"
                     />
             </LinearLayout>
-
-            <RelativeLayout
-                android:visibility="visible"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:background="@android:color/white">
-
-                <TextView
-                    android:id="@+id/tv_inner_travel_edit_order_contact_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="16dp"
-                    android:paddingLeft="16dp"
-                    android:paddingTop="16dp"
-                    android:text="联系人姓名："
-                    android:textColor="@android:color/black" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBottom="@+id/tv_inner_travel_edit_order_contact_name"
-                    android:layout_alignTop="@+id/tv_inner_travel_edit_order_contact_name"
-                    android:layout_toRightOf="@+id/tv_inner_travel_edit_order_contact_name"
-                    android:gravity="center_vertical"
-                    android:layout_centerVertical="true"
-                    android:text="*"
-                    android:textColor="@android:color/holo_red_light" />
-
-                <EditText
-                    android:id="@+id/et_travel_edit_order_contact_name"
+                android:background="@android:color/white"
+                android:orientation="vertical">
+                <!--联系人-->
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignBottom="@+id/tv_inner_travel_edit_order_contact_name"
-                    android:layout_alignTop="@+id/tv_inner_travel_edit_order_contact_name"
-                    android:layout_marginLeft="8dp"
-                    android:layout_toRightOf="@+id/tv_inner_travel_edit_order_contact_name"
-                    android:background="@android:color/white"
-                    android:gravity="center_vertical"
-                    android:hint="必填"
-                    android:maxLines="1"
-                    android:textSize="14sp"
-                    android:layout_centerVertical="true"/>
+                    android:orientation="horizontal"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="联系人姓名："
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:text="*"
+                        android:textColor="@android:color/holo_red_light" />
+
+                    <EditText
+                        android:id="@+id/et_travel_edit_order_contact_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:background="@android:color/white"
+                        android:gravity="center_vertical"
+                        android:hint="必填"
+                        android:maxLines="1"
+                        android:paddingBottom="16dp"
+                        android:paddingTop="16dp"
+                        android:textSize="14sp"
+                        android:inputType="text"/>
+                </LinearLayout>
 
                 <View
-                    android:id="@+id/line_inner_order_contact"
                     android:layout_width="match_parent"
                     android:layout_height="1.2px"
-                    android:layout_below="@+id/tv_inner_travel_edit_order_contact_name"
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
                     android:background="@color/colorLineGray2" />
-
-                <TextView
-                    android:id="@+id/tv_inner_travel_edit_order_contact_tell"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/line_inner_order_contact"
-                    android:paddingBottom="16dp"
-                    android:paddingLeft="16dp"
-                    android:paddingTop="16dp"
-                    android:text="手机号码："
-                    android:textColor="@android:color/black" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBottom="@+id/tv_inner_travel_edit_order_contact_tell"
-                    android:layout_alignTop="@+id/tv_inner_travel_edit_order_contact_tell"
-                    android:layout_toRightOf="@+id/tv_inner_travel_edit_order_contact_tell"
-                    android:gravity="center_vertical"
-                    android:text="*"
-                    android:textColor="@android:color/holo_red_light" />
-
-                <EditText
-                    android:id="@+id/et_travel_edit_order_contact_tel"
+                <!--手机号码-->
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignBottom="@+id/tv_inner_travel_edit_order_contact_tell"
-                    android:layout_alignTop="@+id/tv_inner_travel_edit_order_contact_tell"
-                    android:layout_marginLeft="8dp"
-                    android:layout_toRightOf="@+id/tv_inner_travel_edit_order_contact_tell"
-                    android:background="@android:color/white"
-                    android:gravity="center_vertical"
-                    android:hint="必填"
-                    android:maxLines="1"
-                    android:textSize="14sp"
-                    android:inputType="number"
-                    android:maxLength="11"/>
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp">
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/line_inner_order_contact"
+                        android:text="手机号码："
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:text="*"
+                        android:textColor="@android:color/holo_red_light" />
+
+                    <EditText
+                        android:id="@+id/et_travel_edit_order_contact_tel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:background="@android:color/white"
+                        android:gravity="center_vertical"
+                        android:hint="必填"
+                        android:inputType="number"
+                        android:maxLength="11"
+                        android:maxLines="1"
+                        android:paddingBottom="16dp"
+                        android:paddingTop="16dp"
+                        android:textSize="14sp"
+                        />
+                </LinearLayout>
                 <View
-                    android:id="@+id/line_inner_order_mail"
                     android:layout_width="match_parent"
                     android:layout_height="1.2px"
-                    android:layout_below="@+id/tv_inner_travel_edit_order_contact_tell"
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
                     android:background="@color/colorLineGray2" />
-
-                <TextView
-                    android:id="@+id/tv_inner_travel_edit_order_contact_mail"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/line_inner_order_mail"
-                    android:paddingBottom="16dp"
-                    android:paddingLeft="16dp"
-                    android:paddingTop="16dp"
-                    android:text="邮箱："
-                    android:textColor="@android:color/black" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBottom="@+id/tv_inner_travel_edit_order_contact_mail"
-                    android:layout_alignTop="@+id/tv_inner_travel_edit_order_contact_mail"
-                    android:layout_toRightOf="@+id/tv_inner_travel_edit_order_contact_mail"
-                    android:gravity="center_vertical"
-                    android:text="*"
-                    android:textColor="@android:color/holo_red_light" />
-
-                <EditText
-                    android:id="@+id/et_travel_edit_order_contact_mail"
+                <!--邮箱-->
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignBottom="@+id/tv_inner_travel_edit_order_contact_mail"
-                    android:layout_alignTop="@+id/tv_inner_travel_edit_order_contact_mail"
-                    android:layout_marginLeft="8dp"
-                    android:layout_toRightOf="@+id/tv_inner_travel_edit_order_contact_mail"
-                    android:background="@android:color/white"
-                    android:gravity="center_vertical"
-                    android:hint="必填，接收合同信息"
-                    android:maxLines="1"
-                    android:textSize="14sp"
-                    />
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp">
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/line_inner_order_contact"
+                        android:text="邮箱："
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:text="*"
+                        android:textColor="@android:color/holo_red_light" />
+
+                    <EditText
+                        android:id="@+id/et_travel_edit_order_contact_mail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:background="@android:color/white"
+                        android:gravity="center_vertical"
+                        android:hint="必填"
+                        android:inputType="number"
+                        android:maxLength="11"
+                        android:maxLines="1"
+                        android:paddingBottom="16dp"
+                        android:paddingTop="16dp"
+                        android:textSize="14sp"
+                        />
+                </LinearLayout>
                 <View
-                    android:id="@+id/line_inner_order_leaving"
                     android:layout_width="match_parent"
                     android:layout_height="1.2px"
-                    android:layout_below="@+id/tv_inner_travel_edit_order_contact_mail"
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
                     android:background="@color/colorLineGray2" />
-
-                <TextView
-                    android:id="@+id/tv_inner_travel_edit_order_contact_leaving"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/line_inner_order_leaving"
-                    android:paddingBottom="16dp"
-                    android:paddingLeft="16dp"
-                    android:paddingTop="16dp"
-                    android:text="订单留言："
-                    android:textColor="@android:color/black" />
-
-                <EditText
-                    android:id="@+id/et_travel_edit_order_contact_remark"
+                <!--订单留言-->
+                <LinearLayout
+                    android:visibility="visible"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignBottom="@+id/tv_inner_travel_edit_order_contact_leaving"
-                    android:layout_alignTop="@+id/tv_inner_travel_edit_order_contact_leaving"
-                    android:layout_marginLeft="8dp"
-                    android:layout_toRightOf="@+id/tv_inner_travel_edit_order_contact_leaving"
                     android:background="@android:color/white"
-                    android:gravity="center_vertical"
-                    android:hint="选填"
-                    android:textSize="14sp" />
-            </RelativeLayout>
+                    android:paddingLeft="16dp">
+
+                    <TextView
+                        android:id="@+id/tv_inner_travel_edit_order_contact_leaving"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/line_inner_order_leaving"
+                        android:text="订单留言："
+                        android:textColor="@android:color/black" />
+
+                    <EditText
+                        android:id="@+id/et_travel_edit_order_contact_remark"
+                        android:paddingBottom="16dp"
+                        android:paddingTop="16dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/tv_inner_travel_edit_order_contact_leaving"
+                        android:layout_alignTop="@+id/tv_inner_travel_edit_order_contact_leaving"
+                        android:layout_marginLeft="8dp"
+                        android:layout_toRightOf="@+id/tv_inner_travel_edit_order_contact_leaving"
+                        android:background="@android:color/white"
+                        android:gravity="center_vertical"
+                        android:hint="选填"
+                        android:textSize="14sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+
 
             <LinearLayout
                 android:layout_width="match_parent"

@@ -195,6 +195,12 @@ public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.I
         LogUtil.e(TAG, "===== onResume =====");
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        handler.removeCallbacks(runnable);
+    }
+
     private void getInternetData() {
         imageUrls.add("drawable://" + R.drawable.ic_empty);
         //广告位
@@ -374,6 +380,9 @@ public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.I
         }
         addIndicator(infos.size());
         setIndicator(0);
+        if (listsBanner.size() <= 1){
+            return;
+        }
         handler.postDelayed(runnable, Consts.TIME_PERIOD);
     }
 
@@ -445,8 +454,11 @@ public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.I
 
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        if (infos.size() <= 1){
+            return false;
+        }
         if(e1.getX() - e2.getX() > FLING_MIN_DISTANCE &&
-                Math.abs(velocityX) > FLING_MIN_VELOCITY){
+            Math.abs(velocityX) > FLING_MIN_VELOCITY){
 //            Log.i(TAG, "==============开始向左滑动了================");
             showNextView();
             releaseTime = System.currentTimeMillis();

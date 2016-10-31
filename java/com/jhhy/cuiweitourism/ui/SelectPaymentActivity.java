@@ -18,9 +18,13 @@ import com.jhhy.cuiweitourism.net.models.ResponseModel.ActivityOrderInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelOrderInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainTicketOrderInfo;
 import com.jhhy.cuiweitourism.net.utils.Consts;
+import com.jhhy.cuiweitourism.net.utils.LogUtil;
+import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
 
 public class SelectPaymentActivity extends BaseActivity implements View.OnClickListener {
+
+    private String TAG = SelectPaymentActivity.class.getSimpleName();
 
     private static final int SDK_PAY_FLAG = 8881; //阿里支付
     private TextView tvTitleTop;
@@ -50,12 +54,20 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
                         startPay(partner);
                     }else if (msg.arg1 == 0){
                         ToastUtil.show(getApplicationContext(), String.valueOf(msg.obj));
+                        LoadingIndicator.cancel();
                     }
                     break;
                 case Consts.NET_ERROR:
                     ToastUtil.show(getApplicationContext(), "请检查网络后重试");
+                    LoadingIndicator.cancel();
+                    break;
+                case -1:
+                    ToastUtil.show(getApplicationContext(), "数据解析异常，请重试");
+                    LoadingIndicator.cancel();
                     break;
                 case SDK_PAY_FLAG:
+                    LoadingIndicator.cancel();
+                    LogUtil.e(TAG, "result = " + String.valueOf(msg.obj));
 //                    Result result = new Result((String) msg.obj);
 //                    ToastUtil.show(SelectPaymentActivity.this, result.getResult();
                     break;
@@ -160,6 +172,7 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
 
     //{"head":{"code":"Alipay_index"},"field":{"ordersn":"80489619661756"}}
     private void aliPay() {
+        LoadingIndicator.show(SelectPaymentActivity.this, getString(R.string.http_notice));
         PayActionBiz biz = new PayActionBiz(getApplicationContext(), handler);
         biz.getPayInfo(ordersn);
     }

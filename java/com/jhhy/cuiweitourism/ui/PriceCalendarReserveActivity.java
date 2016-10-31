@@ -110,11 +110,11 @@ public class PriceCalendarReserveActivity extends BaseActivity implements View.O
             hotActivityDetail = (ActivityHotDetailInfo) bundle.getSerializable("hotActivityDetail");
         } else if (type == 13) { //酒店选择住店、离店日期
 
-        } else {
+        } else { //线路日历
             detail = (TravelDetail) bundle.getSerializable("detail");
             LoadingIndicator.show(PriceCalendarReserveActivity.this, getString(R.string.http_notice));
             CalendarLineBiz biz = new CalendarLineBiz(getApplicationContext(), handler);
-            biz.getCalendarLine("14");
+            biz.getCalendarLine(detail.getId()); //14
         }
     }
 

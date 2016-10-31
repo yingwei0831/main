@@ -85,13 +85,13 @@ public class PayActionBiz {
                     String info = null;
                     if (infoAry.length() != 0){
 //                        for (int i = 0; i < infoAry.length(); i ++){
-                            JSONObject colObj = infoAry.getJSONObject(0);
-                            info = colObj.getString("partner");
+                            info = infoAry.getString(0);
 //                        }
                     }
                     msg.obj = info;
                 }
             } catch (JSONException e) {
+                msg.arg1 = -1;
                 e.printStackTrace();
             } finally {
                 handler.sendMessage(msg);

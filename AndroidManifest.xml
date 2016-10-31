@@ -509,6 +509,9 @@
             android:screenOrientation="portrait"
             android:theme="@style/ActionBarTheme" />
 
+        <activity android:name=".ui.ReGeocoderActivity"
+            android:screenOrientation="portrait" />
+
         <!-- ShareSDK 2、注意： tencent后面的appid要保持和您配置的QQ的appid一致 -->
         <activity
             android:name="com.mob.tools.MobUIShell"
@@ -516,6 +519,9 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden|adjustResize">
+
+            <meta-data android:name="AuthorizeAdapter" android:value="cn.sharesdk.onekeyshare.ShareSDKLogoAdapter"/>
+
             <intent-filter>
                 <data android:scheme="tencent100371282" />
 

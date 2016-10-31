@@ -16,7 +16,6 @@
             android:layout_width="match_parent"
             android:layout_height="200dp">
 
-            <include layout="@layout/search_bar"/>
             <ViewFlipper
                 android:id="@+id/viewflipper"
                 android:layout_width="match_parent"
@@ -32,6 +31,8 @@
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:paddingBottom="2dp"/>
+
+            <include layout="@layout/search_bar"/>
 
         </FrameLayout>
 
@@ -157,7 +158,7 @@
             android:drawablePadding="6dp"
             android:foregroundGravity="center"
             android:gravity="left|center_vertical"
-            android:paddingLeft="18dp"
+            android:paddingLeft="16dp"
             android:text="@string/tab1_shop"
             android:textSize="16sp" />
 
@@ -175,7 +176,7 @@
             android:drawablePadding="6dp"
             android:foregroundGravity="center"
             android:gravity="left|center_vertical"
-            android:paddingLeft="16dp"
+            android:paddingLeft="14dp"
             android:text="@string/tab1_insurance"
             android:textSize="16sp" />
     </LinearLayout>

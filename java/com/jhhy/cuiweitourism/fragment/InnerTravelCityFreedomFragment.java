@@ -152,7 +152,6 @@ public class InnerTravelCityFreedomFragment extends Fragment implements AdapterV
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
         LogUtil.i(TAG, "position = " + position + ", id = " + id +", " + list.get((int) id).getId());
-        ToastUtil.show(getContext(), "~~自由游，详情~~");
         if(id < 0)  return; //此处点击的是Header或Footer
 
         Bundle bundle = new Bundle();

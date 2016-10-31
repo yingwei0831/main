@@ -16,6 +16,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -204,6 +205,14 @@ public class InnerActivity4 extends AppCompatActivity  implements ISlideCallback
         getData();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //轮播全部取消
+        handler.removeCallbacks(runnable);
+        handler = null;
+    }
+
     private void getInternetData() {
         imageUrls.add("drawable://" + R.drawable.ic_empty);
         //广告位
@@ -295,6 +304,11 @@ public class InnerActivity4 extends AppCompatActivity  implements ISlideCallback
         content = LayoutInflater.from(getApplicationContext()).inflate(R.layout.layout_inner_travel_top, null);
 
         if (content != null){
+            View ivSearchLeft = content.findViewById(R.id.iv_title_search_left);
+            ivSearchLeft.setVisibility(View.GONE);
+            EditText etSearchText = (EditText) content.findViewById(R.id.iv_title_search_left);
+            etSearchText.setHint("输入你想去的地方");
+
             gvHotDestination = (MyGridView) content.findViewById(R.id.gv_inner_travel_main_hot);
             tvHotRecommendExchange = (TextView) content.findViewById(R.id.tv_hot_recommend_exchange);
             gvHotRecommend = (MyGridView) content.findViewById(R.id.gv_inner_travel_main_recommend);

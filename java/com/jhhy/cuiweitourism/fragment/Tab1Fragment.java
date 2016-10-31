@@ -138,7 +138,7 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
     private TextView tvIndicatorInnerBottom;
     private TextView tvIndicatorOutsideBottom;
     private TextView tvIndicatorNearbyBottom;
-    private int indicator = -1;
+//    private int indicator = -1;
 
     private Handler handler = new Handler(){
         @Override
@@ -313,7 +313,7 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
         getBannerData();
         setupView(view);
         addListener();
-//        getData(0);
+        getData(0);
         return view;
     }
 
@@ -584,7 +584,7 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
             case R.id.tv_tab1_recommend_all_bottom: //Indicator 全部
             case R.id.tv_tab1_indicator_all_top:
 //                gridViewRecommend.setSelection(0);
-                LogUtil.e(TAG, "indicator = " + indicator);
+                LogUtil.e(TAG, "indicator = 全部");
 //                if(0 == indicator)  return;
 //                indicator = 0;
                 changeIndicator(0);
@@ -596,7 +596,7 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
                 break;
             case R.id.tv_tab1_recommend_inner_bottom: //Indicator 国内游
             case R.id.tv_tab1_indicator_inner_top:
-                LogUtil.e(TAG, "indicator = " + indicator);
+                LogUtil.e(TAG, "indicator = 国内游");
 //                if(1 == indicator)  return;
 //                indicator = 1;
                 changeIndicator(1);
@@ -608,7 +608,7 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
                 break;
             case R.id.tv_tab1_recommend_outside_bottom: //Indicator 国外游
             case  R.id.tv_tab1_indicator_outside_top:
-                LogUtil.e(TAG, "indicator = " + indicator);
+                LogUtil.e(TAG, "indicator = 国外游");
                 changeIndicator(2);
                 if(listsOutside != null && listsOutside.size() != 0){
                     adapter.setData(listsOutside);
@@ -620,7 +620,7 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
                 break;
             case R.id.tv_tab1_recommend_nearby_bottom: //Indicator 周边游
             case R.id.tv_tab1_indicator_nearby_top:
-                LogUtil.e(TAG, "indicator = " + indicator);
+                LogUtil.e(TAG, "indicator = 周边游");
 //                if(3 == indicator)  return;
 //                indicator = 3;
                 changeIndicator(3);
@@ -741,8 +741,8 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
     }
     @Override
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-        LogUtil.i(TAG, "++++++++ onScroll +++++++++");
-        LogUtil.i(TAG, "distanceX = " + distanceX + ", distanceY = " + distanceY);
+//        LogUtil.e(TAG, "++++++++ onScroll +++++++++");
+//        LogUtil.e(TAG, "distanceX = " + distanceX + ", distanceY = " + distanceY);
         return false;
     }
     @Override
@@ -769,10 +769,16 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
 
     private void resetTime(int type){
         if (type == 1){
+            if (infos.size() <= 1){
+                return;
+            }
 //            releaseTime = System.currentTimeMillis();
             handler.removeCallbacks(runnable);
             handler.postDelayed(runnable, Consts.TIME_PERIOD);
         }else if (type == 2){
+            if (infosBottom.size() <= 1){
+                return;
+            }
 //            releaseTimeBottom = System.currentTimeMillis();
             handler.removeCallbacks(runnableBottom);
             handler.postDelayed(runnableBottom, Consts.TIME_PERIOD);
@@ -952,9 +958,10 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
             }
         }
     }
+
     private void refreshViewBanner(ArrayList<ForeEndAdvertisingPositionInfo> array) {
-        ArrayList<ADInfo> infosNew = new ArrayList<>();
         // 顶部Banner
+        ArrayList<ADInfo> infosNew = new ArrayList<>();
         ForeEndAdvertisingPositionInfo item = array.get(0);
         ArrayList<String> picList = item.getT();
         ArrayList<String> linkList = item.getL();
@@ -968,7 +975,6 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
 
         //底部Banner
         ArrayList<ADInfo> infosNewBottom = new ArrayList<>();
-        // 顶部Banner
         ForeEndAdvertisingPositionInfo itemBottom = array.get(1);
         ArrayList<String> picListBottom = itemBottom.getT();
         ArrayList<String> linkListBottom = itemBottom.getL();
@@ -980,7 +986,6 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
             infosNewBottom.add(ad);
         }
         updateBanner(2, infosNewBottom);
-
     }
 
     private void updateBanner(int type, ArrayList<ADInfo> listsBanner) {
@@ -992,6 +997,9 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
             }
             addIndicator(type, infos.size());
             setIndicator(type, 0);
+            if (listsBanner.size() <= 1){
+                return;
+            }
             handler.postDelayed(runnable, Consts.TIME_PERIOD);
         }else if (type == 2){
             infosBottom = listsBanner;
@@ -1001,6 +1009,9 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
             }
             addIndicator(type, infosBottom.size());
             setIndicator(type, 0);
+            if (listsBanner.size() <= 1){
+                return;
+            }
             handler.postDelayed(runnableBottom, Consts.TIME_PERIOD);
         }
     }

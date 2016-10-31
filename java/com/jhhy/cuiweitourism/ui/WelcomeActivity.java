@@ -1,6 +1,8 @@
 package com.jhhy.cuiweitourism.ui;
 
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
@@ -14,6 +16,10 @@ import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.utils.SharedPreferencesUtils;
 import com.just.sun.pricecalendar.ToastCommon;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class WelcomeActivity extends BaseActivity {
 
@@ -45,6 +51,7 @@ public class WelcomeActivity extends BaseActivity {
         }else{
             ToastCommon.toastShortShow(getApplicationContext(), null, getString(R.string.Network_error));
         }
+        initImagePath();
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -52,7 +59,6 @@ public class WelcomeActivity extends BaseActivity {
             }
         };
         handler.postDelayed(runnable, 2000); // 2秒钟之后
-
     }
 
     private void checkFirstIn() {
@@ -96,6 +102,44 @@ public class WelcomeActivity extends BaseActivity {
             return true;
         } else {
             return false;
+        }
+    }
+
+    private final String FILE_NAME = "/app_logo.png";
+    public static String TEST_IMAGE;
+
+    private void initImagePath() {
+        FileOutputStream fos = null;
+        try {
+//			if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())
+//					&& Environment.getExternalStorageDirectory().exists()) {
+//				TEST_IMAGE = Environment.getExternalStorageDirectory().getAbsolutePath() + FILE_NAME;
+//			} else {
+            TEST_IMAGE = getApplication().getFilesDir().getAbsolutePath() + FILE_NAME;
+//			}
+            File file = new File(TEST_IMAGE);
+            // 创建图片文件夹
+            if (!file.exists()) {
+                if(file.createNewFile()){
+                    Bitmap pic = BitmapFactory.decodeResource(getResources(), R.mipmap.app_logo);
+                    fos = new FileOutputStream(file);
+                    pic.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                    fos.flush();
+                    fos.close();
+                }
+            }
+        } catch (Throwable t) {
+            t.printStackTrace();
+            TEST_IMAGE = null;
+        } finally {
+            try {
+                if(fos != null){
+                    fos.flush();
+                    fos.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

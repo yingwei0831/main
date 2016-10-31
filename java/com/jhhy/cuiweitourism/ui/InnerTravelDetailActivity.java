@@ -48,6 +48,9 @@ import com.markmao.pulltorefresh.widght.XScrollView;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.sharesdk.framework.ShareSDK;
+import cn.sharesdk.onekeyshare.OnekeyShare;
+
 public class InnerTravelDetailActivity extends BaseActivity implements GestureDetector.OnGestureListener, XScrollView.IXScrollViewListener, View.OnClickListener, AdapterView.OnItemClickListener, View.OnTouchListener {
 
     private String TAG = getClass().getSimpleName();
@@ -103,7 +106,7 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
     private int bottom; //底部控件在屏幕的起始高度
     private boolean click; //是否是点击indicator
 
-    private String[] titles = new String[]{"商品详情", "费用说明", "行程描述", "预订须知"};
+//    private String[] titles = new String[]{"线路特色", "行程安排", "标准", "预订须知"};
 
 //    private String jsonString = "\"<div class=\\\"para\\\" label-module=\\\"para\\\" style=\\\"font-size: 14px; word-wrap: break-word; color: rgb(51, 51, 51); margin-bottom: 15px; text-indent: 28px; line-height: 24px; zoom: 1; font-family: arial, 宋体, sans-serif; white-space: normal; background-color: rgb(255, 255, 255);\\\">颐和园，中国<a target=\\\"_blank\\\" href=\\\"http://baike.baidu.com/subview/5405/13482963.htm\\\" data-lemmaid=\\\"175141\\\" style=\\\"color: rgb(19, 110, 194); text-decoration: none;\\\">清朝</a>时期<a target=\\\"_blank\\\" href=\\\"http://baike.baidu.com/view/646836.htm\\\" style=\\\"color: rgb(19, 110, 194); text-decoration: none;\\\">皇家园林</a>，前身为<a target=\\\"_blank\\\" href=\\\"http://baike.baidu.com/view/1476143.htm\\\" style=\\\"color: rgb(19, 110, 194); text-decoration: none;\\\">清漪园</a>，坐落在北京西郊，距城区十五公里，占地约二百九十公顷，与<a target=\\\"_blank\\\" href=\\\"http://baike.baidu.com/subview/2476/5824630.htm\\\" data-lemmaid=\\\"9328\\\" style=\\\"color: rgb(19, 110, 194); text-decoration: none;\\\">圆明园</a>毗邻。它是以<a target=\\\"_blank\\\" href=\\\"http://baike.baidu.com/view/188034.htm\\\" style=\\\"color: rgb(19, 110, 194); text-decoration: none;\\\">昆明湖</a>、<a target=\\\"_blank\\\" href=\\\"http://baike.baidu.com/view/956201.htm\\\" style=\\\"color: rgb(19, 110, 194); text-decoration: none;\\\">万寿山</a>为基址，以杭州<a target=\\\"_blank\\\" href=\\\"http://baike.baidu.com/view/1598.htm\\\" style=\\\"color: rgb(19, 110, 194); text-decoration: none;\\\">西湖</a>为蓝本，汲取江南园林的设计手法而建成的一座大型山水园林，也是保存最完整的一座皇家行宫御苑，被誉为“皇家园林博物馆”，也是国家重点旅游景点。</div><div class=\\\"para\\\" label-module=\\\"para\\\" style=\\\"font-size: 14px; word-wrap: break-word; color: rgb(51, 51, 51); margin-bottom: 15px; text-indent: 28px; line-height: 24px; zoom: 1; font-family: arial, 宋体, sans-serif; white-space: normal; background-color: rgb(255, 255, 255);\\\">清朝<a target=\\\"_blank\\\" href=\\\"http://baike.baidu.com/view/2436.htm\\\" style=\\\"color: rgb(19, 110, 194); text-decoration: none;\\\">乾隆皇帝</a>继位以前，在北京西郊一带，建起了四座大型<a target=\\\"_blank\\\" href=\\\"http://baike.baidu.com/view/646836.htm\\\" style=\\\"color: rgb(19, 110, 194); text-decoration: none;\\\">皇家园林</a>。<a target=\\\"_blank\\\" href=\\\"http://baike.baidu.com/view/2677.htm\\\" style=\\\"color: rgb(19, 110, 194); text-decoration: none;\\\">乾隆</a>十五年（1750年），乾隆皇帝为孝敬其母孝圣皇后动用448万两白银在这里改建为清漪园，形成了从现<a target=\\\"_blank\\\" href=\\\"http://baike.baidu.com/view/32477.htm\\\" style=\\\"color: rgb(19, 110, 194); text-decoration: none;\\\">清华园</a>到香山长达二十公里的皇家园林区。<a target=\\\"_blank\\\" href=\\\"http://baike.baidu.com/view/84502.htm\\\" style=\\\"color: rgb(19, 110, 194); text-decoration: none;\\\">咸丰</a>十年（1860年），清漪园被<a target=\\\"_blank\\\" href=\\\"http://baike.baidu.com/view/586244.htm\\\" style=\\\"color: rgb(19, 110, 194); text-decoration: none;\\\">英法联军</a>焚毁。<a target=\\\"_blank\\\" href=\\\"http://baike.baidu.com/view/29852.htm\\\" style=\\\"color: rgb(19, 110, 194); text-decoration: none;\\\">光绪</a>十四年（1888年）重建，改称颐和园，作消夏游乐地。光绪二十六年（1900年），颐和园又遭“八国联军”的破坏，珍宝被劫掠一空。清朝灭亡后，颐和园在军阀混战和国民党统治时期，又遭破坏。</div><div class=\\\"para\\\" label-module=\\\"para\\\" style=\\\"font-size: 14px; word-wrap: break-word; color: rgb(51, 51, 51); margin-bottom: 15px; text-indent: 28px; line-height: 24px; zoom: 1; font-family: arial, 宋体, sans-serif; white-space: normal; background-color: rgb(255, 255, 255);\\\">1961年3月4日，颐和园被公布为第一批<a target=\\\"_blank\\\" href=\\\"http://baike.baidu.com/view/163959.htm\\\" style=\\\"color: rgb(19, 110, 194); text-decoration: none;\\\">全国重点文物保护单位</a>，与同时公布的<a target=\\\"_blank\\\" href=\\\"http://baike.baidu.com/view/15110.htm\\\" style=\\\"color: rgb(19, 110, 194); text-decoration: none;\\\">承德避暑山庄</a>、<a target=\\\"_blank\\\" href=\\\"http://baike.baidu.com/view/4131.htm\\\" style=\\\"color: rgb(19, 110, 194); text-decoration: none;\\\">拙政园</a>、<a target=\\\"_blank\\\" href=\\\"http://baike.baidu.com/view/23789.htm\\\" style=\\\"color: rgb(19, 110, 194); text-decoration: none;\\\">留园</a>并称为<a target=\\\"_blank\\\" href=\\\"http://baike.baidu.com/view/400248.htm\\\" style=\\\"color: rgb(19, 110, 194); text-decoration: none;\\\">中国四大名园</a>，1998年11月被列入《<a target=\\\"_blank\\\" href=\\\"http://baike.baidu.com/view/340391.htm\\\" style=\\\"color: rgb(19, 110, 194); text-decoration: none;\\\">世界遗产名录</a>》。2007年5月8日，颐和园经国家旅游局正式批准为国家5A级旅游景区。 2009年，颐和园入选中国世界纪录协会中国现存最大的皇家园林。<span style=\\\"font-size: 12px; line-height: 0; position: relative; vertical-align: baseline; top: -0.5em; margin-left: 2px; color: rgb(51, 102, 204); cursor: default; padding: 0px 2px;\\\">[1]</span><a style=\\\"color: rgb(19, 110, 194); position: relative; top: -50px; font-size: 0px; line-height: 0;\\\" name=\\\"ref_[1]_9572580\\\"></a> </div><p><br/></p>\"";
 
@@ -266,21 +269,21 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
                     layoutIndicatorTop.setVisibility(View.GONE);
                 }
                 if (!click) {
-                    //商品详情
+                    //商品详情——>线路特写
                     int[] detailAry = new int[2];
                     mWebViewProduct.getLocationOnScreen(detailAry);
                     if (detailAry[1] <= statusHeight) {
                         changeIndicator(1);
                     }
 
-                    //费用说明
+                    //费用说明——>行程安排
                     int[] priceAry = new int[2];
                     layoutPrice.getLocationOnScreen(priceAry);
                     if (priceAry[1] <= statusHeight + indicatorHeightTop) {
                         changeIndicator(2);
                     }
 
-                    //行程描述
+                    //行程描述——>标准
                     int[] describe = new int[2];
                     layoutTravelDescribe.getLocationOnScreen(describe);
                     if (describe[1] <= statusHeight + indicatorHeightTop) {
@@ -387,15 +390,15 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
         } else {
             layoutComment.setVisibility(View.GONE);
         }
-        //商品详情
+        //商品详情——>线路特色
         String tripDetail = detail.getLineDetails();
         mWebViewProduct.loadDataWithBaseURL(null, start + tripDetail + end, "text/html", "utf-8", null);
-        //费用说明
-        String priceContain = detail.getPriceInclude();
-        String priceNotContain = detail.getPriceNotContain();
-        tvPriceInclude.setText(priceContain);
-        tvPriceNotInclude.setText(priceNotContain);
-        //行程描述
+        //费用说明——>标准
+//        String priceContain = detail.getPriceInclude();
+//        String priceNotContain = detail.getPriceNotContain();
+        tvPriceInclude.setText(detail.getStandard());
+//        tvPriceNotInclude.setText(priceNotContain);
+        //行程描述——>行程安排
         List<TravelDetailDay> tripDescribe = detail.getTripDescribe();
         if (tripDescribe != null && tripDescribe.size() > 0){
             for (int i = 0; i < tripDescribe.size(); i++) {
@@ -436,11 +439,11 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
             case R.id.tv_inner_travel_detail_content_price_bottom:
             case R.id.btn_inner_travel_detail_indicator_top_price:
                 click = true;
-                changeIndicator(2);
-                layoutPrice.post(new Runnable() {
+                changeIndicator(3);
+                layoutTravelDescribe.post(new Runnable() {
                     @Override
                     public void run() {
-                        mScrollView.scrollTo(0, layoutPrice.getTop() - indicatorHeightTop );
+                        mScrollView.scrollTo(0, layoutTravelDescribe.getTop() - indicatorHeightTop);
                         click = false;
                     }
                 });
@@ -448,11 +451,11 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
             case R.id.tv_inner_travel_detail_content_describe_bottom:
             case R.id.btn_inner_travel_detail_indicator_top_describe:
                 click = true;
-                changeIndicator(3);
-                layoutTravelDescribe.post(new Runnable() {
+                changeIndicator(2);
+                layoutPrice.post(new Runnable() {
                     @Override
                     public void run() {
-                        mScrollView.scrollTo(0, layoutTravelDescribe.getTop() - indicatorHeightTop);
+                        mScrollView.scrollTo(0, layoutPrice.getTop() - indicatorHeightTop );
                         click = false;
                     }
                 });
@@ -481,7 +484,7 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
                 doCollection();
                 break;
             case R.id.tv_inner_travel_share: //分享
-
+                showShare(getApplicationContext());
                 break;
             case R.id.btn_inner_travel_argument: //讨价还价
 
@@ -725,15 +728,16 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
             btnProductTop.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
             viewProductTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
         } else if (tag ==2){
-            btnPrice.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-            viewPrice.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-            btnPriceTop.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-            viewPriceTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-        } else if (tag == 3){
             tvDescribe.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
             viewDescribe.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
             btnDescribeTop.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
             viewDescribeTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
+        } else if (tag == 3){
+            btnPrice.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
+            viewPrice.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
+            btnPriceTop.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
+            viewPriceTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
+
         } else if (tag == 4){
             tvNotice.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
             viewNotice.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
@@ -745,5 +749,36 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
     private void doCollection() {
         UserCollectionBiz biz = new UserCollectionBiz(getApplicationContext(), handler);
         biz.doCollection(MainActivity.user.getUserId(), "1", detail.getId());
+    }
+
+    private void showShare(Context context) {
+        ShareSDK.initSDK(context);
+        OnekeyShare oks = new OnekeyShare();
+        //关闭sso授权
+        oks.disableSSOWhenAuthorize();
+
+        // 分享时Notification的图标和文字  2.5.9以后的版本不调用此方法
+        //oks.setNotification(R.drawable.ic_launcher, getString(R.string.app_name));
+        // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
+        oks.setTitle("翠微旅游");
+        // titleUrl是标题的网络链接，仅在人人网和QQ空间使用
+//        oks.setTitleUrl("http://sharesdk.cn");
+        // text是分享文本，所有平台都需要这个字段
+        oks.setText(context.getString(R.string.share_text));
+        //分享网络图片，新浪微博分享网络图片需要通过审核后申请高级写入接口，否则请注释掉测试新浪微博
+//        oks.setImageUrl("http://f1.sharesdk.cn/imgs/2014/02/26/owWpLZo_638x960.jpg");
+        // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
+        oks.setImagePath(WelcomeActivity.TEST_IMAGE);//确保SDcard下面存在此张图片
+        // url仅在微信（包括好友和朋友圈）中使用
+        oks.setUrl("http://cwly1118.com");
+        // comment是我对这条分享的评论，仅在人人网和QQ空间使用
+//        oks.setComment("我是测试评论文本");
+        // site是分享此内容的网站名称，仅在QQ空间使用
+//        oks.setSite("ShareSDK");
+        // siteUrl是分享此内容的网站地址，仅在QQ空间使用
+//        oks.setSiteUrl("http://sharesdk.cn");
+
+        // 启动分享GUI
+        oks.show(context);
     }
 }

@@ -253,6 +253,7 @@ public class InnerTravelCityActivity extends BaseActivity implements View.OnClic
             addPopListener();
         } else{
             popupWindow.showAtLocation(layout, Gravity.BOTTOM, 0, 0);
+            LogUtil.e(TAG, tag + ", " + sort + ", " + String.valueOf(dayPosition) + ", " + earlyTime + ", " + laterTime + ", " + pricePosition); //2, , -1, , , -1
             popupWindow.refreshView(tag, sort, String.valueOf(dayPosition), earlyTime, laterTime, pricePosition);
         }
     }
@@ -273,16 +274,16 @@ public class InnerTravelCityActivity extends BaseActivity implements View.OnClic
                     String newDay = popupWindow.getDay();
                     if (newDay != null && newDay.length() != 0) {
                         day = newDay;
-                        dayPosition = Integer.parseInt(newDay);
+                        dayPosition = Integer.parseInt(newDay)-1;
                     }else{
                         day = "";
                         dayPosition = -1;
                     }
                     int newPricePosition = popupWindow.getPricePosition();
+                    pricePosition = newPricePosition;
                     if (newPricePosition != -1) {
                         price = popupWindow.getPrice();
 //                        price = listPrices.get(newPricePosition).getPriceLower() +"," + listPrices.get(newPricePosition).getPriceHigh();
-                        pricePosition = newPricePosition;
                     }else{
                         price = "";
                     }
@@ -294,8 +295,8 @@ public class InnerTravelCityActivity extends BaseActivity implements View.OnClic
                     if (newLaterTime != null) {
                         laterTime = newLaterTime;
                     }
-                    LogUtil.e(TAG, "dayPosition = " + dayPosition +", pricePosition = " + pricePosition);
-                    LogUtil.e(TAG, "sort = " + sort + ", day = " + day+", price = "+ price+", earlyTime = " + earlyTime + ", laterTime = " + laterTime);
+//                    LogUtil.e(TAG, "dayPosition = " + dayPosition +", pricePosition = " + pricePosition);
+//                    LogUtil.e(TAG, "sort = " + sort + ", day = " + day+", price = "+ price+", earlyTime = " + earlyTime + ", laterTime = " + laterTime);
 //                    {"head":{"code":"Publics_lines"},"field":{"type":"1","attr":"1","page":"1","offset":"10"}}
                     int currentItem = viewPager.getCurrentItem();
                     if (currentItem == 0){

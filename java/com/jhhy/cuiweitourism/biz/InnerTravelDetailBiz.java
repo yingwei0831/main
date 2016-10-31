@@ -118,12 +118,13 @@ public class InnerTravelDetailBiz {
                         detail.setId(bodyObj.getString(Consts.KEY_ID).trim());
                         detail.setTitle(bodyObj.getString(Consts.KEY_TITLE).trim());
                         detail.setPrice(bodyObj.getString(Consts.KEY_PRICE).trim());
-                        detail.setRemark(bodyObj.getString("beizu").trim());
-                        detail.setPriceInclude(bodyObj.getString("feeinclude").trim());
-                        detail.setFeatures(bodyObj.getString("features").trim());
-                        detail.setTransport(bodyObj.getString("transport").trim());
+//                        detail.setPriceInclude(bodyObj.getString("feeinclude").trim());
+//                        detail.setFeatures(bodyObj.getString("features").trim());
+//                        detail.setTransport(bodyObj.getString("transport").trim());
                         detail.setLineDetails(bodyObj.getString("xlxq").trim());
-                        detail.setPriceNotContain(bodyObj.getString("fybubh").trim());
+                        detail.setStandard(bodyObj.getString("biaozhun"));
+                        detail.setRemark(bodyObj.getString("beizu").trim());
+//                        detail.setPriceNotContain(bodyObj.getString("fybubh").trim());
                         JSONArray picListAry = bodyObj.getJSONArray("piclist");
                         List<String> picList = null;
                         if (picListAry != null){

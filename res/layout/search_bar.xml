@@ -43,8 +43,9 @@
         android:layout_marginBottom="6dp"
         android:layout_marginTop="6dp"
         android:background="@drawable/bg_btn_login"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:src="@mipmap/edit_search" />
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:layout_marginRight="10dp"
+        android:src="@mipmap/tab2_icon_search" />
 
 </RelativeLayout>
