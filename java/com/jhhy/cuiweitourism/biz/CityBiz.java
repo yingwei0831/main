@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 
+import com.jhhy.cuiweitourism.http.NetworkUtil;
 import com.jhhy.cuiweitourism.net.netcallback.HttpUtils;
 import com.jhhy.cuiweitourism.http.ResponseResult;
 import com.jhhy.cuiweitourism.moudle.PhoneBean;
@@ -32,18 +33,24 @@ public class CityBiz {
     }
 
     private String CODE_GET_CITY = "Publics_bourn";
-//    {"head":{"code":"Publics_bourn"},"field":[]}
-    public void getCitySelection(){
-        new Thread() {
-            @Override
-            public void run() {
-                Map<String, Object> headMap = new HashMap<>();
-                headMap.put(Consts.KEY_CODE, CODE_GET_CITY);
-                Map<String, Object> fieldMap = new HashMap<>();
-                HttpUtils.executeXutils(headMap, fieldMap, getCityCallback);
-            }
-        }.start();
+
+    //    {"head":{"code":"Publics_bourn"},"field":[]}
+    public void getCitySelection() {
+        if (NetworkUtil.checkNetwork(context)) {
+            new Thread() {
+                @Override
+                public void run() {
+                    Map<String, Object> headMap = new HashMap<>();
+                    headMap.put(Consts.KEY_CODE, CODE_GET_CITY);
+                    Map<String, Object> fieldMap = new HashMap<>();
+                    HttpUtils.executeXutils(headMap, fieldMap, getCityCallback);
+                }
+            }.start();
+        } else {
+            handler.sendEmptyMessage(Consts.NET_ERROR);
+        }
     }
+
     private ResponseResult getCityCallback = new ResponseResult() {
         @Override
         public void responseSuccess(String result) {
@@ -64,9 +71,9 @@ public class CityBiz {
 // {"head":{"res_code":"0000","res_msg":"success","res_arg":"获取成功"},"body":[{"id":"2","cityname":"鞍山"},{"id":"39","cityname":"百色"}]}
                     JSONArray bodyAry = resultObj.getJSONArray(Consts.KEY_BODY);
                     List<PhoneBean> cityList = null;
-                    if (bodyAry != null && bodyAry.length() != 0){
+                    if (bodyAry != null && bodyAry.length() != 0) {
                         cityList = new ArrayList<>();
-                        for (int i = 0; i < bodyAry.length(); i++){
+                        for (int i = 0; i < bodyAry.length(); i++) {
                             JSONObject cityObj = bodyAry.getJSONObject(i);
                             PhoneBean city = new PhoneBean();
                             city.setName(cityObj.getString("cityname"));

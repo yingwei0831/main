@@ -125,6 +125,9 @@ public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.I
                         handler.postDelayed(runnable, Consts.TIME_PERIOD);
                     }
                     break;
+                case Consts.NET_ERROR:
+                    ToastUtil.show(getContext(), "请检查网络后重试");
+                    break;
                 default:
                     break;
             }

@@ -82,6 +82,9 @@ public class Tab2BottomContentFragment2 extends Fragment implements IPagerScroll
                         }
                     }
                     break;
+                case Consts.NET_ERROR:
+                    ToastUtil.show(getContext(), "请检查网络后重试");
+                    break;
             }
         }
     };

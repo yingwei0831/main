@@ -14,6 +14,7 @@ import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.biz.CheckCodeBiz;
 import com.jhhy.cuiweitourism.biz.UserInformationBiz;
 import com.jhhy.cuiweitourism.net.utils.Consts;
+import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.just.sun.pricecalendar.ToastCommon;
 
 import java.util.Timer;
@@ -59,6 +60,9 @@ public class ModifyTelephoneNumberActivity extends BaseActivity implements View.
                         setResult(RESULT_OK, intent);
                         finish();
                     }
+                    break;
+                case Consts.NET_ERROR:
+                    ToastUtil.show(getApplicationContext(), "请检查网络后重试");
                     break;
             }
         }

@@ -78,6 +78,9 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                         startTime();
                     }
                     break;
+                case Consts.NET_ERROR:
+                    ToastUtil.show(getApplicationContext(), "请检查网络后重试");
+                    break;
             }
         }
     };

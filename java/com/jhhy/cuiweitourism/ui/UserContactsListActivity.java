@@ -19,6 +19,7 @@ import com.jhhy.cuiweitourism.biz.ContactsBiz;
 import com.jhhy.cuiweitourism.moudle.UserContacts;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
+import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.just.sun.pricecalendar.ToastCommon;
 
 import java.util.ArrayList;
@@ -52,6 +53,9 @@ public class UserContactsListActivity extends BaseActivity implements AdapterVie
                     break;
                 case Consts.MESSAGE_DELETE_CONTACTS:
                     getData();
+                    break;
+                case Consts.NET_ERROR:
+                    ToastUtil.show(getApplicationContext(), "请检查网络后重试");
                     break;
             }
         }

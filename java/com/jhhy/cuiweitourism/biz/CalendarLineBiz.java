@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 
+import com.jhhy.cuiweitourism.http.NetworkUtil;
 import com.jhhy.cuiweitourism.net.netcallback.HttpUtils;
 import com.jhhy.cuiweitourism.http.ResponseResult;
 import com.jhhy.cuiweitourism.net.utils.Consts;
@@ -34,16 +35,20 @@ public class CalendarLineBiz {
     }
 //    {"head":{"code":"Publics_rili"},"field":{"id":"14"}}
     public void getCalendarLine(final String id){
-        new Thread() {
-            @Override
-            public void run() {
-                Map<String, Object> headMap = new HashMap<>();
-                headMap.put(Consts.KEY_CODE, CODE_CALENDAR_PRICE);
-                Map<String, Object> fieldMap = new HashMap<>();
-                fieldMap.put(Consts.KEY_ID, id);
-                HttpUtils.executeXutils(headMap, fieldMap, priceCallback);
-            }
-        }.start();
+        if (NetworkUtil.checkNetwork(context)) {
+            new Thread() {
+                @Override
+                public void run() {
+                    Map<String, Object> headMap = new HashMap<>();
+                    headMap.put(Consts.KEY_CODE, CODE_CALENDAR_PRICE);
+                    Map<String, Object> fieldMap = new HashMap<>();
+                    fieldMap.put(Consts.KEY_ID, id);
+                    HttpUtils.executeXutils(headMap, fieldMap, priceCallback);
+                }
+            }.start();
+        }else{
+            handler.sendEmptyMessage(Consts.NET_ERROR);
+        }
     }
 
     private ResponseResult priceCallback = new ResponseResult() {

@@ -151,6 +151,9 @@ public class InnerActivity4 extends AppCompatActivity  implements ISlideCallback
                         handler.postDelayed(runnable, Consts.TIME_PERIOD);
                     }
                     break;
+                case Consts.NET_ERROR:
+                    ToastUtil.show(getApplicationContext(), "请检查网络后重试");
+                    break;
                 default:
                     break;
             }

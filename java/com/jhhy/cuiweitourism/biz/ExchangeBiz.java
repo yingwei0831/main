@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 
+import com.jhhy.cuiweitourism.http.NetworkUtil;
 import com.jhhy.cuiweitourism.net.netcallback.HttpUtils;
 import com.jhhy.cuiweitourism.http.ResponseResult;
 import com.jhhy.cuiweitourism.moudle.CityRecommend;
@@ -32,16 +33,20 @@ public class ExchangeBiz {
         this.handler = handler;
     }
 
-//    {"head":{"code":"Publics_huanyihuan"},"field":[]}
-    public void getHotRecommend(){
-        new Thread() {
-            @Override
-            public void run() {
-                Map<String, Object> headMap = new HashMap<>();
-                headMap.put(Consts.KEY_CODE, CODE_EXCHANGE);
-                HttpUtils.executeXutils(headMap, null, exchageCallback);
-            }
-        }.start();
+    //    {"head":{"code":"Publics_huanyihuan"},"field":[]}
+    public void getHotRecommend() {
+        if (NetworkUtil.checkNetwork(context)) {
+            new Thread() {
+                @Override
+                public void run() {
+                    Map<String, Object> headMap = new HashMap<>();
+                    headMap.put(Consts.KEY_CODE, CODE_EXCHANGE);
+                    HttpUtils.executeXutils(headMap, null, exchageCallback);
+                }
+            }.start();
+        } else {
+            handler.sendEmptyMessage(Consts.NET_ERROR);
+        }
     }
 
     private ResponseResult exchageCallback = new ResponseResult() {
@@ -63,8 +68,8 @@ public class ExchangeBiz {
                     msg.arg1 = 1;
                     JSONArray bodyAry = resultObj.getJSONArray(Consts.KEY_BODY);
                     List<CityRecommend> listRecom = new ArrayList<>();
-                    if (bodyAry != null && bodyAry.length() != 0){
-                        for (int i = 0; i < bodyAry.length(); i ++) {
+                    if (bodyAry != null && bodyAry.length() != 0) {
+                        for (int i = 0; i < bodyAry.length(); i++) {
                             JSONObject recomObj = bodyAry.getJSONObject(i);
                             CityRecommend recom = new CityRecommend(
                                     recomObj.getString(Consts.KEY_ID),
@@ -76,9 +81,9 @@ public class ExchangeBiz {
                     }
                     msg.obj = listRecom;
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
-            }finally {
+            } finally {
                 handler.sendMessage(msg);
             }
         }

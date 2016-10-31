@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.biz.CheckCodeBiz;
 import com.jhhy.cuiweitourism.biz.RegisterBiz;
+import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
 
@@ -52,6 +53,12 @@ public class FindPasswordActivity extends BaseActivity implements View.OnClickLi
                         tvGetCheckCode.setText(msg.arg1 + "秒");
                         startTime();
                     }
+                    break;
+                case Consts.MESSAGE_CHECK_CODE:
+                    ToastUtil.show(getApplicationContext(), String.valueOf(msg.obj));
+                    break;
+                case Consts.NET_ERROR:
+                    ToastUtil.show(getApplicationContext(), "请检查网络后重试");
                     break;
             }
 

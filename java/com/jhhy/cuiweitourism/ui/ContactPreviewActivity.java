@@ -12,6 +12,7 @@ import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.biz.ContactsBiz;
 import com.jhhy.cuiweitourism.moudle.UserContacts;
 import com.jhhy.cuiweitourism.net.utils.Consts;
+import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.just.sun.pricecalendar.ToastCommon;
 
 public class ContactPreviewActivity extends BaseActivity implements View.OnClickListener {
@@ -52,7 +53,11 @@ public class ContactPreviewActivity extends BaseActivity implements View.OnClick
                     setResult(RESULT_OK);
                     finish();
                     break;
+                case Consts.NET_ERROR:
+                    ToastUtil.show(getApplicationContext(), "请检查网络后重试");
+                    break;
             }
+
         }
     };
 
