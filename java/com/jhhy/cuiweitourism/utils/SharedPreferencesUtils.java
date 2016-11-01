@@ -111,11 +111,11 @@ public class SharedPreferencesUtils {
      * 获取用户最后一次更新的位置信息
      * @return
      */
-//    public String[] getLocation(){
-//        String latitude = sp.getString(Consts.KEY_LATITUDE, Double.toString(Constants.BEIJING.latitude));
-//        String longitude = sp.getString(Consts.KEY_LONGITUDE, Double.toString(Constants.BEIJING.longitude));
-//        return new String[]{latitude, longitude};
-//    }
+    public String[] getLocation(){
+        String latitude = sp.getString(Consts.KEY_LATITUDE, Double.toString(Constants.BEIJING.latitude));
+        String longitude = sp.getString(Consts.KEY_LONGITUDE, Double.toString(Constants.BEIJING.longitude));
+        return new String[]{latitude, longitude};
+    }
 
     /**
      * 保存用户最后一次定位地址
@@ -123,12 +123,12 @@ public class SharedPreferencesUtils {
      * @param longitude 纬度
      * @return 保存是否成功
      */
-//    public boolean saveLocation(String latitude, String longitude){
-//        SharedPreferences.Editor editor = sp.edit();
-//        editor.putString(Consts.KEY_LATITUDE, latitude);
-//        editor.putString(Consts.KEY_LONGITUDE, longitude);
-//        return editor.commit();
-//    }
+    public boolean saveLocation(String latitude, String longitude){
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(Consts.KEY_LATITUDE, latitude);
+        editor.putString(Consts.KEY_LONGITUDE, longitude);
+        return editor.commit();
+    }
     /**
      * 保存登录手机号和密码
      * @param telephoneNumber 手机号

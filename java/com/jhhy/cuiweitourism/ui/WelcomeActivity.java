@@ -1,27 +1,40 @@
 package com.jhhy.cuiweitourism.ui;
 
+import android.Manifest;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 
+import com.amap.api.location.AMapLocation;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.biz.LoginBiz;
 import com.jhhy.cuiweitourism.http.NetworkUtil;
 import com.jhhy.cuiweitourism.moudle.User;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
+import com.jhhy.cuiweitourism.utils.LocationUtil;
 import com.jhhy.cuiweitourism.utils.SharedPreferencesUtils;
+import com.jhhy.cuiweitourism.utils.ToastUtil;
+import com.jhhy.cuiweitourism.utils.Utils;
 import com.just.sun.pricecalendar.ToastCommon;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.security.Permission;
 
 public class WelcomeActivity extends BaseActivity {
+
+    private String TAG = WelcomeActivity.class.getSimpleName();
+
+    private AMapLocation aMapLocation;
+    private SharedPreferencesUtils sp;
 
     private Handler handler = new Handler(){
         @Override
@@ -38,6 +51,19 @@ public class WelcomeActivity extends BaseActivity {
                     }
                     finish();
                     break;
+                case Consts.MESSAGE_LOCATION:
+                    LogUtil.e(TAG, "-------handleMessage------");
+
+                    updateLocation(msg);
+                    break;
+                case Consts.MESSAGE_LOCATION_FAILED:
+                    LogUtil.e(TAG, "-------handleMessage------");
+                    showLocationMessage((AMapLocation) msg.obj);
+                    break;
+                case Consts.MESSAGE_NETWORK_CONNECT:
+                    LogUtil.e(TAG, "-------handleMessage------");
+                    new LocationUtil(getApplicationContext(), handler).start();
+                    break;
             }
         }
     };
@@ -46,10 +72,11 @@ public class WelcomeActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
+        sp = SharedPreferencesUtils.getInstance(getApplicationContext());
         if(NetworkUtil.checkNetwork(getApplicationContext())){
-
+            new LocationUtil(getApplicationContext(), handler).start();
         }else{
-            ToastCommon.toastShortShow(getApplicationContext(), null, getString(R.string.Network_error));
+            ToastUtil.show(getApplicationContext(), getString(R.string.Network_error));
         }
         initImagePath();
         Runnable runnable = new Runnable() {
@@ -58,12 +85,13 @@ public class WelcomeActivity extends BaseActivity {
                 checkFirstIn();
             }
         };
-        handler.postDelayed(runnable, 2000); // 2秒钟之后
+        handler.postDelayed(runnable, 2000);
+        // 2秒钟之后进行登录，如果登录成功，进入主页面，并赋值；如果登录失败，可以进入主页面，登录标志为false;网络重新连接，发送广播，主业请求数据进行填充
     }
 
     private void checkFirstIn() {
         if(isFirst()){ //第一次登录
-            LogUtil.i("info", "----isFirst = true");
+            LogUtil.e("info", "----isFirst = true");
             gotoSplash();
         } else { //非第一次登录
             LogUtil.i("info", "----isFirst = false");
@@ -105,6 +133,19 @@ public class WelcomeActivity extends BaseActivity {
         }
     }
 
+    private void updateLocation(Message msg) {
+        AMapLocation aml = (AMapLocation)msg.obj;
+        this.aMapLocation = aml;
+        sp.saveLocation(Double.toString(aMapLocation.getLatitude()), Double.toString(aMapLocation.getLongitude()));
+    }
+
+    /**
+     * 定位失败
+     * @param aMapLocation
+     */
+    private void showLocationMessage(AMapLocation aMapLocation) {
+        ToastUtil.show(getApplicationContext(), "请求定位失败"); //+", "+aMapLocation.getErrorInfo()
+    }
     private final String FILE_NAME = "/app_logo.png";
     public static String TEST_IMAGE;
 

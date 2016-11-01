@@ -202,10 +202,9 @@ public class Consts {
 //    public static final String DEFAULT_ACCOUNT_PWD = "admin123";
 //    public static final long DEFAULT_PROJECT_ID = 48022l;
 //    public static final long DEFAULT_TENANT_ID = 35l;
+
     public static final String EXTRA_USER_ID = "userId";
     public static final String EXTRA_SHOW_USERNICK = "showUserNick";
-
-
 
 //    public static final String ORDER_STATUS_WAIT_PAYMENT = "1"; //待付款
 //    public static final String ORDER_STATUS_WAIT_REFUND = "0"; //待处理，待退款状态
@@ -228,7 +227,7 @@ public class Consts {
 //    选择城市
     public static final int MESSAGE_GET_CITY = 130; //获取城市列表
     public static final int REQUEST_CODE_SELECT_CITY = 1130; //选择城市
-
+    //数据库
     /** Database version */
     public static final int DATABASE_VERSION = 1;
     /** Database file name */
@@ -238,5 +237,11 @@ public class Consts {
      */
     public static final String TABLE_TRAIN_STATION = "cuiwei_tourism_station";
     public static final String TABLE_CITY_RECORD = "cuiwei_city_record";
-
+    //定位
+    public static final String KEY_LONGITUDE = "longitude";
+    public static final String KEY_LATITUDE = "latitude";
+    public static final int MESSAGE_LOCATION = 157; //定位成功
+    public static final int MESSAGE_LOCATION_FAILED = 158; //定位失败，网络
+    public static final int MESSAGE_LOCATION_FAILED_PERMISSION_DENIED = 159; //定位失败，权限被禁止
+    public static final int MESSAGE_NETWORK_CONNECT = 160;//网络已链接
 }

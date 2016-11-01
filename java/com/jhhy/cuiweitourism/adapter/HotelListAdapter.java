@@ -8,18 +8,24 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.amap.api.maps2d.AMapUtils;
+import com.amap.api.maps2d.model.LatLng;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.ActivityHotInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelListInfo;
 import com.jhhy.cuiweitourism.utils.ImageLoaderUtil;
+import com.jhhy.cuiweitourism.utils.SharedPreferencesUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by jiahe008 on 2016/8/29.
  */
 public class HotelListAdapter extends MyBaseAdapter {
+
+    private String[] location;
 
     public HotelListAdapter(Context ct, List list, Object view) {
         super(ct, list, view);
@@ -27,6 +33,8 @@ public class HotelListAdapter extends MyBaseAdapter {
 
     public HotelListAdapter(Context ct, List list) {
         super(ct, list);
+        SharedPreferencesUtils sp = SharedPreferencesUtils.getInstance(context);
+        location = sp.getLocation();
     }
 
     @Override
@@ -53,7 +61,10 @@ public class HotelListAdapter extends MyBaseAdapter {
             holder.tvType.setText(hotelInfo.getTypes());
             holder.tvPrice.setText(hotelInfo.getPrice());
             holder.tvAddress.setText(hotelInfo.getAddress());
-//            holder.tvDistance.setText(hotelInfo.getLat(), hotelInfo.getLng());
+            LatLng latLng = new LatLng(Double.parseDouble(location[0]), Double.parseDouble(location[1]));
+            LatLng latLng1 = new LatLng(Double.parseDouble(hotelInfo.getLat()), Double.parseDouble(hotelInfo.getLng()));
+            float distance = AMapUtils.calculateLineDistance(latLng, latLng1);
+            holder.tvDistance.setText(String.format(Locale.getDefault(), "%.2d", distance));
             ImageLoaderUtil.getInstance(context).displayImage(hotelInfo.getLitpic(), holder.imageView);
         }
 
