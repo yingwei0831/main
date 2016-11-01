@@ -40,6 +40,7 @@ public class ReGeocoderActivity extends Activity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		getData();
 		setContentView(R.layout.geocoder_activity);
         /*
          * 设置离线地图存储目录，在下载离线地图或初始化地图设置;
@@ -51,6 +52,16 @@ public class ReGeocoderActivity extends Activity implements
 		mapView = (MapView) findViewById(R.id.map);
 		mapView.onCreate(savedInstanceState);// 此方法必须重写
 		init();
+	}
+	private String latitude;
+	private String longitude;
+	private void getData() {
+		Bundle bundle = getIntent().getExtras();
+		if (bundle != null){
+			latitude = bundle.getString("latitude");
+			longitude = bundle.getString("longitude");
+			latLonPoint = new LatLonPoint(Double.parseDouble(latitude), Double.parseDouble(longitude));
+		}
 	}
 
 	/**

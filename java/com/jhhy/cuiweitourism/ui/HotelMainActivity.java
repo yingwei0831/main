@@ -114,7 +114,10 @@ public class HotelMainActivity extends BaseActivity implements View.OnClickListe
                 ToastCommon.toastShortShow(getApplicationContext(), null, "后台没有接口");
                 break;
             case R.id.tv_location_icon: //定位
-
+                Intent intentLocation = new Intent(getApplicationContext(), LocationSourceActivity.class);
+//                Bundle bundle = new Bundle();
+//                intentLocation.putExtras(bundle);
+                startActivity(intentLocation);
                 break;
             case R.id.layout_hotel_check_in: //选择入住日期
                 Intent intentFromDate = new Intent( getApplicationContext(), HotelCalendarActivity.class);

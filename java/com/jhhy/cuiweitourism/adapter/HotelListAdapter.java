@@ -63,8 +63,8 @@ public class HotelListAdapter extends MyBaseAdapter {
             holder.tvAddress.setText(hotelInfo.getAddress());
             LatLng latLng = new LatLng(Double.parseDouble(location[0]), Double.parseDouble(location[1]));
             LatLng latLng1 = new LatLng(Double.parseDouble(hotelInfo.getLat()), Double.parseDouble(hotelInfo.getLng()));
-            float distance = AMapUtils.calculateLineDistance(latLng, latLng1);
-            holder.tvDistance.setText(String.format(Locale.getDefault(), "%.2d", distance));
+            float distance = AMapUtils.calculateLineDistance(latLng, latLng1) / 1000;
+            holder.tvDistance.setText(String.format(Locale.getDefault(), "%.2f", distance));
             ImageLoaderUtil.getInstance(context).displayImage(hotelInfo.getLitpic(), holder.imageView);
         }
 

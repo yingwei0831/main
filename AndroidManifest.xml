@@ -596,6 +596,7 @@
         <!-- 接入支付宝支付-end- -->
 
         <activity android:name=".ui.TrainPaySuccessActivity" />
+        <activity android:name=".ui.LocationSourceActivity" android:screenOrientation="portrait"/>
 
         <!--高德定位-->
         <!-- 定位需要的服务 使用2.0的定位需要加上这个 -->

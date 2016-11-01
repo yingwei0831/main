@@ -250,6 +250,12 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
                 break;
             case R.id.layout_hotel_address:
                 //TODO 进入地图
+                Intent intent = new Intent(getApplicationContext(), ReGeocoderActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("latitude", hotelDetail.getLat());
+                bundle.putString("longitude", hotelDetail.getLng());
+                intent.putExtras(bundle);
+                startActivity(intent);
                 break;
             case R.id.layout_hotel_opening:
                 //TODO 进入详情页

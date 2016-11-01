@@ -240,6 +240,7 @@ public class Consts {
     //定位
     public static final String KEY_LONGITUDE = "longitude";
     public static final String KEY_LATITUDE = "latitude";
+    public static final int AMAP_ZOOM_LEVEL = 15; //高德地图缩放级别3-19，默认10
     public static final int MESSAGE_LOCATION = 157; //定位成功
     public static final int MESSAGE_LOCATION_FAILED = 158; //定位失败，网络
     public static final int MESSAGE_LOCATION_FAILED_PERMISSION_DENIED = 159; //定位失败，权限被禁止

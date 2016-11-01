@@ -99,5 +99,7 @@
 
     <color name="colorGrayLight">#979797</color>
     <color name="colorGrayDark">#777777</color>
+    <!--定位-->
+    <color name="darkgrey"> #999999</color>
 
 </resources>
