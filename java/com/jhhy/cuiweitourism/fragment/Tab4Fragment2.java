@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
@@ -71,6 +72,8 @@ public class Tab4Fragment2 extends Fragment implements View.OnClickListener {
     }
 
     private void setupView(View view) {
+        ImageView ivEditInfo = (ImageView) view.findViewById(R.id.title_main_iv_right_telephone);
+
         TextView tvAllOrders = (TextView) view.findViewById(R.id.tv_fragment_tab4_all_orders);
         TextView tvWaitPay = (TextView) view.findViewById(R.id.tv_fragment_tab4_wait_pay);
         TextView tvWaitComment = (TextView) view.findViewById(R.id.tv_fragment_tab4_wait_comment);
@@ -86,6 +89,8 @@ public class Tab4Fragment2 extends Fragment implements View.OnClickListener {
         TextView tvSecurity = (TextView) view.findViewById(R.id.tv_user_security);
         TextView tvAuthentication = (TextView) view.findViewById(R.id.tv_user_authentication);
         TextView tvContacts = (TextView) view.findViewById(R.id.tv_user_contacts);
+
+        ivEditInfo.setOnClickListener(this);
 
         tvMyTourismCoin.setOnClickListener(this);
         tvAllOrders.setOnClickListener(this);
@@ -126,7 +131,7 @@ public class Tab4Fragment2 extends Fragment implements View.OnClickListener {
                 bundle4.putInt("position", 3);
                 Tab4AllOrdersActivity.actionStart(mContext, bundle4);
                 break;
-            case R.id.tv_tab4_fragment2_my_tourism_coin:
+            case R.id.tv_tab4_fragment2_my_tourism_coin: //我的旅游币
                 Tab4MyTourismCoinActivity.actionStart(getContext(), null);
                 break;
             case R.id.tv_user_message: //我的消息
@@ -143,6 +148,7 @@ public class Tab4Fragment2 extends Fragment implements View.OnClickListener {
                 Intent intentRele = new Intent(getContext(), Tab4MyReleaseActivity.class);
                 startActivity(intentRele);
                 break;
+            case R.id.title_main_iv_right_telephone: //编辑用户信息
             case R.id.tv_user_information:
                 Intent intentInfo = new Intent(getContext(), Tab4UserInfoActivity.class);
                 startActivity(intentInfo);
@@ -155,7 +161,7 @@ public class Tab4Fragment2 extends Fragment implements View.OnClickListener {
                 Intent intentAut = new Intent(getContext(), Tab4AccountCertificationActivity.class);
                 startActivity(intentAut);
                 break;
-            case R.id.tv_user_contacts:
+            case R.id.tv_user_contacts: //常用联系人
                 Intent intentCon = new Intent(getContext(), UserContactsListActivity.class);
                 startActivity(intentCon);
                 break;

@@ -163,6 +163,7 @@
     <string name="orders_rent_car">租车订单</string>
     <string name="orders_activity">活动订单</string>
     <string name="orders_visa">签证订单</string>
+    <string name="orders_detail_title">订单详情</string>
 
     <string name="tab3_order_item_cancel_order">取消订单</string>
     <string name="tab3_order_item_sign_contact">签约付款</string>
@@ -213,6 +214,9 @@
     <!--个人中心-->
     <string name="user_info_nickname">昵称</string>
     <string name="user_info_gender">性别</string>
+
+    <!--联系人-->
+    <string name="contact_add_title">添加常用联系人</string>
 
     <!--我的旅游币-->
     <string name="my_tourism_coin_title">我的旅游币</string>
@@ -324,6 +328,9 @@
     <string name="hotel_detail_reserve">预定</string>
     <string name="hotel_detail_map">地图</string>
     <string name="hotel_order_title">订单填写</string>
+    <string name="hotel_location_title">我的位置</string>
+    <string name="hotel_location_address_title">酒店位置</string>
+    <string name="hotel_info_title">酒店信息</string>
 
     <!--火车票-->
     <string name="train_screen_start_time">发车时段</string>

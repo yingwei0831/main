@@ -276,18 +276,18 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
                         changeIndicator(1);
                     }
 
-                    //费用说明——>行程安排
-                    int[] priceAry = new int[2];
-                    layoutPrice.getLocationOnScreen(priceAry);
-                    if (priceAry[1] <= statusHeight + indicatorHeightTop) {
-                        changeIndicator(2);
-                    }
-
                     //行程描述——>标准
                     int[] describe = new int[2];
                     layoutTravelDescribe.getLocationOnScreen(describe);
                     if (describe[1] <= statusHeight + indicatorHeightTop) {
                         changeIndicator(3);
+                    }
+
+                    //费用说明——>行程安排
+                    int[] priceAry = new int[2];
+                    layoutPrice.getLocationOnScreen(priceAry);
+                    if (priceAry[1] <= statusHeight + indicatorHeightTop) {
+                        changeIndicator(2);
                     }
 
                     //预订须知

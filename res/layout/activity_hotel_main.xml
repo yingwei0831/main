@@ -7,9 +7,33 @@
     android:orientation="vertical"
     tools:context="com.jhhy.cuiweitourism.ui.HotelMainActivity">
 
-    <LinearLayout
+    <com.jhhy.cuiweitourism.view.MyScrollView
+        android:id="@+id/viewflipper_myScrollview"
         android:layout_width="match_parent"
-        android:layout_height="140dp" />
+        android:layout_height="140dp"
+        >
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="140dp">
+
+            <ViewFlipper
+                android:id="@+id/viewflipper"
+                android:layout_width="match_parent"
+                android:layout_height="140dp">
+
+            </ViewFlipper>
+            <LinearLayout
+                android:id="@+id/layout_indicator_point"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingBottom="2dp"/>
+        </FrameLayout>
+
+    </com.jhhy.cuiweitourism.view.MyScrollView>
 
     <!--定位地址-->
     <RelativeLayout

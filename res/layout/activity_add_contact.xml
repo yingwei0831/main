@@ -7,10 +7,11 @@
     tools:context=".ui.ContactAddActivity"
     android:paddingBottom="16dp">
 
-    <include android:id="@+id/title_add_contact" layout="@layout/title_tab1_inner_travel"/>
+    <!--<include android:id="@+id/title_add_contact" layout="@layout/title_tab1_inner_travel"/>-->
+
+        <!--android:layout_below="@+id/title_add_contact"-->
     <View
         android:id="@+id/line_add_contact_1"
-        android:layout_below="@+id/title_add_contact"
         android:layout_width="match_parent"
         android:layout_height="1.2px"
         android:background="@color/colorLineGray2"

@@ -15,6 +15,7 @@
     <style name="ActionBarTheme" parent="AppTheme">
         <item name="android:actionBarStyle">@style/MyActionBarStyle</item>
         <item name="actionBarStyle">@style/MyActionBarStyle</item>
+        <item name="android:windowContentOverlay">@null</item>
     </style>
     <!--<style name="CustomWindowTitleBackground">-->
         <!--<item name="android:background">@color/colorBgTitleMain</item>-->
@@ -54,7 +55,6 @@
         <item name="contentInsetStart">0dp</item>
         <item name="contentInsetEnd">0dp</item>
         <item name="background">@android:color/white</item>
-        <item name="android:windowContentOverlay">@null</item>
     </style>
 
     <style name="textsizeappearance">

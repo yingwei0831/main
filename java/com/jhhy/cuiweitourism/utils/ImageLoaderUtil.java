@@ -85,7 +85,7 @@ public class  ImageLoaderUtil {
 		// mAttacher = new PhotoViewAttacher(imageres);
 
 		String mImagePath = imagePath;
-		if(checkImage(imagePath)){//加载本地图片
+		if(checkImage(imagePath)){ //加载本地图片
 			File file = new File(imagePath); //http:/61.51.110.209:8080/ok/ARTICLE_IMG/IMG_20150819_121647.JPEG
 			String fileName = file.getName(); //IMG_20150819_121647.JPEG
 			mImagePath = "file://" + IMG_PATH + fileName; //file:///storage/emulated/0/ARTICLE_IMG/IMG_20150819_121647.JPEG
@@ -116,12 +116,12 @@ public class  ImageLoaderUtil {
 					message = "未知的错误";
 					break;
 				}
-				LogUtil.e(TAG, "下载失败，图片地址："+imageUri+"，失败原因："+message);
+				LogUtil.e(TAG, "下载失败，图片地址：" + imageUri + "，失败原因：" + message);
 			}
 
 			@Override
 			public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-				LogUtil.i(TAG, "下载完成，图片地址："+imageUri);
+				LogUtil.e(TAG, "下载完成，图片地址："+imageUri);
 				saveBMP2SD(imageUri, loadedImage);
 				mCallback.refreshAdapter(loadedImage);
 			}
@@ -181,6 +181,22 @@ public class  ImageLoaderUtil {
 
 	public void displayImage(String url, ImageView imageView){
 		ImageLoader.getInstance().displayImage(url, imageView);
+	}
+
+	public void loadImage(String url){
+		ImageLoader.getInstance().loadImage(url, new SimpleImageLoadingListener(){
+			@Override
+			public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+				super.onLoadingComplete(imageUri, view, loadedImage);
+				LogUtil.e(TAG, "下载图片完成，图片地址："+imageUri);
+			}
+
+			@Override
+			public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+				super.onLoadingFailed(imageUri, view, failReason);
+				LogUtil.e(TAG, "下载图片失败，图片地址：" + imageUri + "，失败原因：" + failReason.getType());
+			}
+		});
 	}
 
 	public static void setIconData(Context context, final ImageView ivIcon, String url) {

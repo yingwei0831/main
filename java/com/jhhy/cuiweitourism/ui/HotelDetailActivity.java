@@ -254,11 +254,17 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
                 Bundle bundle = new Bundle();
                 bundle.putString("latitude", hotelDetail.getLat());
                 bundle.putString("longitude", hotelDetail.getLng());
+                bundle.putString("address", hotelDetail.getAddress());
                 intent.putExtras(bundle);
                 startActivity(intent);
                 break;
             case R.id.layout_hotel_opening:
                 //TODO 进入详情页
+                Intent intentInfo = new Intent(getApplicationContext(), HotelInfoActivity.class);
+                Bundle bundleInfo = new Bundle();
+                bundleInfo.putSerializable("info", hotelDetail);
+                intentInfo.putExtras(bundleInfo);
+                startActivity(intentInfo);
                 break;
         }
     }

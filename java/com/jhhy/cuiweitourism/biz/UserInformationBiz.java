@@ -278,7 +278,8 @@ public class UserInformationBiz {
 // {"head":{"res_code":"0000","res_msg":"success","res_arg":"上传成功"},
 // "body":{"avatar":"http:\/\/cwly.taskbees.cn:8083\/uploads\/member\/111474787153.jpg"}}
                     msg.arg1 = 1;
-                    String avatarPath = resultObj.getString(Consts.KEY_USER_ICON_PATH);
+                    JSONObject body = resultObj.getJSONObject(Consts.KEY_BODY);
+                    String avatarPath = body.getString(Consts.KEY_USER_ICON_PATH);
                     msg.obj = avatarPath;
                 }
             } catch (JSONException e) {
@@ -286,6 +287,14 @@ public class UserInformationBiz {
             } finally {
                 handler.sendMessage(msg);
             }
+        }
+
+        @Override
+        public void onError(Throwable ex, boolean isOnCallback) {
+            super.onError(ex, isOnCallback);
+            Message msg = new Message();
+
+            handler.sendMessage(msg);
         }
     };
 

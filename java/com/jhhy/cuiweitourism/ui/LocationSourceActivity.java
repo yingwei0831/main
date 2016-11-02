@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -18,22 +20,28 @@ import com.amap.api.maps2d.model.BitmapDescriptorFactory;
 import com.amap.api.maps2d.model.MyLocationStyle;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.net.utils.Consts;
+import com.jhhy.cuiweitourism.net.utils.LogUtil;
 
 /**
  * AMapV1地图中简单介绍显示定位小蓝点
  */
-public class LocationSourceActivity extends Activity implements LocationSource,
+public class LocationSourceActivity extends BaseActionBarActivity implements LocationSource,
 		AMapLocationListener {
+
+	private String TAG = LocationSourceActivity.class.getSimpleName();
+
 	private AMap aMap;
 	private MapView mapView;
 	private OnLocationChangedListener mListener;
 	private AMapLocationClient mlocationClient;
 	private AMapLocationClientOption mLocationOption;
 
+	private TextView tvLocationAddress; //我定位的地点
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
 		setContentView(R.layout.locationsource_activity);
+		super.onCreate(savedInstanceState);
 		mapView = (MapView) findViewById(R.id.map);
 		mapView.onCreate(savedInstanceState);// 此方法必须重写
 		init();
@@ -45,7 +53,7 @@ public class LocationSourceActivity extends Activity implements LocationSource,
 	private void init() {
 		if (aMap == null) {
 			aMap = mapView.getMap();
-			aMap.moveCamera(CameraUpdateFactory.zoomTo(Consts.AMAP_ZOOM_LEVEL));//必须在初始化时候调用才能改变缩放级别
+			aMap.moveCamera(CameraUpdateFactory.zoomTo(Consts.AMAP_ZOOM_LEVEL)); //必须在初始化时候调用才能改变缩放级别
 			setUpMap();
 		}
 	}
@@ -67,6 +75,14 @@ public class LocationSourceActivity extends Activity implements LocationSource,
 		aMap.getUiSettings().setMyLocationButtonEnabled(true);// 设置默认定位按钮是否显示
 		aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
 	   // aMap.setMyLocationType()
+	}
+
+	@Override
+	protected void setupView() {
+		super.setupView();
+		tvTitle.setText(getString(R.string.hotel_location_title));
+		tvLocationAddress = (TextView) findViewById(R.id.tv_location_address);
+		tvLocationAddress.setVisibility(View.GONE);
 	}
 
 	/**
@@ -112,9 +128,12 @@ public class LocationSourceActivity extends Activity implements LocationSource,
 	@Override
 	public void onLocationChanged(AMapLocation amapLocation) {
 		if (mListener != null && amapLocation != null) {
-			if (amapLocation != null
-					&& amapLocation.getErrorCode() == 0) {
+			if (amapLocation.getErrorCode() == 0) {
 				mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
+				if (tvLocationAddress.getVisibility() == View.GONE) {
+					tvLocationAddress.setVisibility(View.VISIBLE);
+				}
+				tvLocationAddress.setText(amapLocation.getAddress());
 			} else {
 				String errText = "定位失败," + amapLocation.getErrorCode()+ ": " + amapLocation.getErrorInfo();
 				Log.e("AmapErr",errText);

@@ -28,7 +28,7 @@
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
 
-    <!--高德定位-->
+    <!-- 高德定位 -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -87,7 +87,8 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <!--高德定位-->
+
+        <!-- 高德定位 -->
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="ec04c50141701d3678f9a68b5057c1df" />
@@ -167,7 +168,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
-
         <activity
             android:name=".ui.InnerTravelCityActivity"
             android:screenOrientation="portrait"
@@ -224,7 +224,9 @@
         <activity
             android:name=".ui.ContactAddActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/ActionBarTheme"
+            android:launchMode="singleTop"
+            />
         <activity
             android:name=".ui.ReserveNoticeActivity"
             android:screenOrientation="portrait"
@@ -264,7 +266,9 @@
         <activity
             android:name=".ui.Tab4OrderDetailsActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:launchMode="singleTop"
+            android:theme="@style/ActionBarTheme"
+             />
         <activity
             android:name=".ui.RequestRefundActivity"
             android:screenOrientation="portrait"
@@ -507,7 +511,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/ActionBarTheme"
             android:windowSoftInputMode="adjustPan|stateHidden" />
-
         <activity android:name=".ui.BaseTitleActivity" />
         <activity
             android:name=".ui.TrainListItemInfoActivity"
@@ -519,15 +522,32 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/ActionBarTheme" />
-
         <activity
             android:name=".ui.PlaneMainActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/ActionBarTheme" />
+        <activity
+            android:name=".ui.ReGeocoderActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/ActionBarTheme" />
+        <activity
+            android:name=".ui.TrainPaySuccessActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/ActionBarTheme" />
+        <activity
+            android:name=".ui.LocationSourceActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/ActionBarTheme" />
 
-        <activity android:name=".ui.ReGeocoderActivity"
-            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.HotelInfoActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/ActionBarTheme" />
 
         <!-- ShareSDK 2、注意： tencent后面的appid要保持和您配置的QQ的appid一致 -->
         <activity
@@ -536,8 +556,9 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden|adjustResize">
-
-            <meta-data android:name="AuthorizeAdapter" android:value="cn.sharesdk.onekeyshare.ShareSDKLogoAdapter"/>
+            <meta-data
+                android:name="AuthorizeAdapter"
+                android:value="cn.sharesdk.onekeyshare.ShareSDKLogoAdapter" />
 
             <intent-filter>
                 <data android:scheme="tencent100371282" />
@@ -595,12 +616,10 @@
             android:screenOrientation="behind" />
         <!-- 接入支付宝支付-end- -->
 
-        <activity android:name=".ui.TrainPaySuccessActivity" />
-        <activity android:name=".ui.LocationSourceActivity" android:screenOrientation="portrait"/>
 
-        <!--高德定位-->
+        <!-- 高德定位 -->
         <!-- 定位需要的服务 使用2.0的定位需要加上这个 -->
-        <service android:name="com.amap.api.location.APSService"/>
+        <service android:name="com.amap.api.location.APSService" />
 
     </application>
 

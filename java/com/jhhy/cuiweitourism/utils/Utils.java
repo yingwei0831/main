@@ -311,6 +311,11 @@ public class Utils {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
         return format.format(date);
     }
+    public static String getTimeStrYMDE(long time){
+        Date date = new Date(time);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd E", Locale.CHINA);
+        return format.format(date);
+    }
 
     /**
      * 转为毫秒

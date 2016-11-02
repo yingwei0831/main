@@ -17,7 +17,7 @@ import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.just.sun.pricecalendar.ToastCommon;
 
-public class ContactAddActivity extends BaseActivity implements View.OnClickListener {
+public class ContactAddActivity extends BaseActionBarActivity {
 
     private Button btnAdd;
 
@@ -62,11 +62,11 @@ public class ContactAddActivity extends BaseActivity implements View.OnClickList
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_contact);
         getData();
-        setupView();
-        addListener();
+        super.onCreate(savedInstanceState);
+//        setupView();
+//        addListener();
     }
 
     private void getData() {
@@ -79,11 +79,16 @@ public class ContactAddActivity extends BaseActivity implements View.OnClickList
         }
     }
 
-    private void addListener() {
+    @Override
+    protected void addListener() {
+        super.addListener();
         btnAdd.setOnClickListener(this);
     }
 
-    private void setupView() {
+    @Override
+    protected void setupView() {
+        super.setupView();
+        tvTitle.setText(getString(R.string.contact_add_title));
         btnAdd = (Button) findViewById(R.id.btn_add_save_contacts);
 
         etPassport = (EditText) findViewById(R.id.et_contacts_passport);
@@ -95,21 +100,22 @@ public class ContactAddActivity extends BaseActivity implements View.OnClickList
         }
     }
 
+    @Override
+    public void onClick(View view) {
+        super.onClick(view);
+        switch (view.getId()) {
+            case R.id.btn_add_save_contacts:
+                saveContacts();
+                break;
+        }
+    }
+
     private void refreshView() {
         etName.setText(contacts.getContactsName());
         etCardId.setText(contacts.getContactsIdCard());
         etMobile.setText(contacts.getContactsMobile());
         if (contacts.getContactsPassport() != null) {
             etPassport.setText(contacts.getContactsPassport());
-        }
-    }
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.btn_add_save_contacts:
-                saveContacts();
-                break;
         }
     }
 

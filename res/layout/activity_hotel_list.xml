@@ -8,95 +8,134 @@
     android:orientation="vertical"
     tools:context=".ui.InnerTravelCityActivity">
 
-    <include layout="@layout/search_bar_simple_out" />
+    <!--<include layout="@layout/search_bar_simple_out" />-->
+    <RelativeLayout
+        android:id="@+id/layout_search"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_below="@+id/title_city_selection"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp"
+        android:paddingRight="16dp"
+        >
 
-    <!--<FrameLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:background="@android:color/white">-->
+        <ImageView
+            android:id="@+id/iv_title_search_left"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:src="@mipmap/arrow_left_green"
+            android:scaleType="centerInside"
+            />
 
-        <LinearLayout
+        <EditText
+            android:layout_toRightOf="@+id/iv_title_search_left"
+            android:drawableLeft="@mipmap/edit_search"
+            android:id="@+id/edit_search"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="40dp"
+            android:background="#EFF2F7"
+            android:drawablePadding="6dp"
+            android:focusableInTouchMode="true"
+            android:hint="关键字/位置/品牌/酒店等"
+            android:gravity="center"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:orientation="vertical">
+            android:singleLine="true"
+            android:textColor="@android:color/black"
+            android:textColorHint="#ff333333"
+            android:textSize="16sp" />
+    </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1.2px"
+        android:background="@color/colorLineGray2" />
+    <!--<FrameLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:background="@android:color/white">-->
 
-            <com.handmark.pulltorefresh.library.PullToRefreshListView
-                android:id="@+id/activity_hot_activity_list_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
 
-                >
-
-            </com.handmark.pulltorefresh.library.PullToRefreshListView>
-
-        </LinearLayout>
-
-        <LinearLayout
+        <com.handmark.pulltorefresh.library.PullToRefreshListView
+            android:id="@+id/activity_hot_activity_list_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:background="@color/colorInnerTravelBottomBar"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
 
-            <TextView
-                android:id="@+id/tv_tab1_hot_activity_list_sort_default"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:drawablePadding="4dp"
+            >
 
-                android:drawableTop="@mipmap/tab1_inner_travel_sort_default"
-                android:gravity="center_horizontal"
-                android:paddingBottom="6dp"
-                android:paddingTop="8dp"
-                android:text="@string/hotel_hotel_my_hotel_screen"
-                android:textColor="@android:color/white" />
+        </com.handmark.pulltorefresh.library.PullToRefreshListView>
 
-            <TextView
-                android:id="@+id/tv_tab1_hot_activity_list_trip_days"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:drawablePadding="4dp"
-                android:drawableTop="@mipmap/tab1_inner_travel_trip_days"
-                android:gravity="center_horizontal"
-                android:paddingBottom="6dp"
-                android:paddingTop="8dp"
-                android:text="@string/hotel_hotel_my_hotel_area"
-                android:textColor="@android:color/white" />
+    </LinearLayout>
 
-            <TextView
-                android:id="@+id/tv_tab1_hot_activity_list_start_time"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:drawablePadding="4dp"
-                android:drawableTop="@mipmap/icon_inner_travel_start_time"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@color/colorInnerTravelBottomBar"
+        android:orientation="horizontal">
 
-                android:gravity="center_horizontal"
-                android:paddingBottom="6dp"
-                android:paddingTop="8dp"
-                android:text="@string/hotel_hotel_my_hotel_level"
-                android:textColor="@android:color/white" />
+        <TextView
+            android:id="@+id/tv_tab1_hot_activity_list_sort_default"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:drawablePadding="4dp"
 
-            <TextView
-                android:id="@+id/tv_tab1_hot_activity_list_screen_price"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:drawablePadding="4dp"
-                android:drawableTop="@mipmap/tab1_inner_travel_sort_default"
-                android:gravity="center_horizontal"
-                android:paddingBottom="6dp"
-                android:paddingTop="8dp"
-                android:text="@string/tab1_inner_travel_sort_default"
-                android:textColor="@android:color/white" />
-        </LinearLayout>
+            android:drawableTop="@mipmap/tab1_inner_travel_sort_default"
+            android:gravity="center_horizontal"
+            android:paddingBottom="6dp"
+            android:paddingTop="8dp"
+            android:text="@string/hotel_hotel_my_hotel_screen"
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:id="@+id/tv_tab1_hot_activity_list_trip_days"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:drawablePadding="4dp"
+            android:drawableTop="@mipmap/tab1_inner_travel_trip_days"
+            android:gravity="center_horizontal"
+            android:paddingBottom="6dp"
+            android:paddingTop="8dp"
+            android:text="@string/hotel_hotel_my_hotel_area"
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:id="@+id/tv_tab1_hot_activity_list_start_time"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:drawablePadding="4dp"
+            android:drawableTop="@mipmap/icon_inner_travel_start_time"
+
+            android:gravity="center_horizontal"
+            android:paddingBottom="6dp"
+            android:paddingTop="8dp"
+            android:text="@string/hotel_hotel_my_hotel_level"
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:id="@+id/tv_tab1_hot_activity_list_screen_price"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:drawablePadding="4dp"
+            android:drawableTop="@mipmap/tab1_inner_travel_sort_default"
+            android:gravity="center_horizontal"
+            android:paddingBottom="6dp"
+            android:paddingTop="8dp"
+            android:text="@string/tab1_inner_travel_sort_default"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
 
     <!--</FrameLayout>-->
 

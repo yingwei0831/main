@@ -23,6 +23,7 @@
 
             </ViewFlipper>
 
+            <include layout="@layout/search_bar"/>
             <LinearLayout
                 android:id="@+id/layout_indicator_point"
                 android:layout_width="match_parent"
@@ -32,7 +33,6 @@
                 android:orientation="horizontal"
                 android:paddingBottom="2dp"/>
 
-            <include layout="@layout/search_bar"/>
 
         </FrameLayout>
 

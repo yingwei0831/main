@@ -87,11 +87,9 @@ public class UserContactsListActivity extends BaseActivity implements AdapterVie
         imageViewRight = (TextView) findViewById(R.id.tv_title_simple_title_right);
         imageViewRight.setText("");
         imageViewLeft = (TextView) findViewById(R.id.tv_title_simple_title_left);
-
         tvTitle = (TextView) findViewById(R.id.tv_title_simple_title);
-        drawableRight = ContextCompat.getDrawable(UserContactsListActivity.this, R.mipmap.arrow_right_green);
+        drawableRight = ContextCompat.getDrawable(UserContactsListActivity.this, R.mipmap.icon_add_passenger);
         drawableRight.setBounds(0, 0, drawableRight.getMinimumWidth(), drawableRight.getMinimumHeight());
-
         imageViewRight.setCompoundDrawables(null, null, drawableRight, null);
 
         tvTitle.setText("常用联系人");

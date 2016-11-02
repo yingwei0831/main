@@ -2,25 +2,39 @@ package com.jhhy.cuiweitourism.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.ViewFlipper;
 
 import com.jhhy.cuiweitourism.R;
+import com.jhhy.cuiweitourism.circleviewpager.ViewFactory;
 import com.jhhy.cuiweitourism.dialog.DatePickerActivity;
+import com.jhhy.cuiweitourism.moudle.ADInfo;
 import com.jhhy.cuiweitourism.moudle.PhoneBean;
+import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.utils.Utils;
+import com.jhhy.cuiweitourism.view.MyScrollView;
 import com.just.sun.pricecalendar.ToastCommon;
 
-public class HotelMainActivity extends BaseActivity implements View.OnClickListener {
+import java.util.ArrayList;
+import java.util.List;
+
+public class HotelMainActivity extends BaseActivity implements View.OnClickListener, View.OnTouchListener, GestureDetector.OnGestureListener {
 
     private String TAG = HotelMainActivity.class.getSimpleName();
     private ImageView ivTitleLeft;
@@ -57,7 +71,7 @@ public class HotelMainActivity extends BaseActivity implements View.OnClickListe
         actionBar.setDisplayShowCustomEnabled(true);
         View v = LayoutInflater.from(getApplicationContext()).inflate(R.layout.title_tab1_inner_travel, null);
         actionBar.setCustomView(v, new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT)); //自定义ActionBar布局);
-        actionBar.setElevation(0); //删除自带阴影
+        actionBar.setElevation(0); //删除自带阴影>5.0
         setContentView(R.layout.activity_hotel_main);
         getData();
         setupView();
@@ -72,10 +86,45 @@ public class HotelMainActivity extends BaseActivity implements View.OnClickListe
         }
     }
 
+    private GestureDetector mGestureDetector; // MyScrollView的手势?
+//顶部图片展示
+private List<ADInfo> infos = new ArrayList<ADInfo>();
+    private ViewFlipper flipper;
+    private LinearLayout layoutPoint;
+    private List<String> imageUrls = new ArrayList<>();
+    private ImageView[] indicators; // 轮播图片数组
+    private int currentPosition = 0; // 轮播当前位置
+
+    private static final int FLING_MIN_DISTANCE = 20;
+    private static final int FLING_MIN_VELOCITY = 0;
+
+    private final int WHEEL = 100; // 转动
+    private final int WHEEL_WAIT = 101; // 等待
+    private boolean isScrolling = false; // 滚动框是否滚动着
+    private long releaseTime = 0; // 手指松开、页面不滚动时间，防止手机松开后短时间进行切换
+
     private void setupView() {
+//        imageUrls.add("drawable://" + R.drawable.ic_empty);
+        imageUrls.add("drawable://" + R.mipmap.travel_icon);
+
         tvTitle = (TextView) actionBar.getCustomView().findViewById(R.id.tv_title_inner_travel);
         tvTitle.setText(getString(R.string.hotel_title));
         ivTitleLeft = (ImageView) actionBar.getCustomView().findViewById(R.id.title_main_tv_left_location);
+
+        mGestureDetector = new GestureDetector(getApplicationContext(), this);
+
+        flipper = (ViewFlipper)findViewById(R.id.viewflipper);
+        layoutPoint =(LinearLayout)findViewById(R.id.layout_indicator_point);
+
+        addImageView(imageUrls.size());
+        addIndicator(imageUrls.size());
+        setIndicator(currentPosition);
+
+        flipper.setOnTouchListener(this);
+
+        dianSelect(currentPosition);
+//        MyScrollView myScrollView = (MyScrollView)findViewById(R.id.viewflipper_myScrollview);
+//        myScrollView.setGestureDetector(mGestureDetector);
 
         tvAddress = (TextView) findViewById(R.id.tv_location_name);
         tvLocation = (TextView) findViewById(R.id.tv_location_icon);
@@ -92,6 +141,11 @@ public class HotelMainActivity extends BaseActivity implements View.OnClickListe
         btnMyHotel = (Button) findViewById(R.id.btn_to_my_hotel);
 
         tvAddress.setText(selectCity.getName());
+        checkInDate = Utils.getCurrentTimeYMD();
+        checkOutDate = Utils.getTimeStrYMD(System.currentTimeMillis() + 1000 * 60 * 60 * 24);
+        tvCheckInDate.setText("今天");
+        tvCheckOutDate.setText("明天");
+        stayDays = 1;
     }
 
     private void addListener() {
@@ -198,4 +252,180 @@ public class HotelMainActivity extends BaseActivity implements View.OnClickListe
         }
         context.startActivity(intent);
     }
+
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        return mGestureDetector.onTouchEvent(motionEvent);
+    }
+    private void addIndicator(int size){
+//        if(indicators == null) {
+        indicators = new ImageView[size];
+//        }
+        layoutPoint.removeAllViews();
+        for (int i = 0; i < size; i++) {
+            View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.view_cycle_viewpager_indicator, null);
+            indicators[i] = (ImageView) view.findViewById(R.id.image_indicator);
+            layoutPoint.addView(view);
+        }
+
+    }
+
+    private void setIndicator(int current){
+        for(int i = 0; i < indicators.length; i++) {
+            if(i == current) {
+                indicators[current].setImageResource(R.drawable.icon_point_pre);
+            }else{
+                indicators[i].setImageResource(R.drawable.icon_point);
+            }
+        }
+    }
+
+    private void addImageView(int length) {
+        for(int i=0; i < length; i++){
+            ADInfo info = new ADInfo();
+            info.setUrl(imageUrls.get(i));
+            info.setContent("图片-->" + i);
+            infos.add(info);
+            flipper.addView(ViewFactory.getImageView(getApplicationContext(), infos.get(i).getUrl()));
+        }
+    }
+
+    /**
+     * 对应被选中的点的图片
+     * @param id
+     */
+    private void dianSelect(int id) {
+        indicators[id].setImageResource(R.drawable.icon_point_pre);
+    }
+    /**
+     * 对应未被选中的点的图片
+     * @param id
+     */
+    private void dianUnselect(int id){
+        indicators[id].setImageResource(R.drawable.icon_point);
+    }
+
+    @Override
+    public boolean onDown(MotionEvent motionEvent) {
+        return false;
+    }
+
+    @Override
+    public void onShowPress(MotionEvent motionEvent) {
+
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent motionEvent) {
+        return false;
+    }
+
+    @Override
+    public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
+        return false;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent motionEvent) {
+
+    }
+
+    @Override
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        if(e1.getX() - e2.getX() > FLING_MIN_DISTANCE &&
+                Math.abs(velocityX) > FLING_MIN_VELOCITY){
+//            Log.i(TAG, "==============开始向左滑动了================");
+            showNextView();
+            releaseTime = System.currentTimeMillis();
+            handler.removeCallbacks(runnable);
+            handler.postDelayed(runnable, Consts.TIME_PERIOD);
+            return true;
+        }else if(e2.getX() - e1.getX() > FLING_MIN_DISTANCE &&
+                Math.abs(velocityX) > FLING_MIN_VELOCITY){
+//            Log.i(TAG, "==============开始向右滑动了================");
+            showPreviousView();
+            releaseTime = System.currentTimeMillis();
+            handler.removeCallbacks(runnable);
+            handler.postDelayed(runnable, Consts.TIME_PERIOD);
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    private void showNextView() {
+//        Log.i(TAG, "========showNextView=======向左滑动=======");
+        flipper.setInAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.push_left_in));
+        flipper.setOutAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.push_left_out));
+        flipper.showNext();
+        currentPosition++;
+        if(currentPosition == flipper.getChildCount()){
+            dianUnselect(currentPosition - 1);
+            currentPosition = 0;
+            dianSelect(currentPosition);
+        }else{
+            dianUnselect(currentPosition - 1);
+            dianSelect(currentPosition);
+        }
+//		Log.i(TAG, "==============第"+currentPage+"页==========");
+    }
+
+    private void showPreviousView() {
+//        Log.i(TAG, "========showPreviousView=======向右滑动=======");
+        dianSelect(currentPosition);
+        flipper.setInAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.push_right_in));
+        flipper.setOutAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.push_right_out));
+        flipper.showPrevious();
+        currentPosition--;
+        if(currentPosition == -1){
+            dianUnselect(currentPosition + 1);
+            currentPosition = flipper.getChildCount() - 1;
+            dianSelect(currentPosition);
+        }else{
+            dianUnselect(currentPosition + 1);
+            dianSelect(currentPosition);
+        }
+//		Log.i(TAG, "==============第"+currentPage+"页==========");
+    }
+
+    private final Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            if (HotelMainActivity.this != null && !HotelMainActivity.this.isFinishing()) {
+                long now = System.currentTimeMillis();
+                // 检测上一次滑动时间与本次之间是否有触击(手滑动)操作，有的话等待下次轮播
+                if (now - releaseTime > Consts.TIME_PERIOD - 500) {
+                    handler.sendEmptyMessage(WHEEL);
+                } else {
+                    handler.sendEmptyMessage(WHEEL_WAIT);
+                }
+            }
+        }
+    };
+
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case WHEEL:
+                    if(flipper.getChildCount() != 0){
+                        if(!isScrolling){
+                            //向前滑向后滑
+                            showNextView();
+                        }
+                    }
+                    releaseTime = System.currentTimeMillis();
+                    handler.removeCallbacks(runnable);
+                    handler.postDelayed(runnable, Consts.TIME_PERIOD);
+                    break;
+                case WHEEL_WAIT:
+                    if(flipper.getChildCount() != 0){
+                        handler.removeCallbacks(runnable);
+                        handler.postDelayed(runnable, Consts.TIME_PERIOD);
+                    }
+                    break;
+            }
+        }
+    };
 }

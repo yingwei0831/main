@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.amap.api.maps2d.AMap;
 import com.amap.api.maps2d.CameraUpdateFactory;
@@ -20,6 +21,8 @@ import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.amap.api.services.geocoder.GeocodeSearch.OnGeocodeSearchListener;
 import com.jhhy.cuiweitourism.R;
+import com.jhhy.cuiweitourism.net.utils.Consts;
+import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.utils.AMapUtil;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
 
@@ -27,21 +30,27 @@ import com.jhhy.cuiweitourism.utils.ToastUtil;
 /**
  * 地理编码与逆地理编码功能介绍
  */
-public class ReGeocoderActivity extends Activity implements
+public class ReGeocoderActivity extends BaseActionBarActivity implements
 		OnGeocodeSearchListener, OnClickListener {
+
+	private String TAG = ReGeocoderActivity.class.getSimpleName();
+
 	private ProgressDialog progDialog = null;
 	private GeocodeSearch geocoderSearch;
 	private String addressName;
 	private AMap aMap;
 	private MapView mapView;
-	private LatLonPoint latLonPoint = new LatLonPoint(39.90865, 116.39751);
+	private LatLonPoint latLonPoint; // = new LatLonPoint(39.90865, 116.39751);
 	private Marker regeoMarker;
+
+	private TextView tvAddress;
+	private String address;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
 		getData();
 		setContentView(R.layout.geocoder_activity);
+		super.onCreate(savedInstanceState);
         /*
          * 设置离线地图存储目录，在下载离线地图或初始化地图设置;
          * 使用过程中可自行设置, 若自行设置了离线地图存储的路径，
@@ -60,8 +69,18 @@ public class ReGeocoderActivity extends Activity implements
 		if (bundle != null){
 			latitude = bundle.getString("latitude");
 			longitude = bundle.getString("longitude");
+			address = bundle.getString("address");
 			latLonPoint = new LatLonPoint(Double.parseDouble(latitude), Double.parseDouble(longitude));
+			LogUtil.e(TAG, "latitude = " + latitude + ", longitude = " + longitude);
 		}
+	}
+
+	@Override
+	protected void setupView() {
+		super.setupView();
+		tvTitle.setText(getString(R.string.hotel_location_address_title));
+		tvAddress = (TextView) findViewById(R.id.tv_hotel_location_address);
+		tvAddress.setText(address);
 	}
 
 	/**
@@ -70,6 +89,7 @@ public class ReGeocoderActivity extends Activity implements
 	private void init() {
 		if (aMap == null) {
 			aMap = mapView.getMap();
+			aMap.moveCamera(CameraUpdateFactory.zoomTo(Consts.AMAP_ZOOM_LEVEL)); //必须在初始化时候调用才能改变缩放级别
 			regeoMarker = aMap.addMarker(new MarkerOptions().anchor(0.5f, 0.5f)
 					.icon(BitmapDescriptorFactory
 							.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
@@ -80,6 +100,8 @@ public class ReGeocoderActivity extends Activity implements
 		geocoderSearch = new GeocodeSearch(this);
 		geocoderSearch.setOnGeocodeSearchListener(this);
 		progDialog = new ProgressDialog(this);
+
+		getAddress(latLonPoint);
 	}
 
 	/**

@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.Tab4FragmentAdapter;
@@ -20,7 +21,7 @@ import com.ns.fhvp.TouchPanelLayout;
  * Use the {@link Tab4Fragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Tab4Fragment extends Fragment implements TouchPanelLayout.IConfigCurrentPagerScroll, TouchPanelLayout.OnViewUpdateListener {
+public class Tab4Fragment extends Fragment implements TouchPanelLayout.IConfigCurrentPagerScroll, TouchPanelLayout.OnViewUpdateListener, View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -35,6 +36,7 @@ public class Tab4Fragment extends Fragment implements TouchPanelLayout.IConfigCu
     private ViewPager viewPager;
     private Tab4FragmentAdapter mAdapter;
 
+    private ImageView ivEditInfo; //编辑个人信息
 
     public Tab4Fragment() {
         // Required empty public constructor
@@ -76,6 +78,7 @@ public class Tab4Fragment extends Fragment implements TouchPanelLayout.IConfigCu
     }
 
     private void setupView(View view) {
+        ivEditInfo = (ImageView) view.findViewById(R.id.title_main_iv_right_telephone);
         viewPager = (ViewPager) view.findViewById(R.id.viewPager);
         mAdapter = new Tab4FragmentAdapter(getChildFragmentManager(), getContext());
         mAdapter.addTab(Tab4FragmentContent.class, "tab4FragmentContent", null);
@@ -83,6 +86,7 @@ public class Tab4Fragment extends Fragment implements TouchPanelLayout.IConfigCu
     }
 
     private void addListener() {
+        ivEditInfo.setOnClickListener(this);
         mTouchPanelLayout.setConfigCurrentPagerScroll(this);
         mTouchPanelLayout.setOnViewUpdateListener(this);
     }
@@ -105,6 +109,15 @@ public class Tab4Fragment extends Fragment implements TouchPanelLayout.IConfigCu
     public void onAlphaChanged(int alpha) {
         if (mAbBg != null) {
             mAbBg.setAlpha(alpha);
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.title_main_iv_right_telephone:
+
+                break;
         }
     }
 }

@@ -161,7 +161,7 @@ public class InnerActivity4 extends AppCompatActivity  implements ISlideCallback
         }
     };
 
-    private final Runnable runnable = new Runnable() {
+    private Runnable runnable = new Runnable() {
         @Override
         public void run() {
             if (InnerActivity4.this != null && !InnerActivity4.this.isFinishing()) {
@@ -210,6 +210,7 @@ public class InnerActivity4 extends AppCompatActivity  implements ISlideCallback
         super.onDestroy();
         //轮播全部取消
         handler.removeCallbacks(runnable);
+        runnable = null;
         handler = null;
     }
 
@@ -306,7 +307,7 @@ public class InnerActivity4 extends AppCompatActivity  implements ISlideCallback
         if (content != null){
             View ivSearchLeft = content.findViewById(R.id.iv_title_search_left);
             ivSearchLeft.setVisibility(View.GONE);
-            EditText etSearchText = (EditText) content.findViewById(R.id.iv_title_search_left);
+            EditText etSearchText = (EditText) content.findViewById(R.id.edit_search);
             etSearchText.setHint("输入你想去的地方");
 
             gvHotDestination = (MyGridView) content.findViewById(R.id.gv_inner_travel_main_hot);

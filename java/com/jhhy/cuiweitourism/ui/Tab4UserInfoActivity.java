@@ -29,9 +29,11 @@ import com.jhhy.cuiweitourism.utils.SharedPreferencesUtils;
 import com.jhhy.cuiweitourism.utils.Utils;
 import com.jhhy.cuiweitourism.view.CircleImageView;
 import com.just.sun.pricecalendar.ToastCommon;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class Tab4UserInfoActivity extends BaseActivity implements View.OnClickListener {
 
@@ -63,14 +65,16 @@ public class Tab4UserInfoActivity extends BaseActivity implements View.OnClickLi
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            LoadingIndicator.cancel();
             switch (msg.what){
                 case Consts.MESSAGE_MODIFY_USER_ICON: //修改用户头像
-                    ToastCommon.toastShortShow(getApplicationContext(), null, String.valueOf(msg.obj));
                     if (msg.arg1 == 1){
                         civUserIcon.setImageBitmap(Bimp.bmp.get(0));//把图片显示在ImageView控件上
+                        ImageLoaderUtil.getInstance(getApplicationContext()).loadImage(String.valueOf(msg.obj));
                         MainActivity.user.setUserIconPath(String.valueOf(msg.obj));
+                    }else{
+                        ToastCommon.toastShortShow(getApplicationContext(), null, String.valueOf(msg.obj));
                     }
+                    LoadingIndicator.cancel();
                     break;
                 case MESSAGE_REFRESH_IMAGE:
                     modifyUserIcon();
@@ -81,8 +85,10 @@ public class Tab4UserInfoActivity extends BaseActivity implements View.OnClickLi
                         tvGender.setText(gender);
                         MainActivity.user.setUserGender(gender);
                     }
+                    LoadingIndicator.cancel();
                     break;
             }
+
         }
     };
 
@@ -119,7 +125,13 @@ public class Tab4UserInfoActivity extends BaseActivity implements View.OnClickLi
         tvID = (TextView) findViewById(R.id.tv_real_id);
 
         if (MainActivity.user.getUserIconPath() != null && !"null".equals(MainActivity.user.getUserIconPath())) {
-            ImageLoaderUtil.getInstance(getApplicationContext()).displayImage(MainActivity.user.getUserIconPath(), civUserIcon);
+//            ImageLoaderUtil.getInstance(getApplicationContext()).displayImage(MainActivity.user.getUserIconPath(), civUserIcon);
+            ImageLoaderUtil.getInstance(getApplicationContext()).getImage(civUserIcon, MainActivity.user.getUserIconPath());
+            ImageLoaderUtil.getInstance(getApplicationContext()).setCallBack(new ImageLoaderUtil.ImageLoaderCallBack() {
+                @Override
+                public void refreshAdapter(Bitmap loadedImage) {
+                }
+            });
         } else {
             civUserIcon.setImageResource(R.mipmap.ic_launcher);
         }
@@ -262,7 +274,6 @@ public class Tab4UserInfoActivity extends BaseActivity implements View.OnClickLi
 
     private void modifyUserIcon() {
         LoadingIndicator.show(Tab4UserInfoActivity.this, "正在上传图片，请稍后...");
-        LoadingIndicator.show(Tab4UserInfoActivity.this, getString(R.string.http_notice));
         UserInformationBiz biz = new UserInformationBiz(getApplicationContext(), handler);
         biz.modifyUserIcon(MainActivity.user.getUserId(), Bimp.bmp.get(0));
     }
@@ -300,6 +311,7 @@ public class Tab4UserInfoActivity extends BaseActivity implements View.OnClickLi
         new Thread(new Runnable() {
             public void run() {
                 while (true) {
+                    LogUtil.e(TAG, "Bimp.max = " + Bimp.max +", Bimp.drr.size() = " + Bimp.drr.size() +"，" + Arrays.toString(Bimp.drr.toArray()));
                     if (Bimp.max == Bimp.drr.size()) {
                         Message message = new Message();
                         message.what = MESSAGE_REFRESH_IMAGE;
@@ -318,10 +330,10 @@ public class Tab4UserInfoActivity extends BaseActivity implements View.OnClickLi
                                     path.lastIndexOf("."));
                             MyFileUtils.saveBitmap(bm, "" + newStr);
                             Bimp.max += 1;
-                            Message message = new Message();
-                            message.arg1 = 1;
-                            message.what = MESSAGE_REFRESH_IMAGE;
-                            handler.sendMessage(message);
+//                            Message message = new Message();
+//                            message.arg1 = 1;
+//                            message.what = MESSAGE_REFRESH_IMAGE;
+//                            handler.sendMessage(message);
                             LogUtil.e(TAG, "-----loading----else----");
                         } catch (IOException e) {
                             e.printStackTrace();

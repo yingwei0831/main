@@ -20,7 +20,7 @@ import com.just.sun.pricecalendar.ToastCommon;
 
 import java.util.List;
 
-public class Tab4OrderDetailsActivity extends BaseActivity implements View.OnClickListener {
+public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
 
     private String TAG = getClass().getSimpleName();
     private String orderSN;
@@ -83,14 +83,16 @@ public class Tab4OrderDetailsActivity extends BaseActivity implements View.OnCli
     };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tab4_order_details);
         getData();
-        setupView();
-        addListener();
+        super.onCreate(savedInstanceState);
     }
 
-    private void setupView() {
+    @Override
+    protected void setupView() {
+        super.setupView();
+        tvTitle.setText(getString(R.string.orders_detail_title));
+
         tvOrderTitle = (TextView) findViewById(R.id.tv_order_title);
         tvOrderSN = (TextView) findViewById(R.id.tv_order_sn);
         tvOrderTime = (TextView) findViewById(R.id.tv_order_time);
@@ -199,7 +201,9 @@ public class Tab4OrderDetailsActivity extends BaseActivity implements View.OnCli
 
     }
 
-    private void addListener() {
+    @Override
+    protected void addListener() {
+        super.addListener();
         btnAction.setOnClickListener(this);
     }
 
@@ -221,6 +225,12 @@ public class Tab4OrderDetailsActivity extends BaseActivity implements View.OnCli
 
     @Override
     public void onClick(View view) {
+        super.onClick(view);
+        switch (view.getId()){
+            case R.id.title_main_tv_left_location:
+                finish();
+                return;
+        }
         switch (order.getStatus()){
             case "0": //正在退款——>取消退款
                 OrderActionBiz biz = new OrderActionBiz(getApplicationContext(), handler);
@@ -255,7 +265,6 @@ public class Tab4OrderDetailsActivity extends BaseActivity implements View.OnCli
                 intentComment.putExtras(bundleComment);
                 startActivityForResult(intentComment, REQUEST_COMMENT);
                 break;
-
         }
     }
 

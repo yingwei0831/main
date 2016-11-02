@@ -3,15 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="58dp"
     android:orientation="horizontal"
-    android:paddingTop="4dp"
     android:paddingBottom="4dp"
-    >
+    android:paddingTop="4dp">
+
     <LinearLayout
         android:layout_width="0dp"
-        android:layout_weight="1"
         android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:layout_weight="1"
         android:gravity="center_vertical"
+        android:orientation="vertical"
         android:paddingLeft="16dp">
 
         <TextView
@@ -19,29 +19,31 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:text="name"
             android:gravity="bottom"
-            android:textSize="16sp"
+            android:text="name"
             android:textColor="@android:color/black"
-            />
+            android:textSize="16sp" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:orientation="horizontal">
+
             <TextView
-                android:layout_below="@+id/tv_contact_name"
                 android:id="@+id/tv_contact_mobile_notice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="手机号："/>
-            <TextView
                 android:layout_below="@+id/tv_contact_name"
-                android:layout_toRightOf="@+id/tv_contact_mobile_notice"
+                android:text="手机号：" />
+
+            <TextView
                 android:id="@+id/tv_contact_mobile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="1111111111"/>
+                android:layout_below="@+id/tv_contact_name"
+                android:layout_toRightOf="@+id/tv_contact_mobile_notice"
+                android:text="1111111111" />
         </LinearLayout>
 
 
@@ -51,8 +53,7 @@
     <ImageView
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:src="@mipmap/arrow_right_dark"
-        android:scaleType="center"
         android:layout_alignParentRight="true"
-        />
+        android:scaleType="center"
+        android:src="@mipmap/arrow_right_dark" />
 </LinearLayout>

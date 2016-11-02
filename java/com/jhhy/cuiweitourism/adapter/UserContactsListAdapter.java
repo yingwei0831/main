@@ -27,14 +27,14 @@ public class UserContactsListAdapter extends MyBaseAdapter {
             view = LayoutInflater.from(context).inflate(R.layout.item_my_contacts, null);
             holder = new ViewHolder();
             holder.tvName = (TextView) view.findViewById(R.id.tv_contact_name);
-            holder.tvID = (TextView) view.findViewById(R.id.tv_contact_name);
+            holder.tvMobile = (TextView) view.findViewById(R.id.tv_contact_mobile);
             view.setTag(holder);
         }else {
             holder = (ViewHolder) view.getTag();
         }
         UserContacts contacts = (UserContacts) getItem(i);
         holder.tvName.setText(contacts.getContactsName());
-        holder.tvID.setText(contacts.getContactsIdCard());
+        holder.tvMobile.setText(contacts.getContactsMobile());
         return view;
     }
 
@@ -51,6 +51,6 @@ public class UserContactsListAdapter extends MyBaseAdapter {
 
     class ViewHolder{
         private TextView tvName;
-        private TextView tvID;
+        private TextView tvMobile;
     }
 }

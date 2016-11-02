@@ -474,20 +474,18 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
             myScrollView2.setGestureDetector(mGestureDetector);
         }
         mScrollView.setView(content);
-        final int titleHeight = layoutTitle.getHeight();
         mScrollView.setOnXScrollChangedI(new XScrollView.onXScrollChangedI() {
             @Override
             public void onXScrollChangedImpl(int l, int t, int oldl, int oldt) {
-
 //                LogUtil.i(TAG, "-------onXScrollChangedImpl--------- l = " + l + ", t = " + t + ", oldl = " + oldl + "，oldt = " +oldt);
                 int[] s = new int[2];
                 layoutTabRecommendForYou.getLocationOnScreen(s);
+                int titleHeight = layoutTitle.getHeight();
                 int statusHeight = Utils.getStatusBarHeight(getContext());
-//                LogUtil.i(TAG, "s: x = " + s[0] + ", y = " + s[1]);
 //                LogUtil.i(TAG, "statusHeight = " + statusHeight + ", titleHeight = " + titleHeight);
                 if(statusHeight + titleHeight >= s[1]){
                     layoutTabRecommendForYou2.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     layoutTabRecommendForYou2.setVisibility(View.GONE);
                 }
             }
@@ -719,11 +717,13 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
 
     @Override
     public void onRefresh() {
+
         mScrollView.stopRefresh();
     }
 
     @Override
     public void onLoadMore() {
+
         mScrollView.stopLoadMore();
     }
 

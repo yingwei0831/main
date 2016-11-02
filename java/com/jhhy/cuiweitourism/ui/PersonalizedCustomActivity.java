@@ -111,7 +111,7 @@ public class PersonalizedCustomActivity extends BaseActivity implements XScrollV
         }
     };
 
-    private final Runnable runnable = new Runnable() {
+    private Runnable runnable = new Runnable() {
         @Override
         public void run() {
             if (PersonalizedCustomActivity.this != null && !PersonalizedCustomActivity.this.isFinishing()) {
@@ -135,6 +135,15 @@ public class PersonalizedCustomActivity extends BaseActivity implements XScrollV
         setupView();
         addListener();
         handler.postDelayed(runnable, Consts.TIME_PERIOD);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //轮播全部取消
+        handler.removeCallbacks(runnable);
+        runnable = null;
+        handler = null;
     }
 
     private void getData() {

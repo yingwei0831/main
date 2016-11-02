@@ -6,7 +6,7 @@
     android:orientation="vertical"
     tools:context=".ui.Tab4OrderDetailsActivity">
 
-    <include layout="@layout/title_tab1_inner_travel" />
+    <!--<include layout="@layout/title_tab1_inner_travel" />-->
 
     <View
         android:layout_width="match_parent"
@@ -140,7 +140,7 @@
 
                 </LinearLayout>
             </LinearLayout>
-
+            <!--联系人信息-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -203,7 +203,7 @@
                 </LinearLayout>
 
             </LinearLayout>
-
+            <!--游客信息-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -231,7 +231,7 @@
 
 
             </LinearLayout>
-
+            <!--发票信息-->
             <LinearLayout
                 android:id="@+id/layout_invoice"
                 android:layout_width="match_parent"
@@ -334,7 +334,7 @@
 
                 </LinearLayout>
             </LinearLayout>
-
+            <!--旅游币-->
             <LinearLayout
                 android:id="@+id/layout_travel_icon"
                 android:layout_width="match_parent"
