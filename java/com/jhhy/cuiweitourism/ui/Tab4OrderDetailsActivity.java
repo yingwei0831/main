@@ -281,7 +281,7 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
                 setResult(RESULT_OK);
                 finish();
             }
-        } else if (requestCode == REQUEST_PAY){ //立即付款
+        } else if (requestCode == REQUEST_PAY){ //立即付款，是不是该刷新？而不是关闭？
             if (resultCode == RESULT_OK){
                 setResult(RESULT_OK);
                 finish();

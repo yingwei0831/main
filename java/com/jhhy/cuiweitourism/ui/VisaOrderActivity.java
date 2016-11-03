@@ -310,11 +310,10 @@ public class VisaOrderActivity extends BaseActivity implements View.OnClickListe
                     }
 
                 }
-            } else if (requestCode == Consts.REQUEST_CODE_RESERVE_PAY){ //订单生成成功，去支付成功
+            } else if (requestCode == Consts.REQUEST_CODE_RESERVE_PAY) { //订单生成成功，去支付成功
                 setResult(RESULT_OK);
                 finish();
             }
-
         }
     }
 

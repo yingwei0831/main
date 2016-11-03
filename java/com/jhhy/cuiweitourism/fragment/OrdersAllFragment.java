@@ -20,6 +20,7 @@ import com.jhhy.cuiweitourism.adapter.OrderXListViewAdapter;
 import com.jhhy.cuiweitourism.biz.OrderActionBiz;
 import com.jhhy.cuiweitourism.biz.OrdersAllBiz;
 import com.jhhy.cuiweitourism.moudle.Order;
+import com.jhhy.cuiweitourism.ui.MainActivity;
 import com.jhhy.cuiweitourism.ui.RequestRefundActivity;
 import com.jhhy.cuiweitourism.ui.Tab4OrderDetailsActivity;
 import com.jhhy.cuiweitourism.net.utils.Consts;
@@ -36,8 +37,9 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
     private static final String TITLE = "title";
     private static final String TYPE = "type";
 
-    private String title;
+//    private String title;
     private String type = "0";
+    private boolean refresh; //刷新或加载更多
 
     //    private XListView xListView;
     private PullToRefreshListView pullListView;
@@ -99,7 +101,7 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            title = getArguments().getString(TITLE);
+//            title = getArguments().getString(TITLE);
             type = getArguments().getString(TYPE);
         }
     }
@@ -116,7 +118,7 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
 
     private void getInternetData() {
         OrdersAllBiz biz = new OrdersAllBiz(getContext(), handler);
-        biz.getAllOrders("1", type); //MainActivity.user.getUserId()
+        biz.getAllOrders(MainActivity.user.getUserId(), type); //MainActivity.user.getUserId() "1"
     }
 
     public void getData(String type) {
@@ -143,11 +145,13 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
 
     private void refresh() {
         //TODO 下拉刷新
-        pullListView.onRefreshComplete();
+        getData(type);
+//        pullListView.onRefreshComplete();
     }
     private void loadMore() {
         //TODO 加载更多
-        pullListView.onRefreshComplete();
+        getInternetData();
+//        pullListView.onRefreshComplete();
     }
 
     private void setupView(View view) {
@@ -158,7 +162,7 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
         pullListView.getLoadingLayoutProxy().setRefreshingLabel("refreshingLabel");
         pullListView.getLoadingLayoutProxy().setReleaseLabel("releaseLabel");
 
-        pullListView.setMode(PullToRefreshBase.Mode.BOTH);
+        pullListView.setMode(PullToRefreshBase.Mode.DISABLED);
 
         listView = pullListView.getRefreshableView();
 

@@ -108,8 +108,6 @@ public class PriceCalendarReserveActivity extends BaseActivity implements View.O
         type = bundle.getInt("type");
         if (type == 11) { //应该是废弃了
             hotActivityDetail = (ActivityHotDetailInfo) bundle.getSerializable("hotActivityDetail");
-        } else if (type == 13) { //酒店选择住店、离店日期
-
         } else { //线路日历
             detail = (TravelDetail) bundle.getSerializable("detail");
             LoadingIndicator.show(PriceCalendarReserveActivity.this, getString(R.string.http_notice));
@@ -138,14 +136,8 @@ public class PriceCalendarReserveActivity extends BaseActivity implements View.O
         btnReserve = (Button) findViewById(R.id.btn_price_calendar_reserve);
 
         layoutNumber = (LinearLayout) findViewById(R.id.layout_number);
+        tvTitleTop.setText("立即购买");
 
-        if (type == 13) {
-            tvTitleTop.setText(getString(R.string.hotel_select_date));
-            layoutNumber.setVisibility(View.GONE);
-            btnReserve.setText(getString(R.string.tab1_inner_travel_pop_commit));
-        } else {
-            tvTitleTop.setText("立即购买");
-        }
     }
 
     private void addListener() {
@@ -191,9 +183,7 @@ public class PriceCalendarReserveActivity extends BaseActivity implements View.O
 
             public void onCalendarClick(int row, int col, String dateFormat) {
                 LogUtil.e(TAG, "---------------onCalendarClick-------------- row = " + row + ", col = " + col);
-//                if (type == 13){
-//
-//                }else {
+
                 int month = Integer.parseInt(dateFormat.substring(
                         dateFormat.indexOf("-") + 1,
                         dateFormat.lastIndexOf("-")));
@@ -280,24 +270,22 @@ public class PriceCalendarReserveActivity extends BaseActivity implements View.O
                 tvCountChild.setText(Integer.toString(countChild));
                 break;
             case R.id.btn_price_calendar_reserve:
-                if (type == 13) {
 
+                if (selectDay) {
+                    Intent intent = new Intent(getApplicationContext(), InnerTravelEditOrderActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("countAdult", countAdult);
+                    bundle.putInt("countChild", countChild);
+                    bundle.putSerializable("detail", detail);
+                    bundle.putSerializable("hotActivityDetail", hotActivityDetail);
+                    bundle.putInt("type", type);
+                    bundle.putSerializable("priceCalendar", selectGroupDeadLine);
+                    intent.putExtras(bundle);
+                    startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_EDIT_ORDER);
                 } else {
-                    if (selectDay) {
-                        Intent intent = new Intent(getApplicationContext(), InnerTravelEditOrderActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putInt("countAdult", countAdult);
-                        bundle.putInt("countChild", countChild);
-                        bundle.putSerializable("detail", detail);
-                        bundle.putSerializable("hotActivityDetail", hotActivityDetail);
-                        bundle.putInt("type", type);
-                        bundle.putSerializable("priceCalendar", selectGroupDeadLine);
-                        intent.putExtras(bundle);
-                        startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_EDIT_ORDER);
-                    } else {
-                        ToastCommon.toastShortShow(getApplicationContext(), null, "请选择出发日期");
-                    }
+                    ToastCommon.toastShortShow(getApplicationContext(), null, "请选择出发日期");
                 }
+
                 break;
         }
     }

@@ -13,6 +13,7 @@ import com.jhhy.cuiweitourism.ArgumentOnClick;
 import com.jhhy.cuiweitourism.IOrderItemClick;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.moudle.Order;
+import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.utils.ImageLoaderUtil;
 import com.jhhy.cuiweitourism.utils.Utils;
 
@@ -182,7 +183,7 @@ public abstract class OrderXListViewAdapter extends BaseAdapter implements IOrde
                 onClick.goToArgument(finalConvertView, viewGroup, position, idGoRefund);
             }
         });
-
+        LogUtil.e(TAG, "order = " + order);
         //单击item，进入详情
         view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -190,8 +191,11 @@ public abstract class OrderXListViewAdapter extends BaseAdapter implements IOrde
                 onOrderItemClick(position);
             }
         });
-
-        holder.tvOrderTime.setText(Utils.getTimeStrYMD(Long.parseLong(order.getAddTime()) * 1000));
+        if (order.getAddTime() != null && !"null".equals(order.getAddTime())) {
+            holder.tvOrderTime.setText(Utils.getTimeStrYMD(Long.parseLong(order.getAddTime()) * 1000));
+        }else{
+            holder.tvOrderTime.setText(order.getAddTime());
+        }
         holder.tvOrderTitle.setText(order.getProductName());
         holder.tvOrderPrice.setText(order.getPrice());
         ImageLoaderUtil.getInstance(context).displayImage(order.getPicPath(), holder.ivOrderPic);

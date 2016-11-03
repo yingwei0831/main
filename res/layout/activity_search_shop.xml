@@ -10,12 +10,11 @@
     >
 
     <include
-        layout="@layout/search_bar_simple_out"
+        layout="@layout/search_bar_simple"
         android:id="@+id/layout_search"
         />
 
     <TextView
-
         android:background="@android:color/white"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
@@ -23,7 +22,7 @@
         android:textColor="@android:color/black"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="店铺推荐"
+        android:text="@string/tab1_shop_recommend"
         />
     <com.handmark.pulltorefresh.library.PullToRefreshGridView
         android:id="@+id/pull_gridview"

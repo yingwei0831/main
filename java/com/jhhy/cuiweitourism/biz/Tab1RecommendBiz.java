@@ -32,7 +32,8 @@ public class Tab1RecommendBiz {
         this.handler = handler;
     }
 //{"head":{"code":"Publics_allline"},"field":{"type":"","area":"北京"}}  //type:1国内游、2出境游,area:地区
-    public void getRecommendForYou(final String type, final String area, int typeMessage){
+//{"head":{"code":"Publics_allline"},"field":{"type":"","area":"北京","page":"1","offset":"10"}}
+    public void getRecommendForYou(final String type, final String area, int typeMessage, final int page){
         this.typeMessage = typeMessage;
         new Thread(){
             @Override
@@ -43,6 +44,8 @@ public class Tab1RecommendBiz {
                 Map<String, Object> fieldMap = new HashMap<>();
                 fieldMap.put(Consts.KEY_TYPE, type);
                 fieldMap.put(Consts.TAB1_RECOMMEND_AREA, area);
+                fieldMap.put(Consts.KEY_PAGE, page);
+                fieldMap.put(Consts.KEY_OFFSET, 10);
                 HttpUtils.executeXutils(headMap, fieldMap, tab1RecommendCallback);
             }
         }.start();

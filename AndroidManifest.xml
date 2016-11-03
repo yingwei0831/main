@@ -83,7 +83,7 @@
     <application
         android:name=".service.CuiWeiTourismApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/app_logo"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -358,25 +358,36 @@
         <activity
             android:name=".ui.CarRentSuccessActivity"
             android:screenOrientation="portrait"
+            android:launchMode="singleTop"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.CarRentSmallActivity"
             android:screenOrientation="portrait"
+            android:launchMode="singleTop"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".dialog.CarRentTimeSelectActivity"
             android:screenOrientation="portrait"
+            android:launchMode="singleTop"
             android:theme="@style/SampleTheme.Light" />
         <activity
             android:name=".ui.easemob.EasemobLoginActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            />
         <activity
             android:name=".ui.easemob.ChatActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            />
         <activity
             android:name=".ui.easemob.ContextMenuActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/EMyDialogStyle" />
+            android:theme="@style/EMyDialogStyle"
+            android:launchMode="singleTop"
+            />
         <activity
             android:name=".ui.LineFindActivity"
             android:screenOrientation="portrait" />
@@ -440,7 +451,10 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.LineListActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/ActionBarTheme"
+            android:launchMode="singleTop"
+            />
         <activity
             android:name=".ui.LineDetailActivity"
             android:screenOrientation="portrait" />

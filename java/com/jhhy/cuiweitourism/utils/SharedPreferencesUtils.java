@@ -3,6 +3,7 @@ package com.jhhy.cuiweitourism.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.jhhy.cuiweitourism.moudle.PhoneBean;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 
 
@@ -183,6 +184,19 @@ public class SharedPreferencesUtils {
         sp.getString(Consts.KEY_ID, null);
     }
 
+    public void saveCity(PhoneBean city){
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString("select_city_name", city.getName());
+        editor.putString("select_city_id", city.getCity_id());
+        editor.commit();
+    }
+    public PhoneBean getCity(){
+        PhoneBean city = new PhoneBean();
+        city.setName(sp.getString("select_city_name", "北京"));
+        city.setCity_id(sp.getString("select_city_id", "20"));
+        return city;
+    }
+
     /**
      * 是否自动登录
      * @param autoLogin 是否自动登录
@@ -215,7 +229,7 @@ public class SharedPreferencesUtils {
 //        et.putBoolean(Consts.SP_JPUSH_STATUS + MainActivity.currentUser.getUserPhoneNumber(), status);
 //        return et.commit();
 //    }
-//
+
 //    public boolean getJPushStatus(){
 //        return sp.getBoolean(Consts.SP_JPUSH_STATUS + MainActivity.currentUser.getUserPhoneNumber(), true);
 //    }

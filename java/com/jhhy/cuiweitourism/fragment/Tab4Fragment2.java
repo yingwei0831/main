@@ -111,22 +111,22 @@ public class Tab4Fragment2 extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            case R.id.tv_fragment_tab4_all_orders:
+            case R.id.tv_fragment_tab4_all_orders: //全部订单
                 Bundle bundle = new Bundle();
                 bundle.putInt("position", 0);
                 Tab4AllOrdersActivity.actionStart(mContext, bundle);
                 break;
-            case R.id.tv_fragment_tab4_wait_pay:
+            case R.id.tv_fragment_tab4_wait_pay: //等待付款
                 Bundle bundle2 = new Bundle();
                 bundle2.putInt("position", 1);
                 Tab4AllOrdersActivity.actionStart(mContext, bundle2);
                 break;
-            case R.id.tv_fragment_tab4_wait_comment:
+            case R.id.tv_fragment_tab4_wait_comment: ////待点评
                 Bundle bundle3 = new Bundle();
                 bundle3.putInt("position", 2);
                 Tab4AllOrdersActivity.actionStart(mContext, bundle3);
                 break;
-            case R.id.tv_fragment_tab4_wait_refund:
+            case R.id.tv_fragment_tab4_wait_refund: //待退款
                 Bundle bundle4 = new Bundle();
                 bundle4.putInt("position", 3);
                 Tab4AllOrdersActivity.actionStart(mContext, bundle4);

@@ -249,7 +249,8 @@ public class TrainEditOrderActivity extends AppCompatActivity implements View.On
                 tvAdultCount.setText(String.format("成人%d人", listContact.size()));
                 tvPriceTotal.setText(String.format("%.2f", Float.parseFloat(seatInfo.floorPrice) * listContact.size()));
             }else if (requestCode == Consts.REQUEST_CODE_RESERVE_PAY){ //去支付，支付成功
-
+                setResult(RESULT_OK);
+                finish();
             }
         }
     }

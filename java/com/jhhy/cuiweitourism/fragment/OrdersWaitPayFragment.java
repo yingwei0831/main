@@ -20,6 +20,7 @@ import com.jhhy.cuiweitourism.adapter.OrderXListViewAdapter;
 import com.jhhy.cuiweitourism.biz.OrderActionBiz;
 import com.jhhy.cuiweitourism.biz.OrdersAllBiz;
 import com.jhhy.cuiweitourism.moudle.Order;
+import com.jhhy.cuiweitourism.ui.MainActivity;
 import com.jhhy.cuiweitourism.ui.SelectPaymentActivity;
 import com.jhhy.cuiweitourism.ui.Tab4OrderDetailsActivity;
 import com.jhhy.cuiweitourism.net.utils.Consts;
@@ -64,7 +65,7 @@ public class OrdersWaitPayFragment extends Fragment implements ArgumentOnClick {
                         }else{
                             lists = listWaitPay;
                             adapter.setData(lists);
-                                                    }
+                        }
                     }
                     break;
                 case Consts.MESSAGE_ORDER_CANCEL: //取消订单
@@ -112,7 +113,7 @@ public class OrdersWaitPayFragment extends Fragment implements ArgumentOnClick {
 
     private void getInternetData() {
         OrdersAllBiz biz = new OrdersAllBiz(getContext(), handler);
-        biz.getWaitPayment("1", type); //MainActivity.user.getUserId()
+        biz.getWaitPayment(MainActivity.user.getUserId(), type); // "1"
     }
 
     public void getData(String type) {
@@ -154,7 +155,7 @@ public class OrdersWaitPayFragment extends Fragment implements ArgumentOnClick {
         pullListView.getLoadingLayoutProxy().setPullLabel("PULLLABLE");
         pullListView.getLoadingLayoutProxy().setRefreshingLabel("refreshingLabel");
         pullListView.getLoadingLayoutProxy().setReleaseLabel("releaseLabel");
-        pullListView.setMode(PullToRefreshBase.Mode.BOTH);
+        pullListView.setMode(PullToRefreshBase.Mode.DISABLED);
 
         listView = pullListView.getRefreshableView();
 

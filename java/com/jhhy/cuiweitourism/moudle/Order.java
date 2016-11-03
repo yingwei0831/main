@@ -216,6 +216,8 @@ public class Order implements Serializable{
                 ", travelers=" + travelers +
                 ", invoice=" + invoice +
                 ", useTravelIcon='" + useTravelIcon + '\'' +
+                ", typeId='" + typeId + '\'' +
+                ", productautoid='" + productautoid + '\'' +
                 '}';
     }
 }

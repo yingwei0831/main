@@ -117,6 +117,7 @@ public class SearchShopActivity extends BaseActivity implements View.OnClickList
                 Intent intent = new Intent(getApplicationContext() , LineListActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("shopId", lists.get(i).getId());
+                bundle.putString("shopName", lists.get(i).getName());
                 intent.putExtras(bundle);
                 startActivityForResult(intent, REQUEST_LINE_LIST);
             }
@@ -137,7 +138,7 @@ public class SearchShopActivity extends BaseActivity implements View.OnClickList
 
     private void setupView() {
         tvTitle = (TextView) actionBar.getCustomView().findViewById(R.id.tv_title_inner_travel);
-        tvTitle.setText("找线路");
+        tvTitle.setText(getString(R.string.tab1_shop_title));
         ivTitleLeft = (ImageView) actionBar.getCustomView().findViewById(R.id.title_main_tv_left_location);
 
         pullToRefreshGridView = (PullToRefreshGridView) findViewById(R.id.pull_gridview);

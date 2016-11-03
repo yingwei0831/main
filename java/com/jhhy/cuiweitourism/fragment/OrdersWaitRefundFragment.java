@@ -20,6 +20,7 @@ import com.jhhy.cuiweitourism.adapter.OrderXListViewAdapter;
 import com.jhhy.cuiweitourism.biz.OrderActionBiz;
 import com.jhhy.cuiweitourism.biz.OrdersAllBiz;
 import com.jhhy.cuiweitourism.moudle.Order;
+import com.jhhy.cuiweitourism.ui.MainActivity;
 import com.jhhy.cuiweitourism.ui.Tab4OrderDetailsActivity;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
@@ -108,7 +109,7 @@ public class OrdersWaitRefundFragment extends Fragment  implements ArgumentOnCli
 
     private void getInternetData() {
         OrdersAllBiz biz = new OrdersAllBiz(getContext(), handler);
-        biz.getWaitRefund("1", type); //MainActivity.user.getUserId()
+        biz.getWaitRefund(MainActivity.user.getUserId(), type); //MainActivity.user.getUserId() "1"
     }
 
     public void getData(String type) {
@@ -150,7 +151,7 @@ public class OrdersWaitRefundFragment extends Fragment  implements ArgumentOnCli
         pullListView.getLoadingLayoutProxy().setPullLabel("PULLLABLE");
         pullListView.getLoadingLayoutProxy().setRefreshingLabel("refreshingLabel");
         pullListView.getLoadingLayoutProxy().setReleaseLabel("releaseLabel");
-        pullListView.setMode(PullToRefreshBase.Mode.BOTH);
+        pullListView.setMode(PullToRefreshBase.Mode.DISABLED);
 
         listView = pullListView.getRefreshableView();
 

@@ -52,6 +52,8 @@ import com.jhhy.cuiweitourism.ui.VisaMainActivity;
 import com.jhhy.cuiweitourism.ui.easemob.EasemobLoginActivity;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
+import com.jhhy.cuiweitourism.utils.LoadingIndicator;
+import com.jhhy.cuiweitourism.utils.SharedPreferencesUtils;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.jhhy.cuiweitourism.utils.Utils;
 import com.jhhy.cuiweitourism.view.MyGridView;
@@ -87,7 +89,7 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
     private GestureDetector mGestureDetector; // MyScrollView的手势
     private long releaseTime = 0; // 手指松开、页面不滚动时间，防止手机松开后短时间进行切换
     private boolean isScrolling = false; // 滚动框是否滚动着
-//    private int time = 4000; // 默认轮播时间
+    //    private int time = 4000; // 默认轮播时间
     private final int WHEEL = 100; // 转动
     private final int WHEEL_WAIT = 101; // 等待
 
@@ -101,7 +103,7 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
     private int currentPositionBottom = 0; // 轮播当前位置
     private List<String> imageUrlsBottom = new ArrayList<>();
 
-    private GestureDetector mGestureDetectorBottom; // MyScrollView的手势
+    //    private GestureDetector mGestureDetectorBottom; // MyScrollView的手势
     private long releaseTimeBottom = 0; // 手指松开、页面不滚动时间，防止手机松开后短时间进行切换
     private boolean isScrollingBottom = false; // 滚动框是否滚动着
     private final int WHEEL_BOTTOM = 1010; // 转动
@@ -140,72 +142,105 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
     private TextView tvIndicatorNearbyBottom;
 //    private int indicator = -1;
 
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             LogUtil.i(TAG, "-------------------handleMessage--------------------- what = " + msg.what);
-            switch (msg.what){
+            switch (msg.what) {
                 case Consts.MESSAGE_TAB1_RECOMMEND:
-                    if(msg.arg1 == 0){
-                        ToastUtil.show(getContext(), "获取数据失败");
-                    }else if(msg.arg1 == 1){
-//                        ToastUtil.show(getContext(), "请求成功");
-                        List<Travel> listNew = (List<Travel>) msg.obj;
-                        if(listNew != null) {
-                            lists = listNew;
-                            adapter.setData(lists);
-                        }else{
-                            ToastUtil.show(getContext(), "没有热门推荐城市");
+                    if (msg.arg1 == 0) {
+//                      ToastUtil.show(getContext(), "获取数据失败");
+                    } else if (msg.arg1 == 1) {
+                        if (indicator == 1) { //还是当前的标签页，才给继续加载数据
+                            List<Travel> listNew = (List<Travel>) msg.obj;
+                            if (listNew != null) {
+                                if (refresh) { //刷新
+                                    refresh = false;
+                                    lists = listNew;
+                                } else { //加载
+                                    page++;
+                                    lists.addAll(listNew);
+                                }
+                                adapter.setData(lists);
+                            } else {
+                                ToastUtil.show(getContext(), "没有热门推荐城市");
+                            }
                         }
                     }
+                    onLoad();
+                    LoadingIndicator.cancel();
                     break;
                 case Consts.MESSAGE_TAB1_RECOMMEND_INNER:
-                    if(msg.arg1 == 0){
-                        ToastUtil.show(getContext(), "获取数据失败");
-                    }else if(msg.arg1 == 1){
+                    if (msg.arg1 == 0) {
+//                        ToastUtil.show(getContext(), "获取数据失败");
+                    } else if (msg.arg1 == 1) {
 //                        ToastUtil.show(getContext(), "请求成功");
-                        List<Travel> listNew = (List<Travel>) msg.obj;
-                        if(listNew != null) {
-                            listsInner = listNew;
-                            adapter.setData(listsInner);
-                        }else{
-                            ToastUtil.show(getContext(), "没有国内游推荐城市");
+                        if (indicator == 2) {
+                            List<Travel> listNew = (List<Travel>) msg.obj;
+                            if (listNew != null) {
+                                if (refresh) {
+                                    refresh = false;
+                                    listsInner = listNew;
+                                } else {
+                                    page++;
+                                    listsInner.addAll(listNew);
+                                }
+                                adapter.setData(listsInner);
+                            } else {
+                                ToastUtil.show(getContext(), "没有国内游推荐城市");
+                            }
                         }
                     }
+                    onLoad();
+                    LoadingIndicator.cancel();
                     break;
                 case Consts.MESSAGE_TAB1_RECOMMEND_OUTSIDE:
-                    if(msg.arg1 == 0){
+                    if (msg.arg1 == 0) {
                         ToastUtil.show(getContext(), "获取数据失败");
-                    }else if(msg.arg1 == 1){
+                    } else if (msg.arg1 == 1) {
 //                        ToastUtil.show(getContext(), "请求成功");
                         List<Travel> listNew = (List<Travel>) msg.obj;
-                        if(listNew != null) {
-                            listsOutside = listNew;
+                        if (listNew != null) {
+                            if (refresh) {
+                                refresh = false;
+                                listsOutside = listNew;
+                            } else {
+                                page++;
+                                listsOutside.addAll(listNew);
+                            }
                             adapter.setData(listsOutside);
-                        }else{
+                        } else {
                             ToastUtil.show(getContext(), "没有出境游推荐地点");
                         }
                     }
+                    onLoad();
+                    LoadingIndicator.cancel();
                     break;
                 case Consts.MESSAGE_TAB1_RECOMMEND_NEARBY:
-                    if(msg.arg1 == 0){
-                        ToastUtil.show(getContext(), "获取数据失败");
-                    }else if(msg.arg1 == 1){
-//                        ToastUtil.show(getContext(), "请求成功");
+                    if (msg.arg1 == 0) {
+//                        ToastUtil.show(getContext(), "获取数据失败");
+                    } else if (msg.arg1 == 1) {
                         List<Travel> listNew = (List<Travel>) msg.obj;
-                        if(listNew != null) {
-                            listsNearby = listNew;
+                        if (listNew != null) {
+                            if (refresh) {
+                                refresh = false;
+                                listsNearby = listNew;
+                            } else {
+                                page++;
+                                listsNearby.addAll(listNew);
+                            }
                             adapter.setData(listsNearby);
-                        }else{
+                        } else {
                             ToastUtil.show(getContext(), "没有推荐的周边游地点");
                         }
                     }
+                    onLoad();
+                    LoadingIndicator.cancel();
                     break;
-
                 case WHEEL:
-                    if(flipper.getChildCount() != 0){
-                        if(!isScrolling){
+                    if (flipper.getChildCount() != 0) {
+                        if (!isScrolling) {
                             //向前滑向后滑
                             showNextView(1);
                         }
@@ -215,14 +250,14 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
                     handler.postDelayed(runnable, Consts.TIME_PERIOD);
                     break;
                 case WHEEL_WAIT:
-                    if(flipper.getChildCount() != 0){
+                    if (flipper.getChildCount() != 0) {
                         handler.removeCallbacks(runnable);
                         handler.postDelayed(runnable, Consts.TIME_PERIOD);
                     }
                     break;
                 case WHEEL_BOTTOM:
-                    if(flipperBottom.getChildCount() != 0){
-                        if(!isScrollingBottom){
+                    if (flipperBottom.getChildCount() != 0) {
+                        if (!isScrollingBottom) {
                             //向前滑向后滑
                             showNextView(2);
                         }
@@ -232,7 +267,7 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
                     handler.postDelayed(runnableBottom, Consts.TIME_PERIOD);
                     break;
                 case WHEEL_WAIT_BOTTOM:
-                    if(flipperBottom.getChildCount() != 0){
+                    if (flipperBottom.getChildCount() != 0) {
                         handler.removeCallbacks(runnableBottom);
                         handler.postDelayed(runnableBottom, Consts.TIME_PERIOD);
                     }
@@ -302,6 +337,7 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
 //            mParam2 = getArguments().getString(ARG_PARAM2);
 //        }
     }
+
     private Context mContext;
     private XScrollView mScrollView;
     private View content;
@@ -313,7 +349,7 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
         getBannerData();
         setupView(view);
         addListener();
-        getData(0);
+        getData(0, 1);
         return view;
     }
 
@@ -329,18 +365,18 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
             public void onCompletion(GenericResponseModel<ArrayList<ForeEndAdvertisingPositionInfo>> model) {
                 if ("0000".equals(model.headModel.res_code)) {
                     ArrayList<ForeEndAdvertisingPositionInfo> array = model.body;
-                    LogUtil.e(TAG,"foreEndGetAdvertisingPosition =" + array.toString());
+                    LogUtil.e(TAG, "foreEndGetAdvertisingPosition =" + array.toString());
                     refreshViewBanner(array);
-                }else{
+                } else {
                     ToastCommon.toastShortShow(getContext(), null, "获取广告位数据失败");
                 }
             }
 
             @Override
             public void onError(FetchError error) {
-                if (error.localReason != null){
+                if (error.localReason != null) {
                     ToastCommon.toastShortShow(getContext(), null, error.localReason);
-                }else{
+                } else {
                     ToastCommon.toastShortShow(getContext(), null, "获取广告位数据出错");
                 }
                 LogUtil.e(TAG, "foreEndGetAdvertisingPosition: " + error.toString());
@@ -348,20 +384,27 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
         });
     }
 
-    private void getData(int type) {
-        if(type == 0) {
+    private int page = 1;
+    private boolean refresh; //是否刷新
+    private int indicator = 1; //4个导航
+    private boolean open; //刷新或加载是否开启
+    private boolean more;
+
+    private void getData(int type, int pageTemp) {
+        LoadingIndicator.show(getActivity(), getString(R.string.http_notice));
+        if (type == 0) {
             //此处获取全部
             Tab1RecommendBiz biz = new Tab1RecommendBiz(getContext(), handler);
-            biz.getRecommendForYou("", "北京", Consts.MESSAGE_TAB1_RECOMMEND);
-        }else if(1 == type){ //国内游
+            biz.getRecommendForYou("", "", Consts.MESSAGE_TAB1_RECOMMEND, pageTemp);
+        } else if (1 == type) { //国内游
             Tab1RecommendBiz biz = new Tab1RecommendBiz(getContext(), handler);
-            biz.getRecommendForYou("1", "北京", Consts.MESSAGE_TAB1_RECOMMEND_INNER);
-        }else if(2 == type){ //出境游
+            biz.getRecommendForYou("1", "", Consts.MESSAGE_TAB1_RECOMMEND_INNER, pageTemp);
+        } else if (2 == type) { //出境游
             Tab1RecommendBiz biz = new Tab1RecommendBiz(getContext(), handler);
-            biz.getRecommendForYou("2", "北京", Consts.MESSAGE_TAB1_RECOMMEND_OUTSIDE);
-        }else if(3 == type){ //周边游
+            biz.getRecommendForYou("2", "", Consts.MESSAGE_TAB1_RECOMMEND_OUTSIDE, pageTemp);
+        } else if (3 == type) { //周边游
             Tab1RecommendBiz biz = new Tab1RecommendBiz(getContext(), handler);
-            biz.getRecommendForYou("", "北京", Consts.MESSAGE_TAB1_RECOMMEND_NEARBY);
+            biz.getRecommendForYou("", selectCity.getName(), Consts.MESSAGE_TAB1_RECOMMEND_NEARBY, pageTemp);
         }
     }
 
@@ -384,9 +427,9 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
     }
 
     //悬浮导航的隐藏显示
-private RelativeLayout  layoutTitle; //顶部“标题栏”，求高度
-private LinearLayout    layoutTabRecommendForYou; //GridView的导航
-private LinearLayout    layoutTabRecommendForYou2; //顶部GridView的悬浮导航
+    private RelativeLayout layoutTitle; //顶部“标题栏”，求高度
+    private LinearLayout layoutTabRecommendForYou; //GridView的导航
+    private LinearLayout layoutTabRecommendForYou2; //顶部GridView的悬浮导航
     private TextView tvIndicatorAllTop; //全部
     private TextView tvIndicatorInnerTop; //国内游
     private TextView tvIndicatorOutsideTop; //国外游
@@ -396,18 +439,18 @@ private LinearLayout    layoutTabRecommendForYou2; //顶部GridView的悬浮导�
 
     private void setupView(View view) {
 
-layoutTitle = (RelativeLayout) view.findViewById(R.id.layout_title_tab1);
+        layoutTitle = (RelativeLayout) view.findViewById(R.id.layout_title_tab1);
         tvMobile = (TextView) view.findViewById(R.id.title_main_iv_right_telephone);
-layoutTabRecommendForYou2 = (LinearLayout) view.findViewById(R.id.layout_tab_recommend_for_you_2);
-        tvIndicatorAllTop       = (TextView) view.findViewById(R.id.tv_tab1_indicator_all_top);
-        tvIndicatorInnerTop     = (TextView) view.findViewById(R.id.tv_tab1_indicator_inner_top);
-        tvIndicatorOutsideTop   = (TextView) view.findViewById(R.id.tv_tab1_indicator_outside_top);
-        tvIndicatorNearbyTop    = (TextView) view.findViewById(R.id.tv_tab1_indicator_nearby_top);
+        layoutTabRecommendForYou2 = (LinearLayout) view.findViewById(R.id.layout_tab_recommend_for_you_2);
+        tvIndicatorAllTop = (TextView) view.findViewById(R.id.tv_tab1_indicator_all_top);
+        tvIndicatorInnerTop = (TextView) view.findViewById(R.id.tv_tab1_indicator_inner_top);
+        tvIndicatorOutsideTop = (TextView) view.findViewById(R.id.tv_tab1_indicator_outside_top);
+        tvIndicatorNearbyTop = (TextView) view.findViewById(R.id.tv_tab1_indicator_nearby_top);
 
-        mScrollView = (XScrollView)view.findViewById(R.id.scroll_view);
+        mScrollView = (XScrollView) view.findViewById(R.id.scroll_view);
         mScrollView.setPullRefreshEnable(true);
         mScrollView.setPullLoadEnable(true);
-        mScrollView.setAutoLoadEnable(true);
+        mScrollView.setAutoLoadEnable(false);
         mScrollView.setIXScrollViewListener(this);
         mScrollView.setRefreshTime(Utils.getCurrentTime());
 
@@ -431,9 +474,9 @@ layoutTabRecommendForYou2 = (LinearLayout) view.findViewById(R.id.layout_tab_rec
             layoutPersionalizedCustom = (RelativeLayout) content.findViewById(R.id.layout_personalized_custom); //个性定制
             layoutHotActivity = (RelativeLayout) content.findViewById(R.id.layout_hot_activity); //热门活动
 
-layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_recommend_for_you); //底部GridView的导航栏
-            tvIndicatorAllBottom    = (TextView) content.findViewById(R.id.tv_tab1_recommend_all_bottom); //全部
-            tvIndicatorInnerBottom  = (TextView) content.findViewById(R.id.tv_tab1_recommend_inner_bottom); //国内游
+            layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_recommend_for_you); //底部GridView的导航栏
+            tvIndicatorAllBottom = (TextView) content.findViewById(R.id.tv_tab1_recommend_all_bottom); //全部
+            tvIndicatorInnerBottom = (TextView) content.findViewById(R.id.tv_tab1_recommend_inner_bottom); //国内游
             tvIndicatorOutsideBottom = (TextView) content.findViewById(R.id.tv_tab1_recommend_outside_bottom); //国外游
             tvIndicatorNearbyBottom = (TextView) content.findViewById(R.id.tv_tab1_recommend_nearby_bottom); //周边游
 
@@ -446,8 +489,8 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
 
             mGestureDetector = new GestureDetector(getActivity(), this);
             //顶部banner页
-            flipper = (ViewFlipper)content.findViewById(R.id.viewflipper);
-            layoutPoint =(LinearLayout)content.findViewById(R.id.layout_indicator_point);
+            flipper = (ViewFlipper) content.findViewById(R.id.viewflipper);
+            layoutPoint = (LinearLayout) content.findViewById(R.id.layout_indicator_point);
 
             addImageView(imageUrls.size());
             addIndicator(1, imageUrls.size());
@@ -456,12 +499,12 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
             flipper.setOnTouchListener(this);
 
             dianSelect(1, currentPosition);
-            MyScrollView myScrollView = (MyScrollView)content.findViewById(R.id.viewflipper_myScrollview);
+            MyScrollView myScrollView = (MyScrollView) content.findViewById(R.id.viewflipper_myScrollview);
             myScrollView.setGestureDetector(mGestureDetector);
 
             //底部banner页
-            flipperBottom = (ViewFlipper)content.findViewById(R.id.viewflipper2);
-            layoutPointBottom =(LinearLayout)content.findViewById(R.id.layout_indicator_point2);
+            flipperBottom = (ViewFlipper) content.findViewById(R.id.viewflipper2);
+            layoutPointBottom = (LinearLayout) content.findViewById(R.id.layout_indicator_point2);
 
             addImageView(imageUrlsBottom.size());
             addIndicator(2, imageUrlsBottom.size());
@@ -470,7 +513,7 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
             flipperBottom.setOnTouchListener(this);
 
             dianSelect(2, currentPositionBottom);
-            MyScrollView myScrollView2 = (MyScrollView)content.findViewById(R.id.viewflipper_myScrollview2);
+            MyScrollView myScrollView2 = (MyScrollView) content.findViewById(R.id.viewflipper_myScrollview2);
             myScrollView2.setGestureDetector(mGestureDetector);
         }
         mScrollView.setView(content);
@@ -483,7 +526,7 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
                 int titleHeight = layoutTitle.getHeight();
                 int statusHeight = Utils.getStatusBarHeight(getContext());
 //                LogUtil.i(TAG, "statusHeight = " + statusHeight + ", titleHeight = " + titleHeight);
-                if(statusHeight + titleHeight >= s[1]){
+                if (statusHeight + titleHeight >= s[1]) {
                     layoutTabRecommendForYou2.setVisibility(View.VISIBLE);
                 } else {
                     layoutTabRecommendForYou2.setVisibility(View.GONE);
@@ -491,6 +534,9 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
             }
         });
 
+        SharedPreferencesUtils sp = SharedPreferencesUtils.getInstance(getContext());
+        selectCity = sp.getCity();
+        tvLocationCity.setText(selectCity.getName());
     }
 
     private void addListener() {
@@ -512,8 +558,8 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
         tvIndicatorInnerBottom.setOnClickListener(this);
         tvIndicatorOutsideBottom.setOnClickListener(this);
         tvIndicatorNearbyBottom.setOnClickListener(this);
-        tvIndicatorAllTop   .setOnClickListener(this);
-        tvIndicatorInnerTop .setOnClickListener(this);
+        tvIndicatorAllTop.setOnClickListener(this);
+        tvIndicatorInnerTop.setOnClickListener(this);
         tvIndicatorOutsideTop.setOnClickListener(this);
         tvIndicatorNearbyTop.setOnClickListener(this);
 
@@ -522,7 +568,7 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.title_main_iv_right_telephone:
                 Utils.contact(getContext(), tvMobile.getText().toString().trim());
                 break;
@@ -569,7 +615,7 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
             case R.id.layout_hot_activity: //热门活动
                 Bundle bundleHotActivity = new Bundle();
                 bundleHotActivity.putSerializable("selectCity", selectCity);
-                HotActivityListActivity.actionStart(getContext(),  bundleHotActivity);
+                HotActivityListActivity.actionStart(getContext(), bundleHotActivity);
                 break;
             case R.id.tv_tab1_search_route_activity: //找路线
                 Bundle bundleLine = new Bundle();
@@ -582,51 +628,67 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
             case R.id.tv_tab1_recommend_all_bottom: //Indicator 全部
             case R.id.tv_tab1_indicator_all_top:
 //                gridViewRecommend.setSelection(0);
-                LogUtil.e(TAG, "indicator = 全部");
 //                if(0 == indicator)  return;
-//                indicator = 0;
+                indicator = 1;
+                page = 1;
+                refresh = true;
                 changeIndicator(0);
-                if(lists != null && lists.size() != 0){
+                if (lists != null && lists.size() != 0) {
+                    lists = lists.subList(0, 10);
                     adapter.setData(lists);
+                    LogUtil.e(TAG, "indicator = 全部, size = " + lists.size());
                     return;
                 }
-                getData(0);
+                LogUtil.e(TAG, "indicator = 全部");
+                getData(0, page);
                 break;
             case R.id.tv_tab1_recommend_inner_bottom: //Indicator 国内游
             case R.id.tv_tab1_indicator_inner_top:
-                LogUtil.e(TAG, "indicator = 国内游");
 //                if(1 == indicator)  return;
-//                indicator = 1;
+                indicator = 2;
+                page = 1;
+                refresh = true;
                 changeIndicator(1);
-                if(listsInner != null && listsInner.size() != 0){
+                if (listsInner != null && listsInner.size() != 0) {
+                    listsInner = listsInner.subList(0, 10);
                     adapter.setData(listsInner);
+                    LogUtil.e(TAG, "indicator = 国内游, size = " + listsInner.size());
                     return;
                 }
-                getData(1);
+                LogUtil.e(TAG, "indicator = 国内游");
+                getData(1, page);
                 break;
             case R.id.tv_tab1_recommend_outside_bottom: //Indicator 国外游
-            case  R.id.tv_tab1_indicator_outside_top:
-                LogUtil.e(TAG, "indicator = 国外游");
+            case R.id.tv_tab1_indicator_outside_top:
+                indicator = 3;
+                page = 1;
+                refresh = true;
                 changeIndicator(2);
-                if(listsOutside != null && listsOutside.size() != 0){
+                if (listsOutside != null && listsOutside.size() != 0) {
+                    listsOutside = listsOutside.subList(0, 10);
                     adapter.setData(listsOutside);
+                    LogUtil.e(TAG, "indicator = 国外游，size = " + listsOutside.size());
                     return;
                 }
 //                if(2 == indicator)  return;
-//                indicator = 2;
-                getData(2);
+                LogUtil.e(TAG, "indicator = 国外游");
+                getData(2, page);
                 break;
             case R.id.tv_tab1_recommend_nearby_bottom: //Indicator 周边游
             case R.id.tv_tab1_indicator_nearby_top:
-                LogUtil.e(TAG, "indicator = 周边游");
 //                if(3 == indicator)  return;
-//                indicator = 3;
+                indicator = 4;
+                page = 1;
+                refresh = true;
                 changeIndicator(3);
-                if(listsNearby != null && listsNearby.size() != 0){
+                if (listsNearby != null && listsNearby.size() != 0) {
+                    listsNearby = listsNearby.subList(0, 10);
                     adapter.setData(listsNearby);
+                    LogUtil.e(TAG, "indicator = 周边游, size = " + listsNearby.size());
                     return;
                 }
-                getData(3);
+                LogUtil.e(TAG, "indicator = 周边游");
+                getData(3, page);
                 break;
             case R.id.tv_search_bar_main_left_location: //顶部搜索栏 选择地址
 //                CitySelectionActivity.actionStart(getContext(), null);
@@ -641,11 +703,14 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Consts.REQUEST_CODE_SELECT_CITY){ //选择城市
-            if (resultCode == Activity.RESULT_OK){
+        if (requestCode == Consts.REQUEST_CODE_SELECT_CITY) { //选择城市
+            if (resultCode == Activity.RESULT_OK) {
                 Bundle bundle = data.getExtras();
                 selectCity = (PhoneBean) bundle.getSerializable("city");
                 tvLocationCity.setText(selectCity.getName());
+                //将地址保存到本机
+                SharedPreferencesUtils sp = SharedPreferencesUtils.getInstance(getContext());
+                sp.saveCity(selectCity);
             }
 
         }
@@ -653,57 +718,58 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        LogUtil.e(TAG, "i = " + i +", l = " + l);
+        LogUtil.e(TAG, "i = " + i + ", l = " + l);
         Travel travel = lists.get((int) l);
         Bundle bundle = new Bundle();
         bundle.putString("id", travel.getId());
         InnerTravelDetailActivity.actionStart(getContext(), bundle);
     }
 
-    private void changeIndicator(int type){
-            tvIndicatorAllBottom.setTextColor(getResources().getColor(android.R.color.black));
-            tvIndicatorAllBottom.setBackground(null);
-            tvIndicatorInnerBottom.setTextColor(getResources().getColor(android.R.color.black));
-            tvIndicatorInnerBottom.setBackground(null);
-            tvIndicatorOutsideBottom.setTextColor(getResources().getColor(android.R.color.black));
-            tvIndicatorOutsideBottom.setBackground(null);
-            tvIndicatorNearbyBottom.setTextColor(getResources().getColor(android.R.color.black));
-            tvIndicatorNearbyBottom.setBackground(null);
+    private void changeIndicator(int type) {
+        tvIndicatorAllBottom.setTextColor(getResources().getColor(android.R.color.black));
+        tvIndicatorAllBottom.setBackground(null);
+        tvIndicatorInnerBottom.setTextColor(getResources().getColor(android.R.color.black));
+        tvIndicatorInnerBottom.setBackground(null);
+        tvIndicatorOutsideBottom.setTextColor(getResources().getColor(android.R.color.black));
+        tvIndicatorOutsideBottom.setBackground(null);
+        tvIndicatorNearbyBottom.setTextColor(getResources().getColor(android.R.color.black));
+        tvIndicatorNearbyBottom.setBackground(null);
 
-            tvIndicatorAllTop.setTextColor(getResources().getColor(android.R.color.black));
-            tvIndicatorAllTop.setBackground(null);
-            tvIndicatorInnerTop.setTextColor(getResources().getColor(android.R.color.black));
-            tvIndicatorInnerTop.setBackground(null);
-            tvIndicatorOutsideTop.setTextColor(getResources().getColor(android.R.color.black));
-            tvIndicatorOutsideTop.setBackground(null);
-            tvIndicatorNearbyTop.setTextColor(getResources().getColor(android.R.color.black));
-            tvIndicatorNearbyTop.setBackground(null);
+        tvIndicatorAllTop.setTextColor(getResources().getColor(android.R.color.black));
+        tvIndicatorAllTop.setBackground(null);
+        tvIndicatorInnerTop.setTextColor(getResources().getColor(android.R.color.black));
+        tvIndicatorInnerTop.setBackground(null);
+        tvIndicatorOutsideTop.setTextColor(getResources().getColor(android.R.color.black));
+        tvIndicatorOutsideTop.setBackground(null);
+        tvIndicatorNearbyTop.setTextColor(getResources().getColor(android.R.color.black));
+        tvIndicatorNearbyTop.setBackground(null);
 
-            if (type == 0){
-                tvIndicatorAllBottom.setTextColor(getResources().getColor(android.R.color.white));
-                tvIndicatorAllBottom.setBackground(getResources().getDrawable(R.drawable.bg_tab1_radiobutton_recommend_for_you));
-                tvIndicatorAllTop.setTextColor(getResources().getColor(android.R.color.white));
-                tvIndicatorAllTop.setBackground(getResources().getDrawable(R.drawable.bg_tab1_radiobutton_recommend_for_you));
-            }else if(1 == type){
-                tvIndicatorInnerBottom.setTextColor(getResources().getColor(android.R.color.white));
-                tvIndicatorInnerBottom.setBackground(getResources().getDrawable(R.drawable.bg_tab1_radiobutton_recommend_for_you));
-                tvIndicatorInnerTop.setTextColor(getResources().getColor(android.R.color.white));
-                tvIndicatorInnerTop.setBackground(getResources().getDrawable(R.drawable.bg_tab1_radiobutton_recommend_for_you));
-            }else if(2 == type){
-                tvIndicatorOutsideBottom.setTextColor(getResources().getColor(android.R.color.white));
-                tvIndicatorOutsideBottom.setBackground(getResources().getDrawable(R.drawable.bg_tab1_radiobutton_recommend_for_you));
-                tvIndicatorOutsideTop.setTextColor(getResources().getColor(android.R.color.white));
-                tvIndicatorOutsideTop.setBackground(getResources().getDrawable(R.drawable.bg_tab1_radiobutton_recommend_for_you));
-            }else if(3 == type){
-                tvIndicatorNearbyBottom.setTextColor(getResources().getColor(android.R.color.white));
-                tvIndicatorNearbyBottom.setBackground(getResources().getDrawable(R.drawable.bg_tab1_radiobutton_recommend_for_you));
-                tvIndicatorNearbyTop.setTextColor(getResources().getColor(android.R.color.white));
-                tvIndicatorNearbyTop.setBackground(getResources().getDrawable(R.drawable.bg_tab1_radiobutton_recommend_for_you));
-            }
+        if (type == 0) {
+            tvIndicatorAllBottom.setTextColor(getResources().getColor(android.R.color.white));
+            tvIndicatorAllBottom.setBackground(getResources().getDrawable(R.drawable.bg_tab1_radiobutton_recommend_for_you));
+            tvIndicatorAllTop.setTextColor(getResources().getColor(android.R.color.white));
+            tvIndicatorAllTop.setBackground(getResources().getDrawable(R.drawable.bg_tab1_radiobutton_recommend_for_you));
+        } else if (1 == type) {
+            tvIndicatorInnerBottom.setTextColor(getResources().getColor(android.R.color.white));
+            tvIndicatorInnerBottom.setBackground(getResources().getDrawable(R.drawable.bg_tab1_radiobutton_recommend_for_you));
+            tvIndicatorInnerTop.setTextColor(getResources().getColor(android.R.color.white));
+            tvIndicatorInnerTop.setBackground(getResources().getDrawable(R.drawable.bg_tab1_radiobutton_recommend_for_you));
+        } else if (2 == type) {
+            tvIndicatorOutsideBottom.setTextColor(getResources().getColor(android.R.color.white));
+            tvIndicatorOutsideBottom.setBackground(getResources().getDrawable(R.drawable.bg_tab1_radiobutton_recommend_for_you));
+            tvIndicatorOutsideTop.setTextColor(getResources().getColor(android.R.color.white));
+            tvIndicatorOutsideTop.setBackground(getResources().getDrawable(R.drawable.bg_tab1_radiobutton_recommend_for_you));
+        } else if (3 == type) {
+            tvIndicatorNearbyBottom.setTextColor(getResources().getColor(android.R.color.white));
+            tvIndicatorNearbyBottom.setBackground(getResources().getDrawable(R.drawable.bg_tab1_radiobutton_recommend_for_you));
+            tvIndicatorNearbyTop.setTextColor(getResources().getColor(android.R.color.white));
+            tvIndicatorNearbyTop.setBackground(getResources().getDrawable(R.drawable.bg_tab1_radiobutton_recommend_for_you));
+        }
     }
 
     /**
      * 讨价还价
+     *
      * @param view      layout布局
      * @param viewGroup
      * @param position  列表中的位置
@@ -717,48 +783,81 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
 
     @Override
     public void onRefresh() {
-
-        mScrollView.stopRefresh();
+        LogUtil.e(TAG, "-----------------onRefresh-----------------");
+        open = true;
+        refresh = true;
+        page = 1;
+        if (indicator == 1) {
+            getData(0, page);
+        } else if (indicator == 2) {
+            getData(1, page);
+        } else if (indicator == 3) {
+            getData(2, page);
+        } else if (indicator == 4) {
+            getData(3, page);
+        }
+//        mScrollView.stopRefresh();
     }
 
     @Override
     public void onLoadMore() {
+        LogUtil.e(TAG, "-----------------onLoadMore-----------------");
+        open = true;
+        if (indicator == 1) {
+            getData(0, page + 1);
+        } else if (indicator == 2) {
+            getData(1, page + 1);
+        } else if (indicator == 3) {
+            getData(2, page + 1);
+        } else if (indicator == 4) {
+            getData(3, page + 1);
+        }
+//        mScrollView.stopLoadMore();
+    }
 
+    private void onLoad() {
+        mScrollView.stopRefresh();
         mScrollView.stopLoadMore();
+        mScrollView.setRefreshTime(Utils.getCurrentTime());
     }
 
     @Override
     public boolean onDown(MotionEvent e) {
         return false;
     }
+
     @Override
     public void onShowPress(MotionEvent e) {
     }
+
     @Override
     public boolean onSingleTapUp(MotionEvent e) {
 //        LogUtil.i(TAG, "=========================================单击事件！");
         return false;
     }
+
     @Override
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
 //        LogUtil.e(TAG, "++++++++ onScroll +++++++++");
 //        LogUtil.e(TAG, "distanceX = " + distanceX + ", distanceY = " + distanceY);
         return false;
     }
+
     @Override
     public void onLongPress(MotionEvent e) {
     }
+
     //GestureDetector.OnGestureListener 回调
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-        if(e1.getX() - e2.getX() > FLING_MIN_DISTANCE &&
-                Math.abs(velocityX) > FLING_MIN_VELOCITY){
+        if (e1.getX() - e2.getX() > FLING_MIN_DISTANCE &&
+                Math.abs(velocityX) > FLING_MIN_VELOCITY) {
 //            LogUtil.i(TAG, "==============开始向左滑动了================");
             showNextView(typeFlipper);
             resetTime(typeFlipper);
             return true;
-        }else if(e2.getX() - e1.getX() > FLING_MIN_DISTANCE &&
-                Math.abs(velocityX) > FLING_MIN_VELOCITY){
+        } else if (e2.getX() - e1.getX() > FLING_MIN_DISTANCE &&
+                Math.abs(velocityX) > FLING_MIN_VELOCITY) {
 //            Log.i(TAG, "==============开始向右滑动了================");
             showPreviousView(typeFlipper);
             resetTime(typeFlipper);
@@ -767,16 +866,16 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
         return false;
     }
 
-    private void resetTime(int type){
-        if (type == 1){
-            if (infos.size() <= 1){
+    private void resetTime(int type) {
+        if (type == 1) {
+            if (infos.size() <= 1) {
                 return;
             }
 //            releaseTime = System.currentTimeMillis();
             handler.removeCallbacks(runnable);
             handler.postDelayed(runnable, Consts.TIME_PERIOD);
-        }else if (type == 2){
-            if (infosBottom.size() <= 1){
+        } else if (type == 2) {
+            if (infosBottom.size() <= 1) {
                 return;
             }
 //            releaseTimeBottom = System.currentTimeMillis();
@@ -803,12 +902,12 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
             }
             releaseTime = System.currentTimeMillis();
             isScrolling = false;
-        }else if (type == 2){
+        } else if (type == 2) {
             isScrollingBottom = true;
             flipperBottom.setInAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.push_left_in));
             flipperBottom.setOutAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.push_left_out));
             flipperBottom.showNext();
-            currentPositionBottom ++;
+            currentPositionBottom++;
             if (currentPositionBottom == flipperBottom.getChildCount()) {
                 dianUnselect(type, currentPositionBottom - 1);
                 currentPositionBottom = 0;
@@ -844,7 +943,7 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
             }
             releaseTime = System.currentTimeMillis();
             isScrolling = false;
-        }else if (type == 2){
+        } else if (type == 2) {
             isScrollingBottom = true;
 //		thread.suspend();
             dianSelect(type, currentPositionBottom);
@@ -869,23 +968,26 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
 
     /**
      * 对应被选中的点的图片
+     *
      * @param id
      */
     private void dianSelect(int type, int id) {
         if (type == 1) {
             indicators[id].setImageResource(R.drawable.icon_point_pre);
-        }else if (type ==2){
+        } else if (type == 2) {
             indicatorsBottom[id].setImageResource(R.drawable.icon_point_pre);
         }
     }
+
     /**
      * 对应未被选中的点的图片
+     *
      * @param id
      */
-    private void dianUnselect(int type, int id){
-        if (type == 1){
+    private void dianUnselect(int type, int id) {
+        if (type == 1) {
             indicators[id].setImageResource(R.drawable.icon_point);
-        }else if (type == 2) {
+        } else if (type == 2) {
             indicatorsBottom[id].setImageResource(R.drawable.icon_point);
         }
     }
@@ -893,7 +995,7 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
     //Flipper的OnTouchListener回调
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.viewflipper:
                 LogUtil.e(TAG, "第一个 Flipper 滑动");
                 typeFlipper = 1;
@@ -907,7 +1009,7 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
     }
 
     private void addImageView(int length) {
-        for(int i=0; i < length; i++){
+        for (int i = 0; i < length; i++) {
             ADInfo info = new ADInfo();
             info.setUrl(imageUrls.get(i));
             info.setContent("图片-->" + i);
@@ -916,7 +1018,7 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
         }
     }
 
-    private void addIndicator(int type, int size){
+    private void addIndicator(int type, int size) {
 //        if(indicators == null) {
         if (type == 1) {
             indicators = new ImageView[size];
@@ -927,7 +1029,7 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
                 indicators[i] = (ImageView) view.findViewById(R.id.image_indicator);
                 layoutPoint.addView(view);
             }
-        }else if (type == 2){
+        } else if (type == 2) {
             indicatorsBottom = new ImageView[size];
             layoutPointBottom.removeAllViews();
             for (int i = 0; i < size; i++) {
@@ -939,7 +1041,7 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
 
     }
 
-    private void setIndicator(int type, int current){
+    private void setIndicator(int type, int current) {
         if (type == 1) {
             for (int i = 0; i < indicators.length; i++) {
                 if (i == current) {
@@ -948,7 +1050,7 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
                     indicators[i].setImageResource(R.drawable.icon_point);
                 }
             }
-        }else if (type == 2){
+        } else if (type == 2) {
             for (int i = 0; i < indicatorsBottom.length; i++) {
                 if (i == current) {
                     indicatorsBottom[current].setImageResource(R.drawable.icon_point_pre);
@@ -965,7 +1067,7 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
         ForeEndAdvertisingPositionInfo item = array.get(0);
         ArrayList<String> picList = item.getT();
         ArrayList<String> linkList = item.getL();
-        for (int j = 0; j < picList.size(); j++){
+        for (int j = 0; j < picList.size(); j++) {
             ADInfo ad = new ADInfo();
             ad.setUrl(picList.get(j));
             ad.setContent(linkList.get(j));
@@ -978,8 +1080,8 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
         ForeEndAdvertisingPositionInfo itemBottom = array.get(1);
         ArrayList<String> picListBottom = itemBottom.getT();
         ArrayList<String> linkListBottom = itemBottom.getL();
-        LogUtil.e(TAG, " ++ picListBottom.size = " + picListBottom.size() +" ++");
-        for (int j = 0; j < picListBottom.size(); j++){
+        LogUtil.e(TAG, " ++ picListBottom.size = " + picListBottom.size() + " ++");
+        for (int j = 0; j < picListBottom.size(); j++) {
             ADInfo ad = new ADInfo();
             ad.setUrl(picListBottom.get(j));
             ad.setContent(linkListBottom.get(j));
@@ -997,11 +1099,11 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
             }
             addIndicator(type, infos.size());
             setIndicator(type, 0);
-            if (listsBanner.size() <= 1){
+            if (listsBanner.size() <= 1) {
                 return;
             }
             handler.postDelayed(runnable, Consts.TIME_PERIOD);
-        }else if (type == 2){
+        } else if (type == 2) {
             infosBottom = listsBanner;
             flipperBottom.removeAllViews();
             for (int i = 0; i < infosBottom.size(); i++) {
@@ -1009,7 +1111,7 @@ layoutTabRecommendForYou = (LinearLayout) content.findViewById(R.id.layout_tab_r
             }
             addIndicator(type, infosBottom.size());
             setIndicator(type, 0);
-            if (listsBanner.size() <= 1){
+            if (listsBanner.size() <= 1) {
                 return;
             }
             handler.postDelayed(runnableBottom, Consts.TIME_PERIOD);

@@ -5,10 +5,12 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alipay.sdk.app.PayTask;
 import com.jhhy.cuiweitourism.R;
@@ -19,6 +21,7 @@ import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelOrderInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainTicketOrderInfo;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
+import com.jhhy.cuiweitourism.pay.PayResult;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
 
@@ -51,11 +54,13 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
                 case Consts.MESSAGE_PAY_ALI: //点击阿里支付，提交ordersn，获得数据
                     if (msg.arg1 == 1){
                         String partner = String.valueOf(msg.obj);
-                        startPay(partner);
+                        String newstring = partner.replace("'", "\"");
+                        LogUtil.e(TAG, "newstring = " + newstring);
+                        startPay(newstring);
                     }else if (msg.arg1 == 0){
                         ToastUtil.show(getApplicationContext(), String.valueOf(msg.obj));
-                        LoadingIndicator.cancel();
                     }
+                    LoadingIndicator.cancel();
                     break;
                 case Consts.NET_ERROR:
                     ToastUtil.show(getApplicationContext(), "请检查网络后重试");
@@ -68,8 +73,31 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
                 case SDK_PAY_FLAG:
                     LoadingIndicator.cancel();
                     LogUtil.e(TAG, "result = " + String.valueOf(msg.obj));
-//                    Result result = new Result((String) msg.obj);
-//                    ToastUtil.show(SelectPaymentActivity.this, result.getResult();
+
+                    PayResult payResult = new PayResult((String) msg.obj);
+                    /**
+                     * 同步返回的结果必须放置到服务端进行验证（验证的规则请看https://doc.open.alipay.com/doc2/
+                     * detail.htm?spm=0.0.0.0.xdvAU6&treeId=59&articleId=103665&
+                     * docType=1) 建议商户依赖异步通知
+                     */
+                    String resultInfo = payResult.getResult();// 同步返回需要验证的信息
+
+                    String resultStatus = payResult.getResultStatus();
+                    // 判断resultStatus 为“9000”则代表支付成功，具体状态码代表含义可参考接口文档
+                    if (TextUtils.equals(resultStatus, "9000")) {
+                        ToastUtil.show(SelectPaymentActivity.this, "支付成功");
+                        setResult(RESULT_OK);
+                        finish();
+                    } else {
+                        // 判断resultStatus 为非"9000"则代表可能支付失败
+                        // "8000"代表支付结果因为支付渠道原因或者系统原因还在等待支付结果确认，最终交易是否成功以服务端异步通知为准（小概率状态）
+                        if (TextUtils.equals(resultStatus, "8000")) {
+                            ToastUtil.show(SelectPaymentActivity.this, "支付结果确认中");
+                        } else {
+                            // 其他值就可以判断为支付失败，包括用户主动取消支付，或者系统返回的错误
+                            ToastUtil.show(SelectPaymentActivity.this, "支付失败");
+                        }
+                    }
                     break;
             }
         }
@@ -165,7 +193,9 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
                 aliPay();
                 break;
             case R.id.tv_wechat_pay:
-
+                //TODO 微信付款
+                setResult(RESULT_OK);
+                finish();
                 break;
         }
     }

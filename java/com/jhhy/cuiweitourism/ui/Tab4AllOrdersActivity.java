@@ -110,9 +110,7 @@ public class Tab4AllOrdersActivity extends BaseActivity implements View.OnClickL
         mViewPager.setOffscreenPageLimit(4);
         //TabLayout加载viewpager,setupWithViePager必须在ViewPager.setAdapter()之后调用
         mTabLayout.setupWithViewPager(mViewPager);
-        LogUtil.e(TAG, "------------ position = " + position + "----------------");
         mViewPager.setCurrentItem(position, true);
-
     }
 
     @Override

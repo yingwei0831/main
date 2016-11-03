@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.SearchShopListAdapter;
@@ -20,7 +21,7 @@ import com.just.sun.pricecalendar.ToastCommon;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LineListActivity extends BaseActivity {
+public class LineListActivity extends BaseActionBarActivity {
 
     private PullToRefreshListView pullToRefreshListView;
     private ListView listView;
@@ -28,6 +29,7 @@ public class LineListActivity extends BaseActivity {
     private SearchShopListAdapter adapter;
 
     private String shopId;
+    private String shopName;
     private int page = 0;
     private boolean add = false;
 
@@ -58,18 +60,17 @@ public class LineListActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_listview);
         getData();
+        super.onCreate(savedInstanceState);
         getInternetData();
-        setupView();
-        addListener();
     }
 
     private void getData() {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             shopId = bundle.getString("shopId");
+            shopName = bundle.getString("shopName");
         }
     }
 
@@ -78,19 +79,26 @@ public class LineListActivity extends BaseActivity {
         biz.getLineList(shopId, String.valueOf(page));
     }
 
-    private void setupView() {
+    @Override
+    protected void setupView() {
+        super.setupView();
+        tvTitle.setText(shopName);
         pullToRefreshListView = (PullToRefreshListView) findViewById(R.id.listView);
         pullToRefreshListView.getLoadingLayoutProxy().setLastUpdatedLabel(Utils.getCurrentTime());
         pullToRefreshListView.getLoadingLayoutProxy().setPullLabel("下拉刷新");
         pullToRefreshListView.getLoadingLayoutProxy().setRefreshingLabel("正在刷新");
         pullToRefreshListView.getLoadingLayoutProxy().setReleaseLabel("松开加载更多");
 
+        pullToRefreshListView.setMode(PullToRefreshBase.Mode.DISABLED);
+
         listView = pullToRefreshListView.getRefreshableView();
         adapter = new SearchShopListAdapter(getApplicationContext(), list);
         pullToRefreshListView.setAdapter(adapter);
     }
 
-    private void addListener() {
+    @Override
+    protected void addListener() {
+        super.addListener();
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
