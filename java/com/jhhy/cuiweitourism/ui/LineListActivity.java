@@ -120,7 +120,8 @@ public class LineListActivity extends BaseActionBarActivity {
         if (requestCode == VIEW_LINE_DETAIL){
             if (resultCode == RESULT_OK){
                 //TODO 可能预定线路
-
+                setResult(RESULT_OK);
+                finish();
             }
         }
     }

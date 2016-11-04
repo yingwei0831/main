@@ -187,11 +187,13 @@ public class OrdersWaitPayFragment extends Fragment implements ArgumentOnClick {
         LogUtil.e(TAG, "============ onActivityResult ============== ");
         if (requestCode == REQUEST_CODE_ORDER_DETAIL){ //订单详情——立即付款
             if (resultCode == Activity.RESULT_OK){
-                getData(type);
+//                getData(type);
+                getContext().sendBroadcast(new Intent(Consts.ACTION_ORDER_UPDATE));
             }
         } else if (requestCode == REQUEST_CODE_PAY){ //签约付款
             if (resultCode == Activity.RESULT_OK){
-                getData(type);
+//                getData(type);
+                getContext().sendBroadcast(new Intent(Consts.ACTION_ORDER_UPDATE));
             }
         }
 
@@ -207,7 +209,6 @@ public class OrdersWaitPayFragment extends Fragment implements ArgumentOnClick {
     public void goToArgument(View view, View viewGroup, int position, int which) {
         switch (which){
             case R.id.btn_tab3_item_sign_contact: //签约付款
-                ToastUtil.show(getContext(), "签约付款");
                 Intent intent = new Intent(getContext(), SelectPaymentActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("order", lists.get(position));

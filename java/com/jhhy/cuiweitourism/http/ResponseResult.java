@@ -1,9 +1,14 @@
 package com.jhhy.cuiweitourism.http;
 
+import android.os.Handler;
+
+import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 
 import org.xutils.common.Callback;
+
+import java.net.SocketTimeoutException;
 
 /**
  * Created by jiahe008 on 2016/9/1.
@@ -11,6 +16,14 @@ import org.xutils.common.Callback;
 public abstract class ResponseResult implements Callback.CommonCallback<String>, ResponseCallback{
 
     private static final String TAG = ResponseResult.class.getSimpleName();
+    private Handler handler;
+
+    public ResponseResult() {
+    }
+
+    public ResponseResult(Handler handler) {
+        this.handler = handler;
+    }
 
     @Override
     public void onSuccess(String result) {
@@ -21,6 +34,9 @@ public abstract class ResponseResult implements Callback.CommonCallback<String>,
     @Override
     public void onError(Throwable ex, boolean isOnCallback) {
         LogUtil.e(TAG, "onError: " + ex + ", " + isOnCallback);
+        if (ex instanceof SocketTimeoutException){
+            handler.sendEmptyMessage(Consts.NET_ERROR_SOCKET_TIMEOUT);
+        }
         LoadingIndicator.cancel();
     }
 

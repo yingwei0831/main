@@ -178,11 +178,13 @@ public class OrdersWaitCommentFragment extends Fragment  implements ArgumentOnCl
         LogUtil.e(TAG, "============ onActivityResult ============== ");
         if (requestCode == REQUEST_COMMENT){
             if (resultCode == Activity.RESULT_OK){
-                getData(type); //刷新数据
+//                getData(type); //刷新数据
+                getContext().sendBroadcast(new Intent(Consts.ACTION_ORDER_UPDATE));
             }
         } else if (requestCode == REQUEST_CODE_DETAIL){
             if (resultCode == Activity.RESULT_OK){
-                getData(type); //刷新数据
+//                getData(type); //刷新数据
+                getContext().sendBroadcast(new Intent(Consts.ACTION_ORDER_UPDATE));
             }
         }
     }

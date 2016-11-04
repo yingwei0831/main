@@ -27,6 +27,7 @@ import com.just.sun.pricecalendar.ToastCommon;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class PriceCalendarReserveActivity extends BaseActivity implements View.OnClickListener {
 
@@ -54,6 +55,10 @@ public class PriceCalendarReserveActivity extends BaseActivity implements View.O
 
     private TextView tvCountAdult; //成人数量
     private TextView tvCountChild; //儿童数量
+
+    private TextView tvPriceAdult; //成人价格
+    private TextView tvPriceChild; //儿童价格
+
     private int countAdult = 1;
     private int countChild;
     private LinearLayout layoutNumber; //数量布局
@@ -133,11 +138,14 @@ public class PriceCalendarReserveActivity extends BaseActivity implements View.O
         tvCountChild = (TextView) findViewById(R.id.tv_price_calendar_number_child);
         tvCountAdult.setText(String.valueOf(countAdult));
         tvCountChild.setText(String.valueOf(countChild));
+        tvPriceAdult = (TextView) findViewById(R.id.tv_price_adult);
+        tvPriceChild = (TextView) findViewById(R.id.tv_price_child);
+        tvPriceAdult.setText(String.format(Locale.getDefault(), "￥%s/人", detail.getPrice()));
+        tvPriceChild.setText(String.format(Locale.getDefault(), "￥%s/人", detail.getPrice()));
         btnReserve = (Button) findViewById(R.id.btn_price_calendar_reserve);
 
         layoutNumber = (LinearLayout) findViewById(R.id.layout_number);
         tvTitleTop.setText("立即购买");
-
     }
 
     private void addListener() {
@@ -204,13 +212,15 @@ public class PriceCalendarReserveActivity extends BaseActivity implements View.O
 
 //                        int stock = Integer.parseInt(calendarPrices.get(i).getStock()); //因为没有人数限制
 //                        LogUtil.e("SHF", "dateFormat--->" + dateFormat + ", date--->" + calendarPrices.get(i).getDate()); // + "peopleNumCur--->" + "stock--->" + stock);
-                        LogUtil.e("SHF", "dateFormat--->" + dateFormat + ", positionDate--->" + positionDate + ", date = " + date); // + "peopleNumCur--->" + "stock--->" + stock);
+//                        LogUtil.e("SHF", "dateFormat--->" + dateFormat + ", positionDate--->" + positionDate + ", date = " + date); // + "peopleNumCur--->" + "stock--->" + stock);
                         if (dateFormat.equals(positionDate)) { //当前点击日期的背景色
 //                                && (stock) > 0) {
                             //设置背景色
                             calendar.removeAllBgColor();
                             calendar.setCalendarDayBgColor(dateFormat, ContextCompat.getColor(getApplicationContext(), R.color.colorActionBar)); //Color.parseColor("#45BDEF")
                             selectGroupDeadLine = calendarPricesNew.get(i);
+                            tvPriceAdult.setText(String.format(Locale.getDefault(), "￥%s/人", selectGroupDeadLine.getSell_price_adult()));
+                            tvPriceChild.setText(String.format(Locale.getDefault(), "￥%s/人", selectGroupDeadLine.getSell_price_adult()));
                         } else if (date.equals(positionDate)) { //如果是选择今天的日期
 //                                && (stock) > 0) {
 //                            ToastCommon.toastShortShow(getApplicationContext(), null, "此团期剩余空位不足，请选择其他团期或减少参团人数");
@@ -269,7 +279,7 @@ public class PriceCalendarReserveActivity extends BaseActivity implements View.O
                 countChild += 1;
                 tvCountChild.setText(Integer.toString(countChild));
                 break;
-            case R.id.btn_price_calendar_reserve:
+            case R.id.btn_price_calendar_reserve: //立即预定
 
                 if (selectDay) {
                     Intent intent = new Intent(getApplicationContext(), InnerTravelEditOrderActivity.class);
@@ -297,7 +307,8 @@ public class PriceCalendarReserveActivity extends BaseActivity implements View.O
 
         } else {
             if (requestCode == Consts.REQUEST_CODE_RESERVE_EDIT_ORDER) { //填写订单
-
+                setResult(RESULT_OK);
+                finish();
             }
         }
     }

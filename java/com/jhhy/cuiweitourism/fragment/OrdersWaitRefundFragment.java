@@ -191,7 +191,8 @@ public class OrdersWaitRefundFragment extends Fragment  implements ArgumentOnCli
         LogUtil.e(TAG, "============ onActivityResult ============== ");
         if (requestCode == REQUEST_CODE_REFUND){
             if (resultCode == Activity.RESULT_OK){
-                getData(type); //刷新数据
+//                getData(type); //刷新数据
+                getContext().sendBroadcast(new Intent(Consts.ACTION_ORDER_UPDATE));
             }
         }
     }

@@ -1,6 +1,7 @@
 package com.jhhy.cuiweitourism.ui;
 
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -19,27 +20,18 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.OnItemTextViewClick;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.moudle.UserContacts;
 import com.jhhy.cuiweitourism.net.biz.PlaneTicketActionBiz;
-import com.jhhy.cuiweitourism.net.biz.TrainTicketActionBiz;
-import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketInfoInternationalRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.TrainTicketOrderFetch;
-import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
-import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketCityInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketInfoOfChina;
-import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketInternationalInfo;
-import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainTicketDetailInfo;
-import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainTicketOrderInfo;
-import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
-import com.jhhy.cuiweitourism.popupwindows.PopupWindowPlaneOrderPriceDetail;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.jhhy.cuiweitourism.utils.Utils;
@@ -51,29 +43,11 @@ import java.util.Locale;
 public class PlaneEditOrderActivity extends AppCompatActivity implements View.OnClickListener, OnItemTextViewClick, CompoundButton.OnCheckedChangeListener {
 
     private String TAG = PlaneEditOrderActivity.class.getSimpleName();
-    private View parent;
-    private View bottom;
 
-    private TextView tvTitleRight;
     private TextView tvTitleLeft;
-    private TextView tvTitle;
     private ActionBar actionBar;
 
-    private TextView tvFromAirport; //起飞机场
-    private TextView tvToAirport;   //降落机场
-
-    private TextView tvStartTime;   //起飞时间
-    private TextView tvArrivalTime; //降落时间
-
-    private TextView tvStartDate;   //起飞日期
-    private TextView tvArrivalDate; //降落日期
-
-    private TextView tvTimeConsuming; //耗时
-    private TextView tvPlaneInfo;   //飞机信息，餐饮
-
     private TextView tvRefundNotice; //退改签说明
-    private TextView tvTicketPrice; //座位价格
-    private TextView tvConstructionFuel; //机建/燃油费
 
     private TextView tvSelectorContacts; //添加乘客
     private LinearLayout layoutContacts; //联系人装载布局
@@ -81,8 +55,8 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
     private EditText etLinkName; //联系人
     private EditText etLinkMobile; //联系电话
 
-    private CheckBox rbDelayCost; //航班延误险
-    private CheckBox rbAccidentCost; //航空意外险
+    private CheckBox cbDelayCost; //航班延误险
+    private CheckBox cbAccidentCost; //航空意外险
 
     private TextView tvPriceTotal; //订单金额
     private ImageView ivArrowTop; //订单金额详情
@@ -93,8 +67,11 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
     private PlaneTicketCityInfo toCity; //到达城市
     private String dateFrom; //出发日期
     private PlaneTicketInfoOfChina.FlightInfo flight; //航班信息
-//    private int positionSeat;
+
     private PlaneTicketInfoOfChina.SeatItemInfo seatInfo; //选择的座位信息
+
+    private int priceDelayCost; //航班延误险价格
+    private int priceAccidentCost; //航空意外险价格
 
 
     private Handler handler = new Handler(){
@@ -123,7 +100,6 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        requestWindowFeature(Window.FEATURE_NO_TITLE);
         //获取ActionBar对象
         actionBar =  getSupportActionBar();
         //自定义一个布局，并居中
@@ -141,26 +117,23 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
     }
 
     private void setupView() {
-        parent = findViewById(R.id.view_parent);
-        bottom = findViewById(R.id.layout_bottom_plane);
-
-        tvTitle = (TextView) actionBar.getCustomView().findViewById(R.id.tv_title_simple_title);
+        TextView tvTitle = (TextView) actionBar.getCustomView().findViewById(R.id.tv_title_simple_title);
         tvTitle.setText(getString(R.string.train_order_edit));
-        tvTitleRight = (TextView) actionBar.getCustomView().findViewById(R.id.tv_title_simple_title_right);
+        TextView tvTitleRight = (TextView) actionBar.getCustomView().findViewById(R.id.tv_title_simple_title_right);
         tvTitleRight.setVisibility(View.GONE);
         tvTitleLeft = (TextView) actionBar.getCustomView().findViewById(R.id.tv_title_simple_title_left);
 
-        tvFromAirport = (TextView) findViewById(R.id.tv_plane_start_station);
-        tvToAirport = (TextView) findViewById(R.id.tv_plane_end_station);
-        tvStartTime = (TextView) findViewById(R.id.tv_plane_start_time);
-        tvArrivalTime = (TextView) findViewById(R.id.tv_plane_end_time);
-        tvStartDate = (TextView) findViewById(R.id.tv_plane_start_date);
-        tvArrivalDate = (TextView) findViewById(R.id.tv_plane_arrival_time);
-        tvTimeConsuming = (TextView) findViewById(R.id.tv_plane_order_time_consuming);
-        tvPlaneInfo = (TextView) findViewById(R.id.tv_plane_order_plane_date);
+        TextView tvFromAirport = (TextView) findViewById(R.id.tv_plane_start_station); //起飞机场
+        TextView tvToAirport = (TextView) findViewById(R.id.tv_plane_end_station); //到达机场
+        TextView tvStartTime = (TextView) findViewById(R.id.tv_plane_start_time); //起飞时间
+        TextView tvArrivalTime = (TextView) findViewById(R.id.tv_plane_end_time); //到达时间
+        TextView tvStartDate = (TextView) findViewById(R.id.tv_plane_start_date); //起飞日期
+        TextView tvArrivalDate = (TextView) findViewById(R.id.tv_plane_arrival_time); //到达日期
+        TextView tvTimeConsuming = (TextView) findViewById(R.id.tv_plane_order_time_consuming); //耗时
+        TextView tvPlaneInfo = (TextView) findViewById(R.id.tv_plane_order_plane_date); //航班信息
 
-        tvTicketPrice = (TextView) findViewById(R.id.tv_plane_seat_price);
-        tvConstructionFuel = (TextView) findViewById(R.id.tv_plane_construction_fuel);
+        TextView tvTicketPrice = (TextView) findViewById(R.id.tv_plane_seat_price);
+        TextView tvConstructionFuel = (TextView) findViewById(R.id.tv_plane_construction_fuel);
         tvRefundNotice = (TextView) findViewById(R.id.tv_plane_refund_notice);
 
         tvSelectorContacts = (TextView) findViewById(R.id.tv_plane_add_passenger); //添加乘客
@@ -169,8 +142,8 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
         etLinkName = (EditText) findViewById(R.id.et_plane_order_link_name); //联系人
         etLinkMobile = (EditText) findViewById(R.id.et_plane_link_mobile); //联系电话
 
-        rbDelayCost     = (CheckBox) findViewById(R.id.rb_plane_order_delay_insurance);
-        rbAccidentCost  = (CheckBox) findViewById(R.id.rb_plane_order_accident_insurance);
+        cbDelayCost     = (CheckBox) findViewById(R.id.rb_plane_order_delay_insurance);
+        cbAccidentCost  = (CheckBox) findViewById(R.id.rb_plane_order_accident_insurance);
 
         tvPriceTotal = (TextView) findViewById(R.id.tv_edit_order_price); //订单总金额
         tvPriceTotal.setText(String.format(Locale.getDefault(), "%.2f", listContact.size() * Float.parseFloat(seatInfo.parPrice)));
@@ -214,10 +187,9 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
         tvSelectorContacts.setOnClickListener(this); //选择联系人
         ivArrowTop.setOnClickListener(this);
         btnPay.setOnClickListener(this);
-        rbAccidentCost.setOnCheckedChangeListener(this);
-        rbDelayCost.setOnCheckedChangeListener(this);
+        cbAccidentCost.setOnCheckedChangeListener(this);
+        cbDelayCost.setOnCheckedChangeListener(this);
     }
-
 
     @Override
     public void onClick(View view) {
@@ -246,29 +218,66 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
             case R.id.btn_edit_order_pay: //立即支付
                 goToPay();
                 break;
-
         }
     }
 
-    private PopupWindowPlaneOrderPriceDetail priceDetail;
+    private PopupWindow popupWindow;
+    private int popUpHeight;
+    private int[] location;
 
-    //订单金额详情
+    //订单金额详情弹窗
     private void viewOrderDetail() {
-//        if (priceDetail == null){
-        int[] location = new int[2];
-        bottom.getLocationOnScreen(location);
-        LogUtil.e(TAG, "x = " + location[0] +", y = " + location[1]);
-        priceDetail = new PopupWindowPlaneOrderPriceDetail(PlaneEditOrderActivity.this, parent, bottom.getMeasuredHeight());
-        LogUtil.e(TAG, "height = " + priceDetail.getHeight());
-        LogUtil.e(TAG, "bottom = " + bottom.getHeight());
-        priceDetail.showAtLocation(bottom, Gravity.NO_GRAVITY, location[0], location[1] - bottom.getHeight());
-//        }
-//        if (priceDetail.isShowing()){
-//            priceDetail.dismiss();
-//        }else{
-//            priceDetail.showAsDropDown(parent, 0, -bottom.getMeasuredHeight());
-//            priceDetail.refreshView();
-//        }
+        if (popupWindow == null) {
+            View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.popup_plane_order_price_detail, null);
+            popupWindow = new PopupWindow(view, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            view.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+            popUpHeight = view.getMeasuredHeight();
+            location = new int[2];
+            // 允许点击外部消失
+            popupWindow.setBackgroundDrawable(new BitmapDrawable());
+            popupWindow.setOutsideTouchable(true);
+            popupWindow.setFocusable(true);
+            // 获得位置
+            ivArrowTop.getLocationOnScreen(location);
+            setupPopView(view);
+        }
+        if (popupWindow.isShowing()){
+            popupWindow.dismiss();
+        }else{
+            popupWindow.showAtLocation(ivArrowTop, Gravity.NO_GRAVITY, 0, location[1] - popUpHeight);
+        }
+        popShow();
+    }
+
+    private void popShow() {
+        tvPopPlaneInfo.setText(String.format(Locale.getDefault(), "%s (%s)", flight.flightNo, seatInfo.getSeatMsg()));
+        tvPopPriceAdult.setText(String.format(Locale.getDefault(), "￥%.2f", Float.parseFloat(seatInfo.parPrice)));
+        tvPopNumberAdult.setText(String.format(Locale.getDefault(), "x %d人", listContact.size()));
+        tvPopPriceAdditional.setText(String.format(Locale.getDefault(), "￥%d", Integer.parseInt(flight.airportTax) + Integer.parseInt(flight.fuelTax)));
+        tvPopNumberAdditional.setText(String.format(Locale.getDefault(), "x %d人", listContact.size()));
+        tvPopPriceEnsurance.setText(String.format(Locale.getDefault(), "￥%d", (priceAccidentCost + priceDelayCost) * listContact.size()));
+        tvPopNumberEnsurance.setText(String.format(Locale.getDefault(), "x %d份", listContact.size()));
+        tvPopNumberPassenger.setText(String.format(Locale.getDefault(), "x %d", listContact.size()));
+    }
+
+    private TextView tvPopPlaneInfo; //飞机信息
+    private TextView tvPopPriceAdult; //成人价格
+    private TextView tvPopNumberAdult; //成人数量
+    private TextView tvPopPriceAdditional; //机建燃油费
+    private TextView tvPopNumberAdditional; //机建燃油费数量
+    private TextView tvPopPriceEnsurance; //保险价格
+    private TextView tvPopNumberEnsurance; //保险数量
+    private TextView tvPopNumberPassenger; //乘机人数
+
+    private void setupPopView(View view) {
+        tvPopPlaneInfo = (TextView) view.findViewById(R.id.tv_plane_info);
+        tvPopPriceAdult = (TextView) view.findViewById(R.id.tv_plane_price_adult);
+        tvPopNumberAdult = (TextView) view.findViewById(R.id.tv_plane_number_adult);
+        tvPopPriceAdditional = (TextView) view.findViewById(R.id.tv_plane_price_additional);
+        tvPopNumberAdditional = (TextView) view.findViewById(R.id.tv_plane_number_additional);
+        tvPopPriceEnsurance = (TextView) view.findViewById(R.id.tv_plane_price_insurance);
+        tvPopNumberEnsurance = (TextView) view.findViewById(R.id.tv_plane_number_insurance);
+        tvPopNumberPassenger = (TextView) view.findViewById(R.id.tv_plane_number_passenger);
     }
 
     @Override
@@ -304,7 +313,14 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
                         listContact.add(contactTrain);
                     }
                 }
-                tvPriceTotal.setText(String.format(Locale.getDefault(), "%.2f", Float.parseFloat(seatInfo.parPrice) * listContact.size()));
+                int acPrice = 0, dcPrice = 0;
+                if (cbAccidentCost.isChecked()){
+                    acPrice = priceAccidentCost * listContact.size();
+                }
+                if (cbDelayCost.isChecked()){
+                    dcPrice = priceDelayCost * listContact.size();
+                }
+                tvPriceTotal.setText(String.format(Locale.getDefault(), "%.2f", (Float.parseFloat(seatInfo.parPrice) * listContact.size() + acPrice + dcPrice)));
             }else if (requestCode == Consts.REQUEST_CODE_RESERVE_PAY){ //去支付，支付成功
                 LogUtil.e(TAG, "订单支付成功");
             }
@@ -317,7 +333,14 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
     public void onItemTextViewClick(int position, View imageView, int id) {
         listContact.remove(position);
         layoutContacts.removeViewAt(position);
-        tvPriceTotal.setText(String.format(Locale.getDefault(), "%.2f", Float.parseFloat(seatInfo.parPrice) * listContact.size()));
+        int acPrice = 0, dcPrice = 0;
+        if (cbAccidentCost.isChecked()){
+            acPrice = priceAccidentCost * listContact.size();
+        }
+        if (cbDelayCost.isChecked()){
+            dcPrice = priceDelayCost * listContact.size();
+        }
+        tvPriceTotal.setText(String.format(Locale.getDefault(), "%.2f", (Float.parseFloat(seatInfo.parPrice) * listContact.size() + acPrice + dcPrice)));
     }
 
     /**
@@ -397,18 +420,20 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         switch (compoundButton.getId()){
             case R.id.rb_plane_order_delay_insurance:
-                rbDelayCost.setChecked(b);
-                if (b){
-                    //TODO 订单金额添加航班延误险
-                }
+                cbDelayCost.setChecked(b);
                 break;
             case R.id.rb_plane_order_accident_insurance:
-                rbAccidentCost.setChecked(b);
-                if (b){
-                    //TODO 订单金额添加航空意外险
-                }
+                cbAccidentCost.setChecked(b);
                 break;
         }
+        int acPrice = 0, dcPrice = 0;
+        if (cbAccidentCost.isChecked()){
+            acPrice = priceAccidentCost * listContact.size();
+        }
+        if (cbDelayCost.isChecked()){
+            dcPrice = priceDelayCost * listContact.size();
+        }
+        tvPriceTotal.setText(String.format(Locale.getDefault(), "%.2f", (Float.parseFloat(seatInfo.parPrice) * listContact.size() + acPrice + dcPrice)));
     }
 
     //预定须知

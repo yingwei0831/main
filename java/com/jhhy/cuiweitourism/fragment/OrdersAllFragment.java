@@ -2,7 +2,10 @@ package com.jhhy.cuiweitourism.fragment;
 
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -22,6 +25,7 @@ import com.jhhy.cuiweitourism.biz.OrdersAllBiz;
 import com.jhhy.cuiweitourism.moudle.Order;
 import com.jhhy.cuiweitourism.ui.MainActivity;
 import com.jhhy.cuiweitourism.ui.RequestRefundActivity;
+import com.jhhy.cuiweitourism.ui.SelectPaymentActivity;
 import com.jhhy.cuiweitourism.ui.Tab4OrderDetailsActivity;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
@@ -41,7 +45,6 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
     private String type = "0";
     private boolean refresh; //刷新或加载更多
 
-    //    private XListView xListView;
     private PullToRefreshListView pullListView;
     private ListView listView;
 
@@ -184,6 +187,7 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
     private int REQUEST_CODE_DETAIL = 1501; //订单详情
     private int REQUEST_COMMENT = 1502; //去评论按钮，进入评论页面
     private int REQUEST_REFUND = 1503; //退款按钮，进入申请退款页面
+    private int REQUEST_CODE_PAY = 1504; //签约付款
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -191,24 +195,27 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
         LogUtil.e(TAG, "============ onActivityResult ============== ");
         if (requestCode == REQUEST_CODE_DETAIL){ //订单详情
             if (resultCode == Activity.RESULT_OK){
-                getData(type);
+//                getData(type);
+                getContext().sendBroadcast(new Intent(Consts.ACTION_ORDER_UPDATE));
             }
         } else if (requestCode == REQUEST_COMMENT){ //去评论
             if (resultCode == Activity.RESULT_OK){
-                getData(type);
+//                getData(type);
+                getContext().sendBroadcast(new Intent(Consts.ACTION_ORDER_UPDATE));
             }
         } else if (requestCode == REQUEST_REFUND){ //申请退款
             if (resultCode == Activity.RESULT_OK){
-                getData(type);
+//                getData(type);
+                getContext().sendBroadcast(new Intent(Consts.ACTION_ORDER_UPDATE));
+            }
+        } else if (requestCode == REQUEST_CODE_PAY){ //签约付款
+            if (resultCode == Activity.RESULT_OK){
+//                getData(type);
+                getContext().sendBroadcast(new Intent(Consts.ACTION_ORDER_UPDATE));
             }
         }
 
     }
-
-//    public void setData(List<Order> lists){
-//        this.lists = lists;
-//        adapter.setData(lists);
-//    }
 
     /**
      * @param view      layout布局
@@ -229,7 +236,6 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
                 bizRefund.requestCancelRefund(lists.get(position).getOrderSN());
                 break;
             case R.id.btn_order_comment: //去评价——>进入评论页面
-
                 Intent intent = new Intent(getContext(), RequestRefundActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("order", lists.get(position));
@@ -238,7 +244,11 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
                 startActivityForResult(intent, REQUEST_COMMENT);
                 break;
             case R.id.btn_tab3_item_sign_contact: //签约付款
-                ToastUtil.show(getContext(), "签约付款");
+                Intent intentPay = new Intent(getContext(), SelectPaymentActivity.class);
+                Bundle bundlePay = new Bundle();
+                bundlePay.putSerializable("order", lists.get(position));
+                intentPay.putExtras(bundlePay);
+                startActivityForResult(intentPay, REQUEST_CODE_PAY);
                 break;
             case R.id.btn_order_go_refund: //退款——>进入申请退款页面
                 Intent intentRequestRefund = new Intent(getContext(), RequestRefundActivity.class);
@@ -250,4 +260,6 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
                 break;
         }
     }
+
+
 }

@@ -3,67 +3,67 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.jhhy.cuiweitourism.ui.PriceCalendarReserveActivity"
     android:orientation="vertical"
-    >
-    <include layout="@layout/title_tab1_inner_travel"/>
+    tools:context="com.jhhy.cuiweitourism.ui.PriceCalendarReserveActivity">
+
+    <include layout="@layout/title_tab1_inner_travel" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <!--顶部显示当前年月-->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:background="#F0F0F0"
-                >
+                android:background="#F0F0F0">
 
                 <ImageView
                     android:id="@+id/imgv_calendar_last_month"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/tv_calendar_month"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:src="@mipmap/arrow_left_green"
-                    android:layout_toLeftOf="@+id/tv_calendar_month">
+                    android:src="@mipmap/arrow_left_green">
 
                 </ImageView>
 
                 <TextView
                     android:id="@+id/tv_calendar_month"
                     android:layout_width="wrap_content"
-                    android:paddingLeft="30dp"
-                    android:paddingRight="30dp"
                     android:layout_height="match_parent"
                     android:layout_centerInParent="true"
                     android:gravity="center"
-                    android:textColor="@android:color/black"/>
+                    android:paddingLeft="30dp"
+                    android:paddingRight="30dp"
+                    android:textColor="@android:color/black" />
 
                 <ImageView
                     android:id="@+id/imgv_calendar_next_month"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/tv_calendar_month"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:src="@mipmap/arrow_right_green"
-                    android:layout_toRightOf="@+id/tv_calendar_month">
+                    android:src="@mipmap/arrow_right_green">
 
                 </ImageView>
             </RelativeLayout>
-
+            <!--日历-->
             <com.just.sun.pricecalendar.KCalendar
-                android:visibility="visible"
                 android:id="@+id/calendar"
                 android:layout_width="match_parent"
                 android:layout_height="360dp"
-                >
+                android:visibility="visible">
 
             </com.just.sun.pricecalendar.KCalendar>
 
@@ -72,124 +72,142 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+                <!--成人-->
                 <RelativeLayout
-                    android:background="@android:color/white"
-                    android:layout_marginTop="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@android:color/white"
+                    android:paddingBottom="12dp"
                     android:paddingLeft="16dp"
                     android:paddingRight="16dp"
-                    android:paddingTop="12dp"
-                    android:paddingBottom="12dp"
-                    >
+                    android:paddingTop="12dp">
 
                     <TextView
+                        android:id="@+id/tv_adult_notice"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="成人"
                         android:layout_centerVertical="true"
-                        android:textSize="16sp"
-                        />
+                        android:text="成人"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/tv_price_adult"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@+id/tv_adult_notice"
+                        android:paddingLeft="10dp"
+                        android:text="￥400/人"
+                        android:textColor="@color/colorTab1RecommendForYouMoney" />
 
                     <ImageView
                         android:id="@+id/tv_price_calendar_number_reduce"
-                        android:layout_toLeftOf="@+id/tv_price_calendar_number"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
+                        android:layout_alignBottom="@+id/tv_price_calendar_number"
+                        android:layout_alignTop="@+id/tv_price_calendar_number"
+                        android:layout_toLeftOf="@+id/tv_price_calendar_number"
+                        android:background="@drawable/bg_iv_price_calendar_left_border"
                         android:scaleType="centerInside"
                         android:src="@mipmap/icon_reduce"
-                        android:layout_alignTop="@+id/tv_price_calendar_number"
-                        android:layout_alignBottom="@+id/tv_price_calendar_number"
-                        android:background="@drawable/bg_iv_price_calendar_left_border"
 
                         />
+
                     <TextView
                         android:id="@+id/tv_price_calendar_number"
-                        android:layout_toLeftOf="@+id/tv_price_calendar_number_add"
-                        android:textSize="18sp"
-                        android:gravity="center"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:background="@drawable/bg_tv_price_calendar_number_border"
-                        android:layout_marginRight="-1dp"
                         android:layout_marginLeft="-1dp"
-                        />
+                        android:layout_marginRight="-1dp"
+                        android:layout_toLeftOf="@+id/tv_price_calendar_number_add"
+                        android:background="@drawable/bg_tv_price_calendar_number_border"
+                        android:gravity="center"
+                        android:textSize="18sp" />
 
                     <ImageView
                         android:id="@+id/tv_price_calendar_number_add"
-                        android:padding="12dp"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:layout_alignParentRight="true"
-                        android:scaleType="centerInside"
-                        android:src="@mipmap/icon_plus"
-                        android:layout_alignTop="@+id/tv_price_calendar_number"
                         android:layout_alignBottom="@+id/tv_price_calendar_number"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignTop="@+id/tv_price_calendar_number"
                         android:background="@drawable/bg_iv_price_calendar_right_border"
-                        />
+                        android:padding="12dp"
+                        android:scaleType="centerInside"
+                        android:src="@mipmap/icon_plus" />
 
                 </RelativeLayout>
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1.2px"
-                    android:background="@color/colorLineGray2"/>
+                    android:background="@color/colorLineGray2" />
+                <!--儿童-->
                 <RelativeLayout
-                    android:background="@android:color/white"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:background="@android:color/white"
+                    android:paddingBottom="10dp"
                     android:paddingLeft="16dp"
                     android:paddingRight="16dp"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
-                    android:layout_marginBottom="10dp"
-                    >
+                    android:paddingTop="10dp">
+
                     <TextView
+                        android:id="@+id/tv_child_notice"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="儿童"
                         android:layout_centerVertical="true"
-                        android:textSize="16sp"
-                        />
+                        android:text="儿童"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/tv_price_child"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@+id/tv_child_notice"
+                        android:paddingLeft="10dp"
+                        android:text="￥400/人"
+                        android:textColor="@color/colorTab1RecommendForYouMoney" />
 
                     <ImageView
                         android:id="@+id/tv_price_calendar_number_reduce_child"
-                        android:layout_toLeftOf="@+id/tv_price_calendar_number_child"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:scaleType="centerInside"
-                        android:src="@mipmap/icon_reduce"
-                        android:layout_alignTop="@+id/tv_price_calendar_number_child"
                         android:layout_alignBottom="@+id/tv_price_calendar_number_child"
+                        android:layout_alignTop="@+id/tv_price_calendar_number_child"
+                        android:layout_toLeftOf="@+id/tv_price_calendar_number_child"
                         android:background="@drawable/bg_iv_price_calendar_left_border"
-                        />
+                        android:scaleType="centerInside"
+                        android:src="@mipmap/icon_reduce" />
                     <!--android:paddingTop="12dp"-->
                     <!--android:paddingBottom="12dp"-->
                     <!--android:paddingLeft="20dp"-->
                     <!--android:paddingRight="20dp"-->
                     <TextView
                         android:id="@+id/tv_price_calendar_number_child"
-                        android:layout_toLeftOf="@+id/tv_price_calendar_number_add_child"
-                        android:textSize="18sp"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:gravity="center"
-                        android:background="@drawable/bg_tv_price_calendar_number_border"
-                        android:layout_marginRight="-1dp"
                         android:layout_marginLeft="-1dp"
-                        />
+                        android:layout_marginRight="-1dp"
+                        android:layout_toLeftOf="@+id/tv_price_calendar_number_add_child"
+                        android:background="@drawable/bg_tv_price_calendar_number_border"
+                        android:gravity="center"
+                        android:textSize="18sp" />
 
                     <ImageView
                         android:id="@+id/tv_price_calendar_number_add_child"
-                        android:padding="12dp"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:layout_alignParentRight="true"
-                        android:scaleType="centerInside"
-                        android:src="@mipmap/icon_plus"
-                        android:layout_alignTop="@+id/tv_price_calendar_number_child"
                         android:layout_alignBottom="@+id/tv_price_calendar_number_child"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignTop="@+id/tv_price_calendar_number_child"
                         android:background="@drawable/bg_iv_price_calendar_right_border"
-                        />
+                        android:padding="12dp"
+                        android:scaleType="centerInside"
+                        android:src="@mipmap/icon_plus" />
 
                 </RelativeLayout>
             </LinearLayout>
@@ -202,11 +220,10 @@
         android:id="@+id/btn_price_calendar_reserve"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/bg_btn_price_calendar_selector"
         android:text="下一步，填写订单"
         android:textColor="@android:color/white"
-        android:background="@drawable/bg_btn_price_calendar_selector"
         android:textSize="16sp"
-        android:visibility="visible"
-        />
+        android:visibility="visible" />
 
 </LinearLayout>

@@ -15,6 +15,8 @@ public class Consts {
 
 
     public static final int NET_ERROR = 9999; //网络发生故障
+    public static final int NET_ERROR_SOCKET_TIMEOUT = 9991; //与服务器链接超时
+    public static final int JSON_PARSE_ERROR = 9992; //json解析异常
 
     public static final int TIME_PERIOD = 4000; //轮播图片时间间隔
 
@@ -166,6 +168,8 @@ public class Consts {
     public static final int MESSAGE_ORDER_CANCEL_REFUND = 1137; //取消退款
     public static final int MESSAGE_ORDER_COMMENT = 1138; //取消退款
     public static final int MESSAGE_ORDER_CANCEL = 1139; //取消订单
+
+    public static final String ACTION_ORDER_UPDATE = "jhhy.intent.action.UPDATE_ORDER"; //订单更新广播
 
     //支付宝
     public static final int MESSAGE_PAY_ALI = 1215; //

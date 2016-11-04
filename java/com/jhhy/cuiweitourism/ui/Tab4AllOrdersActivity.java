@@ -1,7 +1,9 @@
 package com.jhhy.cuiweitourism.ui;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -20,6 +22,7 @@ import com.jhhy.cuiweitourism.fragment.OrdersAllFragment;
 import com.jhhy.cuiweitourism.fragment.OrdersWaitCommentFragment;
 import com.jhhy.cuiweitourism.fragment.OrdersWaitPayFragment;
 import com.jhhy.cuiweitourism.fragment.OrdersWaitRefundFragment;
+import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.popupwindows.AllOrdersPopupWindow;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 
@@ -56,6 +59,7 @@ public class Tab4AllOrdersActivity extends BaseActivity implements View.OnClickL
         setupView();
         addListener();
         initData();
+        registReceiver();
     }
 
     private void getData() {
@@ -196,6 +200,32 @@ public class Tab4AllOrdersActivity extends BaseActivity implements View.OnClickL
     private AllOrdersPopupWindow popOrderType; //选择订单类型的
     private int selection = 0;
     private String type = "0"; //0.全部订单、1.线路、2.酒店、3租车、8签证、14私人定制、202活动
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(receiver);
+    }
+
+    private OrderUpdateReceiver receiver;
+
+    private void registReceiver() {
+        receiver = new OrderUpdateReceiver();
+        IntentFilter filter = new IntentFilter(Consts.ACTION_ORDER_UPDATE);
+        registerReceiver(receiver, filter);
+    }
+
+    class OrderUpdateReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (Consts.ACTION_ORDER_UPDATE.equals(intent.getAction())){
+                f1.getData(type);
+                f2.getData(type);
+                f3.getData(type);
+                f4.getData(type);
+            }
+        }
+    }
 
     public static void actionStart(Context context, Bundle bundle){
         Intent intent = new Intent(context, Tab4AllOrdersActivity.class);

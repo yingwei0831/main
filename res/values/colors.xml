@@ -37,6 +37,7 @@
 
     <color name="colorFreedom">#00A2FF</color>
     <color name="colorInnerTravelBottomBar">#bb000000</color>
+    <color name="colorPlanePop">#cc000000</color>
     <color name="colorInnerTravelPopLeftBg">#F2F3F4</color>
     <color name="colorInnerTravelYellowDark">#F57103</color>
     <color name="colorInnerTravelGreenLight">#28CE9E</color>
