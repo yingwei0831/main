@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 
+import com.jhhy.cuiweitourism.http.NetworkUtil;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.MemberCenterMsgInfo;
 import com.jhhy.cuiweitourism.net.netcallback.HttpUtils;
 import com.jhhy.cuiweitourism.http.ResponseResult;
@@ -16,6 +17,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,24 +40,31 @@ public class InnerTravelDetailBiz {
     }
 
 //{"head":{"code":"Publics_show"},"field":{"id":"14"}}
+
     /**
      * 国内游（出境游）详情页
+     *
      * @param id 某城市id
      */
-    public void getInnerTravelDetail(final String id){
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                Map<String, Object> headMap = new HashMap<>();
-                headMap.put(Consts.KEY_CODE, CODE_TRIP_DETAIL);
-                Map<String, Object> fieldMap = new HashMap<>();
-                fieldMap.put(Consts.KEY_ID, id);
-                HttpUtils.executeXutils(headMap, fieldMap, travelDetailCallback);
-            }
-        }.start();
+    public void getInnerTravelDetail(final String id) {
+        if (NetworkUtil.checkNetwork(context)) {
+            new Thread() {
+                @Override
+                public void run() {
+                    super.run();
+                    Map<String, Object> headMap = new HashMap<>();
+                    headMap.put(Consts.KEY_CODE, CODE_TRIP_DETAIL);
+                    Map<String, Object> fieldMap = new HashMap<>();
+                    fieldMap.put(Consts.KEY_ID, id);
+                    HttpUtils.executeXutils(headMap, fieldMap, travelDetailCallback);
+                }
+            }.start();
+        } else {
+            handler.sendEmptyMessage(Consts.NET_ERROR);
+        }
     }
-//    "id": "12",
+
+    //    "id": "12",
 //    "title": "北京5日游",
 //    "price": "4800",
 //    "beizu": "",
@@ -113,7 +122,7 @@ public class InnerTravelDetailBiz {
                     msg.arg1 = 1;
                     JSONObject bodyObj = resultObj.getJSONObject(Consts.KEY_BODY);
                     TravelDetail detail = null;
-                    if (bodyObj != null){
+                    if (bodyObj != null) {
                         detail = new TravelDetail();
                         detail.setId(bodyObj.getString(Consts.KEY_ID).trim());
                         detail.setTitle(bodyObj.getString(Consts.KEY_TITLE).trim());
@@ -127,9 +136,9 @@ public class InnerTravelDetailBiz {
 //                        detail.setPriceNotContain(bodyObj.getString("fybubh").trim());
                         JSONArray picListAry = bodyObj.getJSONArray("piclist");
                         List<String> picList = null;
-                        if (picListAry != null){
+                        if (picListAry != null) {
                             picList = new ArrayList<>();
-                            for (int i = 0; i < picListAry.length(); i++){
+                            for (int i = 0; i < picListAry.length(); i++) {
                                 picList.add(picListAry.getString(i).trim());
                             }
                         }
@@ -138,9 +147,9 @@ public class InnerTravelDetailBiz {
                         detail.setNeedScore(bodyObj.getString("needjifen").trim());
                         List<TravelDetailDay> tripDetail = null;
                         JSONArray tripDetailAry = bodyObj.getJSONArray("xcms");
-                        if (tripDetailAry != null && tripDetailAry.length() != 0){
+                        if (tripDetailAry != null && tripDetailAry.length() != 0) {
                             tripDetail = new ArrayList<>();
-                            for (int i = 0; i < tripDetailAry.length(); i++){
+                            for (int i = 0; i < tripDetailAry.length(); i++) {
                                 JSONObject tripDayObj = tripDetailAry.getJSONObject(i);
                                 TravelDetailDay tripDay = new TravelDetailDay();
                                 tripDay.setDay(tripDayObj.getString("day").trim());
@@ -151,11 +160,11 @@ public class InnerTravelDetailBiz {
                         }
                         detail.setTripDescribe(tripDetail);
                         Object comment = bodyObj.get("comment");
-                        if (comment != null && !"null".equals(comment) && !"[]".equals(comment) && !"".equals(comment)){
+                        if (comment != null && !"null".equals(comment) && !"[]".equals(comment) && !"".equals(comment)) {
 //                            JSONObject commentObj = new JSONObject(comment);
                             JSONObject commentObj = bodyObj.getJSONObject("comment");
                             UserComment userComment = null;
-                            if (commentObj != null){
+                            if (commentObj != null) {
                                 userComment = new UserComment();
                                 userComment.setNickName(commentObj.getString(Consts.KEY_USER_NICK_NAME).trim());
                                 userComment.setUserIcon(commentObj.getString("face").trim());
@@ -163,9 +172,9 @@ public class InnerTravelDetailBiz {
                                 userComment.setContent(commentObj.getString("content").trim());
                                 List<String> commentPicList = null;
                                 JSONArray comPicListAry = commentObj.getJSONArray("pllist");
-                                if (comPicListAry != null && comPicListAry.length() != 0){
+                                if (comPicListAry != null && comPicListAry.length() != 0) {
                                     commentPicList = new ArrayList<>();
-                                    for (int i = 0; i < comPicListAry.length(); i++){
+                                    for (int i = 0; i < comPicListAry.length(); i++) {
                                         commentPicList.add(comPicListAry.getString(i).trim());
                                     }
                                 }
@@ -186,5 +195,14 @@ public class InnerTravelDetailBiz {
                 handler.sendMessage(msg);
             }
         }
+
+        @Override
+        public void onError(Throwable ex, boolean isOnCallback) {
+            super.onError(ex, isOnCallback);
+            if (ex instanceof SocketTimeoutException) {
+                handler.sendEmptyMessage(Consts.NET_ERROR_SOCKET_TIMEOUT);
+            }
+        }
+
     };
 }

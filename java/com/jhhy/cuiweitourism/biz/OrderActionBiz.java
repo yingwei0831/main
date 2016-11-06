@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
 
+import com.jhhy.cuiweitourism.http.NetworkUtil;
 import com.jhhy.cuiweitourism.net.netcallback.HttpUtils;
 import com.jhhy.cuiweitourism.http.ResponseResult;
 import com.jhhy.cuiweitourism.moudle.Invoice;
@@ -17,6 +18,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,93 +41,113 @@ public class OrderActionBiz {
     //    {"head":{"code":"User_orderinfo"},"field":{"ordersn":"01585988836818"}}
     private String CODE_ORDER_DETAIL = "User_orderinfo";
     public void getOrderDetail(final String orderSN){
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                Map<String, Object> headMap = new HashMap<>();
-                headMap.put(Consts.KEY_CODE, CODE_ORDER_DETAIL);
-                Map<String, Object> fieldMap = new HashMap<>();
-                fieldMap.put("ordersn", orderSN);
-                HttpUtils.executeXutils(headMap, fieldMap, detailCallback);
-            }
-        }.start();
+        if (NetworkUtil.checkNetwork(context)) {
+            new Thread(){
+                @Override
+                public void run() {
+                    super.run();
+                    Map<String, Object> headMap = new HashMap<>();
+                    headMap.put(Consts.KEY_CODE, CODE_ORDER_DETAIL);
+                    Map<String, Object> fieldMap = new HashMap<>();
+                    fieldMap.put("ordersn", orderSN);
+                    HttpUtils.executeXutils(headMap, fieldMap, detailCallback);
+                }
+            }.start();
+        } else {
+            handler.sendEmptyMessage(Consts.NET_ERROR);
+        }
     }
 //    {"head":{"code":"User_refund"},"field":{"ordersn":"01586793683431","remark":"时间周转不开"}}
     private String CODE_REQUEST_REFUND = "User_refund";
     public void requestRefund(final String orderSN, final String remark){
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                Map<String, Object> headMap = new HashMap<>();
-                headMap.put(Consts.KEY_CODE, CODE_REQUEST_REFUND);
-                Map<String, Object> fieldMap = new HashMap<>();
-                fieldMap.put("ordersn", orderSN);
-                fieldMap.put("remark", remark);
-                HttpUtils.executeXutils(headMap, fieldMap, refundCallback);
-            }
-        }.start();
+        if (NetworkUtil.checkNetwork(context)) {
+            new Thread(){
+                @Override
+                public void run() {
+                    super.run();
+                    Map<String, Object> headMap = new HashMap<>();
+                    headMap.put(Consts.KEY_CODE, CODE_REQUEST_REFUND);
+                    Map<String, Object> fieldMap = new HashMap<>();
+                    fieldMap.put("ordersn", orderSN);
+                    fieldMap.put("remark", remark);
+                    HttpUtils.executeXutils(headMap, fieldMap, refundCallback);
+                }
+            }.start();
+        } else {
+            handler.sendEmptyMessage(Consts.NET_ERROR);
+        }
     }
 
 //    {"head":{"code":"User_cancelrefund"},"field":{"ordersn":"01585988836818"}}
     private String CODE_REQUEST_CANCEL_REFUND = "User_cancelrefund";
     public void requestCancelRefund(final String orderSN){
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                Map<String, Object> headMap = new HashMap<>();
-                headMap.put(Consts.KEY_CODE, CODE_REQUEST_CANCEL_REFUND);
-                Map<String, Object> fieldMap = new HashMap<>();
-                fieldMap.put("ordersn", orderSN);
-                HttpUtils.executeXutils(headMap, fieldMap, cancelRefundCallback);
-            }
-        }.start();
+        if (NetworkUtil.checkNetwork(context)) {
+            new Thread(){
+                @Override
+                public void run() {
+                    super.run();
+                    Map<String, Object> headMap = new HashMap<>();
+                    headMap.put(Consts.KEY_CODE, CODE_REQUEST_CANCEL_REFUND);
+                    Map<String, Object> fieldMap = new HashMap<>();
+                    fieldMap.put("ordersn", orderSN);
+                    HttpUtils.executeXutils(headMap, fieldMap, cancelRefundCallback);
+                }
+            }.start();
+        } else {
+            handler.sendEmptyMessage(Consts.NET_ERROR);
+        }
     }
 //{"head":{"code":"User_orderpj"},"field":{"mid":"6","articleid":"1","typeid":"1","orderid":"1",
 // "content":"旅游线路很不错。","img":"img"}}
     private String CODE_COMMIT_COMMENT = "User_orderpj";
     public void requestComment(final String mid, final Order order,
                                final String content, final List<Bitmap> upLoadBimp){
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
+        if (NetworkUtil.checkNetwork(context)) {
+            new Thread(){
+                @Override
+                public void run() {
+                    super.run();
 
-                JSONArray picArray = new JSONArray();
-                for (int i = 0; i < upLoadBimp.size(); i++) {
-                    picArray.put(BitmapUtil.bitmaptoString(upLoadBimp.get(i)));
+                    JSONArray picArray = new JSONArray();
+                    for (int i = 0; i < upLoadBimp.size(); i++) {
+                        picArray.put(BitmapUtil.bitmaptoString(upLoadBimp.get(i)));
+                    }
+
+                    Map<String, Object> headMap = new HashMap<>();
+                    headMap.put(Consts.KEY_CODE, CODE_COMMIT_COMMENT);
+                    Map<String, Object> fieldMap = new HashMap<>();
+                    fieldMap.put(Consts.KEY_USER_USER_MID, mid);
+                    fieldMap.put("typeid", order.getTypeId());
+                    fieldMap.put("orderid", order.getId());
+                    fieldMap.put("articleid", order.getProductautoid());
+                    fieldMap.put("content", content);
+                    fieldMap.put("img", picArray);
+
+                    HttpUtils.executeXutils(headMap, fieldMap, commentCallback);
                 }
-
-                Map<String, Object> headMap = new HashMap<>();
-                headMap.put(Consts.KEY_CODE, CODE_COMMIT_COMMENT);
-                Map<String, Object> fieldMap = new HashMap<>();
-                fieldMap.put(Consts.KEY_USER_USER_MID, mid);
-                fieldMap.put("typeid", order.getTypeId());
-                fieldMap.put("orderid", order.getId());
-                fieldMap.put("articleid", order.getProductautoid());
-                fieldMap.put("content", content);
-                fieldMap.put("img", picArray);
-
-                HttpUtils.executeXutils(headMap, fieldMap, commentCallback);
-            }
-        }.start();
+            }.start();
+        } else {
+            handler.sendEmptyMessage(Consts.NET_ERROR);
+        }
     }
 //    {"head":{"code":"User_cancelorder"},"field":{"ordersn":"01974528995005"}}
     private String CODE_CANCEL_ORDER = "User_cancelorder";
     public void requestCancelOrder(final String orderSN){
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                Map<String, Object> headMap = new HashMap<>();
-                headMap.put(Consts.KEY_CODE, CODE_CANCEL_ORDER);
-                Map<String, Object> fieldMap = new HashMap<>();
-                fieldMap.put("ordersn", orderSN);
-                HttpUtils.executeXutils(headMap, fieldMap, cancelOrderCallback);
-            }
-        }.start();
+        if (NetworkUtil.checkNetwork(context)) {
+            new Thread(){
+                @Override
+                public void run() {
+                    super.run();
+                    Map<String, Object> headMap = new HashMap<>();
+                    headMap.put(Consts.KEY_CODE, CODE_CANCEL_ORDER);
+                    Map<String, Object> fieldMap = new HashMap<>();
+                    fieldMap.put("ordersn", orderSN);
+                    HttpUtils.executeXutils(headMap, fieldMap, cancelOrderCallback);
+                }
+            }.start();
+        } else {
+            handler.sendEmptyMessage(Consts.NET_ERROR);
+        }
     }
 //    {"head":{"code":"User_refund"},"field":{"ordersn":"01586793683431","remark":"时间周转不开"}}
 
@@ -152,6 +174,13 @@ public class OrderActionBiz {
                 e.printStackTrace();
             } finally {
                 handler.sendMessage(msg);
+            }
+        }
+        @Override
+        public void onError(Throwable ex, boolean isOnCallback) {
+            super.onError(ex, isOnCallback);
+            if (ex instanceof SocketTimeoutException) {
+                handler.sendEmptyMessage(Consts.NET_ERROR_SOCKET_TIMEOUT);
             }
         }
     };
@@ -181,6 +210,13 @@ public class OrderActionBiz {
                 handler.sendMessage(msg);
             }
         }
+        @Override
+        public void onError(Throwable ex, boolean isOnCallback) {
+            super.onError(ex, isOnCallback);
+            if (ex instanceof SocketTimeoutException) {
+                handler.sendEmptyMessage(Consts.NET_ERROR_SOCKET_TIMEOUT);
+            }
+        }
     };
 
     private ResponseResult cancelRefundCallback = new ResponseResult() {
@@ -208,6 +244,13 @@ public class OrderActionBiz {
                 handler.sendMessage(msg);
             }
         }
+        @Override
+        public void onError(Throwable ex, boolean isOnCallback) {
+            super.onError(ex, isOnCallback);
+            if (ex instanceof SocketTimeoutException) {
+                handler.sendEmptyMessage(Consts.NET_ERROR_SOCKET_TIMEOUT);
+            }
+        }
     };
 
     private ResponseResult refundCallback = new ResponseResult() {
@@ -233,6 +276,13 @@ public class OrderActionBiz {
                 e.printStackTrace();
             } finally {
                 handler.sendMessage(msg);
+            }
+        }
+        @Override
+        public void onError(Throwable ex, boolean isOnCallback) {
+            super.onError(ex, isOnCallback);
+            if (ex instanceof SocketTimeoutException) {
+                handler.sendEmptyMessage(Consts.NET_ERROR_SOCKET_TIMEOUT);
             }
         }
     };
@@ -316,6 +366,13 @@ public class OrderActionBiz {
                 e.printStackTrace();
             } finally {
                 handler.sendMessage(msg);
+            }
+        }
+        @Override
+        public void onError(Throwable ex, boolean isOnCallback) {
+            super.onError(ex, isOnCallback);
+            if (ex instanceof SocketTimeoutException) {
+                handler.sendEmptyMessage(Consts.NET_ERROR_SOCKET_TIMEOUT);
             }
         }
     };

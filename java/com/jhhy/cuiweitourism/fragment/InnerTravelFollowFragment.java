@@ -72,6 +72,12 @@ public class InnerTravelFollowFragment extends Fragment implements ArgumentOnCli
                         }
                     }
                     break;
+                case Consts.NET_ERROR:
+                    ToastUtil.show(getContext(), "请检查网络后重试");
+                    break;
+                case Consts.NET_ERROR_SOCKET_TIMEOUT:
+                    ToastUtil.show(getContext(), "与服务器链接超时，请重试");
+                    break;
             }
         }
     };

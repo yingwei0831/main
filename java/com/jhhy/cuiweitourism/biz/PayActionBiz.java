@@ -105,6 +105,13 @@ public class PayActionBiz {
                 handler.sendMessage(msg);
             }*/
         }
+        @Override
+        public void onError(Throwable ex, boolean isOnCallback) {
+            super.onError(ex, isOnCallback);
+            if (ex instanceof SocketTimeoutException) {
+                handler.sendEmptyMessage(Consts.NET_ERROR_SOCKET_TIMEOUT);
+            }
+        }
     };
 
 //    {"head":{"res_code":"0000","res_msg":"success","res_arg":"获取成功"},
@@ -150,6 +157,12 @@ public class PayActionBiz {
                 handler.sendMessage(msg);
             }
         }
-
+        @Override
+        public void onError(Throwable ex, boolean isOnCallback) {
+            super.onError(ex, isOnCallback);
+            if (ex instanceof SocketTimeoutException) {
+                handler.sendEmptyMessage(Consts.NET_ERROR_SOCKET_TIMEOUT);
+            }
+        }
     };
 }

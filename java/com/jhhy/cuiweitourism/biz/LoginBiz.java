@@ -6,6 +6,7 @@ import android.os.Message;
 
 import com.easemob.EMCallBack;
 import com.easemob.chat.EMChatManager;
+import com.jhhy.cuiweitourism.http.NetworkUtil;
 import com.jhhy.cuiweitourism.net.netcallback.HttpUtils;
 import com.jhhy.cuiweitourism.http.ResponseResult;
 import com.jhhy.cuiweitourism.moudle.User;
@@ -15,6 +16,7 @@ import com.jhhy.cuiweitourism.net.utils.Consts;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.SocketTimeoutException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,22 +38,26 @@ public class LoginBiz {
 
 //{"head":{"code":"User_login"},"field":{"mobile":"15210656911","password":"admin123"}}
 
-    public void login(final String userName, final String password){
+    public void login(final String userName, final String password) {
         //登录环信聊天服务器
         EMChatManager.getInstance().login(userName, password, new EMCallBack() {
             @Override
             public void onSuccess() {
-                new Thread() {
-                    @Override
-                    public void run() {
-                        Map<String, Object> headMap = new HashMap<>();
-                        headMap.put(Consts.KEY_CODE, CODE_LOGIN);
-                        Map<String, Object> fieldMap = new HashMap<>();
-                        fieldMap.put(Consts.KEY_USER_MOBILE, userName);
-                        fieldMap.put(Consts.KEY_PASSWORD, password);
-                        HttpUtils.executeXutils(headMap, fieldMap, loginCallback);
-                    }
-                }.start();
+                if (NetworkUtil.checkNetwork(context)) {
+                    new Thread() {
+                        @Override
+                        public void run() {
+                            Map<String, Object> headMap = new HashMap<>();
+                            headMap.put(Consts.KEY_CODE, CODE_LOGIN);
+                            Map<String, Object> fieldMap = new HashMap<>();
+                            fieldMap.put(Consts.KEY_USER_MOBILE, userName);
+                            fieldMap.put(Consts.KEY_PASSWORD, password);
+                            HttpUtils.executeXutils(headMap, fieldMap, loginCallback);
+                        }
+                    }.start();
+                } else {
+                    handler.sendEmptyMessage(Consts.NET_ERROR);
+                }
             }
 
             @Override
@@ -70,7 +76,7 @@ public class LoginBiz {
 
     }
 
-//    {"head":{"res_code":"0001","res_msg":"error","res_arg":"用户名不存在"},"body":"[]"}
+    //    {"head":{"res_code":"0001","res_msg":"error","res_arg":"用户名不存在"},"body":"[]"}
     private ResponseResult loginCallback = new ResponseResult() {
         @Override
         public void responseSuccess(String result) {
@@ -116,9 +122,17 @@ public class LoginBiz {
                 handler.sendMessage(msg);
             }
         }
+
+        @Override
+        public void onError(Throwable ex, boolean isOnCallback) {
+            super.onError(ex, isOnCallback);
+            if (ex instanceof SocketTimeoutException) {
+                handler.sendEmptyMessage(Consts.NET_ERROR_SOCKET_TIMEOUT);
+            }
+        }
     };
 
-    public void logout(String username){
+    public void logout(String username) {
         DemoHelper.getInstance().logout(true, null);
     }
 }

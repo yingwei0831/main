@@ -127,13 +127,11 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
     private static final int FLING_MIN_VELOCITY = 0;
     private GestureDetector mGestureDetector; // MyScrollView的手势
 
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            if (msg.arg1 == 0){
-                ToastUtil.show(getApplicationContext(), (String) msg.obj);
-            } else {
+            if (msg.arg1 == 1) {
                 switch (msg.what) {
                     case Consts.MESSAGE_INNER_TRAVEL_DETAIL:
                         TravelDetail detailNew = (TravelDetail) msg.obj;
@@ -142,7 +140,15 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
                             refreshView();
                         }
                         break;
+                    case Consts.NET_ERROR:
+                        ToastUtil.show(getApplicationContext(), "请检查网络后重试");
+                        break;
+                    case Consts.NET_ERROR_SOCKET_TIMEOUT:
+                        ToastUtil.show(getApplicationContext(), "与服务器链接超时，请重试");
+                        break;
                 }
+            } else {
+                ToastUtil.show(getApplicationContext(), (String) msg.obj);
             }
             LoadingIndicator.cancel();
         }
@@ -172,7 +178,7 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
     }
 
     private void setupView() {
-        mScrollView = (XScrollView)findViewById(R.id.scroll_view_detail);
+        mScrollView = (XScrollView) findViewById(R.id.scroll_view_detail);
         mScrollView.setPullRefreshEnable(false);
         mScrollView.setPullLoadEnable(false);
         mScrollView.setAutoLoadEnable(false);
@@ -231,8 +237,8 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
 
             mGestureDetector = new GestureDetector(getApplicationContext(), this);
 
-            flipper = (ViewFlipper)content.findViewById(R.id.viewflipper);
-            layoutPoint =(LinearLayout)content.findViewById(R.id.layout_indicator_point);
+            flipper = (ViewFlipper) content.findViewById(R.id.viewflipper);
+            layoutPoint = (LinearLayout) content.findViewById(R.id.layout_indicator_point);
 
             addImageView(imageUrls.size());
             addIndicator(imageUrls.size());
@@ -242,7 +248,7 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
             flipper.setOnTouchListener(this);
 
             dianSelect(currentPosition);
-            MyScrollView myScrollView = (MyScrollView)content.findViewById(R.id.viewflipper_myScrollview);
+            MyScrollView myScrollView = (MyScrollView) content.findViewById(R.id.viewflipper_myScrollview);
             myScrollView.setGestureDetector(mGestureDetector);
         }
         mScrollView.setView(content);
@@ -263,9 +269,9 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
                 int statusHeight = Utils.getStatusBarHeight(getApplicationContext());
 //                int titleHeight = layoutTitle.getHeight();
                 indicatorHeightTop = layoutIndicatorTop.getHeight();
-                if(s[1] <= statusHeight){ // + titleHeight
+                if (s[1] <= statusHeight) { // + titleHeight
                     layoutIndicatorTop.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     layoutIndicatorTop.setVisibility(View.GONE);
                 }
                 if (!click) {
@@ -301,8 +307,9 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
         });
 
     }
+
     private void addImageView(int length) {
-        for(int i=0; i < length; i++){
+        for (int i = 0; i < length; i++) {
             ADInfo info = new ADInfo();
             info.setUrl(imageUrls.get(i));
             info.setContent("图片-->" + i);
@@ -310,7 +317,8 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
             flipper.addView(ViewFactory.getImageView(getApplicationContext(), infos.get(i).getUrl()));
         }
     }
-    private void addIndicator(int size){
+
+    private void addIndicator(int size) {
 //        if(indicators == null) {
         indicators = new ImageView[size];
 //        }
@@ -323,27 +331,31 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
 
     }
 
-    private void setIndicator(int current){
-        for(int i = 0; i < indicators.length; i++) {
-            if(i == current) {
+    private void setIndicator(int current) {
+        for (int i = 0; i < indicators.length; i++) {
+            if (i == current) {
                 indicators[current].setImageResource(R.drawable.icon_point_pre);
-            }else{
+            } else {
                 indicators[i].setImageResource(R.drawable.icon_point);
             }
         }
     }
+
     /**
      * 对应被选中的点的图片
+     *
      * @param id
      */
     private void dianSelect(int id) {
         indicators[id].setImageResource(R.drawable.icon_point_pre);
     }
+
     /**
      * 对应未被选中的点的图片
+     *
      * @param id
      */
-    private void dianUnselect(int id){
+    private void dianUnselect(int id) {
         indicators[id].setImageResource(R.drawable.icon_point);
     }
 
@@ -400,14 +412,14 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
 //        tvPriceNotInclude.setText(priceNotContain);
         //行程描述——>行程安排
         List<TravelDetailDay> tripDescribe = detail.getTripDescribe();
-        if (tripDescribe != null && tripDescribe.size() > 0){
+        if (tripDescribe != null && tripDescribe.size() > 0) {
             for (int i = 0; i < tripDescribe.size(); i++) {
                 TravelDetailDay tripDay = tripDescribe.get(i);
                 InnerTravelDetailDescribeView viewStep = new InnerTravelDetailDescribeView(getApplicationContext());
                 if (i == 0) {
                     viewStep.isFirstStep(true);
                 }
-                if (i == tripDescribe.size() - 1){
+                if (i == tripDescribe.size() - 1) {
                     viewStep.isLastStep(true);
                 }
                 viewStep.setTvDayText(tripDay.getDay());
@@ -423,11 +435,11 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.tv_inner_travel_detail_content_product_bottom:
             case R.id.btn_inner_travel_detail_indicator_top_product:
                 click = true;
-               changeIndicator(1);
+                changeIndicator(1);
                 mWebViewProduct.post(new Runnable() {
                     @Override
                     public void run() {
@@ -455,7 +467,7 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
                 layoutPrice.post(new Runnable() {
                     @Override
                     public void run() {
-                        mScrollView.scrollTo(0, layoutPrice.getTop() - indicatorHeightTop );
+                        mScrollView.scrollTo(0, layoutPrice.getTop() - indicatorHeightTop);
                         click = false;
                     }
                 });
@@ -504,10 +516,10 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_CANCELED){
+        if (resultCode == RESULT_CANCELED) {
 
-        }else{
-            if (requestCode == Consts.REQUEST_CODE_RESERVE_SELECT_DATE){ //选择日期
+        } else {
+            if (requestCode == Consts.REQUEST_CODE_RESERVE_SELECT_DATE) { //选择日期
                 //TODO 日期选择返回
             }
         }
@@ -557,6 +569,7 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
 
     /**
      * GestureDetector.OnGestureListener 回调
+     *
      * @param motionEvent
      * @return
      */
@@ -567,6 +580,7 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
 
     /**
      * GestureDetector.OnGestureListener 回调
+     *
      * @param motionEvent
      */
     @Override
@@ -576,6 +590,7 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
 
     /**
      * GestureDetector.OnGestureListener 回调
+     *
      * @param motionEvent
      * @return
      */
@@ -586,6 +601,7 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
 
     /**
      * GestureDetector.OnGestureListener 回调
+     *
      * @param motionEvent
      * @param motionEvent1
      * @param v
@@ -599,6 +615,7 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
 
     /**
      * GestureDetector.OnGestureListener 回调
+     *
      * @param motionEvent
      */
     @Override
@@ -608,6 +625,7 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
 
     /**
      * GestureDetector.OnGestureListener 回调
+     *
      * @param e1
      * @param e2
      * @param velocityX
@@ -616,17 +634,17 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
      */
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-        if(e1.getX() - e2.getX() > FLING_MIN_DISTANCE &&
-                Math.abs(velocityX) > FLING_MIN_VELOCITY){
+        if (e1.getX() - e2.getX() > FLING_MIN_DISTANCE &&
+                Math.abs(velocityX) > FLING_MIN_VELOCITY) {
 //            Log.i(TAG, "==============开始向左滑动了================");
             showNextView();
             return true;
-        }else if(e2.getX() - e1.getX() > FLING_MIN_DISTANCE &&
-                Math.abs(velocityX) > FLING_MIN_VELOCITY){
+        } else if (e2.getX() - e1.getX() > FLING_MIN_DISTANCE &&
+                Math.abs(velocityX) > FLING_MIN_VELOCITY) {
 //            Log.i(TAG, "==============开始向右滑动了================");
             showPreviousView();
             return true;
-        }else{
+        } else {
             return false;
         }
     }
@@ -637,11 +655,11 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
         flipper.setOutAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.push_left_out));
         flipper.showNext();
         currentPosition++;
-        if(currentPosition == flipper.getChildCount()){
+        if (currentPosition == flipper.getChildCount()) {
             dianUnselect(currentPosition - 1);
             currentPosition = 0;
             dianSelect(currentPosition);
-        }else{
+        } else {
             dianUnselect(currentPosition - 1);
             dianSelect(currentPosition);
         }
@@ -655,11 +673,11 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
         flipper.setOutAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.push_right_out));
         flipper.showPrevious();
         currentPosition--;
-        if(currentPosition == -1){
+        if (currentPosition == -1) {
             dianUnselect(currentPosition + 1);
             currentPosition = flipper.getChildCount() - 1;
             dianSelect(currentPosition);
-        }else{
+        } else {
             dianUnselect(currentPosition + 1);
             dianSelect(currentPosition);
         }
@@ -668,18 +686,18 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
 
     private void setIconData(String url) {
         final String subString = url.substring(url.lastIndexOf("/") + 1);
-        if(MyFileUtils.fileIsExists(Consts.IMG_PATH + subString)){
+        if (MyFileUtils.fileIsExists(Consts.IMG_PATH + subString)) {
             Bitmap iconBmp = BitmapFactory.decodeFile(Consts.IMG_PATH + subString);
-            if(iconBmp != null){
+            if (iconBmp != null) {
                 civIcon.setImageBitmap(iconBmp);
             }
-        }else{
+        } else {
             ImageLoaderUtil imageLoader = ImageLoaderUtil.getInstance(getApplicationContext());
             imageLoader.getImage(civIcon, url);
             imageLoader.setCallBack(new ImageLoaderUtil.ImageLoaderCallBack() {
                 @Override
                 public void refreshAdapter(Bitmap loadedImage) {
-                    if(loadedImage != null){
+                    if (loadedImage != null) {
                         civIcon.setImageBitmap(loadedImage);
                     }
                 }
@@ -688,9 +706,9 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
 
     }
 
-    public static void actionStart(Context context, Bundle bundle){
+    public static void actionStart(Context context, Bundle bundle) {
         Intent intent = new Intent(context, InnerTravelDetailActivity.class);
-        if(bundle != null){
+        if (bundle != null) {
             intent.putExtras(bundle);
         }
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -702,7 +720,7 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
         return mGestureDetector.onTouchEvent(motionEvent);
     }
 
-    private void changeIndicator(int tag){
+    private void changeIndicator(int tag) {
         tvProduct.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
         viewProduct.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
         btnProductTop.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
@@ -722,23 +740,23 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
         viewNotice.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
         btnNoticeTop.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
         viewNoticeTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-        if (tag == 1){
+        if (tag == 1) {
             tvProduct.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
             viewProduct.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
             btnProductTop.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
             viewProductTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-        } else if (tag ==2){
+        } else if (tag == 2) {
             tvDescribe.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
             viewDescribe.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
             btnDescribeTop.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
             viewDescribeTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-        } else if (tag == 3){
+        } else if (tag == 3) {
             btnPrice.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
             viewPrice.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
             btnPriceTop.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
             viewPriceTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
 
-        } else if (tag == 4){
+        } else if (tag == 4) {
             tvNotice.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
             viewNotice.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
             btnNoticeTop.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));

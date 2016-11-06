@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 
+import com.jhhy.cuiweitourism.http.NetworkUtil;
 import com.jhhy.cuiweitourism.net.netcallback.HttpUtils;
 import com.jhhy.cuiweitourism.http.ResponseResult;
 import com.jhhy.cuiweitourism.moudle.Invoice;
@@ -20,6 +21,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.xutils.x;
 
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,18 +48,22 @@ public class OrdersAllBiz {
 // 返回订单状态：0等待处理、1等待付款、2付款成功、3订单取消、4已退款、5交易完成
 
     public void getAllOrders(final String mid, final String type){
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                Map<String, Object> headMap = new HashMap<>();
-                headMap.put(Consts.KEY_CODE, CODE_ALL_ORDERS);
-                Map<String, Object> fieldMap = new HashMap<>();
-                fieldMap.put(Consts.KEY_USER_USER_MID, mid);
-                fieldMap.put(Consts.ORDER_TYPE, type);
-                HttpUtils.executeXutils(headMap, fieldMap, allOrdersCallback);
-            }
-        }.start();
+        if (NetworkUtil.checkNetwork(context)) {
+            new Thread(){
+                @Override
+                public void run() {
+                    super.run();
+                    Map<String, Object> headMap = new HashMap<>();
+                    headMap.put(Consts.KEY_CODE, CODE_ALL_ORDERS);
+                    Map<String, Object> fieldMap = new HashMap<>();
+                    fieldMap.put(Consts.KEY_USER_USER_MID, mid);
+                    fieldMap.put(Consts.ORDER_TYPE, type);
+                    HttpUtils.executeXutils(headMap, fieldMap, allOrdersCallback);
+                }
+            }.start();
+        } else {
+            handler.sendEmptyMessage(Consts.NET_ERROR);
+        }
     }
 //{"head":{"code":"Order_index"},"field":{"memberid":"6",
 // "supplierlist":"1","productaid":"9","productname":"北京山五日游", "usedate":"2016-08-30",
@@ -75,77 +81,81 @@ public class OrdersAllBiz {
                             final String needInvoice, final Invoice invoice,
                             final String useScore, final String priceScore,
                             final List<UserContacts> contactses, final String remark){
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                Map<String, Object> headMap = new HashMap<>();
-                headMap.put(Consts.KEY_CODE, CODE_COMMIT_ORDER);
-                JSONObject fieldObj = new JSONObject();
-                try {
-                    if ("1".equals(needInvoice)){
-                        HashMap<String, String> invoiceMap = new HashMap<String, String>();
-                        invoiceMap.put("title", invoice.getTitle());
-                        invoiceMap.put("receiver", invoice.getReceiver());
-                        invoiceMap.put("mobile", invoice.getMobile());
-                        invoiceMap.put("address", invoice.getAddress());
-                        JSONObject invoiceObj = new JSONObject(invoiceMap);
-                        fieldObj.put("fapiao", invoiceObj);
-                    }else{
-                        fieldObj.put("fapiao", null);
+        if (NetworkUtil.checkNetwork(context)) {
+            new Thread(){
+                @Override
+                public void run() {
+                    super.run();
+                    Map<String, Object> headMap = new HashMap<>();
+                    headMap.put(Consts.KEY_CODE, CODE_COMMIT_ORDER);
+                    JSONObject fieldObj = new JSONObject();
+                    try {
+                        if ("1".equals(needInvoice)){
+                            HashMap<String, String> invoiceMap = new HashMap<String, String>();
+                            invoiceMap.put("title", invoice.getTitle());
+                            invoiceMap.put("receiver", invoice.getReceiver());
+                            invoiceMap.put("mobile", invoice.getMobile());
+                            invoiceMap.put("address", invoice.getAddress());
+                            JSONObject invoiceObj = new JSONObject(invoiceMap);
+                            fieldObj.put("fapiao", invoiceObj);
+                        }else{
+                            fieldObj.put("fapiao", null);
+                        }
+                        JSONArray contactArray = new JSONArray();
+                        for (int i = 0; i < contactses.size(); i++){
+                            UserContacts con = contactses.get(i);
+                            HashMap<String, String> conMap = new HashMap<String, String>();
+                            conMap.put("linkman", con.getContactsName());
+                            conMap.put("idcard", con.getContactsIdCard());
+                            conMap.put("mobile", con.getContactsMobile());
+                            conMap.put("passport", con.getContactsPassport());
+                            contactArray.put(new JSONObject(conMap));
+                        }
+                        fieldObj.put("memberid", MainActivity.user.getUserId());
+                        fieldObj.put("supplierlist", detail.getBusinessId());
+                        fieldObj.put("productaid", detail.getId());
+                        fieldObj.put("productname", detail.getTitle());
+                        fieldObj.put("price", groupDeadline.getSell_price_adult());
+                        fieldObj.put("childprice", groupDeadline.getSell_price_children());
+                        fieldObj.put("usedate", groupDeadline.getDate());
+                        fieldObj.put("dingnum", countAdult+"");
+                        fieldObj.put("childnum", countChild+"");
+                        fieldObj.put("oldprice", "0");
+                        fieldObj.put("oldnum", "0");
+                        fieldObj.put("linkman", linkName);
+                        fieldObj.put("linktel", linkMobile);
+                        fieldObj.put("linkemail", linkMail);
+                        fieldObj.put("isneedpiao", needInvoice);
+                        fieldObj.put("usejifen", useScore);
+                        fieldObj.put("jifentprice", priceScore);
+                        fieldObj.put("needjifen", detail.getNeedScore());
+
+                        fieldObj.put("lxr", contactArray);
+                        fieldObj.put("remark", remark);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                    JSONArray contactArray = new JSONArray();
-                    for (int i = 0; i < contactses.size(); i++){
-                        UserContacts con = contactses.get(i);
-                        HashMap<String, String> conMap = new HashMap<String, String>();
-                        conMap.put("linkman", con.getContactsName());
-                        conMap.put("idcard", con.getContactsIdCard());
-                        conMap.put("mobile", con.getContactsMobile());
-                        conMap.put("passport", con.getContactsPassport());
-                        contactArray.put(new JSONObject(conMap));
+                    org.xutils.http.RequestParams param = new org.xutils.http.RequestParams(Consts.SERVER_URL);
+                    param.addHeader("Content-Type", "application/json;charset=utf-8");
+                    JSONObject json = new JSONObject();
+
+                    try {
+                        json.put(Consts.KEY_HEAD, setFieldParams(headMap));
+                        json.put(Consts.KEY_FIELD, fieldObj);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                    fieldObj.put("memberid", MainActivity.user.getUserId());
-                    fieldObj.put("supplierlist", detail.getBusinessId());
-                    fieldObj.put("productaid", detail.getId());
-                    fieldObj.put("productname", detail.getTitle());
-                    fieldObj.put("price", groupDeadline.getSell_price_adult());
-                    fieldObj.put("childprice", groupDeadline.getSell_price_children());
-                    fieldObj.put("usedate", groupDeadline.getDate());
-                    fieldObj.put("dingnum", countAdult+"");
-                    fieldObj.put("childnum", countChild+"");
-                    fieldObj.put("oldprice", "0");
-                    fieldObj.put("oldnum", "0");
-                    fieldObj.put("linkman", linkName);
-                    fieldObj.put("linktel", linkMobile);
-                    fieldObj.put("linkemail", linkMail);
-                    fieldObj.put("isneedpiao", needInvoice);
-                    fieldObj.put("usejifen", useScore);
-                    fieldObj.put("jifentprice", priceScore);
-                    fieldObj.put("needjifen", detail.getNeedScore());
-
-                    fieldObj.put("lxr", contactArray);
-                    fieldObj.put("remark", remark);
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                    String entityString = json.toString();
+                    param.setBodyContent(entityString);
+                    LogUtil.e(TAG, "发送数据：" + param.getBodyContent());
+                    x.http().post(param, commitOrderCallback);
                 }
-                org.xutils.http.RequestParams param = new org.xutils.http.RequestParams(Consts.SERVER_URL);
-                param.addHeader("Content-Type", "application/json;charset=utf-8");
-                JSONObject json = new JSONObject();
-
-                try {
-                    json.put(Consts.KEY_HEAD, setFieldParams(headMap));
-                    json.put(Consts.KEY_FIELD, fieldObj);
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                String entityString = json.toString();
-                param.setBodyContent(entityString);
-                LogUtil.e(TAG, "发送数据：" + param.getBodyContent());
-                x.http().post(param, commitOrderCallback);
-            }
-        }.start();
+            }.start();
+        } else {
+            handler.sendEmptyMessage(Consts.NET_ERROR);
+        }
     }
 
     private ResponseResult commitOrderCallback = new ResponseResult() {
@@ -177,6 +187,13 @@ public class OrdersAllBiz {
                 e.printStackTrace();
             } finally {
                 handler.sendMessage(msg);
+            }
+        }
+        @Override
+        public void onError(Throwable ex, boolean isOnCallback) {
+            super.onError(ex, isOnCallback);
+            if (ex instanceof SocketTimeoutException) {
+                handler.sendEmptyMessage(Consts.NET_ERROR_SOCKET_TIMEOUT);
             }
         }
     };
@@ -234,6 +251,13 @@ public class OrdersAllBiz {
                 handler.sendMessage(msg);
             }
         }
+        @Override
+        public void onError(Throwable ex, boolean isOnCallback) {
+            super.onError(ex, isOnCallback);
+            if (ex instanceof SocketTimeoutException) {
+                handler.sendEmptyMessage(Consts.NET_ERROR_SOCKET_TIMEOUT);
+            }
+        }
     };
 
 //{"head":{"code":"User_dfkorder"},"field":{"mid":"6","type":"0"}}
@@ -243,18 +267,22 @@ public class OrdersAllBiz {
      * 待付款
      */
     public void getWaitPayment(final String mid, final String type){
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                Map<String, Object> headMap = new HashMap<>();
-                headMap.put(Consts.KEY_CODE, CODE_ALL_WAIT_PAY);
-                Map<String, Object> fieldMap = new HashMap<>();
-                fieldMap.put(Consts.KEY_USER_USER_MID, mid);
-                fieldMap.put(Consts.ORDER_TYPE, type);
-                HttpUtils.executeXutils(headMap, fieldMap, waitPayOrdersCallback);
-            }
-        }.start();
+        if (NetworkUtil.checkNetwork(context)) {
+            new Thread(){
+                @Override
+                public void run() {
+                    super.run();
+                    Map<String, Object> headMap = new HashMap<>();
+                    headMap.put(Consts.KEY_CODE, CODE_ALL_WAIT_PAY);
+                    Map<String, Object> fieldMap = new HashMap<>();
+                    fieldMap.put(Consts.KEY_USER_USER_MID, mid);
+                    fieldMap.put(Consts.ORDER_TYPE, type);
+                    HttpUtils.executeXutils(headMap, fieldMap, waitPayOrdersCallback);
+                }
+            }.start();
+        } else {
+            handler.sendEmptyMessage(Consts.NET_ERROR);
+        }
     }
 
     private ResponseResult waitPayOrdersCallback = new ResponseResult() {
@@ -302,22 +330,33 @@ public class OrdersAllBiz {
                 handler.sendMessage(msg);
             }
         }
+        @Override
+        public void onError(Throwable ex, boolean isOnCallback) {
+            super.onError(ex, isOnCallback);
+            if (ex instanceof SocketTimeoutException) {
+                handler.sendEmptyMessage(Consts.NET_ERROR_SOCKET_TIMEOUT);
+            }
+        }
     };
 //    {"head":{"code":"User_ordercomment"},"field":{"mid":"6","type":"0"}}
     private String CODE_WAIT_COMMENT = "User_ordercomment";
     public void getWaitComment(final String mid, final String type){
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                Map<String, Object> headMap = new HashMap<>();
-                headMap.put(Consts.KEY_CODE, CODE_WAIT_COMMENT);
-                Map<String, Object> fieldMap = new HashMap<>();
-                fieldMap.put(Consts.KEY_USER_USER_MID, mid);
-                fieldMap.put(Consts.ORDER_TYPE, type);
-                HttpUtils.executeXutils(headMap, fieldMap, waitCommentOrdersCallback);
-            }
-        }.start();
+        if (NetworkUtil.checkNetwork(context)) {
+            new Thread(){
+                @Override
+                public void run() {
+                    super.run();
+                    Map<String, Object> headMap = new HashMap<>();
+                    headMap.put(Consts.KEY_CODE, CODE_WAIT_COMMENT);
+                    Map<String, Object> fieldMap = new HashMap<>();
+                    fieldMap.put(Consts.KEY_USER_USER_MID, mid);
+                    fieldMap.put(Consts.ORDER_TYPE, type);
+                    HttpUtils.executeXutils(headMap, fieldMap, waitCommentOrdersCallback);
+                }
+            }.start();
+        } else {
+            handler.sendEmptyMessage(Consts.NET_ERROR);
+        }
     }
 
     private ResponseResult waitCommentOrdersCallback = new ResponseResult() {
@@ -371,23 +410,34 @@ public class OrdersAllBiz {
                 handler.sendMessage(msg);
             }
         }
+        @Override
+        public void onError(Throwable ex, boolean isOnCallback) {
+            super.onError(ex, isOnCallback);
+            if (ex instanceof SocketTimeoutException) {
+                handler.sendEmptyMessage(Consts.NET_ERROR_SOCKET_TIMEOUT);
+            }
+        }
     };
 
     private String CODE_WAIT_REFUND = "User_forarefund";
 //{"head":{"code":"User_forarefund"},"field":{"mid":"1","type":"0"}}
     public void getWaitRefund(final String mid, final String type){
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                Map<String, Object> headMap = new HashMap<>();
-                headMap.put(Consts.KEY_CODE, CODE_WAIT_REFUND);
-                Map<String, Object> fieldMap = new HashMap<>();
-                fieldMap.put(Consts.KEY_USER_USER_MID, mid);
-                fieldMap.put(Consts.ORDER_TYPE, type);
-                HttpUtils.executeXutils(headMap, fieldMap, waitRefundOrdersCallback);
-            }
-        }.start();
+        if (NetworkUtil.checkNetwork(context)) {
+            new Thread(){
+                @Override
+                public void run() {
+                    super.run();
+                    Map<String, Object> headMap = new HashMap<>();
+                    headMap.put(Consts.KEY_CODE, CODE_WAIT_REFUND);
+                    Map<String, Object> fieldMap = new HashMap<>();
+                    fieldMap.put(Consts.KEY_USER_USER_MID, mid);
+                    fieldMap.put(Consts.ORDER_TYPE, type);
+                    HttpUtils.executeXutils(headMap, fieldMap, waitRefundOrdersCallback);
+                }
+            }.start();
+        } else {
+            handler.sendEmptyMessage(Consts.NET_ERROR);
+        }
     }
 
     private ResponseResult waitRefundOrdersCallback = new ResponseResult() {
@@ -435,6 +485,13 @@ public class OrdersAllBiz {
                 e.printStackTrace();
             } finally {
                 handler.sendMessage(msg);
+            }
+        }
+        @Override
+        public void onError(Throwable ex, boolean isOnCallback) {
+            super.onError(ex, isOnCallback);
+            if (ex instanceof SocketTimeoutException) {
+                handler.sendEmptyMessage(Consts.NET_ERROR_SOCKET_TIMEOUT);
             }
         }
     };

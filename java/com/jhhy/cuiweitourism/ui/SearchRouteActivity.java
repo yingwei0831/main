@@ -99,6 +99,12 @@ public class SearchRouteActivity extends BaseActivity implements View.OnClickLis
                         ToastUtil.show(getApplicationContext(), "未获取到筛选价格区间");
                     }
                     break;
+                case Consts.NET_ERROR:
+                    ToastUtil.show(getApplicationContext(), "请检查网络后重试");
+                    break;
+                case Consts.NET_ERROR_SOCKET_TIMEOUT:
+                    ToastUtil.show(getApplicationContext(), "与服务器链接超时，请重试");
+                    break;
             }
         }
     };
