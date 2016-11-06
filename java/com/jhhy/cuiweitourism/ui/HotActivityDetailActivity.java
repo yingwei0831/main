@@ -22,15 +22,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
-import com.bumptech.glide.util.Util;
 import com.jhhy.cuiweitourism.R;
-import com.jhhy.cuiweitourism.biz.HotActivityBiz;
-import com.jhhy.cuiweitourism.biz.InnerTravelDetailBiz;
 import com.jhhy.cuiweitourism.circleviewpager.ViewFactory;
 import com.jhhy.cuiweitourism.moudle.ADInfo;
-import com.jhhy.cuiweitourism.moudle.TravelDetail;
-import com.jhhy.cuiweitourism.moudle.TravelDetailDay;
-import com.jhhy.cuiweitourism.moudle.UserComment;
 import com.jhhy.cuiweitourism.net.biz.ActivityActionBiz;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HomePageCustonDetail;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.ActivityComment;

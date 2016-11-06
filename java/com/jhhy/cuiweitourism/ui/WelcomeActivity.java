@@ -40,6 +40,7 @@ public class WelcomeActivity extends BaseActivity {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+            LogUtil.e(TAG, "-------handleMessage------");
             switch (msg.what) {
                 case Consts.MESSAGE_LOGIN:
                     if (0 == msg.arg1) {
@@ -52,17 +53,19 @@ public class WelcomeActivity extends BaseActivity {
                     finish();
                     break;
                 case Consts.MESSAGE_LOCATION:
-                    LogUtil.e(TAG, "-------handleMessage------");
-
                     updateLocation(msg);
                     break;
                 case Consts.MESSAGE_LOCATION_FAILED:
-                    LogUtil.e(TAG, "-------handleMessage------");
                     showLocationMessage((AMapLocation) msg.obj);
                     break;
                 case Consts.MESSAGE_NETWORK_CONNECT:
-                    LogUtil.e(TAG, "-------handleMessage------");
                     new LocationUtil(getApplicationContext(), handler).start();
+                    break;
+                case Consts.NET_ERROR:
+                    ToastUtil.show(getApplicationContext(), "请检查网络后重试");
+                    break;
+                case Consts.NET_ERROR_SOCKET_TIMEOUT:
+                    ToastUtil.show(getApplicationContext(), "与服务器链接超时，请重试");
                     break;
             }
         }

@@ -69,6 +69,12 @@ public class InnerTravelCityFreedomFragment extends Fragment implements AdapterV
 
                         }
                         break;
+                    case Consts.NET_ERROR:
+                        ToastUtil.show(getContext(), "请检查网络后重试");
+                        break;
+                    case Consts.NET_ERROR_SOCKET_TIMEOUT:
+                        ToastUtil.show(getContext(), "与服务器链接超时，请重试");
+                        break;
                 }
             }else{
                 ToastUtil.show(getContext(), (String) msg.obj);

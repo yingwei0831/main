@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 
+import com.jhhy.cuiweitourism.http.NetworkUtil;
 import com.jhhy.cuiweitourism.net.netcallback.HttpUtils;
 import com.jhhy.cuiweitourism.http.ResponseResult;
 import com.jhhy.cuiweitourism.moudle.Travel;
@@ -13,6 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,20 +42,24 @@ public class FindLinesBiz {
 // "zcfdate":"2016-8-18","wcfdate":"2016-8-18","page":"1","offset":"10"}}
 
     public void getLines(final int page, final String fromCityId, final String sort, String day, String price, String earlyTime, String laterTime){
-        new Thread() {
-            @Override
-            public void run() {
-                Map<String, Object> headMap = new HashMap<>();
-                headMap.put(Consts.KEY_CODE, CODE_FIND_LINES);
-                Map<String, Object> fieldMap = new HashMap<>();
-                fieldMap.put("startareaid", fromCityId);
-                fieldMap.put("order", sort);
+        if (NetworkUtil.checkNetwork(context)) {
+            new Thread() {
+                @Override
+                public void run() {
+                    Map<String, Object> headMap = new HashMap<>();
+                    headMap.put(Consts.KEY_CODE, CODE_FIND_LINES);
+                    Map<String, Object> fieldMap = new HashMap<>();
+                    fieldMap.put("startareaid", fromCityId);
+                    fieldMap.put("order", sort);
 
-                fieldMap.put(Consts.KEY_PAGE, Integer.toString(page));
-                fieldMap.put(Consts.KEY_OFFSET, "10");
-                HttpUtils.executeXutils(headMap, fieldMap, findLinesCallback);
-            }
-        }.start();
+                    fieldMap.put(Consts.KEY_PAGE, Integer.toString(page));
+                    fieldMap.put(Consts.KEY_OFFSET, "10");
+                    HttpUtils.executeXutils(headMap, fieldMap, findLinesCallback);
+                }
+            }.start();
+        } else {
+            handler.sendEmptyMessage(Consts.NET_ERROR);
+        }
     }
 
     private ResponseResult findLinesCallback = new ResponseResult() {
@@ -94,6 +100,13 @@ public class FindLinesBiz {
                 e.printStackTrace();
             } finally {
                 handler.sendMessage(msg);
+            }
+        }
+        @Override
+        public void onError(Throwable ex, boolean isOnCallback) {
+            super.onError(ex, isOnCallback);
+            if (ex instanceof SocketTimeoutException) {
+                handler.sendEmptyMessage(Consts.NET_ERROR_SOCKET_TIMEOUT);
             }
         }
     };

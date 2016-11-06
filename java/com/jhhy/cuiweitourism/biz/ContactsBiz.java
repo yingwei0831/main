@@ -14,6 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -99,6 +100,13 @@ public class ContactsBiz {
                 handler.sendMessage(msg);
             }
         }
+        @Override
+        public void onError(Throwable ex, boolean isOnCallback) {
+            super.onError(ex, isOnCallback);
+            if (ex instanceof SocketTimeoutException) {
+                handler.sendEmptyMessage(Consts.NET_ERROR_SOCKET_TIMEOUT);
+            }
+        }
     };
 
     private String CODE_SAVE_CONTACTS = "User_contactsadd";
@@ -152,6 +160,13 @@ public class ContactsBiz {
                 e.printStackTrace();
             } finally {
                 handler.sendMessage(msg);
+            }
+        }
+        @Override
+        public void onError(Throwable ex, boolean isOnCallback) {
+            super.onError(ex, isOnCallback);
+            if (ex instanceof SocketTimeoutException) {
+                handler.sendEmptyMessage(Consts.NET_ERROR_SOCKET_TIMEOUT);
             }
         }
     };
@@ -212,6 +227,13 @@ public class ContactsBiz {
                 handler.sendMessage(msg);
             }
         }
+        @Override
+        public void onError(Throwable ex, boolean isOnCallback) {
+            super.onError(ex, isOnCallback);
+            if (ex instanceof SocketTimeoutException) {
+                handler.sendEmptyMessage(Consts.NET_ERROR_SOCKET_TIMEOUT);
+            }
+        }
     };
 
     //    {"head":{"code":"User_contactsdel"},"field":{"id":"1"}}
@@ -259,6 +281,13 @@ public class ContactsBiz {
                 e.printStackTrace();
             } finally {
                 handler.sendMessage(msg);
+            }
+        }
+        @Override
+        public void onError(Throwable ex, boolean isOnCallback) {
+            super.onError(ex, isOnCallback);
+            if (ex instanceof SocketTimeoutException) {
+                handler.sendEmptyMessage(Consts.NET_ERROR_SOCKET_TIMEOUT);
             }
         }
     };

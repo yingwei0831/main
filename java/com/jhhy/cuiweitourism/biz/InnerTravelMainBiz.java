@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 
+import com.jhhy.cuiweitourism.http.NetworkUtil;
 import com.jhhy.cuiweitourism.net.netcallback.HttpUtils;
 import com.jhhy.cuiweitourism.http.ResponseResult;
 import com.jhhy.cuiweitourism.moudle.HotDestination;
@@ -14,6 +15,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,25 +42,30 @@ public class InnerTravelMainBiz {
 
     /**
      * 底下列表
+     *
      * @param type 1国内游、2出境游(默认跟团游)
      * @param attr attr(属性):1（跟团游）、142（自由游）
      * @param page
      */
-    public void getInnerTravelData(final String type, final String attr, final String page){
-        new Thread() {
-            @Override
-            public void run() {
-                Map<String, Object> headMap = new HashMap<>();
-                headMap.put(Consts.KEY_CODE, CODE_INNER_TRAVEL_DATA);
-                Map<String, Object> fieldMap = new HashMap<>();
-                fieldMap.put(Consts.KEY_TYPE, type);
-                fieldMap.put("attr", attr);
-                fieldMap.put(Consts.KEY_PAGE, page);
-                fieldMap.put(Consts.KEY_OFFSET, "10");
+    public void getInnerTravelData(final String type, final String attr, final String page) {
+        if (NetworkUtil.checkNetwork(context)) {
+            new Thread() {
+                @Override
+                public void run() {
+                    Map<String, Object> headMap = new HashMap<>();
+                    headMap.put(Consts.KEY_CODE, CODE_INNER_TRAVEL_DATA);
+                    Map<String, Object> fieldMap = new HashMap<>();
+                    fieldMap.put(Consts.KEY_TYPE, type);
+                    fieldMap.put("attr", attr);
+                    fieldMap.put(Consts.KEY_PAGE, page);
+                    fieldMap.put(Consts.KEY_OFFSET, "10");
 
-                HttpUtils.executeXutils(headMap, fieldMap, innerTravelDataCallback);
-            }
-        }.start();
+                    HttpUtils.executeXutils(headMap, fieldMap, innerTravelDataCallback);
+                }
+            }.start();
+        } else {
+            handler.sendEmptyMessage(Consts.NET_ERROR);
+        }
     }
 
     private ResponseResult innerTravelDataCallback = new ResponseResult() {
@@ -82,7 +89,7 @@ public class InnerTravelMainBiz {
                     msg.arg1 = 1;
                     JSONArray bodyAry = resultObj.getJSONArray(Consts.KEY_BODY);
                     List<Travel> listTravel = new ArrayList<>();
-                    if(bodyAry != null) {
+                    if (bodyAry != null) {
                         for (int i = 0; i < bodyAry.length(); i++) {
                             JSONObject travelObj = bodyAry.getJSONObject(i);
                             Travel travel = new Travel();
@@ -102,6 +109,13 @@ public class InnerTravelMainBiz {
                 handler.sendMessage(msg);
             }
         }
+        @Override
+        public void onError(Throwable ex, boolean isOnCallback) {
+            super.onError(ex, isOnCallback);
+            if (ex instanceof SocketTimeoutException) {
+                handler.sendEmptyMessage(Consts.NET_ERROR_SOCKET_TIMEOUT);
+            }
+        }
     };
 
 //    {"head":{"code":"Publics_hotarea"},"field":{"pid":"1"}}
@@ -110,19 +124,25 @@ public class InnerTravelMainBiz {
 
     /**
      * 国内游、出境游通用 ——> 热门目的地
+     *
      * @param pid 1：国内游 2：出境游
      */
-    public void getHotDestination(final String pid){
-        new Thread() {
-            @Override
-            public void run() {
-                Map<String, Object> headMap = new HashMap<>();
-                headMap.put(Consts.KEY_CODE, CODE_INNER_TRAVEL_HOT_DESTINATION);
-                Map<String, Object> fieldMap = new HashMap<>();
-                fieldMap.put("pid", pid);
-                HttpUtils.executeXutils(headMap, fieldMap, hotDestinationCallback);
-            }
-        }.start();
+    public void getHotDestination(final String pid) {
+
+        if (NetworkUtil.checkNetwork(context)) {
+            new Thread() {
+                @Override
+                public void run() {
+                    Map<String, Object> headMap = new HashMap<>();
+                    headMap.put(Consts.KEY_CODE, CODE_INNER_TRAVEL_HOT_DESTINATION);
+                    Map<String, Object> fieldMap = new HashMap<>();
+                    fieldMap.put("pid", pid);
+                    HttpUtils.executeXutils(headMap, fieldMap, hotDestinationCallback);
+                }
+            }.start();
+        } else {
+            handler.sendEmptyMessage(Consts.NET_ERROR);
+        }
     }
 
     private ResponseResult hotDestinationCallback = new ResponseResult() {
@@ -146,7 +166,7 @@ public class InnerTravelMainBiz {
                     msg.arg1 = 1;
                     JSONArray bodyAry = resultObj.getJSONArray(Consts.KEY_BODY);
                     List<HotDestination> listDestination = new ArrayList<>();
-                    if(bodyAry != null) {
+                    if (bodyAry != null) {
                         for (int i = 0; i < bodyAry.length(); i++) {
                             JSONObject destObj = bodyAry.getJSONObject(i);
                             HotDestination dest = new HotDestination(
@@ -161,6 +181,13 @@ public class InnerTravelMainBiz {
                 e.printStackTrace();
             } finally {
                 handler.sendMessage(msg);
+            }
+        }
+        @Override
+        public void onError(Throwable ex, boolean isOnCallback) {
+            super.onError(ex, isOnCallback);
+            if (ex instanceof SocketTimeoutException) {
+                handler.sendEmptyMessage(Consts.NET_ERROR_SOCKET_TIMEOUT);
             }
         }
     };

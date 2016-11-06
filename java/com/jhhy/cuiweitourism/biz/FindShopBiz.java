@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 
+import com.jhhy.cuiweitourism.http.NetworkUtil;
 import com.jhhy.cuiweitourism.net.netcallback.HttpUtils;
 import com.jhhy.cuiweitourism.http.ResponseResult;
 import com.jhhy.cuiweitourism.moudle.Line;
@@ -14,6 +15,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,35 +36,47 @@ public class FindShopBiz {
 
     //找商铺    {"head":{"code":"Publics_store"},"field":{"page":"1","offset":"10"}}
     private String CODE_FIND_SHOP = "Publics_store";
-    public void getShop(final String page){
-        new Thread() {
-            @Override
-            public void run() {
-                Map<String, Object> headMap = new HashMap<>();
-                headMap.put(Consts.KEY_CODE, CODE_FIND_SHOP);
-                Map<String, Object> fieldMap = new HashMap<>();
-                fieldMap.put("page", page);
-                fieldMap.put("offset", "10");
-                HttpUtils.executeXutils(headMap, fieldMap, findShopCallback);
-            }
-        }.start();
+
+    public void getShop(final String page) {
+        if (NetworkUtil.checkNetwork(context)) {
+            new Thread() {
+                @Override
+                public void run() {
+                    Map<String, Object> headMap = new HashMap<>();
+                    headMap.put(Consts.KEY_CODE, CODE_FIND_SHOP);
+                    Map<String, Object> fieldMap = new HashMap<>();
+                    fieldMap.put("page", page);
+                    fieldMap.put("offset", "10");
+                    HttpUtils.executeXutils(headMap, fieldMap, findShopCallback);
+                }
+            }.start();
+        } else {
+            handler.sendEmptyMessage(Consts.NET_ERROR);
+        }
     }
-//该商铺所有线路{"head":{"code":"Publics_storeline"},"field":{"sjid":"1","page":"1","offset":"10"}}
+
+    //该商铺所有线路{"head":{"code":"Publics_storeline"},"field":{"sjid":"1","page":"1","offset":"10"}}
     private String CODE_SHOP_LINE_LIST = "Publics_storeline";
-    public void getLineList(final String shopId, final String page){
-        new Thread() {
-            @Override
-            public void run() {
-                Map<String, Object> headMap = new HashMap<>();
-                headMap.put(Consts.KEY_CODE, CODE_SHOP_LINE_LIST);
-                Map<String, Object> fieldMap = new HashMap<>();
-                fieldMap.put("sjid", shopId);
-                fieldMap.put("page", page);
-                fieldMap.put("offset", "10");
-                HttpUtils.executeXutils(headMap, fieldMap, shopLineListCallback);
-            }
-        }.start();
+
+    public void getLineList(final String shopId, final String page) {
+        if (NetworkUtil.checkNetwork(context)) {
+            new Thread() {
+                @Override
+                public void run() {
+                    Map<String, Object> headMap = new HashMap<>();
+                    headMap.put(Consts.KEY_CODE, CODE_SHOP_LINE_LIST);
+                    Map<String, Object> fieldMap = new HashMap<>();
+                    fieldMap.put("sjid", shopId);
+                    fieldMap.put("page", page);
+                    fieldMap.put("offset", "10");
+                    HttpUtils.executeXutils(headMap, fieldMap, shopLineListCallback);
+                }
+            }.start();
+        } else {
+            handler.sendEmptyMessage(Consts.NET_ERROR);
+        }
     }
+
     private ResponseResult shopLineListCallback = new ResponseResult() {
         @Override
         public void responseSuccess(String result) {
@@ -89,7 +103,7 @@ public class FindShopBiz {
 //                    }
                     List<Line> lines = new ArrayList<>();
                     JSONArray bodyAry = resultObj.getJSONArray(Consts.KEY_BODY);
-                    for (int i = 0; i < bodyAry.length(); i ++){
+                    for (int i = 0; i < bodyAry.length(); i++) {
                         JSONObject lineObj = bodyAry.getJSONObject(i);
                         Line line = new Line(lineObj.getString(Consts.KEY_ID), lineObj.getString(Consts.KEY_TITLE),
                                 lineObj.getString(Consts.PIC_PATH_LITPIC), lineObj.getString(Consts.KEY_PRICE),
@@ -102,6 +116,13 @@ public class FindShopBiz {
                 e.printStackTrace();
             } finally {
                 handler.sendMessage(msg);
+            }
+        }
+        @Override
+        public void onError(Throwable ex, boolean isOnCallback) {
+            super.onError(ex, isOnCallback);
+            if (ex instanceof SocketTimeoutException) {
+                handler.sendEmptyMessage(Consts.NET_ERROR_SOCKET_TIMEOUT);
             }
         }
     };
@@ -132,7 +153,7 @@ public class FindShopBiz {
 //                    ]
                     List<ShopRecommend> listShop = new ArrayList<>();
                     JSONArray bodyAry = resultObj.getJSONArray(Consts.KEY_BODY);
-                    for (int i = 0; i < bodyAry.length(); i++){
+                    for (int i = 0; i < bodyAry.length(); i++) {
                         JSONObject shopObj = bodyAry.getJSONObject(i);
                         ShopRecommend shop = new ShopRecommend();
                         shop.setId(shopObj.getString("sid"));
@@ -147,6 +168,13 @@ public class FindShopBiz {
                 e.printStackTrace();
             } finally {
                 handler.sendMessage(msg);
+            }
+        }
+        @Override
+        public void onError(Throwable ex, boolean isOnCallback) {
+            super.onError(ex, isOnCallback);
+            if (ex instanceof SocketTimeoutException) {
+                handler.sendEmptyMessage(Consts.NET_ERROR_SOCKET_TIMEOUT);
             }
         }
     };

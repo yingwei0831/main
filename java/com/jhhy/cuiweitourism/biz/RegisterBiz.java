@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 
+import com.jhhy.cuiweitourism.http.NetworkUtil;
 import com.jhhy.cuiweitourism.net.netcallback.HttpUtils;
 import com.jhhy.cuiweitourism.http.ResponseResult;
 import com.jhhy.cuiweitourism.moudle.User;
@@ -12,6 +13,7 @@ import com.jhhy.cuiweitourism.net.utils.Consts;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.SocketTimeoutException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,24 +39,28 @@ public class RegisterBiz {
      * @param codes 注册码
      */
     public void register(final String mobile, final String password, final String verify, final String codes){
-        new Thread() {
-            @Override
-            public void run() {
-                try {
-                    sleep(1500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+        if (NetworkUtil.checkNetwork(context)) {
+            new Thread() {
+                @Override
+                public void run() {
+                    try {
+                        sleep(1500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    Map<String, Object> headMap = new HashMap<>();
+                    headMap.put(Consts.KEY_CODE, CODE_REGISTER);
+                    Map<String, Object> fieldMap = new HashMap<>();
+                    fieldMap.put(Consts.KEY_USER_MOBILE, mobile);
+                    fieldMap.put(Consts.KEY_PASSWORD, password);
+                    fieldMap.put(Consts.KEY_CHECK_CODE, verify);
+                    fieldMap.put(Consts.KEY_REGISTER_CODE, codes);
+                    HttpUtils.executeXutils(headMap, fieldMap, registerCallback);
                 }
-                Map<String, Object> headMap = new HashMap<>();
-                headMap.put(Consts.KEY_CODE, CODE_REGISTER);
-                Map<String, Object> fieldMap = new HashMap<>();
-                fieldMap.put(Consts.KEY_USER_MOBILE, mobile);
-                fieldMap.put(Consts.KEY_PASSWORD, password);
-                fieldMap.put(Consts.KEY_CHECK_CODE, verify);
-                fieldMap.put(Consts.KEY_REGISTER_CODE, codes);
-                HttpUtils.executeXutils(headMap, fieldMap, registerCallback);
-            }
-        }.start();
+            }.start();
+        }else {
+            handler.sendEmptyMessage(Consts.NET_ERROR);
+        }
     }
 
     private ResponseResult registerCallback = new ResponseResult() {
@@ -96,6 +102,13 @@ public class RegisterBiz {
                 e.printStackTrace();
             } finally {
                 handler.sendMessage(msg);
+            }
+        }
+        @Override
+        public void onError(Throwable ex, boolean isOnCallback) {
+            super.onError(ex, isOnCallback);
+            if (ex instanceof SocketTimeoutException) {
+                handler.sendEmptyMessage(Consts.NET_ERROR_SOCKET_TIMEOUT);
             }
         }
     };

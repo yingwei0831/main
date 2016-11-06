@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 
+import com.jhhy.cuiweitourism.http.NetworkUtil;
 import com.jhhy.cuiweitourism.http.ResponseResult;
 import com.jhhy.cuiweitourism.moudle.Travel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.ActivityComment;
@@ -16,6 +17,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,17 +39,21 @@ public class HotActivityBiz {
 
     //    {"head":{"code":"Activity_hotpublishshow"},"field":{"id":"1"}}
     //热门活动详情
-    public void getHotActivityDetail(final String id){
-        new Thread() {
-            @Override
-            public void run() {
-                Map<String, Object> headMap = new HashMap<>();
-                headMap.put(Consts.KEY_CODE, CODE_HOT_ACTIVITY_DETAILL);
-                Map<String, Object> fieldMap = new HashMap<>();
-                fieldMap.put("id", id);
-                HttpUtils.executeXutils(headMap, fieldMap, detailCallback);
-            }
-        }.start();
+    public void getHotActivityDetail(final String id) {
+        if (NetworkUtil.checkNetwork(context)) {
+            new Thread() {
+                @Override
+                public void run() {
+                    Map<String, Object> headMap = new HashMap<>();
+                    headMap.put(Consts.KEY_CODE, CODE_HOT_ACTIVITY_DETAILL);
+                    Map<String, Object> fieldMap = new HashMap<>();
+                    fieldMap.put("id", id);
+                    HttpUtils.executeXutils(headMap, fieldMap, detailCallback);
+                }
+            }.start();
+        } else {
+            handler.sendEmptyMessage(Consts.NET_ERROR);
+        }
     }
 
     public ResponseResult detailCallback = new ResponseResult() {
@@ -144,6 +150,14 @@ public class HotActivityBiz {
                 e.printStackTrace();
             } finally {
                 handler.sendMessage(msg);
+            }
+        }
+
+        @Override
+        public void onError(Throwable ex, boolean isOnCallback) {
+            super.onError(ex, isOnCallback);
+            if (ex instanceof SocketTimeoutException) {
+                handler.sendEmptyMessage(Consts.NET_ERROR_SOCKET_TIMEOUT);
             }
         }
     };

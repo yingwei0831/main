@@ -15,6 +15,7 @@ import com.jhhy.cuiweitourism.adapter.SearchShopListAdapter;
 import com.jhhy.cuiweitourism.biz.FindShopBiz;
 import com.jhhy.cuiweitourism.moudle.Line;
 import com.jhhy.cuiweitourism.net.utils.Consts;
+import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.jhhy.cuiweitourism.utils.Utils;
 import com.just.sun.pricecalendar.ToastCommon;
 
@@ -53,6 +54,12 @@ public class LineListActivity extends BaseActionBarActivity {
                     }else{
                         ToastCommon.toastShortShow(getApplicationContext(), null, String.valueOf(msg.obj));
                     }
+                    break;
+                case Consts.NET_ERROR:
+                    ToastUtil.show(getApplicationContext(), "请检查网络后重试");
+                    break;
+                case Consts.NET_ERROR_SOCKET_TIMEOUT:
+                    ToastUtil.show(getApplicationContext(), "与服务器链接超时，请重试");
                     break;
             }
         }

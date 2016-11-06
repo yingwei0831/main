@@ -66,6 +66,9 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
                     ToastUtil.show(getApplicationContext(), "请检查网络后重试");
                     LoadingIndicator.cancel();
                     break;
+                case Consts.NET_ERROR_SOCKET_TIMEOUT:
+                    ToastUtil.show(getApplicationContext(), "与服务器链接超时，请重试");
+                    break;
                 case -1:
                     ToastUtil.show(getApplicationContext(), "数据解析异常，请重试");
                     LoadingIndicator.cancel();
