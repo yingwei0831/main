@@ -1,7 +1,7 @@
 package com.jhhy.cuiweitourism.service;
 
 import android.app.Application;
-
+import android.support.multidex.MultiDexApplication;
 
 import com.jhhy.cuiweitourism.ui.easemob.DemoHelper;
 
@@ -10,14 +10,13 @@ import org.xutils.x;
 /**
  * Created by jiahe008 on 2016/9/2.
  */
-public class CuiWeiTourismApplication extends Application {
+public class CuiWeiTourismApplication extends MultiDexApplication {
 
     @Override
     public void onCreate() {
         super.onCreate();
         x.Ext.init(this); // 这一步之后, 我们就可以在任何地方使用x.app()来获取Application的实例了.
         x.Ext.setDebug(true); // 是否输出debug日志
-
 
         // 初始化ImageLoader
 //        DisplayImageOptions options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.icon_stub) // 设置图片下载期间显示的图片
@@ -27,7 +26,7 @@ public class CuiWeiTourismApplication extends Application {
 //                .cacheOnDisc(true) // 设置下载的图片是否缓存在SD卡中
 ////                .displayer(new RoundedBitmapDisplayer(20)) // 设置成圆角图片
 //                .build(); // 创建配置过得DisplayImageOption对象
-//
+
 //        //创建默认的ImageLoader配置参数
 //        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this).defaultDisplayImageOptions(options)
 //                .threadPriority(Thread.NORM_PRIORITY - 2).denyCacheImageMultipleSizesInMemory()

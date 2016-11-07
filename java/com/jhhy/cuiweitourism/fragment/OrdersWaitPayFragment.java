@@ -26,6 +26,7 @@ import com.jhhy.cuiweitourism.ui.Tab4OrderDetailsActivity;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
+import com.jhhy.cuiweitourism.utils.Utils;
 import com.just.sun.pricecalendar.ToastCommon;
 
 import java.util.ArrayList;
@@ -39,8 +40,8 @@ public class OrdersWaitPayFragment extends Fragment implements ArgumentOnClick {
 
     private String title;
     private String type;
+    private boolean refresh; //标记刷新
 
-//    private XListView xListView;
     private PullToRefreshListView pullListView;
     private ListView listView;
 
@@ -54,18 +55,20 @@ public class OrdersWaitPayFragment extends Fragment implements ArgumentOnClick {
             super.handleMessage(msg);
             switch(msg.what){
                 case Consts.MESSAGE_ORDERS_WAIT_PAY:
-                    if (msg.arg1 == 0){
-                        ToastUtil.show(getContext(), "获取待付款订单失败");
-                        LogUtil.e(TAG, "msg.arg1 = 0");
-                    } else{
-                        LogUtil.e(TAG, "msg.arg1 = 1");
+                    if (refresh){
+                        pullListView.onRefreshComplete();
+                        refresh = false;
+                    }
+                    if (msg.arg1 == 1){
                         List<Order> listWaitPay = (List<Order>) msg.obj;
                         if (listWaitPay == null || listWaitPay.size() == 0){
-                            ToastUtil.show(getContext(), "待付款订单为空");
+                            ToastCommon.toastShortShow(getContext(), null, "待付款订单为空");
                         }else{
                             lists = listWaitPay;
                             adapter.setData(lists);
                         }
+                    } else {
+                        ToastCommon.toastShortShow(getContext(), null, "获取待付款订单失败");
                     }
                     break;
                 case Consts.MESSAGE_ORDER_CANCEL: //取消订单
@@ -139,7 +142,7 @@ public class OrdersWaitPayFragment extends Fragment implements ArgumentOnClick {
                     // Call onRefreshComplete when the list has been refreshed.
                     refresh();
                 } else { //上拉加载
-                    loadMore();
+//                    loadMore();
                 }
             }
         });
@@ -147,7 +150,12 @@ public class OrdersWaitPayFragment extends Fragment implements ArgumentOnClick {
 
     private void refresh() {
         //TODO 下拉刷新
-        pullListView.onRefreshComplete();
+        if (refresh){
+            return;
+        }
+        getData(type);
+        refresh = true;
+//        pullListView.onRefreshComplete();
     }
     private void loadMore() {
         //TODO 加载更多
@@ -157,11 +165,11 @@ public class OrdersWaitPayFragment extends Fragment implements ArgumentOnClick {
     private void setupView(View view) {
 //        xListView = (XListView) view.findViewById(R.id.listView_wait);
         pullListView = (PullToRefreshListView) view.findViewById(R.id.listView_wait);
-        pullListView.getLoadingLayoutProxy().setLastUpdatedLabel("lastUpdateLabel");
-        pullListView.getLoadingLayoutProxy().setPullLabel("PULLLABLE");
-        pullListView.getLoadingLayoutProxy().setRefreshingLabel("refreshingLabel");
-        pullListView.getLoadingLayoutProxy().setReleaseLabel("releaseLabel");
-        pullListView.setMode(PullToRefreshBase.Mode.DISABLED);
+        pullListView.getLoadingLayoutProxy().setLastUpdatedLabel(Utils.getCurrentTime());
+        pullListView.getLoadingLayoutProxy().setPullLabel("下拉刷新");
+        pullListView.getLoadingLayoutProxy().setRefreshingLabel("正在刷新");
+        pullListView.getLoadingLayoutProxy().setReleaseLabel("松开刷新");
+        pullListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
 
         listView = pullListView.getRefreshableView();
 

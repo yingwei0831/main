@@ -39,41 +39,45 @@ public class LoginBiz {
 //{"head":{"code":"User_login"},"field":{"mobile":"15210656911","password":"admin123"}}
 
     public void login(final String userName, final String password) {
-        //登录环信聊天服务器
-        EMChatManager.getInstance().login(userName, password, new EMCallBack() {
-            @Override
-            public void onSuccess() {
-                if (NetworkUtil.checkNetwork(context)) {
-                    new Thread() {
-                        @Override
-                        public void run() {
-                            Map<String, Object> headMap = new HashMap<>();
-                            headMap.put(Consts.KEY_CODE, CODE_LOGIN);
-                            Map<String, Object> fieldMap = new HashMap<>();
-                            fieldMap.put(Consts.KEY_USER_MOBILE, userName);
-                            fieldMap.put(Consts.KEY_PASSWORD, password);
-                            HttpUtils.executeXutils(headMap, fieldMap, loginCallback);
-                        }
-                    }.start();
-                } else {
-                    handler.sendEmptyMessage(Consts.NET_ERROR);
+        if (NetworkUtil.checkNetwork(context)) {
+
+            //登录环信聊天服务器
+            EMChatManager.getInstance().login(userName, password, new EMCallBack() {
+                @Override
+                public void onSuccess() {
+                    if (NetworkUtil.checkNetwork(context)) {
+                        new Thread() {
+                            @Override
+                            public void run() {
+                                Map<String, Object> headMap = new HashMap<>();
+                                headMap.put(Consts.KEY_CODE, CODE_LOGIN);
+                                Map<String, Object> fieldMap = new HashMap<>();
+                                fieldMap.put(Consts.KEY_USER_MOBILE, userName);
+                                fieldMap.put(Consts.KEY_PASSWORD, password);
+                                HttpUtils.executeXutils(headMap, fieldMap, loginCallback);
+                            }
+                        }.start();
+                    } else {
+                        handler.sendEmptyMessage(Consts.NET_ERROR);
+                    }
                 }
-            }
 
-            @Override
-            public void onProgress(int progress, String status) {
-            }
+                @Override
+                public void onProgress(int progress, String status) {
+                }
 
-            @Override
-            public void onError(final int code, final String message) {
-                Message msg = new Message();
-                msg.what = Consts.MESSAGE_LOGIN;
-                msg.arg1 = 0;
-                msg.obj = "登录聊天服务器失败";
-                handler.sendMessage(msg);
-            }
-        });
-
+                @Override
+                public void onError(final int code, final String message) {
+                    Message msg = new Message();
+                    msg.what = Consts.MESSAGE_LOGIN;
+                    msg.arg1 = 0;
+                    msg.obj = "登录聊天服务器失败";
+                    handler.sendMessage(msg);
+                }
+            });
+        } else {
+            handler.sendEmptyMessage(Consts.NET_ERROR);
+        }
     }
 
     //    {"head":{"res_code":"0001","res_msg":"error","res_arg":"用户名不存在"},"body":"[]"}
@@ -126,9 +130,9 @@ public class LoginBiz {
         @Override
         public void onError(Throwable ex, boolean isOnCallback) {
             super.onError(ex, isOnCallback);
-            if (ex instanceof SocketTimeoutException) {
+//            if (ex instanceof SocketTimeoutException) {
                 handler.sendEmptyMessage(Consts.NET_ERROR_SOCKET_TIMEOUT);
-            }
+//            }
         }
     };
 

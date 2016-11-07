@@ -66,14 +66,12 @@ public class CarRentActivity extends BaseActivity implements View.OnClickListene
     private Button btnNext;
     private CarRentActionBiz carBiz; //租大车业务类
 
-    private int position = 0;
+    private int position = 1;
 
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            LogUtil.e(TAG, "-----------handleMessage-----------");
-
         }
     };
 
@@ -88,7 +86,14 @@ public class CarRentActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void getData() {
-        position = getIntent().getExtras().getInt("position");
+        Intent intent = getIntent();
+        if (intent != null){
+            Bundle bundle = intent.getExtras();
+            if (bundle != null){
+                position = bundle.getInt("position");
+            }
+        }
+        LogUtil.e(TAG, "position = " + position);
     }
 
 
@@ -213,7 +218,7 @@ public class CarRentActivity extends BaseActivity implements View.OnClickListene
             }
         } else if (requestCode == ORDER_RENT_CAR){ //有可能订车
             if(resultCode == RESULT_OK){
-
+                finish(); //订车、支付成功，关闭页面
             }
         }else if (requestCode == INPUT_FROM_ADDRESS){
             if(resultCode == RESULT_OK){

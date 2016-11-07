@@ -12,6 +12,9 @@ import android.widget.TextView;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.CarRentOrderResponse;
 
+/**
+ * 租车成功
+ */
 public class CarRentSuccessActivity extends BaseActivity implements View.OnClickListener {
 
     private TextView tvTitle;
@@ -73,8 +76,21 @@ public class CarRentSuccessActivity extends BaseActivity implements View.OnClick
                 break;
             case R.id.btn_car_rent_next:
                 //TODO 去支付
-
+                startActivityForResult(new Intent(getApplicationContext(), SelectPaymentActivity.class), GO_TO_PAY);
                 break;
+        }
+    }
+
+    private int GO_TO_PAY = 6357; //去付款
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (RESULT_OK == resultCode){
+            if (requestCode == GO_TO_PAY){
+                setResult(RESULT_OK);
+                finish();
+            }
         }
     }
 

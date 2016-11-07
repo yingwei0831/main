@@ -2,6 +2,7 @@
     <string name="app_name">翠微旅游</string>
 
     <string name="http_notice">网络请求中，请稍后...</string>
+    <string name="net_error_notice">网络已断开</string>
     <string name="empty_input">输入不能为空</string>
     <!--首页-->
     <string name="activity_main_home">首页</string>
@@ -63,6 +64,7 @@
     <string name="car_rent_days">天数</string>
     <string name="car_rent_days_1">1天</string>
     <string name="car_rent_days_2">2天</string>
+    <string name="car_rent_city">北京市</string>
 
     <string name="car_rent_from">出发地点</string>
     <string name="car_rent_from_select">请选择出发地点</string>

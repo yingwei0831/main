@@ -29,6 +29,9 @@ import com.jhhy.cuiweitourism.net.netcallback.BizCallback;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.just.sun.pricecalendar.ToastCommon;
 
+/**
+ * 租车订单页
+ */
 public class CarRentOrderActivity extends BaseActivity implements View.OnClickListener {
 
     private String TAG = CarRentOrderActivity.class.getSimpleName();
@@ -120,9 +123,9 @@ public class CarRentOrderActivity extends BaseActivity implements View.OnClickLi
 
 //        tvRentType.setText(rentTypeText);
         SpannableString ss1 = new SpannableString(rentTypeText);
-        ss1.setSpan(new AbsoluteSizeSpan(18), 0, rentTypeText.indexOf("座")-3, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        ss1.setSpan(new AbsoluteSizeSpan(12), rentTypeText.indexOf("座")-3, rentTypeText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        ss1.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorActionBar)), rentTypeText.indexOf("座")-3, rentTypeText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ss1.setSpan(new AbsoluteSizeSpan(18), 0, rentTypeText.indexOf("座")-2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ss1.setSpan(new AbsoluteSizeSpan(12), rentTypeText.indexOf("座")-2, rentTypeText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ss1.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorActionBar)), rentTypeText.indexOf("座")-2, rentTypeText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         tvRentType.setText(ss1);
 
         tvRentDay.setText(rentDay + "天");
@@ -188,7 +191,8 @@ public class CarRentOrderActivity extends BaseActivity implements View.OnClickLi
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RENT_CARRIAGE_SUCCESS){
             if (resultCode == RESULT_OK){ //支付成功
-
+                setResult(RESULT_OK);
+                finish();
             }
         }
     }

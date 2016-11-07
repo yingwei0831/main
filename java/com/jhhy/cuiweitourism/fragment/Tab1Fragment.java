@@ -27,6 +27,7 @@ import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.Tab1GridViewAdapter;
 import com.jhhy.cuiweitourism.biz.Tab1RecommendBiz;
 import com.jhhy.cuiweitourism.circleviewpager.ViewFactory;
+import com.jhhy.cuiweitourism.http.NetworkUtil;
 import com.jhhy.cuiweitourism.moudle.ADInfo;
 import com.jhhy.cuiweitourism.moudle.PhoneBean;
 import com.jhhy.cuiweitourism.moudle.Travel;
@@ -36,12 +37,14 @@ import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.ForeEndAdvertisingPositionInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
+import com.jhhy.cuiweitourism.ui.CarRentActivity;
 import com.jhhy.cuiweitourism.ui.CarRentSelectTypeActivity;
 import com.jhhy.cuiweitourism.ui.CitySelectionActivity;
 import com.jhhy.cuiweitourism.ui.HotActivityListActivity;
 import com.jhhy.cuiweitourism.ui.HotelMainActivity;
 import com.jhhy.cuiweitourism.ui.InnerActivity4;
 import com.jhhy.cuiweitourism.ui.InnerTravelDetailActivity;
+import com.jhhy.cuiweitourism.ui.MainActivity;
 import com.jhhy.cuiweitourism.ui.PersonalizedCustomActivity;
 import com.jhhy.cuiweitourism.ui.PlaneMainActivity;
 import com.jhhy.cuiweitourism.ui.SearchRouteActivity;
@@ -309,15 +312,10 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
     };
 
     public Tab1Fragment() {
-        // Required empty public constructor
     }
 
     public static Tab1Fragment newInstance(String param1, String param2) {
         Tab1Fragment fragment = new Tab1Fragment();
-//        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-//        fragment.setArguments(args);
         return fragment;
     }
 
@@ -332,10 +330,6 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LogUtil.i(TAG, "======onCreate======");
-//        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-//        }
     }
 
     private Context mContext;
@@ -353,7 +347,7 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
         return view;
     }
 
-    private void getBannerData() {
+    public void getBannerData() {
         imageUrls.add("drawable://" + R.mipmap.travel_icon);
         imageUrlsBottom.add("drawable://" + R.mipmap.travel_icon);
         //广告位
@@ -387,8 +381,6 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
     private int page = 1;
     private boolean refresh; //是否刷新
     private int indicator = 1; //4个导航
-    private boolean open; //刷新或加载是否开启
-    private boolean more;
 
     private void getData(int type, int pageTemp) {
         LoadingIndicator.show(getActivity(), getString(R.string.http_notice));
@@ -408,6 +400,13 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
         }
     }
 
+    public void getData(){
+        indicator = 1;
+        page = 1;
+        //此处获取全部
+        Tab1RecommendBiz biz = new Tab1RecommendBiz(getContext(), handler);
+        biz.getRecommendForYou("", "", Consts.MESSAGE_TAB1_RECOMMEND, 1);
+    }
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -492,7 +491,7 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
             flipper = (ViewFlipper) content.findViewById(R.id.viewflipper);
             layoutPoint = (LinearLayout) content.findViewById(R.id.layout_indicator_point);
 
-            addImageView(imageUrls.size());
+            addImageView(1, imageUrls.size());
             addIndicator(1, imageUrls.size());
             setIndicator(1, currentPosition);
 
@@ -506,7 +505,7 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
             flipperBottom = (ViewFlipper) content.findViewById(R.id.viewflipper2);
             layoutPointBottom = (LinearLayout) content.findViewById(R.id.layout_indicator_point2);
 
-            addImageView(imageUrlsBottom.size());
+            addImageView(2, imageUrlsBottom.size());
             addIndicator(2, imageUrlsBottom.size());
             setIndicator(2, currentPositionBottom);
 
@@ -568,135 +567,140 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.title_main_iv_right_telephone:
-                Utils.contact(getContext(), tvMobile.getText().toString().trim());
-                break;
-            case R.id.tv_tab1_inner_travel: //国内游
-                Bundle bundle = new Bundle();
-                bundle.putInt("type", 1);
-                InnerActivity4.actionStart(getContext(), bundle);
-                break;
-            case R.id.tv_tab1_outside: //出境游
-                Bundle bundleOut = new Bundle();
-                bundleOut.putInt("type", 2);
-                InnerActivity4.actionStart(getContext(), bundleOut);
-                break;
-            case R.id.tv_tab1_plane_ticket: //飞机票
-                Bundle bundlePlane = new Bundle();
-                bundlePlane.putInt("type", 2);
+        if (NetworkUtil.checkNetwork(getContext())) {
+            switch (view.getId()) {
+                case R.id.title_main_iv_right_telephone:
+                    Utils.contact(getContext(), tvMobile.getText().toString().trim());
+                    break;
+                case R.id.tv_tab1_inner_travel: //国内游
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("type", 1);
+                    InnerActivity4.actionStart(getContext(), bundle);
+                    break;
+                case R.id.tv_tab1_outside: //出境游
+                    Bundle bundleOut = new Bundle();
+                    bundleOut.putInt("type", 2);
+                    InnerActivity4.actionStart(getContext(), bundleOut);
+                    break;
+                case R.id.tv_tab1_plane_ticket: //飞机票
+                    Bundle bundlePlane = new Bundle();
+                    bundlePlane.putInt("type", 2);
 
-                PlaneMainActivity.actionStart(getContext(), bundlePlane);
-                break;
-            case R.id.tv_tab1_start_activity: //发起活动
-                StartActivityEditActivity.actionStart(getContext(), null);
-                break;
-            case R.id.tv_tab1_rent_car: //租车
-                Bundle bundleCar = new Bundle();
-                bundleCar.putString("city", tvLocationCity.getText().toString());
-                CarRentSelectTypeActivity.actionStart(getContext(), bundleCar);
-                break;
-            case R.id.tv_tab1_visa: //签证
-                VisaMainActivity.actionStart(getContext(), null);
-                break;
-            case R.id.tv_tab1_train: //火车票
-                TrainMainActivity.actionStart(getContext(), null);
-                break;
-            case R.id.tv_tab1_hotel: //酒店
-                Bundle bundleHotel = new Bundle();
-                bundleHotel.putSerializable("selectCity", selectCity);
-                HotelMainActivity.actionStart(getContext(), bundleHotel);
-                break;
-            case R.id.layout_personalized_custom: //个性定制
-                Bundle bundleCustom = new Bundle();
-                bundleCustom.putSerializable("selectCity", selectCity);
-                PersonalizedCustomActivity.actionStart(getContext(), bundleCustom);
-                break;
-            case R.id.layout_hot_activity: //热门活动
-                Bundle bundleHotActivity = new Bundle();
-                bundleHotActivity.putSerializable("selectCity", selectCity);
-                HotActivityListActivity.actionStart(getContext(), bundleHotActivity);
-                break;
-            case R.id.tv_tab1_search_route_activity: //找路线
-                Bundle bundleLine = new Bundle();
-                bundleLine.putSerializable("selectCity", selectCity);
-                SearchRouteActivity.actionStart(getContext(), bundleLine);
-                break;
-            case R.id.tv_tab1_search_shop: //找商铺
-                SearchShopActivity.actionStart(getContext(), null);
-                break;
-            case R.id.tv_tab1_recommend_all_bottom: //Indicator 全部
-            case R.id.tv_tab1_indicator_all_top:
+                    PlaneMainActivity.actionStart(getContext(), bundlePlane);
+                    break;
+                case R.id.tv_tab1_start_activity: //发起活动
+                    StartActivityEditActivity.actionStart(getContext(), null);
+                    break;
+                case R.id.tv_tab1_rent_car: //租车
+//                Bundle bundleCar = new Bundle();
+//                bundleCar.putString("city", tvLocationCity.getText().toString());
+//                CarRentSelectTypeActivity.actionStart(getContext(), bundleCar);
+                    CarRentActivity.actionStart(getContext(), null);
+                    break;
+                case R.id.tv_tab1_visa: //签证
+                    VisaMainActivity.actionStart(getContext(), null);
+                    break;
+                case R.id.tv_tab1_train: //火车票
+                    TrainMainActivity.actionStart(getContext(), null);
+                    break;
+                case R.id.tv_tab1_hotel: //酒店
+                    Bundle bundleHotel = new Bundle();
+                    bundleHotel.putSerializable("selectCity", selectCity);
+                    HotelMainActivity.actionStart(getContext(), bundleHotel);
+                    break;
+                case R.id.layout_personalized_custom: //个性定制
+                    Bundle bundleCustom = new Bundle();
+                    bundleCustom.putSerializable("selectCity", selectCity);
+                    PersonalizedCustomActivity.actionStart(getContext(), bundleCustom);
+                    break;
+                case R.id.layout_hot_activity: //热门活动
+                    Bundle bundleHotActivity = new Bundle();
+                    bundleHotActivity.putSerializable("selectCity", selectCity);
+                    HotActivityListActivity.actionStart(getContext(), bundleHotActivity);
+                    break;
+                case R.id.tv_tab1_search_route_activity: //找路线
+                    Bundle bundleLine = new Bundle();
+                    bundleLine.putSerializable("selectCity", selectCity);
+                    SearchRouteActivity.actionStart(getContext(), bundleLine);
+                    break;
+                case R.id.tv_tab1_search_shop: //找商铺
+                    SearchShopActivity.actionStart(getContext(), null);
+                    break;
+                case R.id.tv_tab1_recommend_all_bottom: //Indicator 全部
+                case R.id.tv_tab1_indicator_all_top:
 //                gridViewRecommend.setSelection(0);
 //                if(0 == indicator)  return;
-                indicator = 1;
-                page = 1;
-                refresh = true;
-                changeIndicator(0);
-                if (lists != null && lists.size() != 0) {
-                    lists = lists.subList(0, 10);
-                    adapter.setData(lists);
-                    LogUtil.e(TAG, "indicator = 全部, size = " + lists.size());
-                    return;
-                }
-                LogUtil.e(TAG, "indicator = 全部");
-                getData(0, page);
-                break;
-            case R.id.tv_tab1_recommend_inner_bottom: //Indicator 国内游
-            case R.id.tv_tab1_indicator_inner_top:
+                    indicator = 1;
+                    page = 1;
+                    refresh = true;
+                    changeIndicator(0);
+                    if (lists != null && lists.size() != 0) {
+                        lists = lists.subList(0, 10);
+                        adapter.setData(lists);
+                        LogUtil.e(TAG, "indicator = 全部, size = " + lists.size());
+                        return;
+                    }
+                    LogUtil.e(TAG, "indicator = 全部");
+                    getData(0, page);
+                    break;
+                case R.id.tv_tab1_recommend_inner_bottom: //Indicator 国内游
+                case R.id.tv_tab1_indicator_inner_top:
 //                if(1 == indicator)  return;
-                indicator = 2;
-                page = 1;
-                refresh = true;
-                changeIndicator(1);
-                if (listsInner != null && listsInner.size() != 0) {
-                    listsInner = listsInner.subList(0, 10);
-                    adapter.setData(listsInner);
-                    LogUtil.e(TAG, "indicator = 国内游, size = " + listsInner.size());
-                    return;
-                }
-                LogUtil.e(TAG, "indicator = 国内游");
-                getData(1, page);
-                break;
-            case R.id.tv_tab1_recommend_outside_bottom: //Indicator 国外游
-            case R.id.tv_tab1_indicator_outside_top:
-                indicator = 3;
-                page = 1;
-                refresh = true;
-                changeIndicator(2);
-                if (listsOutside != null && listsOutside.size() != 0) {
-                    listsOutside = listsOutside.subList(0, 10);
-                    adapter.setData(listsOutside);
-                    LogUtil.e(TAG, "indicator = 国外游，size = " + listsOutside.size());
-                    return;
-                }
+                    indicator = 2;
+                    page = 1;
+                    refresh = true;
+                    changeIndicator(1);
+                    if (listsInner != null && listsInner.size() != 0) {
+                        listsInner = listsInner.subList(0, 10);
+                        adapter.setData(listsInner);
+                        LogUtil.e(TAG, "indicator = 国内游, size = " + listsInner.size());
+                        return;
+                    }
+                    LogUtil.e(TAG, "indicator = 国内游");
+                    getData(1, page);
+                    break;
+                case R.id.tv_tab1_recommend_outside_bottom: //Indicator 国外游
+                case R.id.tv_tab1_indicator_outside_top:
+                    indicator = 3;
+                    page = 1;
+                    refresh = true;
+                    changeIndicator(2);
+                    if (listsOutside != null && listsOutside.size() != 0) {
+                        listsOutside = listsOutside.subList(0, 10);
+                        adapter.setData(listsOutside);
+                        LogUtil.e(TAG, "indicator = 国外游，size = " + listsOutside.size());
+                        return;
+                    }
 //                if(2 == indicator)  return;
-                LogUtil.e(TAG, "indicator = 国外游");
-                getData(2, page);
-                break;
-            case R.id.tv_tab1_recommend_nearby_bottom: //Indicator 周边游
-            case R.id.tv_tab1_indicator_nearby_top:
+                    LogUtil.e(TAG, "indicator = 国外游");
+                    getData(2, page);
+                    break;
+                case R.id.tv_tab1_recommend_nearby_bottom: //Indicator 周边游
+                case R.id.tv_tab1_indicator_nearby_top:
 //                if(3 == indicator)  return;
-                indicator = 4;
-                page = 1;
-                refresh = true;
-                changeIndicator(3);
-                if (listsNearby != null && listsNearby.size() != 0) {
-                    listsNearby = listsNearby.subList(0, 10);
-                    adapter.setData(listsNearby);
-                    LogUtil.e(TAG, "indicator = 周边游, size = " + listsNearby.size());
-                    return;
-                }
-                LogUtil.e(TAG, "indicator = 周边游");
-                getData(3, page);
-                break;
-            case R.id.tv_search_bar_main_left_location: //顶部搜索栏 选择地址
+                    indicator = 4;
+                    page = 1;
+                    refresh = true;
+                    changeIndicator(3);
+                    if (listsNearby != null && listsNearby.size() != 0) {
+                        listsNearby = listsNearby.subList(0, 10);
+                        adapter.setData(listsNearby);
+                        LogUtil.e(TAG, "indicator = 周边游, size = " + listsNearby.size());
+                        return;
+                    }
+                    LogUtil.e(TAG, "indicator = 周边游");
+                    getData(3, page);
+                    break;
+                case R.id.tv_search_bar_main_left_location: //顶部搜索栏 选择地址
 //                CitySelectionActivity.actionStart(getContext(), null);
-                Intent intentCity = new Intent(getContext(), CitySelectionActivity.class);
-                Bundle bundleCity = new Bundle();
-                bundleCity.putString("currentCity", tvLocationCity.getText().toString());
-                intentCity.putExtras(bundleCity);
-                startActivityForResult(intentCity, Consts.REQUEST_CODE_SELECT_CITY);
+                    Intent intentCity = new Intent(getContext(), CitySelectionActivity.class);
+                    Bundle bundleCity = new Bundle();
+                    bundleCity.putString("currentCity", tvLocationCity.getText().toString());
+                    intentCity.putExtras(bundleCity);
+                    startActivityForResult(intentCity, Consts.REQUEST_CODE_SELECT_CITY);
+            }
+        }else{
+            ToastCommon.toastShortShow(getContext(), null, "请检查网络后重试");
         }
     }
 
@@ -784,7 +788,6 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
     @Override
     public void onRefresh() {
         LogUtil.e(TAG, "-----------------onRefresh-----------------");
-        open = true;
         refresh = true;
         page = 1;
         if (indicator == 1) {
@@ -802,7 +805,6 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
     @Override
     public void onLoadMore() {
         LogUtil.e(TAG, "-----------------onLoadMore-----------------");
-        open = true;
         if (indicator == 1) {
             getData(0, page + 1);
         } else if (indicator == 2) {
@@ -1008,13 +1010,23 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
         return mGestureDetector.onTouchEvent(motionEvent);
     }
 
-    private void addImageView(int length) {
-        for (int i = 0; i < length; i++) {
-            ADInfo info = new ADInfo();
-            info.setUrl(imageUrls.get(i));
-            info.setContent("图片-->" + i);
-            infos.add(info);
-            flipper.addView(ViewFactory.getImageView(getContext(), infos.get(i).getUrl()));
+    private void addImageView(int type, int length) {
+        if (type == 1) {
+            for (int i = 0; i < length; i++) {
+                ADInfo info = new ADInfo();
+                info.setUrl(imageUrls.get(i));
+                info.setContent("图片-->" + i);
+                infos.add(info);
+                flipper.addView(ViewFactory.getImageView(getContext(), infos.get(i).getUrl()));
+            }
+        }else if(type == 2){
+            for (int i = 0; i < length; i++) {
+                ADInfo info = new ADInfo();
+                info.setUrl(imageUrlsBottom.get(i));
+                info.setContent("图片-->" + i);
+                infosBottom.add(info);
+                flipperBottom.addView(ViewFactory.getImageView(getContext(), infosBottom.get(i).getUrl()));
+            }
         }
     }
 

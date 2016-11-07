@@ -9,6 +9,7 @@ import com.jhhy.cuiweitourism.net.netcallback.HttpUtils;
 import com.jhhy.cuiweitourism.http.ResponseResult;
 import com.jhhy.cuiweitourism.moudle.ClassifyArea;
 import com.jhhy.cuiweitourism.net.utils.Consts;
+import com.jhhy.cuiweitourism.net.utils.LogUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -177,11 +178,12 @@ public class ClassifyBiz {
                             if (provinceAry != null) {
                                 listProvince = new ArrayList<>();
                                 for (int j = 0; j < provinceAry.length(); j++) {
-                                    JSONObject provinceObj = (JSONObject) provinceAry.get(j);
+                                    JSONObject provinceObj = provinceAry.getJSONObject(j);
+                                    LogUtil.e(TAG, provinceObj.toString());
                                     ClassifyArea province = new ClassifyArea();
                                     province.setAreaId(provinceObj.getString(Consts.KEY_ID));
                                     province.setAreaName(provinceObj.getString(Consts.KEY_KIND_NAME)); //右侧城市名字
-                                    province.setAreaPic(provinceObj.getString(Consts.PIC_PATH_LITPIC)); //暂时注释，数据不全
+//                                    province.setAreaPic(provinceObj.getString(Consts.PIC_PATH_LITPIC)); //暂时注释，数据不全
                                     listProvince.add(province);
                                 }
                                 area.setListProvince(listProvince);

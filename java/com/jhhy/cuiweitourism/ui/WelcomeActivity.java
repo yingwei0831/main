@@ -44,7 +44,8 @@ public class WelcomeActivity extends BaseActivity {
             switch (msg.what) {
                 case Consts.MESSAGE_LOGIN:
                     if (0 == msg.arg1) {
-                        gotoLogin();
+//                        gotoLogin();
+                        gotoMain();
                     } else if (1 == msg.arg1) {
                         Bundle bundle = new Bundle();
                         bundle.putSerializable(Consts.KEY_REQUEST, (User) msg.obj);
@@ -62,10 +63,15 @@ public class WelcomeActivity extends BaseActivity {
                     new LocationUtil(getApplicationContext(), handler).start();
                     break;
                 case Consts.NET_ERROR:
-                    ToastUtil.show(getApplicationContext(), "请检查网络后重试");
+                    ToastUtil.show(getApplicationContext(), "网络连接已断开，请检查网络");
+//                    gotoLogin();
+                    gotoMain();
                     break;
                 case Consts.NET_ERROR_SOCKET_TIMEOUT:
-                    ToastUtil.show(getApplicationContext(), "与服务器链接超时，请重试");
+                    ToastUtil.show(getApplicationContext(), "与服务器链接超时");
+//                    gotoLogin();
+                    gotoMain();
+
                     break;
             }
         }
@@ -79,7 +85,7 @@ public class WelcomeActivity extends BaseActivity {
         if(NetworkUtil.checkNetwork(getApplicationContext())){
             new LocationUtil(getApplicationContext(), handler).start();
         }else{
-            ToastUtil.show(getApplicationContext(), getString(R.string.Network_error));
+//            ToastUtil.show(getApplicationContext(), getString(R.string.net_error_notice));
         }
         initImagePath();
         Runnable runnable = new Runnable() {
@@ -94,15 +100,14 @@ public class WelcomeActivity extends BaseActivity {
 
     private void checkFirstIn() {
         if(isFirst()){ //第一次登录
-            LogUtil.e("info", "----isFirst = true");
             gotoSplash();
         } else { //非第一次登录
-            LogUtil.i("info", "----isFirst = false");
             //登录——>主页面（成功）
             //登录——>登录页面（失败）
             SharedPreferencesUtils sp = SharedPreferencesUtils.getInstance(getApplicationContext());
             if(TextUtils.isEmpty(sp.getTelephoneNumber()) || TextUtils.isEmpty(sp.getPassword())){
-                gotoLogin();
+//                gotoLogin();
+                gotoMain();
             } else {
                 LoginBiz biz = new LoginBiz(getApplicationContext(), handler);
                 biz.login(sp.getTelephoneNumber(), sp.getPassword());
@@ -115,8 +120,13 @@ public class WelcomeActivity extends BaseActivity {
         finish();
     }
 
-    public void gotoLogin() {
-        LoginActivity.actionStart(getApplicationContext(), null);
+//    public void gotoLogin() {
+//        LoginActivity.actionStart(getApplicationContext(), null);
+//        finish();
+//    }
+
+    private void gotoMain(){
+        MainActivity.actionStart(getApplicationContext(), null);
         finish();
     }
 

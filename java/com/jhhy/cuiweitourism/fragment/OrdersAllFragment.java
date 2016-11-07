@@ -30,6 +30,7 @@ import com.jhhy.cuiweitourism.ui.Tab4OrderDetailsActivity;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
+import com.jhhy.cuiweitourism.utils.Utils;
 import com.just.sun.pricecalendar.ToastCommon;
 
 import java.util.ArrayList;
@@ -57,17 +58,20 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
             super.handleMessage(msg);
             switch (msg.what){
                 case Consts.MESSAGE_ORDERS_ALL: //获取订单
-
+                    if (refresh){
+                        pullListView.onRefreshComplete();
+                        refresh = false;
+                    }
                     if (msg.arg1 == 0){
-                        ToastUtil.show(getContext(), "获取失败");
+                        ToastCommon.toastShortShow(getContext(), null, "获取失败");
                     } else {
                         List<Order> listNew = (List<Order>) msg.obj;
                         if (listNew == null || listNew.size() == 0) {
-                            ToastUtil.show(getContext(), "没有数据");
-                            return;
+                            ToastCommon.toastShortShow(getContext(), null, "没有数据");
+                        }else {
+                            lists = listNew;
+                            adapter.setData(lists);
                         }
-                        lists = listNew;
-                        adapter.setData(lists);
                     }
                     break;
                 case Consts.MESSAGE_ORDER_CANCEL: //取消订单
@@ -126,8 +130,12 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
     }
 
     private void getInternetData() {
-        OrdersAllBiz biz = new OrdersAllBiz(getContext(), handler);
-        biz.getAllOrders(MainActivity.user.getUserId(), type); //MainActivity.user.getUserId() "1"
+        if (MainActivity.logged) {
+            OrdersAllBiz biz = new OrdersAllBiz(getContext(), handler);
+            biz.getAllOrders(MainActivity.user.getUserId(), type); //MainActivity.user.getUserId() "1"
+        }else{
+            ToastUtil.show(getContext(), "请回到个人中心页登录后重试");
+        }
     }
 
     public void getData(String type) {
@@ -146,7 +154,7 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
                     // Call onRefreshComplete when the list has been refreshed.
                     refresh();
                 } else { //上拉加载
-                    loadMore();
+//                    loadMore();
                 }
             }
         });
@@ -154,6 +162,10 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
 
     private void refresh() {
         //TODO 下拉刷新
+        if (refresh){
+            return;
+        }
+        refresh = true;
         getData(type);
 //        pullListView.onRefreshComplete();
     }
@@ -166,12 +178,12 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
     private void setupView(View view) {
 //        xListView = (XListView) view.findViewById(R.id.listView_wait);
         pullListView = (PullToRefreshListView) view.findViewById(R.id.listView_wait);
-        pullListView.getLoadingLayoutProxy().setLastUpdatedLabel("lastUpdateLabel");
-        pullListView.getLoadingLayoutProxy().setPullLabel("PULLLABLE");
-        pullListView.getLoadingLayoutProxy().setRefreshingLabel("refreshingLabel");
-        pullListView.getLoadingLayoutProxy().setReleaseLabel("releaseLabel");
+        pullListView.getLoadingLayoutProxy().setLastUpdatedLabel(Utils.getCurrentTime());
+        pullListView.getLoadingLayoutProxy().setPullLabel("下拉刷新");
+        pullListView.getLoadingLayoutProxy().setRefreshingLabel("正在刷新");
+        pullListView.getLoadingLayoutProxy().setReleaseLabel("松开刷新");
 
-        pullListView.setMode(PullToRefreshBase.Mode.DISABLED);
+        pullListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
 
         listView = pullListView.getRefreshableView();
 

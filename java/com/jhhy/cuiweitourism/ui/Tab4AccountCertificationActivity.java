@@ -34,7 +34,9 @@ import com.just.sun.pricecalendar.ToastCommon;
 import java.io.File;
 import java.io.IOException;
 
-
+/**
+ * 实名认证
+ */
 public class Tab4AccountCertificationActivity extends BaseActivity implements View.OnClickListener {
 
     private String TAG = Tab4AccountCertificationActivity.class.getSimpleName();

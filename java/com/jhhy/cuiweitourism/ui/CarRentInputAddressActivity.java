@@ -63,10 +63,14 @@ public class CarRentInputAddressActivity extends BaseActivity implements View.On
 
         if (type == 1){
             tvTitle.setText("出发地点");
+            etCurrentPwd.setEnabled(false);
+            etCurrentPwd.setText(getString(R.string.car_rent_city));
         }else if (type == 2){
             tvTitle.setText("目的地点");
             etNewPwd.setVisibility(View.GONE);
             etConfirmPwd.setVisibility(View.GONE);
+            etCurrentPwd.setText("");
+            etCurrentPwd.setHint("请输入北京市内地址信息");
         }
     }
 

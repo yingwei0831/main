@@ -25,6 +25,7 @@ import com.jhhy.cuiweitourism.ui.Tab4OrderDetailsActivity;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
+import com.jhhy.cuiweitourism.utils.Utils;
 import com.just.sun.pricecalendar.ToastCommon;
 
 import java.util.ArrayList;
@@ -38,8 +39,8 @@ public class OrdersWaitRefundFragment extends Fragment  implements ArgumentOnCli
 
     private String title;
     private String type;
+    private boolean refresh;
 
-    //    private XListView xListView;
     private PullToRefreshListView pullListView;
     private ListView listView;
 
@@ -53,16 +54,20 @@ public class OrdersWaitRefundFragment extends Fragment  implements ArgumentOnCli
             super.handleMessage(msg);
             switch(msg.what){
                 case Consts.MESSAGE_ORDERS_WAIT_REFUND: //订单详情
-                    if (msg.arg1 == 0){
-                        ToastUtil.show(getContext(), "获取数据失败");
-                    }else{
+                    if (refresh){
+                        pullListView.onRefreshComplete();
+                        refresh = false;
+                    }
+                    if (msg.arg1 == 1){
                         List<Order> listWaitRefund = (List<Order>) msg.obj;
                         if (listWaitRefund == null || listWaitRefund.size() == 0){
-                            ToastUtil.show(getContext(), "获取数据为空");
+                            ToastCommon.toastShortShow(getContext(), null, "获取数据为空");
                         }else{
                             lists = listWaitRefund;
                             adapter.setData(listWaitRefund);
                         }
+                    }else{
+                        ToastCommon.toastShortShow(getContext(), null, "获取数据失败");
                     }
                     break;
                 case Consts.MESSAGE_ORDER_CANCEL_REFUND: //取消退款
@@ -130,12 +135,9 @@ public class OrdersWaitRefundFragment extends Fragment  implements ArgumentOnCli
             @Override
             public void onRefresh(PullToRefreshBase<ListView> refreshView) {
                 if (PullToRefreshBase.Mode.PULL_FROM_START.equals( pullListView.getCurrentMode())){ //下拉刷新
-                    ToastCommon.toastShortShow(getContext(), null, "下拉刷新");
-                    getData();
-//                    refresh();
+                    refresh();
                 } else { //上拉加载
-                    ToastCommon.toastShortShow(getContext(), null, "上拉加载");
-                    getData();
+//                    getData();
 //                    loadMore();
                 }
             }
@@ -144,7 +146,12 @@ public class OrdersWaitRefundFragment extends Fragment  implements ArgumentOnCli
 
     private void refresh() {
         //TODO 下拉刷新
-        pullListView.onRefreshComplete();
+        if (refresh){
+            return;
+        }
+        getData();
+        refresh = true;
+//        pullListView.onRefreshComplete();
     }
     private void loadMore() {
         //TODO 加载更多
@@ -153,11 +160,11 @@ public class OrdersWaitRefundFragment extends Fragment  implements ArgumentOnCli
 
     private void setupView(View view) {
         pullListView = (PullToRefreshListView) view.findViewById(R.id.listView_wait);
-        pullListView.getLoadingLayoutProxy().setLastUpdatedLabel("lastUpdateLabel");
-        pullListView.getLoadingLayoutProxy().setPullLabel("PULLLABLE");
-        pullListView.getLoadingLayoutProxy().setRefreshingLabel("refreshingLabel");
-        pullListView.getLoadingLayoutProxy().setReleaseLabel("releaseLabel");
-        pullListView.setMode(PullToRefreshBase.Mode.DISABLED);
+        pullListView.getLoadingLayoutProxy().setLastUpdatedLabel(Utils.getCurrentTime());
+        pullListView.getLoadingLayoutProxy().setPullLabel("下拉刷新");
+        pullListView.getLoadingLayoutProxy().setRefreshingLabel("正在刷新");
+        pullListView.getLoadingLayoutProxy().setReleaseLabel("松开刷新");
+        pullListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
 
         listView = pullListView.getRefreshableView();
 

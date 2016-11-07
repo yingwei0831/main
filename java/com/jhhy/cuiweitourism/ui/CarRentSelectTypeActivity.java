@@ -130,7 +130,7 @@ public class CarRentSelectTypeActivity extends BaseActivity implements View.OnCl
 //                position = 0;
 //                Bundle bundle4 = new Bundle();
 //                bundle4.putInt("position", position);
-//                CarRentActivity.actionStart(getApplicationContext(), bundle4);
+//                CarRentMainActivity.actionStart(getApplicationContext(), bundle4);
 //                break;
             case R.id.tv_carriages_20_koste:
                 position = 1;

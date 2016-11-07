@@ -59,7 +59,7 @@ public class Tab2ContentListViewAdapter extends BaseAdapter {
         }
         ClassifyArea travel = getItem(i);
         holder.tvDestinationName.setText(travel.getAreaName());
-        ImageLoaderUtil.getInstance(context).displayImage(travel.getAreaPic(), holder.ivDestinationImg);
+//        ImageLoaderUtil.getInstance(context).displayImage(travel.getAreaPic(), holder.ivDestinationImg);
         return view;
     }
 

@@ -83,8 +83,8 @@
         android:protectionLevel="signature" />
 
     <uses-permission android:name="com.jhhy.cuiweitourism.permission.MIPUSH_RECEIVE" />
-
     <!-- end 环信 -->
+
     <application
         android:name=".service.CuiWeiTourismApplication"
         android:allowBackup="true"
@@ -120,6 +120,12 @@
                 <action android:name="android.intent.action.USER_PRESENT" />
             </intent-filter>
         </receiver>
+
+        <!--<receiver android:name=".service.NetWorkReceiver">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
 
         <activity
             android:name=".ui.MainActivity"

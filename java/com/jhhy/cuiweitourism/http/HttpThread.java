@@ -43,11 +43,6 @@ public class HttpThread extends Thread {
             handler.sendMessage(msg);
             return;
         }
-        /*try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }*/
         //配置参数
         org.xutils.http.RequestParams param = new org.xutils.http.RequestParams(Consts.SERVER_URL);
         param.addHeader("Content-Type", "application/json;charset=utf-8");

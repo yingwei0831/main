@@ -125,7 +125,6 @@ public class Tab3Fragment extends Fragment implements View.OnClickListener {
                     if (popOrderType.isShowing()) {
                         popOrderType.dismiss();
                     } else {
-                        LogUtil.e(TAG, "------ selection before = " + selection + "-----------");
                         popOrderType.refreshData(selection);
                         popOrderType.showAsDropDown(layoutTitle, 0, 0);
                     }

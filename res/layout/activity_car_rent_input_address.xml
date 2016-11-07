@@ -42,11 +42,10 @@
                 android:layout_weight="1"
                 android:background="@drawable/bg_car_corner_1"
                 android:drawablePadding="10dp"
-                android:hint="请输入城市"
-
                 android:paddingBottom="16dp"
                 android:paddingTop="16dp"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textColor="@android:color/black"/>
         </LinearLayout>
 
 

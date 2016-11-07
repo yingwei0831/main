@@ -51,8 +51,6 @@ import java.util.List;
 public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.IConfigCurrentPagerScroll, TouchPanelLayoutModify.OnViewUpdateListener, View.OnClickListener, AdapterView.OnItemClickListener, View.OnTouchListener, GestureDetector.OnGestureListener {
 
     private String TAG = Tab2Fragment_2.class.getSimpleName();
-    private static final String ARG_PARAM1 = "param1";
-    private String mParam1;
 
     //  轮播图片
     private List<ADInfo> infos = new ArrayList<ADInfo>();
@@ -80,7 +78,6 @@ public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.I
 
     private String[] mTitles = new String[]{"国内游", "出境游", "周边游"};
     private List<Fragment> mContent = new ArrayList<>();
-    private TabLayout tabIndicator;
     private ViewPager viewPager;
     private OrdersPagerAdapter pagerAdapter;
 
@@ -153,16 +150,15 @@ public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.I
         }
     };
 
+    private Tab2BottomContentFragment  bottomFragment1;
+    private Tab2BottomContentFragment2 bottomFragment2;
+
+
     public Tab2Fragment_2() {
-
     }
-
 
     public static Tab2Fragment_2 newInstance(String param1, String param2) {
         Tab2Fragment_2 fragment = new Tab2Fragment_2();
-//        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        fragment.setArguments(args);
         return fragment;
     }
 
@@ -188,25 +184,13 @@ public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.I
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        LogUtil.e(TAG, "===== onStart =====");
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        LogUtil.e(TAG, "===== onResume =====");
-    }
-
-    @Override
     public void onDestroy() {
         super.onDestroy();
         handler.removeCallbacks(runnable);
     }
 
     private void getInternetData() {
-        imageUrls.add("drawable://" + R.drawable.ic_empty);
+        imageUrls.add("drawable://" + R.mipmap.travel_icon);
         //广告位
         ForeEndActionBiz fbiz = new ForeEndActionBiz();
 //        mark:index（首页）、line_index(国内游、出境游)、header（分类上方）、visa_index（签证）、customize_index(个性定制)
@@ -233,6 +217,7 @@ public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.I
                     ToastCommon.toastShortShow(getContext(), null, "获取广告位数据出错, 点击广告位重试");
                 }
                 LogUtil.e(TAG, "foreEndGetAdvertisingPosition: " + error.toString());
+
             }
         });
     }
@@ -250,7 +235,7 @@ public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.I
         gridViewHotRecommend.setAdapter(hotAdapter);
 
 
-        tabIndicator = (TabLayout) view.findViewById(R.id.tab_tab2_indicator);
+        TabLayout tabIndicator = (TabLayout) view.findViewById(R.id.tab_tab2_indicator);
         //设置TabLayout的模式
         tabIndicator.setTabMode(TabLayout.MODE_FIXED);
         //为TabLayout添加tab名称
@@ -260,8 +245,10 @@ public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.I
 
         viewPager = (ViewPager) view.findViewById(R.id.viewpager_tab2_bottom);
         viewPager.setOffscreenPageLimit(2);
-        mContent.add(new Tab2BottomContentFragment());
-        mContent.add(new Tab2BottomContentFragment2());
+        bottomFragment1 = new Tab2BottomContentFragment();
+        bottomFragment2 = new Tab2BottomContentFragment2();
+        mContent.add(bottomFragment1);
+        mContent.add(bottomFragment2);
 //        mContent.add(new Tab2BottomContentFragment3());
         pagerAdapter = new OrdersPagerAdapter(getChildFragmentManager(), mTitles, mContent);
         viewPager.setAdapter(pagerAdapter);
@@ -288,6 +275,13 @@ public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.I
         gridViewHotRecommend.setOnItemClickListener(this);
 
         flipper.setOnClickListener(this);
+    }
+
+    public void refreshView(){
+        getInternetData();
+        getRecommend();
+        bottomFragment1.getData("1");
+        bottomFragment2.getData("2");
     }
 
     @Override

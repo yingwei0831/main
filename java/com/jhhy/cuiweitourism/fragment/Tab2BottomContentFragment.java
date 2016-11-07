@@ -91,6 +91,7 @@ public class Tab2BottomContentFragment extends Fragment implements IPagerScroll,
                     ToastUtil.show(getContext(), "与服务器链接超时，请重试");
                     break;
             }
+            LoadingIndicator.cancel();
         }
     };
 
@@ -116,7 +117,6 @@ public class Tab2BottomContentFragment extends Fragment implements IPagerScroll,
         area.setListProvince(pro);
         listRight.add(area);
         adapterRight = new Tab2ContentListViewAdapter(getContext(), listRight.get(0).getListProvince());
-        LogUtil.e(TAG, "gridveiw.columnWidth = "+gridView.getColumnWidth());
         gridView.setAdapter(adapterRight);
 
         addListener();
@@ -124,7 +124,7 @@ public class Tab2BottomContentFragment extends Fragment implements IPagerScroll,
         return view;
     }
 
-    private void getData(String type) {
+    public void getData(String type) {
 //        {"head":{"code":"Publics_classify"},"field":{"type":"1"}} //type:1国内、2出境、102周边
         ClassifyBiz biz = new ClassifyBiz(getContext(), handler);
         biz.getAreaList(type,  Consts.MESSAGE_CLASSIFY);

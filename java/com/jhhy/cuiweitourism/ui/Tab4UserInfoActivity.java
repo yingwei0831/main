@@ -124,7 +124,7 @@ public class Tab4UserInfoActivity extends BaseActivity implements View.OnClickLi
         tvRealName = (TextView) findViewById(R.id.tv_real_name);
         tvID = (TextView) findViewById(R.id.tv_real_id);
 
-        if (MainActivity.user.getUserIconPath() != null && !"null".equals(MainActivity.user.getUserIconPath())) {
+        if (MainActivity.user != null && MainActivity.user.getUserIconPath() != null && !"null".equals(MainActivity.user.getUserIconPath())) {
 //            ImageLoaderUtil.getInstance(getApplicationContext()).displayImage(MainActivity.user.getUserIconPath(), civUserIcon);
             ImageLoaderUtil.getInstance(getApplicationContext()).getImage(civUserIcon, MainActivity.user.getUserIconPath());
             ImageLoaderUtil.getInstance(getApplicationContext()).setCallBack(new ImageLoaderUtil.ImageLoaderCallBack() {

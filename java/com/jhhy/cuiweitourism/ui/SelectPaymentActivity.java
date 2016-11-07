@@ -24,6 +24,8 @@ import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.pay.PayResult;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
 public class SelectPaymentActivity extends BaseActivity implements View.OnClickListener {
 
@@ -197,10 +199,18 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
                 break;
             case R.id.tv_wechat_pay:
                 //TODO 微信付款
-                setResult(RESULT_OK);
-                finish();
+                weChatPay();
+//                setResult(RESULT_OK);
+//                finish();
                 break;
         }
+    }
+
+    private void weChatPay() {
+        // 注册APPID
+        final IWXAPI msgApi = WXAPIFactory.createWXAPI(getApplicationContext(), null);
+        // 将该app注册到微信
+        msgApi.registerApp("wxfa0103db1944bda3");
     }
 
     //{"head":{"code":"Alipay_index"},"field":{"ordersn":"80489619661756"}}
