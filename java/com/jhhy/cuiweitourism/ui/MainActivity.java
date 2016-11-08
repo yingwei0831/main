@@ -263,15 +263,15 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
                         SharedPreferencesUtils sp = SharedPreferencesUtils.getInstance(getApplicationContext());
                         LoginBiz biz = new LoginBiz(getApplicationContext(), handler);
                         biz.login(sp.getTelephoneNumber(), sp.getPassword());
-                    }
-                    if (tab1Fragment != null) {
-                        tab1Fragment.getBannerData();
-                        tab1Fragment.getData();
-                    }
-                    if (tab2Fragment_2 != null) {
-                        tab2Fragment_2.refreshView();
-                    }
 
+                        if (tab1Fragment != null) {
+                            tab1Fragment.getBannerData();
+                            tab1Fragment.getData();
+                        }
+                        if (tab2Fragment_2 != null) {
+                            tab2Fragment_2.refreshView();
+                        }
+                    }
                 } else {
 //                    ToastCommon.toastShortShow(getApplicationContext(), null, "网络已断开");
                 }
