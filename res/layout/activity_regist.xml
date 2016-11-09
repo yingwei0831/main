@@ -3,255 +3,252 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@android:color/white"
+    android:orientation="vertical"
     tools:context=".ui.RegisterActivity">
 
-    <include layout="@layout/title_simple"/>
+    <include layout="@layout/title_simple" />
 
     <RelativeLayout
-        android:layout_marginTop="30dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        >
+        android:layout_marginTop="30dp">
+
         <TextView
             android:id="@+id/tv_activity_regist_phone_notice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:paddingTop="10dp"
+            android:layout_centerVertical="true"
             android:paddingBottom="10dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
+            android:paddingTop="10dp"
             android:text="@string/activity_regist_phone_number"
-            android:layout_centerVertical="true"/>
+            android:textSize="16sp" />
+
         <EditText
-            android:maxLines="1"
-            android:maxLength="11"
             android:id="@+id/et_activity_regist_phone_number"
-            android:layout_toRightOf="@id/tv_activity_regist_phone_notice"
-            android:layout_toLeftOf="@+id/tv_activity_register_get_check_code"
-            android:background="@android:color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="10dp"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/tv_activity_register_get_check_code"
+            android:layout_toRightOf="@id/tv_activity_regist_phone_notice"
+            android:background="@android:color/white"
+            android:hint="@string/activity_regist_hint_phone_number"
+            android:inputType="number"
+            android:maxLength="11"
+            android:maxLines="1"
             android:paddingBottom="10dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:layout_centerVertical="true"
-            android:hint="@string/activity_regist_hint_phone_number"
-            android:textColorHint="@color/colorTab1RecommendForYouNotice"
-            android:inputType="number"
-            />
+            android:paddingTop="10dp"
+            android:textColorHint="@color/colorTab1RecommendForYouNotice" />
+
         <TextView
             android:id="@+id/tv_activity_register_get_check_code"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/bg_tv_activity_regist_border_check_code"
             android:gravity="center"
-            android:paddingTop="8dp"
             android:paddingBottom="8dp"
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
-            android:text="@string/activity_regist_get_check_code"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/bg_tv_activity_regist_border_check_code"
-            android:layout_centerVertical="true"
-            />
+            android:paddingTop="8dp"
+            android:text="@string/activity_regist_get_check_code" />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/colorLineGray"
-            android:layout_marginTop="10dp"
             android:layout_below="@id/et_activity_regist_phone_number"
-            />
+            android:layout_marginTop="10dp"
+            android:background="@color/colorLineGray" />
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        >
+        android:layout_marginRight="16dp">
+
         <TextView
             android:id="@+id/tv_activity_regist_check_code_notice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:paddingTop="10dp"
+            android:layout_centerVertical="true"
             android:paddingBottom="10dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
+            android:paddingTop="10dp"
             android:text="@string/activity_regist_check_code"
-            android:layout_centerVertical="true"/>
+            android:textSize="16sp" />
+
         <EditText
             android:id="@+id/et_activity_regist_check_code"
-            android:layout_toRightOf="@id/tv_activity_regist_check_code_notice"
-            android:background="@android:color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="10dp"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/tv_activity_regist_check_code_notice"
+            android:background="@android:color/white"
+            android:hint="@string/activity_regist_hint_check_code"
+            android:maxLines="1"
             android:paddingBottom="10dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:layout_centerVertical="true"
-            android:hint="@string/activity_regist_hint_check_code"
-            android:textColorHint="@color/colorTab1RecommendForYouNotice"
-            android:maxLines="1"
-            />
+            android:paddingTop="10dp"
+            android:textColorHint="@color/colorTab1RecommendForYouNotice" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/colorLineGray"
-            android:layout_marginTop="10dp"
             android:layout_below="@id/et_activity_regist_check_code"
-            />
+            android:layout_marginTop="10dp"
+            android:background="@color/colorLineGray" />
     </RelativeLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        >
+        android:layout_marginRight="16dp">
+
         <TextView
             android:id="@+id/tv_activity_regist_register_code_notice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:paddingTop="10dp"
+            android:layout_centerVertical="true"
             android:paddingBottom="10dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
+            android:paddingTop="10dp"
             android:text="@string/activity_regist_register_code"
-            android:layout_centerVertical="true"/>
+            android:textSize="16sp" />
+
         <EditText
             android:id="@+id/et_activity_regist_register_code"
-            android:layout_toRightOf="@id/tv_activity_regist_register_code_notice"
-            android:background="@android:color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="10dp"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/tv_activity_regist_register_code_notice"
+            android:background="@android:color/white"
+            android:hint="@string/activity_regist_hint_register_code"
+            android:maxLines="1"
             android:paddingBottom="10dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:layout_centerVertical="true"
-            android:hint="@string/activity_regist_hint_register_code"
-            android:textColorHint="@color/colorTab1RecommendForYouNotice"
-            android:maxLines="1"
-            />
+            android:paddingTop="10dp"
+            android:textColorHint="@color/colorTab1RecommendForYouNotice" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/colorLineGray"
-            android:layout_marginTop="10dp"
             android:layout_below="@id/et_activity_regist_register_code"
-            />
+            android:layout_marginTop="10dp"
+            android:background="@color/colorLineGray" />
     </RelativeLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        >
+        android:layout_marginRight="16dp">
+
         <TextView
             android:id="@+id/tv_activity_regist_set_password_notice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:paddingTop="10dp"
+            android:layout_centerVertical="true"
             android:paddingBottom="10dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
+            android:paddingTop="10dp"
             android:text="@string/activity_regist_set_password"
-            android:layout_centerVertical="true"/>
+            android:textSize="16sp" />
+
         <EditText
             android:id="@+id/et_activity_regist_set_password"
-            android:layout_toRightOf="@id/tv_activity_regist_set_password_notice"
-            android:background="@android:color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="10dp"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/tv_activity_regist_set_password_notice"
+            android:background="@android:color/white"
+            android:hint="@string/activity_regist_hint_set_password"
+            android:inputType="textPassword"
+            android:maxLines="1"
             android:paddingBottom="10dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:layout_centerVertical="true"
-            android:hint="@string/activity_regist_hint_set_password"
-            android:textColorHint="@color/colorTab1RecommendForYouNotice"
-            android:inputType="textPassword"
-            android:maxLines="1"
-            />
+            android:paddingTop="10dp"
+            android:textColorHint="@color/colorTab1RecommendForYouNotice" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/colorLineGray"
-            android:layout_marginTop="10dp"
             android:layout_below="@id/tv_activity_regist_set_password_notice"
-            />
+            android:layout_marginTop="10dp"
+            android:background="@color/colorLineGray" />
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        >
+        android:layout_marginRight="16dp">
+
         <TextView
             android:id="@+id/tv_activity_regist_confirm_password_notice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:paddingTop="10dp"
+            android:layout_centerVertical="true"
             android:paddingBottom="10dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
+            android:paddingTop="10dp"
             android:text="@string/activity_regist_confirm_password"
-            android:layout_centerVertical="true"/>
+            android:textSize="16sp" />
+
         <EditText
             android:id="@+id/et_activity_regist_confirm_password"
-            android:layout_toRightOf="@id/tv_activity_regist_confirm_password_notice"
-            android:background="@android:color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="10dp"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/tv_activity_regist_confirm_password_notice"
+            android:background="@android:color/white"
+            android:hint="@string/activity_regist_hint_confirm_password"
+            android:inputType="textPassword"
+            android:maxLines="1"
             android:paddingBottom="10dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:layout_centerVertical="true"
-            android:hint="@string/activity_regist_hint_confirm_password"
-            android:textColorHint="@color/colorTab1RecommendForYouNotice"
-            android:inputType="textPassword"
-            android:maxLines="1"
-            />
+            android:paddingTop="10dp"
+            android:textColorHint="@color/colorTab1RecommendForYouNotice" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/colorLineGray"
-            android:layout_marginTop="10dp"
             android:layout_below="@id/tv_activity_regist_confirm_password_notice"
-            />
+            android:layout_marginTop="10dp"
+            android:background="@color/colorLineGray" />
     </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
+        android:layout_marginBottom="30dp"
         android:layout_marginTop="30dp"
-        android:layout_marginBottom="30dp">
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
         <CheckBox
             android:id="@+id/cb_register_deal"
-            android:layout_marginLeft="16dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:checked="false"
             android:layout_gravity="center_vertical"
-            />
+            android:layout_marginLeft="16dp"
+            android:checked="false" />
 
         <TextView
             android:id="@+id/tv_register_deal"
@@ -264,45 +261,44 @@
 
     <Button
         android:id="@+id/btn_register_register"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="同意服务条款并注册"
-        android:textColor="@android:color/white"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:background="@drawable/bg_btn_regist_border_selector"
-        />
+        android:text="同意服务条款并注册"
+        android:textColor="@android:color/white" />
 
     <RelativeLayout
-        android:layout_gravity="bottom"
-        android:layout_marginBottom="16dp"
+        android:id="@+id/layout_login"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="16dp"
         android:layout_weight="1"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
         android:gravity="bottom"
-        >
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
         <TextView
-            android:layout_alignParentLeft="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/activity_register_has_account"
-            android:paddingTop="6dp"
+            android:layout_alignParentLeft="true"
             android:paddingBottom="6dp"
-            />
+            android:paddingTop="6dp"
+            android:text="@string/activity_register_has_account" />
+
         <TextView
-            android:layout_alignParentRight="true"
             android:id="@+id/tv_register_to_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/activity_login"
-            android:paddingTop="6dp"
+            android:layout_alignParentRight="true"
             android:paddingBottom="6dp"
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
-            android:textColor="@android:color/black"
-            />
+            android:paddingTop="6dp"
+            android:text="@string/activity_login"
+            android:textColor="@android:color/black" />
     </RelativeLayout>
 
 </LinearLayout>

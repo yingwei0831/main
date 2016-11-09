@@ -22,20 +22,23 @@
         android:textSize="18sp" />
 
 
-    <EditText
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/tv_search_text"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
         android:layout_marginBottom="6dp"
         android:layout_marginTop="6dp"
-        android:layout_toLeftOf="@+id/title_main_iv_right_telephone"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:layout_toLeftOf="@+id/title_main_iv_right_search"
         android:layout_toRightOf="@+id/tv_search_bar_main_left_location"
         android:background="@drawable/bg_et_search_corner"
-        android:hint="@string/app_name"
-        android:paddingLeft="10dp" />
+        android:hint="@string/car_rent_city_beijing"
+        />
 
     <ImageView
-        android:id="@+id/title_main_iv_right_telephone"
+        android:id="@+id/title_main_iv_right_search"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"

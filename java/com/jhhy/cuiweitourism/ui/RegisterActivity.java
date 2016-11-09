@@ -100,6 +100,23 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         tvDeal = (TextView) findViewById(R.id.tv_register_deal);
         tvTitle = (TextView) findViewById(R.id.tv_title_simple_title);
         tvTitle.setText(getString(R.string.activity_register_title));
+        TextView tvright = (TextView) findViewById(R.id.tv_title_simple_title_right);
+        tvright.setVisibility(View.GONE);
+        TextView tvleft = (TextView) findViewById(R.id.tv_title_simple_title_left);
+        tvleft.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+        View view = findViewById(R.id.layout_login);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish(); //回到登录页面
+            }
+        });
+
         tvGetCheckCode = (TextView) findViewById(R.id.tv_activity_register_get_check_code);
 
         etMobile = (EditText) findViewById(R.id.et_activity_regist_phone_number);
@@ -109,11 +126,11 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         etPassword = (EditText) findViewById(R.id.et_activity_regist_set_password);
         etConfirmPassword = (EditText) findViewById(R.id.et_activity_regist_confirm_password);
 
-        etMobile.setText("15210656918");
-        etCheckCode.setText("cwly");
-        etRegisterCode.setText("CWuhvle");
-        etPassword.setText("admin123");
-        etConfirmPassword.setText("admin123");
+//        etMobile.setText("15210656918");
+//        etCheckCode.setText("cwly");
+//        etRegisterCode.setText("CWuhvle");
+//        etPassword.setText("admin123");
+//        etConfirmPassword.setText("admin123");
 
 
         btnRegister = (Button) findViewById(R.id.btn_register_register);
@@ -173,6 +190,9 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void register() {
+        if (!cbRegisterDeal.isChecked()){
+            return;
+        }
         String mobile = etMobile.getText().toString().trim();
         String checkCode = etCheckCode.getText().toString().trim();
         String registerCode = etRegisterCode.getText().toString().trim();
@@ -185,7 +205,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 //        {"head":{"code":"User_register"},"field":{"mobile":"15210656911","password":"admin123","verify":"cwly","codes":"CWuhvle"}}
         LoadingIndicator.show(RegisterActivity.this, getString(R.string.http_notice));
         RegisterBiz biz = new RegisterBiz(getApplicationContext(), handler);
-        biz.register(mobile, "admin123", "cwly", "CWuhvle");
+        biz.register(mobile, password, checkCode, registerCode);
     }
 
     private void startTime() {

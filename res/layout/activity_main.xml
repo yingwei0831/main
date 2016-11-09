@@ -8,49 +8,47 @@
         android:id="@+id/main_content"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        />
+        android:layout_weight="1" />
 
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:src="@mipmap/line_gray_border"
         android:background="#E7E7E7"
-        android:contentDescription="@null"/>
+        android:contentDescription="@null"
+        android:src="@mipmap/line_gray_border" />
 
     <RadioGroup
         android:id="@+id/tab_menu"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <RadioButton
+            android:id="@+id/tab1"
+            style="@style/MainBottomRadioButtonStyle"
             android:checked="true"
             android:drawableTop="@drawable/tab1_indicator_selector"
-            android:id="@+id/tab1"
-            android:text="@string/activity_main_home"
-            style="@style/MainBottomRadioButtonStyle"
-            />
+            android:text="@string/activity_main_home" />
 
         <RadioButton
             android:id="@+id/tab2"
+            style="@style/MainBottomRadioButtonStyle"
             android:drawableTop="@drawable/tab2_indicator_selector"
-            android:text="@string/activity_main_sort"
-            style="@style/MainBottomRadioButtonStyle"/>
+            android:text="@string/activity_main_sort" />
 
         <RadioButton
             android:id="@+id/tab3"
-            android:text="@string/activity_main_order"
+            style="@style/MainBottomRadioButtonStyle"
             android:drawableTop="@drawable/tab3_indicator_selector"
-            style="@style/MainBottomRadioButtonStyle"/>
+            android:text="@string/activity_main_order" />
 
         <RadioButton
             android:id="@+id/tab4"
+            style="@style/MainBottomRadioButtonStyle"
             android:drawableTop="@drawable/tab4_indicator_selector"
-            android:text="@string/activity_main_mine"
-            style="@style/MainBottomRadioButtonStyle"/>
+            android:text="@string/activity_main_mine" />
     </RadioGroup>
 
 </LinearLayout>

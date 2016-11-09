@@ -71,6 +71,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void setupView() {
+
+
         etUserName = (EditText) findViewById(R.id.et_login_user_name);
         etPassword = (EditText) findViewById(R.id.et_login_user_pwd);
 
@@ -78,8 +80,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
         tvToRegister = (TextView) findViewById(R.id.tv_login_to_register);
         tvToForgetPassword = (TextView) findViewById(R.id.tv_login_to_forget_password);
-        etUserName.setText("15210656919");
-        etPassword.setText("admin123");
+        etUserName.setText(SharedPreferencesUtils.getInstance(getApplicationContext()).getTelephoneNumber());
+//        etUserName.setText("15210656919");
+//        etPassword.setText("admin123");
     }
 
     private void addListener() {
@@ -109,6 +112,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         if(RESULT_OK == resultCode){
             if(Consts.REQUEST_CODE_REGISTER == requestCode){
                 registerUser = (User) data.getSerializableExtra(Consts.KEY_RESULT_DATA);
+                etUserName.setText(registerUser.getUserPhoneNumber());
             }
         }
     }
@@ -127,7 +131,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         String name = etUserName.getText().toString();
         String password = etPassword.getText().toString();
         LoginBiz biz = new LoginBiz(getApplicationContext(), handler);
-        biz.login(name, password);
+        biz.login(name, password );
     }
 
     public static void actionStart(Context context, Bundle data) {

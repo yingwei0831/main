@@ -55,13 +55,13 @@ public class ActivityHotDetailInfo implements Serializable{
     public String cfcity;
     public String feeinclude;
     public String  features;
-    public ArrayList<String> piclist;
-
-    public ActivityComment comment;
-
-    public String ctnum;
     public String xlxq;
     public String xcinfo;
+    public ArrayList<String> piclist;
+
+    public ActivityComment comment; //时有时无
+
+    public String ctnum;
 
     public ActivityHotDetailInfo(String id, String title, String price, String num, String days, String cftime, String cfcity, String feeinclude, String features, ArrayList<String> piclist, ActivityComment comment, String ctnum, String xlxq, String xcinfo) {
         this.id = id;

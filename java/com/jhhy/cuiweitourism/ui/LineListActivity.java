@@ -32,7 +32,10 @@ public class LineListActivity extends BaseActionBarActivity {
     private String shopId;
     private String shopName;
     private int page = 0;
-    private boolean add = false;
+//    private boolean add = false;
+
+    private boolean refresh = true;
+    private boolean loadMore;
 
     private Handler handler = new Handler(){
         @Override
@@ -41,19 +44,31 @@ public class LineListActivity extends BaseActionBarActivity {
             switch (msg.what){
                 case Consts.MESSAGE_FIND_SHOP_LINE_LIST: //该商铺的所有线路
                     if (msg.arg1 == 1) {
-                        if (add) { //加载更多
-
-                        } else { //下拉刷新
-                            list = (List<Line>) msg.obj;
-                            if (list == null || list.size() == 0) {
-
-                            } else {
+                        List<Line> listNew = (List<Line>) msg.obj;
+                        if (listNew != null && listNew.size()!= 0) {
+                            if (loadMore) { //加载更多
+                                loadMore = false;
+                                list.addAll(listNew);
+                                adapter.addData(listNew);
+                            }
+                            if (refresh) { //下拉刷新
+                                refresh = false;
+                                list = listNew;
                                 adapter.setData(list);
+                            }
+                        }else{
+//                            ToastCommon.toastShortShow(getApplicationContext(), null, "暂无新数据");
+                            if (loadMore){
+                                page --;
                             }
                         }
                     }else{
                         ToastCommon.toastShortShow(getApplicationContext(), null, String.valueOf(msg.obj));
+                        if (loadMore){
+                            page --;
+                        }
                     }
+                    pullToRefreshListView.onRefreshComplete();
                     break;
                 case Consts.NET_ERROR:
                     ToastUtil.show(getApplicationContext(), "请检查网络后重试");
@@ -96,7 +111,7 @@ public class LineListActivity extends BaseActionBarActivity {
         pullToRefreshListView.getLoadingLayoutProxy().setRefreshingLabel("正在刷新");
         pullToRefreshListView.getLoadingLayoutProxy().setReleaseLabel("松开加载更多");
 
-        pullToRefreshListView.setMode(PullToRefreshBase.Mode.DISABLED);
+        pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
 
         listView = pullToRefreshListView.getRefreshableView();
         adapter = new SearchShopListAdapter(getApplicationContext(), list);
@@ -112,11 +127,37 @@ public class LineListActivity extends BaseActionBarActivity {
                 //进入线路详情
                 Intent intent = new Intent(getApplicationContext(), InnerTravelDetailActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("id", list.get(i).getLineId());
+                bundle.putString("id", list.get((int)l).getLineId());
                 intent.putExtras(bundle);
                 startActivityForResult(intent, VIEW_LINE_DETAIL);
             }
         });
+        pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+                //TODO 下拉刷新
+                refresh();
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+                //TODO 加载更多
+                loadMore();
+            }
+        });
+    }
+
+    private void loadMore() {
+        if (loadMore)   return;
+        loadMore = true;
+        page ++;
+        getInternetData();
+    }
+
+    private void refresh() {
+        if (refresh)    return;
+        refresh = true;
+        getInternetData();
     }
 
     private final int VIEW_LINE_DETAIL = 2908; //进入线路详情

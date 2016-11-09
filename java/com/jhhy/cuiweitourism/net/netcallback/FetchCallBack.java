@@ -14,6 +14,7 @@ import org.xutils.ex.HttpException;
 
 import java.net.ConnectException;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
 /**
@@ -68,6 +69,10 @@ public class FetchCallBack implements Callback.CommonCallback<String> {
         else if(ex instanceof ConnectException){
             LogUtil.e(TAG, " excetpion = " + ex.toString());
             error.localReason = "请检查网络连接并重试";
+        }
+        else if (ex instanceof SocketTimeoutException){
+            LogUtil.e(TAG, " excetpion = " + ex.toString());
+            error.localReason = "与服务器连接超时，请重试";
         }
 
         this.response.onError(error);

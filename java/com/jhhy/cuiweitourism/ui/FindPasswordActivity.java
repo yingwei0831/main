@@ -55,6 +55,7 @@ public class FindPasswordActivity extends BaseActivity implements View.OnClickLi
                     }
                     break;
                 case Consts.MESSAGE_CHECK_CODE:
+
                     ToastUtil.show(getApplicationContext(), String.valueOf(msg.obj));
                     break;
                 case Consts.NET_ERROR:
@@ -88,10 +89,10 @@ public class FindPasswordActivity extends BaseActivity implements View.OnClickLi
         etPassword = (EditText) findViewById(R.id.et_activity_find_password_set_password);
         etConfirmPassword = (EditText) findViewById(R.id.et_activity_find_password_confirm_password);
 
-        etMobile.setText("15210656918");
-        etCheckCode.setText("cwly");
-        etPassword.setText("admin123");
-        etConfirmPassword.setText("admin123");
+//        etMobile.setText("15210656918");
+//        etCheckCode.setText("cwly");
+//        etPassword.setText("admin123");
+//        etConfirmPassword.setText("admin123");
 
         btnFinish = (Button) findViewById(R.id.btn_find_password);
     }
@@ -168,7 +169,7 @@ public class FindPasswordActivity extends BaseActivity implements View.OnClickLi
 //        {"head":{"code":"User_register"},"field":{"mobile":"15210656911","password":"admin123","verify":"cwly","codes":"CWuhvle"}}
         LoadingIndicator.show(FindPasswordActivity.this, getString(R.string.http_notice));
         RegisterBiz biz = new RegisterBiz(getApplicationContext(), handler);
-        biz.register(mobile, "admin123", "cwly", "CWuhvle");
+        biz.register(mobile, password, checkCode, "CWuhvle");
     }
 
 }

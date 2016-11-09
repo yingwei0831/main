@@ -47,6 +47,7 @@ import com.jhhy.cuiweitourism.ui.InnerTravelDetailActivity;
 import com.jhhy.cuiweitourism.ui.MainActivity;
 import com.jhhy.cuiweitourism.ui.PersonalizedCustomActivity;
 import com.jhhy.cuiweitourism.ui.PlaneMainActivity;
+import com.jhhy.cuiweitourism.ui.SearchActivity;
 import com.jhhy.cuiweitourism.ui.SearchRouteActivity;
 import com.jhhy.cuiweitourism.ui.SearchShopActivity;
 import com.jhhy.cuiweitourism.ui.StartActivityEditActivity;
@@ -117,6 +118,8 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
     private TextView tvMobile; //客服号码
     private TextView tvLocationCity; //显示当前选择的城市
     private PhoneBean selectCity; //选择的城市
+    private TextView tvSearchText; //搜索
+    private ImageView ivSearchImg; //搜索
 
     private TextView tvInnerTravel; //国内游
     private TextView tvOutsideTravel; //出境游
@@ -457,6 +460,8 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
 
         if (null != content) {
             tvLocationCity = (TextView) content.findViewById(R.id.tv_search_bar_main_left_location); //当前城市
+            tvSearchText = (TextView) content.findViewById(R.id.tv_search_text); //搜索
+            ivSearchImg = (ImageView) content.findViewById(R.id.title_main_iv_right_search); //搜索
 
             tvInnerTravel = (TextView) content.findViewById(R.id.tv_tab1_inner_travel); //国内游
             tvOutsideTravel = (TextView) content.findViewById(R.id.tv_tab1_outside); //出境游
@@ -541,6 +546,9 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
     private void addListener() {
         tvMobile.setOnClickListener(this);
         tvLocationCity.setOnClickListener(this);
+        tvSearchText.setOnClickListener(this);
+        ivSearchImg .setOnClickListener(this);
+
         tvInnerTravel.setOnClickListener(this);
         tvOutsideTravel.setOnClickListener(this);
         tvPlaneTicket.setOnClickListener(this);
@@ -569,6 +577,13 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
     public void onClick(View view) {
         if (NetworkUtil.checkNetwork(getContext())) {
             switch (view.getId()) {
+                case R.id.tv_search_text: //搜索
+                case R.id.title_main_iv_right_search: //搜索
+                    //TODO
+                    Bundle bundleSearch = new Bundle();
+                    bundleSearch.putSerializable("selectCity", selectCity);
+                    SearchActivity.actionStart(getContext(), bundleSearch);
+                    break;
                 case R.id.title_main_iv_right_telephone:
                     Utils.contact(getContext(), tvMobile.getText().toString().trim());
                     break;

@@ -42,10 +42,10 @@
      
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
 
-    <!--微信支付-->
+    <!-- 微信支付 -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <!-- begin 环信 -->
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -83,8 +83,8 @@
         android:protectionLevel="signature" />
 
     <uses-permission android:name="com.jhhy.cuiweitourism.permission.MIPUSH_RECEIVE" />
-    <!-- end 环信 -->
 
+    <!-- end 环信 -->
     <application
         android:name=".service.CuiWeiTourismApplication"
         android:allowBackup="true"
@@ -100,9 +100,11 @@
         <!-- 设置环信应用的AppKey -->
         <meta-data
             android:name="EASEMOB_APPKEY"
-            android:value="yingwei0831#cuiweitourism" />
+            android:value="1113161102178500#kefuchannelapp30145" />
         <!-- experience-kefu#sandbox -->
+        <!-- 1170161103178208#cwly1118 -->
         <!-- yingwei0831#cuiweitourism -->
+        <!-- 1113161102178500#kefuchannelapp30145 -->
         <!-- 声明SDK所需的service SDK核心功能 -->
         <service
             android:name="com.easemob.chat.EMChatService"
@@ -120,12 +122,6 @@
                 <action android:name="android.intent.action.USER_PRESENT" />
             </intent-filter>
         </receiver>
-
-        <!--<receiver android:name=".service.NetWorkReceiver">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>-->
-            <!--</intent-filter>-->
-        <!--</receiver>-->
 
         <activity
             android:name=".ui.MainActivity"
@@ -155,13 +151,17 @@
         <activity
             android:name=".ui.LoginActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            />
         <activity
             android:name=".ui.RegisterActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.FindPasswordActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            />
         <activity
             android:name=".ui.CitySelectionActivity"
             android:screenOrientation="portrait"
@@ -234,10 +234,9 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.ContactAddActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/ActionBarTheme"
             android:launchMode="singleTop"
-            />
+            android:screenOrientation="portrait"
+            android:theme="@style/ActionBarTheme" />
         <activity
             android:name=".ui.ReserveNoticeActivity"
             android:screenOrientation="portrait"
@@ -276,10 +275,9 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.Tab4OrderDetailsActivity"
-            android:screenOrientation="portrait"
             android:launchMode="singleTop"
-            android:theme="@style/ActionBarTheme"
-             />
+            android:screenOrientation="portrait"
+            android:theme="@style/ActionBarTheme" />
         <activity
             android:name=".ui.RequestRefundActivity"
             android:screenOrientation="portrait"
@@ -340,6 +338,12 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
+            android:name=".ui.SearchActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/ActionBarTheme"
+            android:windowSoftInputMode="adjustPan|stateHidden"
+            />
+        <activity
             android:name=".ui.SearchShopActivity"
             android:screenOrientation="portrait"
             android:theme="@style/ActionBarTheme" />
@@ -368,37 +372,35 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.CarRentSuccessActivity"
-            android:screenOrientation="portrait"
             android:launchMode="singleTop"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.CarRentSmallActivity"
-            android:screenOrientation="portrait"
             android:launchMode="singleTop"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".dialog.CarRentTimeSelectActivity"
-            android:screenOrientation="portrait"
             android:launchMode="singleTop"
+            android:screenOrientation="portrait"
             android:theme="@style/SampleTheme.Light" />
         <activity
             android:name=".ui.easemob.EasemobLoginActivity"
-            android:screenOrientation="portrait"
             android:launchMode="singleTop"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             />
         <activity
             android:name=".ui.easemob.ChatActivity"
-            android:screenOrientation="portrait"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            />
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.easemob.ContextMenuActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/EMyDialogStyle"
             android:launchMode="singleTop"
-            />
+            android:screenOrientation="portrait"
+            android:theme="@style/EMyDialogStyle" />
         <activity
             android:name=".ui.LineFindActivity"
             android:screenOrientation="portrait" />
@@ -462,10 +464,9 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.LineListActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/ActionBarTheme"
             android:launchMode="singleTop"
-            />
+            android:screenOrientation="portrait"
+            android:theme="@style/ActionBarTheme" />
         <activity
             android:name=".ui.LineDetailActivity"
             android:screenOrientation="portrait" />
@@ -567,7 +568,6 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/ActionBarTheme" />
-
         <activity
             android:name=".ui.HotelInfoActivity"
             android:launchMode="singleTop"
@@ -641,16 +641,19 @@
             android:screenOrientation="behind" />
         <!-- 接入支付宝支付-end- -->
 
-        <!--接入微信支付 start -->
+
+        <!-- 接入微信支付 start -->
         <activity
             android:name=".wxapi.WXPayEntryActivity"
             android:exported="true"
-            android:launchMode="singleTop"/>
-        <!--接入微信支付 end -->
+            android:launchMode="singleTop" />
+        <!-- 接入微信支付 end -->
+
 
         <!-- 高德定位 -->
         <!-- 定位需要的服务 使用2.0的定位需要加上这个 -->
         <service android:name="com.amap.api.location.APSService" />
+
 
     </application>
 

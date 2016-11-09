@@ -132,7 +132,11 @@ public class PersonalizedCustomDetailActivity extends BaseActivity implements Ge
         getData();
         setupView();
         addListener();
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     private void getData() {

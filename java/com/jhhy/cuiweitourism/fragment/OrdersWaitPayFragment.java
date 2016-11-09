@@ -121,8 +121,13 @@ public class OrdersWaitPayFragment extends Fragment implements ArgumentOnClick {
     }
 
     private void getInternetData() {
-        OrdersAllBiz biz = new OrdersAllBiz(getContext(), handler);
-        biz.getWaitPayment(MainActivity.user.getUserId(), type); // "1"
+        if (MainActivity.user != null) {
+            OrdersAllBiz biz = new OrdersAllBiz(getContext(), handler);
+            biz.getWaitPayment(MainActivity.user.getUserId(), type); // "1"
+        }else{
+//            pullListView.setEmptyView();
+//            listView.setEmptyView();
+        }
     }
 
     public void getData(String type) {

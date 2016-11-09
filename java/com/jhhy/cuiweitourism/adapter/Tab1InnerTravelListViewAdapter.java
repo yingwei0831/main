@@ -1,6 +1,7 @@
 package com.jhhy.cuiweitourism.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,9 +68,7 @@ public class Tab1InnerTravelListViewAdapter extends BaseAdapter {
         }
         Travel travel = (Travel) getItem(position);
 
-        final View finalConvertView = view;
         final int id = holder.tvArgument.getId();
-
         holder.tvArgument.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -80,16 +79,26 @@ public class Tab1InnerTravelListViewAdapter extends BaseAdapter {
         });
 
         if(travel != null){
-            //TODO
-            if("跟团游".equals(travel.getType())){
-                holder.tvType.setBackgroundColor(context.getResources().getColor(R.color.colorTab1RecommendForYouArgument));
-            }else if("自由游".equals(travel.getType())){
-                holder.tvType.setBackgroundColor(context.getResources().getColor(R.color.colorFreedom));
+            if (travel.getType() != null && !"null".equals(travel.getType())) {
+                holder.tvType.setVisibility(View.VISIBLE);
+                if (travel.getType().contains("跟团游")) {
+                    holder.tvType.setBackgroundColor(context.getResources().getColor(R.color.colorTab1RecommendForYouArgument));
+                    holder.tvType.setText("跟团游");
+                } else if (travel.getType().contains("自由游")) {
+                    holder.tvType.setBackgroundColor(context.getResources().getColor(R.color.colorFreedom));
+                    holder.tvType.setText("自由游");
+                }else {
+                    holder.tvType.setVisibility(View.GONE);
+                }
             }
-            holder.tvType.setText(travel.getType());
             holder.tvTitle.setText(travel.getTravelTitle());
             holder.tvPrice.setText(travel.getTravelPrice());
-            ImageLoaderUtil.getInstance(context).displayImage(travel.getTravelIconPath(), holder.ivDestination);
+            ImageLoaderUtil.getInstance(context).getImage( holder.ivDestination, travel.getTravelIconPath());
+            ImageLoaderUtil.getInstance(context).setCallBack(new ImageLoaderUtil.ImageLoaderCallBack() {
+                @Override
+                public void refreshAdapter(Bitmap loadedImage) {
+                }
+            });
         }
         return view;
     }

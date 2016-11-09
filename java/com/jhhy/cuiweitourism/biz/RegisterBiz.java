@@ -81,20 +81,18 @@ public class RegisterBiz {
                     msg.obj = resArg;
                 } else if ("0000".equals(resCode)) {
                     msg.arg1 = 1;
-//{"head":{"res_code":"0000","res_msg":"success","res_arg":"[]"},"body":{
-// "mid":11,"mobile":"15210656919","nickname":"15210***","sex":"保密","avatar":"http:\/\/cwly.taskbees.cn:8083\/res\/images\/member_nopic.png"}}
-                    String body = resultObj.getString(Consts.KEY_BODY);
-                    JSONObject bodyObj = new JSONObject(body);
-                    String field = bodyObj.getString(Consts.KEY_FIELD);
-                    JSONObject fieldObj = new JSONObject(field);
+// {"head":{"res_code":"0000","res_msg":"success","res_arg":"[]"},
+// "body":{"mid":39,"mobile":"13260398606","nickname":"13260***","sex":"保密","avatar":"http://www.cwly1118.com/res/images/member_nopic.png","hxname":"cw14732302154"}}
+                    JSONObject bodyObj = resultObj.getJSONObject(Consts.KEY_BODY);
                     User user = null;
-                    if (fieldObj != null) {
+                    if (bodyObj != null) {
                         user = new User();
-                        user.setUserId(fieldObj.getString(Consts.KEY_USER_USER_MID));
-                        user.setUserNickName(fieldObj.getString(Consts.KEY_USER_NICK_NAME));
-                        user.setUserGender(fieldObj.getString(Consts.KEY_USER_GENDER));
-                        user.setUserIconPath(fieldObj.getString(Consts.KEY_USER_ICON_PATH));
-                        user.setUserPhoneNumber(fieldObj.getString(Consts.KEY_USER_MOBILE));
+                        user.setUserId(bodyObj.getString(Consts.KEY_USER_USER_MID));
+                        user.setUserNickName(bodyObj.getString(Consts.KEY_USER_NICK_NAME));
+                        user.setUserGender(bodyObj.getString(Consts.KEY_USER_GENDER));
+                        user.setUserIconPath(bodyObj.getString(Consts.KEY_USER_ICON_PATH));
+                        user.setUserPhoneNumber(bodyObj.getString(Consts.KEY_USER_MOBILE));
+                        user.setHxname(bodyObj.getString("hxname"));
                     }
                     msg.obj = user;
                 }

@@ -23,14 +23,19 @@ import com.jhhy.cuiweitourism.biz.ScreenBiz;
 import com.jhhy.cuiweitourism.moudle.PhoneBean;
 import com.jhhy.cuiweitourism.moudle.PriceArea;
 import com.jhhy.cuiweitourism.moudle.Travel;
+import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.popupwindows.PopupWindowSearchLine;
 import com.jhhy.cuiweitourism.net.utils.Consts;
+import com.jhhy.cuiweitourism.ui.easemob.EasemobLoginActivity;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
+import com.jhhy.cuiweitourism.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SearchRouteActivity extends BaseActivity implements View.OnClickListener, ArgumentOnClick {
+
+    private String TAG = SearchRouteActivity.class.getSimpleName();
 
     private TextView tvTitleTop;
     private ImageView ivTitleLeft;
@@ -53,14 +58,17 @@ public class SearchRouteActivity extends BaseActivity implements View.OnClickLis
     private List<PriceArea> listPrices = new ArrayList<>();
 
     private int page = 1;
-    private String fromCityId = "1";
     private String sort = "";
     private String day = "";
     private String price = "";
     private String earlyTime = "";
     private String laterTime = "";
+    private int dayPosition = -1;
+    private int pricePosition = -1;
 
     private PhoneBean selectCity;
+    private boolean refresh = true; //刷新
+    private boolean loadMore; //加载更多
 
     private Handler handler = new Handler(){
         @Override
@@ -68,16 +76,34 @@ public class SearchRouteActivity extends BaseActivity implements View.OnClickLis
             super.handleMessage(msg);
             switch (msg.what){
                 case Consts.MESSAGE_FIND_LINES:
-                    if(msg.arg1 == 0){
-                        ToastUtil.show(getApplicationContext(), "加载数据出错");
-                    }else {
+                    if(msg.arg1 == 1){
                         List<Travel> listNew = (List<Travel>) msg.obj;
                         if(listNew != null && listNew.size() != 0){
-                            adapter.setData(listNew);
+                            LogUtil.e(TAG, "refresh = " + refresh +", loadMore = " + loadMore);
+                            if (refresh){
+                                refresh = false;
+                                mLists = listNew;
+                                adapter.setData(mLists);
+                            }
+                            if (loadMore){
+                                loadMore = false;
+                                mLists.addAll(listNew);
+                                adapter.addData(listNew);
+                            }
                         }else{
+                            if (loadMore){
+                                loadMore = false;
+                                page --;
+                            }
+                            if (refresh){
+                                refresh = false;
+                            }
                             ToastUtil.show(getApplicationContext(), "加载数据失败");
                         }
+                    }else{
+                        ToastUtil.show(getApplicationContext(), String.valueOf(msg.obj));
                     }
+                    pullToRefreshListView.onRefreshComplete();
                     break;
                 case Consts.MESSAGE_TRIP_DAYS:
                     if (msg.arg1 == 0){
@@ -127,7 +153,7 @@ public class SearchRouteActivity extends BaseActivity implements View.OnClickLis
         screenBiz.getScreenPrice();
 
         FindLinesBiz biz = new FindLinesBiz(getApplicationContext(), handler);
-        biz.getLines(page, fromCityId, sort, day, price, earlyTime, laterTime);
+        biz.getLines(page, selectCity.getCity_id(), sort, day, price, earlyTime, laterTime);
     }
 
     private void getData() {
@@ -151,10 +177,10 @@ public class SearchRouteActivity extends BaseActivity implements View.OnClickLis
 
         pullToRefreshListView = (PullToRefreshListView) findViewById(R.id.activity_search_route_list_view);
         //这几个刷新Label的设置
-        pullToRefreshListView.getLoadingLayoutProxy().setLastUpdatedLabel("lastUpdateLabel");
-        pullToRefreshListView.getLoadingLayoutProxy().setPullLabel("PULLLABLE");
-        pullToRefreshListView.getLoadingLayoutProxy().setRefreshingLabel("refreshingLabel");
-        pullToRefreshListView.getLoadingLayoutProxy().setReleaseLabel("releaseLabel");
+        pullToRefreshListView.getLoadingLayoutProxy().setLastUpdatedLabel(Utils.getCurrentTime());
+        pullToRefreshListView.getLoadingLayoutProxy().setPullLabel("下拉刷新");
+        pullToRefreshListView.getLoadingLayoutProxy().setRefreshingLabel("正在刷新");
+        pullToRefreshListView.getLoadingLayoutProxy().setReleaseLabel("松开刷新");
 
         //上拉、下拉设定
         pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
@@ -164,13 +190,13 @@ public class SearchRouteActivity extends BaseActivity implements View.OnClickLis
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
                 //TODO 下拉刷新
-                pullToRefreshListView.onRefreshComplete();
+                update();
             }
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
                 //TODO 加载更多
-                pullToRefreshListView.onRefreshComplete();
+                loadMore();
             }
         });
 
@@ -183,6 +209,22 @@ public class SearchRouteActivity extends BaseActivity implements View.OnClickLis
         pullToRefreshListView.setAdapter(adapter);
 
         listView = pullToRefreshListView.getRefreshableView();
+    }
+
+    private void update() {
+        if(refresh) return;
+        refresh = true;
+        page = 1;
+        getInternetData();
+//        pullToRefreshListView.onRefreshComplete();
+    }
+
+    private void loadMore() {
+        if (loadMore)   return;
+        loadMore = true;
+        page ++;
+        getInternetData();
+//        pullToRefreshListView.onRefreshComplete();
     }
 
     private void addListener() {
@@ -198,7 +240,7 @@ public class SearchRouteActivity extends BaseActivity implements View.OnClickLis
                 //进入线路详情
                 Intent intent = new Intent(getApplicationContext(), InnerTravelDetailActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("id", mLists.get(i).getId());
+                bundle.putString("id", mLists.get((int)l).getId());
                 intent.putExtras(bundle);
                 startActivityForResult(intent, VIEW_LINE_DETAIL);
             }
@@ -251,6 +293,7 @@ public class SearchRouteActivity extends BaseActivity implements View.OnClickLis
             addPopListener();
         }else{
             popupWindowSearchLine.showAtLocation(layout, Gravity.BOTTOM, 0, 0);
+            popupWindowSearchLine.refreshView(tag, sort, String.valueOf(dayPosition), earlyTime, laterTime, pricePosition);
         }
     }
 
@@ -264,16 +307,26 @@ public class SearchRouteActivity extends BaseActivity implements View.OnClickLis
                 boolean commit = popupWindowSearchLine.getCommit();
                 if (commit) {
                     String newSort = popupWindowSearchLine.getSort();
-                    if (newSort != null) {
-                        sort = newSort;
+                    if ("0".equals(newSort)){
+                        sort = "";
+                    }else{
+                        sort = String.valueOf(newSort);
                     }
                     String newDay = popupWindowSearchLine.getDay();
-                    if (newDay != null) {
+                    if (newDay != null && newDay.length() != 0) {
                         day = newDay;
+                        dayPosition = Integer.parseInt(newDay) - 1;
+                    }else{
+                        day = "";
+                        dayPosition = -1;
                     }
-                    String newPrice = popupWindowSearchLine.getPrice();
-                    if (newPrice != null) {
-                        price = newPrice;
+                    int newPricePosition = popupWindowSearchLine.getPricePosition();
+                    pricePosition = newPricePosition;
+                    if (newPricePosition != -1) {
+                        price = popupWindowSearchLine.getPrice();
+//                        price = listPrices.get(newPricePosition).getPriceLower() +"," + listPrices.get(newPricePosition).getPriceHigh();
+                    }else{
+                        price = "";
                     }
                     String newEarylTime = popupWindowSearchLine.getEarlyTime();
                     if (newEarylTime != null) {
@@ -283,9 +336,11 @@ public class SearchRouteActivity extends BaseActivity implements View.OnClickLis
                     if (newLaterTime != null) {
                         laterTime = newLaterTime;
                     }
+                    LogUtil.e(TAG, "sort = " + sort + ", day = " + day + ", price = " + price + ", earlyTime = " + earlyTime + ", laterTime = " + laterTime);
+                    LogUtil.e(TAG, "dayPosition = " + dayPosition +", pricePosition = " + pricePosition);
                     //重新请求数据
                     FindLinesBiz biz = new FindLinesBiz(getApplicationContext(), handler);
-                    biz.getLines(page, fromCityId, sort, day, price, earlyTime, laterTime);
+                    biz.getLines(page, selectCity.getCity_id(), sort, day, price, earlyTime, laterTime);
                 }
             }
         });
@@ -308,6 +363,12 @@ public class SearchRouteActivity extends BaseActivity implements View.OnClickLis
      */
     @Override
     public void goToArgument(View view, View viewGroup, int position, int which) {
-        ToastUtil.show(getApplicationContext(), "讨价还价");
+//        ToastUtil.show(getApplicationContext(), "讨价还价");
+        switch (which){
+            case R.id.tv_inner_travel_item_argument:
+                Intent intent = new Intent(getApplicationContext(), EasemobLoginActivity.class);
+                startActivity(intent);
+                break;
+        }
     }
 }

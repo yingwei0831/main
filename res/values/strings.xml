@@ -65,6 +65,7 @@
     <string name="car_rent_days_1">1天</string>
     <string name="car_rent_days_2">2天</string>
     <string name="car_rent_city">北京市</string>
+    <string name="car_rent_city_beijing">北京</string>
 
     <string name="car_rent_from">出发地点</string>
     <string name="car_rent_from_select">请选择出发地点</string>

@@ -10,6 +10,7 @@ import com.jhhy.cuiweitourism.http.NetworkUtil;
 import com.jhhy.cuiweitourism.net.netcallback.HttpUtils;
 import com.jhhy.cuiweitourism.http.ResponseResult;
 import com.jhhy.cuiweitourism.moudle.User;
+import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.ui.easemob.DemoHelper;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 
@@ -42,7 +43,7 @@ public class LoginBiz {
         if (NetworkUtil.checkNetwork(context)) {
 
             //登录环信聊天服务器
-            EMChatManager.getInstance().login(userName, password, new EMCallBack() {
+            EMChatManager.getInstance().login(userName, "admin123", new EMCallBack() {
                 @Override
                 public void onSuccess() {
                     if (NetworkUtil.checkNetwork(context)) {
@@ -68,6 +69,7 @@ public class LoginBiz {
 
                 @Override
                 public void onError(final int code, final String message) {
+                    LogUtil.e(TAG, "code = " + code + ", 环信失败原因 message = " + message);
                     Message msg = new Message();
                     msg.what = Consts.MESSAGE_LOGIN;
                     msg.arg1 = 0;

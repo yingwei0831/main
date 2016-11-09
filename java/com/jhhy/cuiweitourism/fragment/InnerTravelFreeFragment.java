@@ -54,16 +54,17 @@ public class InnerTravelFreeFragment extends Fragment implements ArgumentOnClick
             super.handleMessage(msg);
             switch (msg.what){
                 case Consts.MESSAGE_INNER_FREEDOM:
-                    if (msg.arg1 == 0){
-                        ToastUtil.show(getContext(), (String) msg.obj);
-                    }else{
+                    if (msg.arg1 == 1){
+
                         List<Travel> follow = (List<Travel>) msg.obj;
                         if (follow == null || follow.size() == 0){
-                            ToastUtil.show(getContext(), (String) msg.obj);
+//                            ToastUtil.show(getContext(), "无数据");
                         }else{
                             mList = follow;
                             adapter.setData(mList);
                         }
+                    }else{
+                        ToastUtil.show(getContext(), (String) msg.obj);
                     }
                     break;
                 case Consts.NET_ERROR:

@@ -65,7 +65,7 @@ public class InnerTravelFollowFragment extends Fragment implements ArgumentOnCli
                     }else{
                         List<Travel> follow = (List<Travel>) msg.obj;
                         if (follow == null || follow.size() == 0){
-                            ToastUtil.show(getContext(), (String) msg.obj);
+                            ToastUtil.show(getContext(), "获取数据为空");
                         }else{
                             lists = follow;
                             adapter.setData(lists);

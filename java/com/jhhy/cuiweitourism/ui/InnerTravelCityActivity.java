@@ -274,7 +274,7 @@ public class InnerTravelCityActivity extends BaseActivity implements View.OnClic
                     String newDay = popupWindow.getDay();
                     if (newDay != null && newDay.length() != 0) {
                         day = newDay;
-                        dayPosition = Integer.parseInt(newDay)-1;
+                        dayPosition = Integer.parseInt(newDay) - 1;
                     }else{
                         day = "";
                         dayPosition = -1;
@@ -295,8 +295,8 @@ public class InnerTravelCityActivity extends BaseActivity implements View.OnClic
                     if (newLaterTime != null) {
                         laterTime = newLaterTime;
                     }
-//                    LogUtil.e(TAG, "dayPosition = " + dayPosition +", pricePosition = " + pricePosition);
-//                    LogUtil.e(TAG, "sort = " + sort + ", day = " + day+", price = "+ price+", earlyTime = " + earlyTime + ", laterTime = " + laterTime);
+                    LogUtil.e(TAG, "dayPosition = " + dayPosition +", pricePosition = " + pricePosition);
+                    LogUtil.e(TAG, "sort = " + sort + ", day = " + day+", price = "+ price+", earlyTime = " + earlyTime + ", laterTime = " + laterTime);
 //                    {"head":{"code":"Publics_lines"},"field":{"type":"1","attr":"1","page":"1","offset":"10"}}
                     int currentItem = viewPager.getCurrentItem();
                     if (currentItem == 0){

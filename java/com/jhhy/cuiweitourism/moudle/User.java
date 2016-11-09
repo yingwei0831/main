@@ -20,9 +20,6 @@ public class User implements Serializable{
     private String userCardId; //身份证号
     private String userScore; //积分
 
-//    private String userDistributionNum;
-//    private String userGrabNum;
-//    private boolean isAngel;
     private String userAddress;//北京市朝阳区安贞门26号
     private String district;//朝阳区
     private String street;//北三环中路
@@ -33,6 +30,39 @@ public class User implements Serializable{
     private String longitude;//经度
     private String latitude;//纬度
 
+    private String hxname; //环信分配的id
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "_id=" + _id +
+                ", userId='" + userId + '\'' +
+                ", userPhoneNumber='" + userPhoneNumber + '\'' +
+                ", userPassword='" + userPassword + '\'' +
+                ", userNickName='" + userNickName + '\'' +
+                ", userGender='" + userGender + '\'' +
+                ", userIconPath='" + userIconPath + '\'' +
+                ", userTrueName='" + userTrueName + '\'' +
+                ", userCardId='" + userCardId + '\'' +
+                ", userScore='" + userScore + '\'' +
+                ", userAddress='" + userAddress + '\'' +
+                ", district='" + district + '\'' +
+                ", street='" + street + '\'' +
+                ", userCity='" + userCity + '\'' +
+                ", userCityCode='" + userCityCode + '\'' +
+                ", longitude='" + longitude + '\'' +
+                ", latitude='" + latitude + '\'' +
+                ", hxname='" + hxname + '\'' +
+                '}';
+    }
+
+    public String getHxname() {
+        return hxname;
+    }
+
+    public void setHxname(String hxname) {
+        this.hxname = hxname;
+    }
 
     public User() {
     }
@@ -117,10 +147,6 @@ public class User implements Serializable{
         this._id = _id;
     }
 
-//    public boolean isAngel() {
-//        return isAngel;
-//    }
-
     public String getUserAddress() {
         return userAddress;
     }
@@ -135,29 +161,6 @@ public class User implements Serializable{
 
     public void setUserCity(String userCity) {
         this.userCity = userCity;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "_id=" + _id +
-                ", userId='" + userId + '\'' +
-                ", userPhoneNumber='" + userPhoneNumber + '\'' +
-                ", userPassword='" + userPassword + '\'' +
-                ", userNickName='" + userNickName + '\'' +
-                ", userGender='" + userGender + '\'' +
-                ", userIconPath='" + userIconPath + '\'' +
-//                ", userDistributionNum='" + userDistributionNum + '\'' +
-//                ", userGrabNum='" + userGrabNum + '\'' +
-//                ", isAngel=" + isAngel +
-                ", userAddress='" + userAddress + '\'' +
-                ", district='" + district + '\'' +
-                ", street='" + street + '\'' +
-                ", userCity='" + userCity + '\'' +
-                ", userCityCode='" + userCityCode + '\'' +
-                ", longitude='" + longitude + '\'' +
-                ", latitude='" + latitude + '\'' +
-                '}';
     }
 
     public String getUserPhoneNumber() {
@@ -200,27 +203,4 @@ public class User implements Serializable{
         this.userIconPath = userIconPath;
     }
 
-//    public String getUserDistributionNum() {
-//        return userDistributionNum;
-//    }
-
-//    public void setUserDistributionNum(String userDistributionNum) {
-//        this.userDistributionNum = userDistributionNum;
-//    }
-
-//    public String getUserGrabNum() {
-//        return userGrabNum;
-//    }
-
-//    public void setUserGrabNum(String userGrabNum) {
-//        this.userGrabNum = userGrabNum;
-//    }
-
-//    public boolean getIsAngel() {
-//        return isAngel;
-//    }
-
-//    public void setAngel(boolean angel) {
-//        isAngel = angel;
-//    }
 }

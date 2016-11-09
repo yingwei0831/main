@@ -21,7 +21,9 @@ import com.jhhy.cuiweitourism.adapter.SearchShopGridAdapter;
 import com.jhhy.cuiweitourism.biz.FindShopBiz;
 import com.jhhy.cuiweitourism.moudle.ShopRecommend;
 import com.jhhy.cuiweitourism.net.utils.Consts;
+import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
+import com.jhhy.cuiweitourism.utils.Utils;
 import com.just.sun.pricecalendar.ToastCommon;
 
 import java.util.ArrayList;
@@ -42,7 +44,9 @@ public class SearchShopActivity extends BaseActivity implements View.OnClickList
     private SearchShopGridAdapter adapter;
 
     private int page = 1;
-    private boolean add = false; //标记下一页或刷新
+
+    private boolean refresh = true;
+    private boolean loadMore;
 
     private Handler handler = new Handler(){
         @Override
@@ -51,20 +55,30 @@ public class SearchShopActivity extends BaseActivity implements View.OnClickList
             switch (msg.what){
                 case Consts.MESSAGE_FIND_SHOP:
                     if (msg.arg1 == 1){
-                        if (add){ //下一页
-                            lists.addAll((Collection<? extends ShopRecommend>) msg.obj);
-                            adapter.addData((List<ShopRecommend>) msg.obj);
-                            page ++;
-                            add = false;
-                        } else { //刷新
-
-                            lists = (List<ShopRecommend>) msg.obj;
-                            adapter.setData(lists);
+                        List<ShopRecommend> listNew = (List<ShopRecommend>) msg.obj;
+                        if (listNew != null && listNew.size() != 0) {
+                            if (loadMore) { //下一页
+                                loadMore = false;
+                                lists.addAll(listNew);
+                                adapter.addData(listNew);
+                            }
+                            if (refresh) { //刷新
+                                refresh = false;
+                                lists = (List<ShopRecommend>) msg.obj;
+                                adapter.setData(lists);
+                            }
+                        }else{
+                            if (loadMore){
+                                page --;
+                            }
                         }
-
                     }else{
                         ToastCommon.toastShortShow(getApplicationContext(), null, String.valueOf(msg.obj));
+                        if (loadMore){
+                            page --;
+                        }
                     }
+                    pullToRefreshGridView.onRefreshComplete();
                     break;
                 case Consts.NET_ERROR:
                     ToastUtil.show(getApplicationContext(), "请检查网络后重试");
@@ -120,15 +134,40 @@ public class SearchShopActivity extends BaseActivity implements View.OnClickList
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                ToastCommon.toastShortShow(getApplicationContext(), null, "grid item Click");
+                LogUtil.e(TAG, "i = " + i +", l = " + l);
                 Intent intent = new Intent(getApplicationContext() , LineListActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("shopId", lists.get(i).getId());
-                bundle.putString("shopName", lists.get(i).getName());
+                bundle.putString("shopId", lists.get((int) l).getId());
+                bundle.putString("shopName", lists.get((int) l).getName());
                 intent.putExtras(bundle);
                 startActivityForResult(intent, REQUEST_LINE_LIST);
             }
         });
+
+        pullToRefreshGridView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<GridView>() {
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<GridView> refreshView) {
+                refresh();
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<GridView> refreshView) {
+                loadMore();
+            }
+        });
+    }
+
+    private void loadMore() {
+        if (loadMore)   return;
+        loadMore = true;
+        page ++;
+        getInternetData();
+    }
+
+    private void refresh() {
+        if (refresh)    return;
+        refresh = true;
+        getInternetData();
     }
 
     private int REQUEST_LINE_LIST = 8901; //该旅行社所有旅行线路列表
@@ -149,7 +188,12 @@ public class SearchShopActivity extends BaseActivity implements View.OnClickList
         ivTitleLeft = (ImageView) actionBar.getCustomView().findViewById(R.id.title_main_tv_left_location);
 
         pullToRefreshGridView = (PullToRefreshGridView) findViewById(R.id.pull_gridview);
-        pullToRefreshGridView.setMode(PullToRefreshBase.Mode.DISABLED);
+        pullToRefreshGridView.getLoadingLayoutProxy().setLastUpdatedLabel(Utils.getCurrentTime());
+        pullToRefreshGridView.getLoadingLayoutProxy().setPullLabel("下拉刷新");
+        pullToRefreshGridView.getLoadingLayoutProxy().setRefreshingLabel("正在刷新");
+        pullToRefreshGridView.getLoadingLayoutProxy().setReleaseLabel("松开刷新");
+        pullToRefreshGridView.setMode(PullToRefreshBase.Mode.BOTH);
+
         gridView = pullToRefreshGridView.getRefreshableView();
         adapter = new SearchShopGridAdapter(getApplicationContext(), lists);
         pullToRefreshGridView.setAdapter(adapter);

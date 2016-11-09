@@ -11,6 +11,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.View;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.jhhy.cuiweitourism.R;
@@ -27,11 +29,18 @@ import com.jhhy.cuiweitourism.utils.SharedPreferencesUtils;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.just.sun.pricecalendar.ToastCommon;
 
-public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedChangeListener {
+public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedChangeListener
+//        implements View.OnClickListener
+{
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private RadioGroup radioGroup;
+    private RadioButton rb1;
+    private RadioButton rb2;
+    private RadioButton rb3;
+    private RadioButton rb4;
+
     private Fragment mContent;
     private Tab1Fragment tab1Fragment;
     //    private Tab1Fragment_3 tab1Fragment_3;
@@ -117,10 +126,18 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
 
     private void setupView() {
         radioGroup = (RadioGroup) findViewById(R.id.tab_menu);
+        rb1 = (RadioButton) findViewById(R.id.tab1);
+        rb2 = (RadioButton) findViewById(R.id.tab2);
+        rb3 = (RadioButton) findViewById(R.id.tab3);
+        rb4 = (RadioButton) findViewById(R.id.tab4);
     }
 
     private void addListener() {
         radioGroup.setOnCheckedChangeListener(this);
+//        rb1.setOnClickListener(this);
+//        rb2.setOnClickListener(this);
+//        rb3.setOnClickListener(this);
+//        rb4.setOnClickListener(this);
     }
 
     private void setDefaultFragment(Bundle savedInstanceState) {
@@ -175,46 +192,92 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
 
     @Override
     public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
-        Fragment to = null;
-        Fragment from = mContent;
+//        if (logged) {
+            Fragment to = null;
+            Fragment from = mContent;
 
-        switch (checkedId) {
-            case R.id.tab1:
-                index = 1;
-                to = tab1Fragment;
-                break;
-            case R.id.tab2:
-                index = 2;
-                if (tab2Fragment_2 == null) {
-                    tab2Fragment_2 = Tab2Fragment_2.newInstance(null, null);
-                }
-                to = tab2Fragment_2;
-                break;
-            case R.id.tab3:
-                index = 3;
-                if (tab3Fragment == null) {
-                    tab3Fragment = Tab3Fragment.newInstance(null, null);
-                }
-                to = tab3Fragment;
-                break;
-            case R.id.tab4:
-                index = 4;
-                if (tab4Fragment2 == null) {
-                    tab4Fragment2 = Tab4Fragment2.newInstance(null);
-                }
-                to = tab4Fragment2;
-                break;
-        }
-        if (mContent != to) {
-            mContent = to;
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction(); //fm.beginTransaction().setCustomAnimations(android.R.anim.fade_in, R.anim.slide_out);
-            if (!to.isAdded()) {    // 先判断是否被add过
-                transaction.hide(from).add(R.id.main_content, to, index + "").commit(); //transaction.hide(from).add(R.id.content_frame, to).commit(); // 隐藏当前的fragment，add下一个到Activity中
-            } else {
-                transaction.hide(from).show(to).commit(); //transaction.hide(from).show(to).commit(); // 隐藏当前的fragment，显示下一个
+            switch (checkedId) {
+                case R.id.tab1:
+                    index = 1;
+                    to = tab1Fragment;
+                    break;
+                case R.id.tab2:
+                    index = 2;
+                    if (tab2Fragment_2 == null) {
+                        tab2Fragment_2 = Tab2Fragment_2.newInstance(null, null);
+                    }
+                    to = tab2Fragment_2;
+                    break;
+                case R.id.tab3:
+                    index = 3;
+                    if (tab3Fragment == null) {
+                        tab3Fragment = Tab3Fragment.newInstance(null, null);
+                    }
+                    to = tab3Fragment;
+                    break;
+                case R.id.tab4:
+                    index = 4;
+                    if (tab4Fragment2 == null) {
+                        tab4Fragment2 = Tab4Fragment2.newInstance(null);
+                    }
+                    to = tab4Fragment2;
+                    break;
             }
-        }
+            if (mContent != to) {
+                mContent = to;
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction(); //fm.beginTransaction().setCustomAnimations(android.R.anim.fade_in, R.anim.slide_out);
+                if (!to.isAdded()) {    // 先判断是否被add过
+                    transaction.hide(from).add(R.id.main_content, to, index + "").commit(); //transaction.hide(from).add(R.id.content_frame, to).commit(); // 隐藏当前的fragment，add下一个到Activity中
+                } else {
+                    transaction.hide(from).show(to).commit(); //transaction.hide(from).show(to).commit(); // 隐藏当前的fragment，显示下一个
+                }
+            }
+//        }else{
+//            ToastUtil.show(getApplicationContext(), "请登录后重试");
+//        }
     }
+
+//    @Override
+//    public void onClick(View view) {
+//        Fragment to = null;
+//        Fragment from = mContent;
+//        switch (view.getId()){
+//            case R.id.tab1:
+//                index = 1;
+//                to = tab1Fragment;
+//                break;
+//            case R.id.tab2:
+//                index = 2;
+//                if (tab2Fragment_2 == null) {
+//                    tab2Fragment_2 = Tab2Fragment_2.newInstance(null, null);
+//                }
+//                to = tab2Fragment_2;
+//                break;
+//            case R.id.tab3:
+//                index = 3;
+//                if (tab3Fragment == null) {
+//                    tab3Fragment = Tab3Fragment.newInstance(null, null);
+//                }
+//                to = tab3Fragment;
+//                break;
+//            case R.id.tab4:
+//                index = 4;
+//                if (tab4Fragment2 == null) {
+//                    tab4Fragment2 = Tab4Fragment2.newInstance(null);
+//                }
+//                to = tab4Fragment2;
+//                break;
+//        }
+//        if (mContent != to) {
+//            mContent = to;
+//            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction(); //fm.beginTransaction().setCustomAnimations(android.R.anim.fade_in, R.anim.slide_out);
+//            if (!to.isAdded()) {    // 先判断是否被add过
+//                transaction.hide(from).add(R.id.main_content, to, index + "").commit(); //transaction.hide(from).add(R.id.content_frame, to).commit(); // 隐藏当前的fragment，add下一个到Activity中
+//            } else {
+//                transaction.hide(from).show(to).commit(); //transaction.hide(from).show(to).commit(); // 隐藏当前的fragment，显示下一个
+//            }
+//        }
+//    }
 
     // 保存当前Fragment的下标,内存重启时调用
     private final String KEY_INDEX = "index";
@@ -269,7 +332,8 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
                             tab1Fragment.getData();
                         }
                         if (tab2Fragment_2 != null) {
-                            tab2Fragment_2.refreshView();
+//                            tab2Fragment_2.refreshView();
+                            tab2Fragment_2 = Tab2Fragment_2.newInstance(null, null);
                         }
                     }
                 } else {

@@ -34,11 +34,15 @@ import com.jhhy.cuiweitourism.popupwindows.InnerTravelPopupWindow;
 import com.jhhy.cuiweitourism.popupwindows.PopupWindowSearchLine;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
+import com.jhhy.cuiweitourism.utils.Utils;
 import com.just.sun.pricecalendar.ToastCommon;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 热门活动列表页
+ */
 public class HotActivityListActivity extends BaseActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
 
     private String TAG = HotActivityListActivity.class.getSimpleName();
@@ -64,7 +68,6 @@ public class HotActivityListActivity extends BaseActivity implements View.OnClic
     private List<PriceArea> listPrices = new ArrayList<>();
 
     private int page = 1;
-    private String fromCityId = "1";
     private String sort = ""; //排序
     private String sortCommit = ""; //排序
     private String day = ""; //行程天数
@@ -77,6 +80,9 @@ public class HotActivityListActivity extends BaseActivity implements View.OnClic
 
     private PhoneBean selectCity; //主页选择的城市
     private String areaId; //城市id
+
+    private boolean refresh = true; //刷新
+    private boolean loadMore; //加载更多
 
     private Handler handler = new Handler(){
         @Override
@@ -159,10 +165,10 @@ public class HotActivityListActivity extends BaseActivity implements View.OnClic
         pullToRefreshListView = (PullToRefreshListView) findViewById(R.id.activity_hot_activity_list_view);
         listView = pullToRefreshListView.getRefreshableView();
         //这几个刷新Label的设置
-        pullToRefreshListView.getLoadingLayoutProxy().setLastUpdatedLabel("lastUpdateLabel");
-        pullToRefreshListView.getLoadingLayoutProxy().setPullLabel("PULLLABLE");
-        pullToRefreshListView.getLoadingLayoutProxy().setRefreshingLabel("refreshingLabel");
-        pullToRefreshListView.getLoadingLayoutProxy().setReleaseLabel("releaseLabel");
+        pullToRefreshListView.getLoadingLayoutProxy().setLastUpdatedLabel(Utils.getCurrentTime());
+        pullToRefreshListView.getLoadingLayoutProxy().setPullLabel("下拉刷新");
+        pullToRefreshListView.getLoadingLayoutProxy().setRefreshingLabel("正在刷新");
+        pullToRefreshListView.getLoadingLayoutProxy().setReleaseLabel("松开刷新");
 
         //上拉、下拉设定
         pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
@@ -171,12 +177,12 @@ public class HotActivityListActivity extends BaseActivity implements View.OnClic
         pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-
+                refresh();
             }
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-
+                loadMore();
             }
         });
 
@@ -184,6 +190,20 @@ public class HotActivityListActivity extends BaseActivity implements View.OnClic
         tvSortDays = (TextView) findViewById(R.id.tv_tab1_hot_activity_list_trip_days);
         tvStartTime = (TextView) findViewById(R.id.tv_tab1_hot_activity_list_start_time);
         tvScreenPrice = (TextView) findViewById(R.id.tv_tab1_hot_activity_list_screen_price);
+    }
+
+    private void refresh() {
+        if (refresh)    return;
+        refresh = true;
+        page = 1;
+        getHotActivityList();
+    }
+
+    private void loadMore() {
+        if (loadMore)   return;
+        loadMore = true;
+        page ++;
+        getHotActivityList();
     }
 
     private void addListener() {
@@ -331,21 +351,46 @@ public class HotActivityListActivity extends BaseActivity implements View.OnClic
         activityBiz.activitiesHotGetInfo(hot, new BizGenericCallback<ArrayList<ActivityHotInfo>>() {
             @Override
             public void onCompletion(GenericResponseModel<ArrayList<ActivityHotInfo>> model) {
-                ArrayList<ActivityHotInfo> array = model.body;
-                //重新加载
-                listFreedom = array;
-                refreshView();
-
-                LogUtil.e(TAG,"activitiesHotGetInfo =" + array.toString());
+                pullToRefreshListView.onRefreshComplete();
+                if ("0001".equals(model.headModel.res_code)){
+                    ToastUtil.show(getApplicationContext(), model.headModel.res_arg);
+                    if (loadMore){
+                        page --;
+                    }
+                }else if ("0000".equals(model.headModel.res_code)){
+                    ArrayList<ActivityHotInfo> array = model.body;
+                    if (array == null || array.size() == 0){
+                        if (loadMore){
+                            page --;
+                        }
+                    } else {
+                        //重新加载
+                        if (refresh) {
+                            refresh = false;
+                            listFreedom = array;
+                            refreshView();
+                        }
+                        if (loadMore) {
+                            loadMore = false;
+                            listFreedom.addAll(array);
+                            adapter.addData(array);
+                        }
+                    }
+                    LogUtil.e(TAG,"activitiesHotGetInfo =" + array.toString());
+                }
                 LoadingIndicator.cancel();
             }
 
             @Override
             public void onError(FetchError error) {
+                pullToRefreshListView.onRefreshComplete();
                 if (error.localReason != null){
                     ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
                 }else{
                     ToastCommon.toastShortShow(getApplicationContext(), null, "与服务器通信异常，请重试");
+                }
+                if (loadMore){
+                    page --;
                 }
                 LogUtil.e(TAG, " activitiesHotGetInfo :" + error.toString());
                 LoadingIndicator.cancel();

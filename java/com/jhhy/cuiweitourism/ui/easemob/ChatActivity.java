@@ -6,6 +6,7 @@ import android.os.Bundle;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.ui.BaseActivity;
 import com.jhhy.cuiweitourism.net.utils.Consts;
+import com.jhhy.cuiweitourism.ui.MainActivity;
 
 
 /**
@@ -24,7 +25,7 @@ public class ChatActivity extends BaseActivity {
 //        Bundle extra = getIntent().getExtras();
         activityInstance = this;
         // 聊天人或群id
-        toChatUsername = "15210656918";//MainActivity.user.getUserPhoneNumber(); //HelpDeskPreferenceUtils.getInstance(this).getSettingCustomerAccount();
+        toChatUsername = MainActivity.user.getUserPhoneNumber();//15210656919/MainActivity.user.getUserPhoneNumber(); //HelpDeskPreferenceUtils.getInstance(this).getSettingCustomerAccount();
         // 可以直接new EaseChatFratFragment使用
         chatFragment = new ChatFragment();
         Intent intent = getIntent();

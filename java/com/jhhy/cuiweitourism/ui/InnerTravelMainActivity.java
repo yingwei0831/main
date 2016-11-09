@@ -83,7 +83,7 @@ public class InnerTravelMainActivity extends BaseActivity implements XScrollView
         mScrollView = (XScrollView)findViewById(R.id.scroll_view);
         mScrollView.setPullRefreshEnable(true);
         mScrollView.setPullLoadEnable(true);
-        mScrollView.setAutoLoadEnable(true);
+        mScrollView.setAutoLoadEnable(false);
         mScrollView.setIXScrollViewListener(this);
         mScrollView.setRefreshTime(Utils.getCurrentTime());
 

@@ -40,8 +40,9 @@ public class FindLinesBiz {
 //{"head":{"code":"Publics_line"},"field":{
 // "startareaid":"2","order":"storeprice desc","day":"5","price":"0,10000",
 // "zcfdate":"2016-8-18","wcfdate":"2016-8-18","page":"1","offset":"10"}}
+    //order: ""—>时间降序，"1"—>价格降序，其它—>价格升序
 
-    public void getLines(final int page, final String fromCityId, final String sort, String day, String price, String earlyTime, String laterTime){
+    public void getLines(final int page, final String fromCityId, final String sort, final String day, final String price, final String earlyTime, final String laterTime){
         if (NetworkUtil.checkNetwork(context)) {
             new Thread() {
                 @Override
@@ -51,7 +52,10 @@ public class FindLinesBiz {
                     Map<String, Object> fieldMap = new HashMap<>();
                     fieldMap.put("startareaid", fromCityId);
                     fieldMap.put("order", sort);
-
+                    fieldMap.put("day", day);
+                    fieldMap.put("price", price);
+                    fieldMap.put("zcfdate", earlyTime);
+                    fieldMap.put("wcfdate", laterTime);
                     fieldMap.put(Consts.KEY_PAGE, Integer.toString(page));
                     fieldMap.put(Consts.KEY_OFFSET, "10");
                     HttpUtils.executeXutils(headMap, fieldMap, findLinesCallback);
@@ -90,6 +94,7 @@ public class FindLinesBiz {
                             travel.setTravelTitle(lineObj.getString(Consts.KEY_TITLE));
                             travel.setTravelPrice(lineObj.getString(Consts.KEY_PRICE));
                             travel.setTravelIconPath(lineObj.getString(Consts.PIC_PATH_LITPIC));
+                            travel.setType(lineObj.getString("txt"));
                             travel.setGroup(lineObj.getString(Consts.KEY_GROUP));
                             listLines.add(travel);
                         }
