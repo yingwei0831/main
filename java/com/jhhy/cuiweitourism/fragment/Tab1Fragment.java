@@ -542,6 +542,7 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
         SharedPreferencesUtils sp = SharedPreferencesUtils.getInstance(getContext());
         selectCity = sp.getCity();
         tvLocationCity.setText(selectCity.getName());
+
     }
 
     private void addListener() {
@@ -736,11 +737,13 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
         if (requestCode == Consts.REQUEST_CODE_SELECT_CITY) { //选择城市
             if (resultCode == Activity.RESULT_OK) {
                 Bundle bundle = data.getExtras();
-                selectCity = (PhoneBean) bundle.getSerializable("city");
-                tvLocationCity.setText(selectCity.getName());
-                //将地址保存到本机
-                SharedPreferencesUtils sp = SharedPreferencesUtils.getInstance(getContext());
-                sp.saveCity(selectCity);
+                selectCity = (PhoneBean) bundle.getSerializable("selectCity");
+                if (selectCity != null) {
+                    tvLocationCity.setText(selectCity.getName());
+                    //将地址保存到本机
+                    SharedPreferencesUtils sp = SharedPreferencesUtils.getInstance(getContext());
+                    sp.saveCity(selectCity);
+                }
             }
 
         }

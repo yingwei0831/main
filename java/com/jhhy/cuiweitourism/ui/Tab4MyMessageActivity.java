@@ -68,13 +68,16 @@ public class Tab4MyMessageActivity extends BaseActivity implements View.OnClickL
         ivTitleLeft = (ImageView) actionBar.getCustomView().findViewById(R.id.title_main_tv_left_location);
 
         pullToRefreshListView = (PullToRefreshListView) findViewById(R.id.listView);
-        pullToRefreshListView.getLoadingLayoutProxy().setLastUpdatedLabel(Utils.getCurrentTime()); //刷新完成，赋值完成时间
-        pullToRefreshListView.getLoadingLayoutProxy().setPullLabel("PULLLABLE");
-        pullToRefreshListView.getLoadingLayoutProxy().setRefreshingLabel("refreshingLabel");
-        pullToRefreshListView.getLoadingLayoutProxy().setReleaseLabel("releaseLabel");
+        pullToRefreshListView.getLoadingLayoutProxy().setLastUpdatedLabel(Utils.getCurrentTime());
+        pullToRefreshListView.getLoadingLayoutProxy().setPullLabel("下拉刷新");
+        pullToRefreshListView.getLoadingLayoutProxy().setRefreshingLabel("正在刷新");
+        pullToRefreshListView.getLoadingLayoutProxy().setReleaseLabel("松开刷新");
         pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
 
         listView = pullToRefreshListView.getRefreshableView();
+        ImageView ivEmpty = (ImageView) findViewById(R.id.iv_empty_view);
+        ivEmpty.setImageResource(R.mipmap.no_message);
+        listView.setEmptyView(ivEmpty);
 
         adapter = new UserMessageListAdapter(getApplicationContext(), mList);
         pullToRefreshListView.setAdapter(adapter);

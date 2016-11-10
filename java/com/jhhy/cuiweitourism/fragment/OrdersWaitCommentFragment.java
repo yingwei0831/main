@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -59,12 +60,12 @@ public class OrdersWaitCommentFragment extends Fragment  implements ArgumentOnCl
                     }
                     if (msg.arg1 == 1){
                         List<Order> listWaitComment = (List<Order>) msg.obj;
-                        if (listWaitComment == null || listWaitComment.size() == 0){
-                            ToastCommon.toastShortShow(getContext(), null, "获取数据为空");
-                        }else{
+//                        if (listWaitComment == null || listWaitComment.size() == 0){
+//                            ToastCommon.toastShortShow(getContext(), null, "获取数据为空");
+//                        }else{
                             lists = listWaitComment;
                             adapter.setData(listWaitComment);
-                        }
+//                        }
                     }else{
                         ToastCommon.toastShortShow(getContext(), null, "获取数据失败");
                     }
@@ -165,6 +166,9 @@ public class OrdersWaitCommentFragment extends Fragment  implements ArgumentOnCl
         pullListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
 
         listView = pullListView.getRefreshableView();
+        ImageView ivEmpty = (ImageView) view.findViewById(R.id.iv_empty_view);
+        ivEmpty.setImageResource(R.mipmap.no_order);
+        listView.setEmptyView(ivEmpty);
 
         adapter = new OrderXListViewAdapter(getContext(), lists, this) {
             /**

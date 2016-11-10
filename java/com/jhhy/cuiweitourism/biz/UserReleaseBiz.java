@@ -88,7 +88,7 @@ public class UserReleaseBiz {
 //                    "ishot": "0"},
                     List<CustomActivity> listRelase = null;
                     JSONArray collecAry = resultObj.getJSONArray(Consts.KEY_BODY);
-                    if (collecAry.length() != 0){
+                    if (collecAry != null){
                         listRelase = new ArrayList<>();
                         for (int i = 0; i < collecAry.length(); i ++){
                             JSONObject actyObj = collecAry.getJSONObject(i);

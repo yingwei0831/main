@@ -69,10 +69,11 @@ public class FlashActivity extends AppCompatActivity implements ILauncherView, V
 
     /**
      * 去往登录页面
+     * 去往主页面
      */
     @Override
     public void gotoMain() {
-        LoginActivity.actionStart(getApplicationContext(), null);
+        MainActivity.actionStart(getApplicationContext(), null);
         finish();
     }
 

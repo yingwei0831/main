@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -177,6 +178,9 @@ public class OrdersWaitPayFragment extends Fragment implements ArgumentOnClick {
         pullListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
 
         listView = pullListView.getRefreshableView();
+        ImageView ivEmpty = (ImageView) view.findViewById(R.id.iv_empty_view);
+        ivEmpty.setImageResource(R.mipmap.no_order);
+        listView.setEmptyView(ivEmpty);
 
         adapter = new OrderXListViewAdapter(getContext(), lists, this) {
             /**

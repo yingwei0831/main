@@ -136,6 +136,8 @@ public class CitySelectionActivity extends BaseActivity implements View.OnClickL
         setContentView(R.layout.activity_city_selection);
         getData();
         edit_search = (EditText) findViewById(R.id.edit_search);
+        edit_search.setHint("北京/beijing");
+
         listView = (PinnedSectionListView) findViewById(R.id.phone_listview);
         letterIndexView = (LetterIndexView) findViewById(R.id.phone_LetterIndexView);
         txt_center = (TextView) findViewById(R.id.phone_txt_center);
@@ -148,6 +150,7 @@ public class CitySelectionActivity extends BaseActivity implements View.OnClickL
         gvHistoryRecord = (GridView) headerView.findViewById(R.id.gv_header_city_selection_record);
         listHistory.add(currentCity);
         gvHistoryAdapter = new CitySelectionGridViewAdapter(getApplicationContext(), listHistory);
+        gvHistoryAdapter.setType(1);
         gvHistoryRecord.setAdapter(gvHistoryAdapter);
         gvHistoryRecord.setSelector(new ColorDrawable(Color.TRANSPARENT));
         //头部数据
@@ -156,6 +159,7 @@ public class CitySelectionActivity extends BaseActivity implements View.OnClickL
             citiesHot.add("海南" + i);
         }
         gvAdapter = new CitySelectionGridViewAdapter(this, citiesHot);
+        gvAdapter.setType(1);
         mGridView.setAdapter(gvAdapter);
         mGridView.setSelector(new ColorDrawable(Color.TRANSPARENT));
         listView.addHeaderView(headerView);
@@ -325,7 +329,7 @@ public class CitySelectionActivity extends BaseActivity implements View.OnClickL
                     ToastCommon.toastShortShow(getApplicationContext(), null, city.getName());
                     Intent intent = new Intent();
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("city", city);
+                    bundle.putSerializable("selectCity", city);
                     intent.putExtras(bundle);
                     setResult(RESULT_OK, intent);
                     finish();
