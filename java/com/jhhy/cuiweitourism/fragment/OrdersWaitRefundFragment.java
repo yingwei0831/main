@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -60,12 +61,12 @@ public class OrdersWaitRefundFragment extends Fragment  implements ArgumentOnCli
                     }
                     if (msg.arg1 == 1){
                         List<Order> listWaitRefund = (List<Order>) msg.obj;
-                        if (listWaitRefund == null || listWaitRefund.size() == 0){
-                            ToastCommon.toastShortShow(getContext(), null, "获取数据为空");
-                        }else{
+//                        if (listWaitRefund == null || listWaitRefund.size() == 0){
+//                            ToastCommon.toastShortShow(getContext(), null, "获取数据为空");
+//                        }else{
                             lists = listWaitRefund;
                             adapter.setData(listWaitRefund);
-                        }
+//                        }
                     }else{
                         ToastCommon.toastShortShow(getContext(), null, "获取数据失败");
                     }
@@ -167,6 +168,9 @@ public class OrdersWaitRefundFragment extends Fragment  implements ArgumentOnCli
         pullListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
 
         listView = pullListView.getRefreshableView();
+        ImageView ivEmpty = (ImageView) view.findViewById(R.id.iv_empty_view);
+        ivEmpty.setImageResource(R.mipmap.no_order);
+        listView.setEmptyView(ivEmpty);
 
         adapter = new OrderXListViewAdapter(getContext(), lists, this) {
             /**

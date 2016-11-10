@@ -168,18 +168,21 @@ public class ClassifyBiz {
                     if (bodyAry != null) {
                         listArea = new ArrayList<>(); //所有地区数据集合
                         for (int i = 0; i < bodyAry.length(); i++) {
+                            LogUtil.e(TAG, bodyAry.length()+"——>大区数据个数 i = " + i);
                             JSONObject areaObj = (JSONObject) bodyAry.get(i);
                             ClassifyArea area = new ClassifyArea();
                             area.setAreaId(areaObj.getString(Consts.KEY_ID));
                             area.setAreaName(areaObj.getString(Consts.KEY_KIND_NAME)); //左侧地区名字
                             areaNameList.add(areaObj.getString(Consts.KEY_KIND_NAME));
+                            LogUtil.e(TAG, "left name = " + areaObj.getString(Consts.KEY_KIND_NAME));
                             JSONArray provinceAry = areaObj.getJSONArray(Consts.KEY_SON);
                             List<ClassifyArea> listProvince = null; //右侧省市列表
                             if (provinceAry != null) {
                                 listProvince = new ArrayList<>();
                                 for (int j = 0; j < provinceAry.length(); j++) {
+                                    LogUtil.e(TAG, provinceAry.length()+"——>省市数据个数 j = " + j);
                                     JSONObject provinceObj = provinceAry.getJSONObject(j);
-                                    LogUtil.e(TAG, provinceObj.toString());
+//                                    LogUtil.e(TAG, provinceObj.toString());
                                     ClassifyArea province = new ClassifyArea();
                                     province.setAreaId(provinceObj.getString(Consts.KEY_ID));
                                     province.setAreaName(provinceObj.getString(Consts.KEY_KIND_NAME)); //右侧城市名字
@@ -189,6 +192,7 @@ public class ClassifyBiz {
                                 area.setListProvince(listProvince);
                             }
                             listArea.add(area);
+                            LogUtil.e(TAG, "right listAreaItem = " + area);
                         }
                     }
                     List[] array = new List[2];

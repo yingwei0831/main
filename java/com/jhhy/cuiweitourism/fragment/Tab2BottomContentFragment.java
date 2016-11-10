@@ -143,6 +143,7 @@ public class Tab2BottomContentFragment extends Fragment implements IPagerScroll,
                 } else {
                     listTop = false;
                 }
+                LogUtil.e(TAG, "listTop = " + listTop);
             }
         });
 
@@ -158,6 +159,7 @@ public class Tab2BottomContentFragment extends Fragment implements IPagerScroll,
                 }else{
                     gridTop = false;
                 }
+                LogUtil.e(TAG, "gridTop = " + gridTop);
             }
         });
 
@@ -166,6 +168,7 @@ public class Tab2BottomContentFragment extends Fragment implements IPagerScroll,
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 listOnTouch = true;
                 gridOnTouch = false;
+                LogUtil.e(TAG, "listOnTouch = " + listOnTouch +", gridOnTouch = " + gridOnTouch);
                 return false;
             }
         });
@@ -174,6 +177,7 @@ public class Tab2BottomContentFragment extends Fragment implements IPagerScroll,
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 gridOnTouch = true;
                 listOnTouch = false;
+                LogUtil.e(TAG, "listOnTouch = " + listOnTouch +", gridOnTouch = " + gridOnTouch);
                 return false;
             }
         });

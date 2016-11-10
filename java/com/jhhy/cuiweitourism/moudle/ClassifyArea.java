@@ -53,7 +53,7 @@ public class ClassifyArea {
         return "ClassifyArea{" +
                 "areaId='" + areaId + '\'' +
                 ", areaName ='" + areaName + '\'' +
-                ", listProvince =" + Arrays.toString(listProvince.toArray()) +
+                ", listProvince =" + ((listProvince == null || listProvince.size() == 0) ? 0 : Arrays.toString(listProvince.toArray()) )+
                 '}';
     }
 }

@@ -16,6 +16,8 @@ import java.util.List;
  */
 public class CitySelectionGridViewAdapter extends MyBaseAdapter {
 
+    private int type;
+
     public CitySelectionGridViewAdapter(Context ct, List list) {
         super(ct, list);
     }
@@ -32,9 +34,18 @@ public class CitySelectionGridViewAdapter extends MyBaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        TrainStationInfo info = (TrainStationInfo) getItem(position);
-        holder.tvCityName.setText(info.getName());
+        if (type == 1){
+            String name = (String) getItem(position);
+            holder.tvCityName.setText(name);
+        }else {
+            TrainStationInfo info = (TrainStationInfo) getItem(position);
+            holder.tvCityName.setText(info.getName());
+        }
         return convertView;
+    }
+
+    public void setType(int type){
+        this.type = type;
     }
 
     class ViewHolder {

@@ -171,24 +171,24 @@ public class Tab4Fragment2 extends Fragment implements View.OnClickListener {
                 case R.id.tv_user_comment: //我的评论
                     Tab4MyCommentActivity.actionStart(getContext(), null);
                     break;
-                case R.id.tv_user_collection:
+                case R.id.tv_user_collection: //我的收藏
                     Intent intentColl = new Intent(getContext(), Tab4MyCollectionActivity.class);
                     startActivity(intentColl);
                     break;
-                case R.id.tv_user_release:
+                case R.id.tv_user_release: //我的发布
                     Intent intentRele = new Intent(getContext(), Tab4MyReleaseActivity.class);
                     startActivity(intentRele);
                     break;
                 case R.id.title_main_iv_right_telephone: //编辑用户信息
                 case R.id.tv_user_information:
                     Intent intentInfo = new Intent(getContext(), Tab4UserInfoActivity.class);
-                    startActivity(intentInfo);
+                    startActivityForResult(intentInfo, VIEW_USER_INFO);
                     break;
-                case R.id.tv_user_security:
+                case R.id.tv_user_security: //账户安全
                     Intent intentSec = new Intent(getContext(), Tab4AccountSecurityActivity.class);
                     startActivityForResult(intentSec, LOGIN_OUT);
                     break;
-                case R.id.tv_user_authentication:
+                case R.id.tv_user_authentication: //账户认证
                     Intent intentAut = new Intent(getContext(), Tab4AccountCertificationActivity.class);
                     startActivity(intentAut);
                     break;
@@ -203,6 +203,7 @@ public class Tab4Fragment2 extends Fragment implements View.OnClickListener {
     }
 
     private final int LOGIN_OUT = 6952; //是否登出
+    private final int VIEW_USER_INFO = 6953; //查看用户信息，有可能修改用户信息，比如昵称
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -211,6 +212,9 @@ public class Tab4Fragment2 extends Fragment implements View.OnClickListener {
             if (requestCode == LOGIN_OUT){
                 gotoLogin();
             }
+        }
+        if (requestCode == VIEW_USER_INFO){
+            tvUserName.setText(MainActivity.user.getUserNickName());
         }
     }
 

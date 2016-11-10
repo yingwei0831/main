@@ -13,6 +13,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -66,12 +67,12 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
                         ToastCommon.toastShortShow(getContext(), null, "获取失败");
                     } else {
                         List<Order> listNew = (List<Order>) msg.obj;
-                        if (listNew == null || listNew.size() == 0) {
-                            ToastCommon.toastShortShow(getContext(), null, "没有数据");
-                        }else {
+//                        if (listNew == null || listNew.size() == 0) {
+//                            ToastCommon.toastShortShow(getContext(), null, "没有数据");
+//                        }else {
                             lists = listNew;
                             adapter.setData(lists);
-                        }
+//                        }
                     }
                     break;
                 case Consts.MESSAGE_ORDER_CANCEL: //取消订单
@@ -186,6 +187,9 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
         pullListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
 
         listView = pullListView.getRefreshableView();
+        ImageView ivEmpty = (ImageView) view.findViewById(R.id.iv_empty_view);
+        ivEmpty.setImageResource(R.mipmap.no_order);
+        listView.setEmptyView(ivEmpty);
 
         adapter = new OrderXListViewAdapter(getContext(), lists, this) {
             @Override

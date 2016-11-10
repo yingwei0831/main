@@ -26,6 +26,7 @@ import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
+import com.just.sun.pricecalendar.ToastCommon;
 import com.ns.fhvp.IPagerScroll;
 
 import java.util.ArrayList;
@@ -60,26 +61,32 @@ public class Tab2BottomContentFragment2 extends Fragment implements IPagerScroll
             switch (msg.what){
                 case Consts.MESSAGE_CLASSIFY_OUT:
                     LoadingIndicator.cancel();
-                    if(0 == msg.arg1){
-                        ToastUtil.show(getContext(), "获取数据失败");
-                    }else if(1 == msg.arg1) {
+                    if(1 == msg.arg1){
                         List[] array = (List[]) msg.obj;
                         if(array != null) {
                             listLeft = array[1];
                             listRight = array[0];
-                            adapterLeft.setData(listLeft);
-                            listView.setSelection(0);
-                            adapterRight.setData(listRight.get(0).getListProvince());
+                            LogUtil.e(TAG, "数据 left: " + listLeft);
+                            LogUtil.e(TAG, "数据 right：" + listRight);
+                            if (listLeft.size() > 0 && listRight.size() > 0) {
+                                adapterLeft.setData(listLeft);
+                                listView.setSelection(0);
+                                adapterRight.setData(listRight.get(0).getListProvince());
 
-                            handler.postDelayed(new Runnable() {
-                                @Override public void run() {
-                                    listView.performItemClick(listView.getAdapter().getView(0, null, null), 0, listView.getAdapter().getItemId(0));
-                                }
-                            }, 1000);
-
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        listView.performItemClick(listView.getAdapter().getView(0, null, null), 0, listView.getAdapter().getItemId(0));
+                                    }
+                                }, 1000);
+                            }else{
+                                ToastCommon.toastShortShow(getContext(), null, "没有数据可展示");
+                            }
                         }else{
                             ToastUtil.show(getContext(), "没有分类数据");
                         }
+                    }else{
+                        ToastUtil.show(getContext(), "获取数据失败");
                     }
                     break;
                 case Consts.NET_ERROR:
@@ -144,6 +151,7 @@ public class Tab2BottomContentFragment2 extends Fragment implements IPagerScroll
                 } else {
                     listTop = false;
                 }
+                LogUtil.e(TAG, "listTop = " + listTop);
             }
         });
 
@@ -159,6 +167,7 @@ public class Tab2BottomContentFragment2 extends Fragment implements IPagerScroll
                 }else{
                     gridTop = false;
                 }
+                LogUtil.e(TAG, "gridTop = " + gridTop);
             }
         });
 
@@ -167,6 +176,7 @@ public class Tab2BottomContentFragment2 extends Fragment implements IPagerScroll
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 listOnTouch = true;
                 gridOnTouch = false;
+                LogUtil.e(TAG, "listOnTouch = " + listOnTouch +", gridOnTouch = " + gridOnTouch);
                 return false;
             }
         });
@@ -175,6 +185,7 @@ public class Tab2BottomContentFragment2 extends Fragment implements IPagerScroll
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 gridOnTouch = true;
                 listOnTouch = false;
+                LogUtil.e(TAG, "listOnTouch = " + listOnTouch +", gridOnTouch = " + gridOnTouch);
                 return false;
             }
         });

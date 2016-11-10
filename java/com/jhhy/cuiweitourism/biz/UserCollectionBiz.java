@@ -119,10 +119,9 @@ public class UserCollectionBiz {
 //    {"head":{"res_code":"0000","res_msg":"success","res_arg":"获取成功"},"body":
 // [{"id":"7","memberid":"6","typeid":"1","productaid":"13","addtime":"1473318267","title":"这是测试的线路这是测试的线路这是测试的线路",
 // "litpic":"http:\/\/cwly.taskbees.cn:8083\/uploads\/2016\/0607\/f1a7e360b659d4dbf6f40e133ffe5d20.jpg","price":"3500"}]}
-                    List<Collection> listCollection = null;
+                    List<Collection> listCollection = new ArrayList<>();
                     JSONArray collecAry = resultObj.getJSONArray(Consts.KEY_BODY);
-                    if (collecAry.length() != 0){
-                        listCollection = new ArrayList<>();
+                    if (collecAry != null){
                         for (int i = 0; i < collecAry.length(); i ++){
                             JSONObject colObj = collecAry.getJSONObject(i);
                             Collection collection = new Collection();

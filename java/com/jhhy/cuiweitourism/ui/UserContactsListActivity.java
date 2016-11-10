@@ -75,7 +75,7 @@ public class UserContactsListActivity extends BaseActivity implements AdapterVie
 
     private void getData() {
         ContactsBiz biz = new ContactsBiz(getApplicationContext(), handler);
-        biz.getContacts("1"); //MainActivity.user.getUserId()
+        biz.getContacts(MainActivity.user.getUserId()); //
     }
 
     private void addListener() {

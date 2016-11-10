@@ -5,6 +5,7 @@ import android.os.Message;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ import com.jhhy.cuiweitourism.biz.UserCollectionBiz;
 import com.jhhy.cuiweitourism.moudle.Collection;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
+import com.jhhy.cuiweitourism.utils.Utils;
 import com.just.sun.pricecalendar.ToastCommon;
 
 import java.util.ArrayList;
@@ -56,14 +58,14 @@ public class Tab4MyCollectionActivity extends BaseActivity implements View.OnCli
                     if (msg.arg1 == 1){
                         List<Collection> newlists = (List<Collection>) msg.obj;
                         LogUtil.e(TAG, "newlists.size = " + newlists.size()+", list = " + newlists );
-                        if (newlists == null || newlists.size() == 0){
-                            LogUtil.e(TAG, "if ----- newlists = " + newlists );
-                            ToastCommon.toastShortShow(getApplicationContext(), null, "获取收藏数据为空");
-                        } else {
+//                        if (newlists == null || newlists.size() == 0){
+//                            LogUtil.e(TAG, "if ----- newlists = " + newlists );
+//                            ToastCommon.toastShortShow(getApplicationContext(), null, "获取收藏数据为空");
+//                        } else {
                             LogUtil.e(TAG, "else ----- newlists = " + newlists );
                             lists = newlists;
                             adapter.setData(newlists);
-                        }
+//                        }
                     }else{
                         ToastCommon.toastShortShow(getApplicationContext(), null, String.valueOf(msg.obj));
                     }
@@ -83,7 +85,7 @@ public class Tab4MyCollectionActivity extends BaseActivity implements View.OnCli
 
     private void getData() {
         UserCollectionBiz biz = new UserCollectionBiz(getApplicationContext(), handler);
-        biz.getMyCollection("1"); //MainActivity.user.getUserId()
+        biz.getMyCollection(MainActivity.user.getUserId()); //MainActivity.user.getUserId()
     }
 
     private void setupView() {
@@ -100,13 +102,16 @@ public class Tab4MyCollectionActivity extends BaseActivity implements View.OnCli
         btnDelete = (Button) findViewById(R.id.btn_collection_delete);
 
         pullListView = (PullToRefreshListView) findViewById(R.id.xlistview_my_collection);
-        pullListView.getLoadingLayoutProxy().setLastUpdatedLabel("lastUpdateLabel");
-        pullListView.getLoadingLayoutProxy().setPullLabel("PULLLABLE");
-        pullListView.getLoadingLayoutProxy().setRefreshingLabel("refreshingLabel");
-        pullListView.getLoadingLayoutProxy().setReleaseLabel("releaseLabel");
+        pullListView.getLoadingLayoutProxy().setLastUpdatedLabel(Utils.getCurrentTime());
+        pullListView.getLoadingLayoutProxy().setPullLabel("下拉刷新");
+        pullListView.getLoadingLayoutProxy().setRefreshingLabel("正在刷新");
+        pullListView.getLoadingLayoutProxy().setReleaseLabel("松开刷新");
         pullListView.setMode(PullToRefreshBase.Mode.BOTH);
 
         listView = pullListView.getRefreshableView();
+        ImageView ivEmpty = (ImageView) findViewById(R.id.iv_empty_view);
+        ivEmpty.setImageResource(R.mipmap.no_collection);
+        listView.setEmptyView(ivEmpty);
 
         adapter = new UserCollectionListAdapter(getApplicationContext(), lists) {
             @Override

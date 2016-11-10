@@ -75,6 +75,9 @@ public class Tab4MyCommentActivity extends BaseActivity implements View.OnClickL
         pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
 
         listView = pullToRefreshListView.getRefreshableView();
+        ImageView ivEmpty = (ImageView) findViewById(R.id.iv_empty_view);
+        ivEmpty.setImageResource(R.mipmap.no_comment);
+        listView.setEmptyView(ivEmpty);
 
         adapter = new UserCommentListAdapter(getApplicationContext(), mList);
         pullToRefreshListView.setAdapter(adapter);
