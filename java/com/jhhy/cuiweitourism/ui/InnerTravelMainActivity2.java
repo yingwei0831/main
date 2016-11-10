@@ -125,18 +125,6 @@ public class InnerTravelMainActivity2 extends BaseActivity implements XScrollVie
     }
 
     private void setupView() {
-//        for (int i = 0; i < 11; i++){
-//            Travel travel = new Travel();
-//            travel.setTravelName("北京" + i);
-//            listHotDestination.add("北京" + i);
-//        }
-
-//        for (int i = 20; i < 22; i++){
-//            CityRecommend city = new CityRecommend();
-//            city.setCityName("北京" + i);
-//            listHotRecommend.add(city);
-//        }
-
         xScrollView = (XScrollView)findViewById(R.id.fhvp_header);
         xScrollView.setPullRefreshEnable(true);
         xScrollView.setPullLoadEnable(false);
@@ -155,7 +143,6 @@ public class InnerTravelMainActivity2 extends BaseActivity implements XScrollVie
 //            gvHotRecommend.setAdapter(new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, listHotRecommend));
             hotDestAdapter = new HotDestinationAdapter(getApplicationContext(), listHotDestination);
             gvHotDestination.setAdapter(hotDestAdapter);
-
 
             hotRecomAdapter = new HotRecommendGridViewAdapter(getApplicationContext(), listHotRecommend);
             gvHotRecommend.setAdapter(hotRecomAdapter);

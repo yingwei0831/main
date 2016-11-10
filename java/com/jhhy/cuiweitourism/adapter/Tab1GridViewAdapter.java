@@ -38,6 +38,10 @@ public class Tab1GridViewAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public void addData(List<Travel> list){
+        this.mLists.addAll(list);
+        notifyDataSetChanged();
+    }
 //    public void setArgumentOnClick(ArgumentOnClick listener){
 //        this.argument = listener;
 //    }

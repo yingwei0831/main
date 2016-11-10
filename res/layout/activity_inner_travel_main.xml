@@ -4,9 +4,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include
-        android:id="@+id/layout_inner_travel_main_title"
-        layout="@layout/title_tab1_inner_travel" />
+    <!--<include-->
+    <!--android:id="@+id/layout_inner_travel_main_title"-->
+    <!--layout="@layout/title_tab1_inner_travel" />-->
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -24,7 +24,6 @@
             android:layout_height="wrap_content"
             android:background="@android:color/white"
             android:orientation="horizontal"
-
             android:visibility="gone">
 
             <LinearLayout
@@ -34,6 +33,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/tv_travel_main_indicator_top_follow"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -43,6 +43,7 @@
                     android:textColor="@color/colorTab1RecommendForYouArgument" />
 
                 <View
+                    android:id="@+id/view_travel_main_indicator_top_follow"
                     android:layout_width="match_parent"
                     android:layout_height="4dp"
                     android:background="@color/colorTab1RecommendForYouArgument" />
@@ -55,6 +56,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/tv_travel_main_indicator_top_freedom"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -64,6 +66,7 @@
                     android:textColor="@android:color/black" />
 
                 <View
+                    android:id="@+id/view_travel_main_indicator_top_freedom"
                     android:layout_width="match_parent"
                     android:layout_height="4dp"
                     android:background="@color/colorTab1RecommendForYouArgument"

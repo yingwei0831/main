@@ -4,7 +4,7 @@
     android:layout_height="40dp"
     >
 
-    <EditText
+    <TextView
         android:id="@+id/et_search_key_words"
         android:layout_toLeftOf="@+id/title_search_iv_right_telephone"
         android:layout_width="match_parent"

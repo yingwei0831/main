@@ -4,6 +4,38 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <include layout="@layout/search_bar_simple_out"/>
+
+    <com.jhhy.cuiweitourism.view.MyScrollView
+        android:id="@+id/viewflipper_myScrollview"
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:visibility="visible">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="140dp">
+
+            <ViewFlipper
+                android:id="@+id/viewflipper"
+                android:layout_width="match_parent"
+                android:layout_height="140dp">
+
+            </ViewFlipper>
+
+            <LinearLayout
+                android:id="@+id/layout_indicator_point"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingBottom="2dp" />
+
+        </FrameLayout>
+
+    </com.jhhy.cuiweitourism.view.MyScrollView>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -11,16 +43,10 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:visibility="visible" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@android:color/white"
             android:orientation="vertical"
-            android:paddingBottom="16dp"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:paddingTop="10dp">
@@ -36,6 +62,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:paddingBottom="4dp"
                 android:horizontalSpacing="10dp"
                 android:numColumns="4"
                 android:verticalSpacing="10dp" />
@@ -59,9 +86,11 @@
                 android:text="热门推荐" />
 
             <TextView
+                android:id="@+id/tv_hot_recommend_exchange"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
+                android:padding="6dp"
                 android:text="换一批" />
 
             <com.jhhy.cuiweitourism.view.MyGridView

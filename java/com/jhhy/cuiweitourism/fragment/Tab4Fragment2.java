@@ -30,11 +30,6 @@ import com.jhhy.cuiweitourism.ui.Tab4UserInfoActivity;
 import com.jhhy.cuiweitourism.ui.UserContactsListActivity;
 import com.just.sun.pricecalendar.ToastCommon;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link Tab4Fragment2#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class Tab4Fragment2 extends Fragment implements View.OnClickListener {
 
     private String TAG = Tab4Fragment2.class.getSimpleName();

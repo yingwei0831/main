@@ -198,7 +198,10 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.InnerTravelMainActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/ActionBarTheme"
+            android:launchMode="singleTop"
+            android:windowSoftInputMode="stateHidden|adjustResize"/>
         <!-- <activity android:name=".ui.OutsideTravelMainActivity" /> -->
         <activity
             android:name=".ui.StartActivityEditActivity"

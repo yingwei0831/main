@@ -44,6 +44,7 @@ import com.jhhy.cuiweitourism.ui.HotActivityListActivity;
 import com.jhhy.cuiweitourism.ui.HotelMainActivity;
 import com.jhhy.cuiweitourism.ui.InnerActivity4;
 import com.jhhy.cuiweitourism.ui.InnerTravelDetailActivity;
+import com.jhhy.cuiweitourism.ui.InnerTravelMainActivity;
 import com.jhhy.cuiweitourism.ui.MainActivity;
 import com.jhhy.cuiweitourism.ui.PersonalizedCustomActivity;
 import com.jhhy.cuiweitourism.ui.PlaneMainActivity;
@@ -590,12 +591,14 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
                 case R.id.tv_tab1_inner_travel: //国内游
                     Bundle bundle = new Bundle();
                     bundle.putInt("type", 1);
-                    InnerActivity4.actionStart(getContext(), bundle);
+                    bundle.putSerializable("selectCity", selectCity);
+//                    InnerActivity4.actionStart(getContext(), bundle);
+                    InnerTravelMainActivity.actionStart(getContext(), bundle);
                     break;
                 case R.id.tv_tab1_outside: //出境游
                     Bundle bundleOut = new Bundle();
                     bundleOut.putInt("type", 2);
-                    InnerActivity4.actionStart(getContext(), bundleOut);
+                    InnerTravelMainActivity.actionStart(getContext(), bundleOut);
                     break;
                 case R.id.tv_tab1_plane_ticket: //飞机票
                     Bundle bundlePlane = new Bundle();
@@ -650,7 +653,9 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
                     refresh = true;
                     changeIndicator(0);
                     if (lists != null && lists.size() != 0) {
-                        lists = lists.subList(0, 10);
+                        if (lists.size() > 10) {
+                            lists = lists.subList(0, 10);
+                        }
                         adapter.setData(lists);
                         LogUtil.e(TAG, "indicator = 全部, size = " + lists.size());
                         return;
@@ -666,7 +671,9 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
                     refresh = true;
                     changeIndicator(1);
                     if (listsInner != null && listsInner.size() != 0) {
-                        listsInner = listsInner.subList(0, 10);
+                        if (listsInner.size() > 10) {
+                            listsInner = listsInner.subList(0, 10);
+                        }
                         adapter.setData(listsInner);
                         LogUtil.e(TAG, "indicator = 国内游, size = " + listsInner.size());
                         return;
@@ -681,7 +688,9 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
                     refresh = true;
                     changeIndicator(2);
                     if (listsOutside != null && listsOutside.size() != 0) {
-                        listsOutside = listsOutside.subList(0, 10);
+                        if (listsOutside.size() > 10) {
+                            listsOutside = listsOutside.subList(0, 10);
+                        }
                         adapter.setData(listsOutside);
                         LogUtil.e(TAG, "indicator = 国外游，size = " + listsOutside.size());
                         return;
@@ -698,7 +707,9 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
                     refresh = true;
                     changeIndicator(3);
                     if (listsNearby != null && listsNearby.size() != 0) {
-                        listsNearby = listsNearby.subList(0, 10);
+                        if (listsNearby.size() > 10) {
+                            listsNearby = listsNearby.subList(0, 10);
+                        }
                         adapter.setData(listsNearby);
                         LogUtil.e(TAG, "indicator = 周边游, size = " + listsNearby.size());
                         return;

@@ -173,6 +173,8 @@ public class SearchRouteActivity extends BaseActivity implements View.OnClickLis
         tvTitleTop.setText(selectCity.getName());
         ivTitleLeft = (ImageView) findViewById(R.id.title_main_tv_left_location);
 
+        TextView tvSearch = (TextView) findViewById(R.id.et_search_key_words);
+        tvSearch.setOnClickListener(this);
         layout = findViewById(R.id.activity_search_route_list);
 
         pullToRefreshListView = (PullToRefreshListView) findViewById(R.id.activity_search_route_list_view);
@@ -263,6 +265,11 @@ public class SearchRouteActivity extends BaseActivity implements View.OnClickLis
     @Override
     public void onClick(View view) {
         switch (view.getId()){
+            case R.id.et_search_key_words:
+                Bundle bundleSearch = new Bundle();
+                bundleSearch.putSerializable("selectCity", selectCity);
+                SearchActivity.actionStart(getApplicationContext(), bundleSearch);
+                break;
             case R.id.title_main_tv_left_location:
                 finish();
                 break;

@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.biz.CheckCodeBiz;
+import com.jhhy.cuiweitourism.biz.LoginBiz;
 import com.jhhy.cuiweitourism.biz.RegisterBiz;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
@@ -55,7 +56,6 @@ public class FindPasswordActivity extends BaseActivity implements View.OnClickLi
                     }
                     break;
                 case Consts.MESSAGE_CHECK_CODE:
-
                     ToastUtil.show(getApplicationContext(), String.valueOf(msg.obj));
                     break;
                 case Consts.NET_ERROR:
@@ -63,6 +63,16 @@ public class FindPasswordActivity extends BaseActivity implements View.OnClickLi
                     break;
                 case Consts.NET_ERROR_SOCKET_TIMEOUT:
                     ToastUtil.show(getApplicationContext(), "与服务器链接超时，请重试");
+                    break;
+                case -2:
+                    ToastUtil.show(getApplicationContext(), "与服务器通信异常，请重试");
+                    break;
+                case Consts.MESSAGE_FIND_PWD:
+                    ToastUtil.show(getApplicationContext(), String.valueOf(msg.obj));
+                    if (msg.arg1 == 1){
+                        setResult(RESULT_OK);
+                        finish();
+                    }
                     break;
             }
 
@@ -81,6 +91,16 @@ public class FindPasswordActivity extends BaseActivity implements View.OnClickLi
     private void setupView() {
         tvTitle = (TextView) findViewById(R.id.tv_title_simple_title);
         tvTitle.setText(getString(R.string.activity_find_password_title));
+        TextView tvright = (TextView) findViewById(R.id.tv_title_simple_title_right);
+        tvright.setVisibility(View.GONE);
+        TextView tvleft = (TextView) findViewById(R.id.tv_title_simple_title_left);
+        tvleft.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
         tvGetCheckCode = (TextView) findViewById(R.id.tv_activity_find_password_get_check_code);
 
         etMobile = (EditText) findViewById(R.id.et_activity_find_password_phone_number);
@@ -168,8 +188,8 @@ public class FindPasswordActivity extends BaseActivity implements View.OnClickLi
         }
 //        {"head":{"code":"User_register"},"field":{"mobile":"15210656911","password":"admin123","verify":"cwly","codes":"CWuhvle"}}
         LoadingIndicator.show(FindPasswordActivity.this, getString(R.string.http_notice));
-        RegisterBiz biz = new RegisterBiz(getApplicationContext(), handler);
-        biz.register(mobile, password, checkCode, "CWuhvle");
+        LoginBiz biz = new LoginBiz(getApplicationContext(), handler);
+        biz.findPassword(mobile, password, checkCode);
     }
 
 }

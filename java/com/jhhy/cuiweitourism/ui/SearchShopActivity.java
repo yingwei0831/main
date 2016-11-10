@@ -187,6 +187,9 @@ public class SearchShopActivity extends BaseActivity implements View.OnClickList
         tvTitle.setText(getString(R.string.tab1_shop_title));
         ivTitleLeft = (ImageView) actionBar.getCustomView().findViewById(R.id.title_main_tv_left_location);
 
+        TextView textView = (TextView) findViewById(R.id.edit_search);
+        textView.setOnClickListener(this);
+
         pullToRefreshGridView = (PullToRefreshGridView) findViewById(R.id.pull_gridview);
         pullToRefreshGridView.getLoadingLayoutProxy().setLastUpdatedLabel(Utils.getCurrentTime());
         pullToRefreshGridView.getLoadingLayoutProxy().setPullLabel("下拉刷新");
@@ -213,6 +216,11 @@ public class SearchShopActivity extends BaseActivity implements View.OnClickList
         switch (view.getId()){
             case R.id.title_main_tv_left_location:
                 finish();
+                break;
+            case R.id.edit_search:
+                Bundle bundleSearch = new Bundle();
+//                bundleSearch.putSerializable("selectCity", selectCity);
+                SearchActivity.actionStart(getApplicationContext(), bundleSearch);
                 break;
         }
     }

@@ -3,82 +3,249 @@ package com.jhhy.cuiweitourism.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.ViewFlipper;
 
 import com.jhhy.cuiweitourism.ArgumentOnClick;
 import com.jhhy.cuiweitourism.R;
+import com.jhhy.cuiweitourism.adapter.HotDestinationAdapter;
 import com.jhhy.cuiweitourism.adapter.HotDestinationGridViewAdapter;
 import com.jhhy.cuiweitourism.adapter.HotRecommendGridViewAdapter;
 import com.jhhy.cuiweitourism.adapter.Tab1GridViewAdapter;
+import com.jhhy.cuiweitourism.biz.ExchangeBiz;
+import com.jhhy.cuiweitourism.biz.InnerTravelMainBiz;
+import com.jhhy.cuiweitourism.circleviewpager.ViewFactory;
+import com.jhhy.cuiweitourism.moudle.ADInfo;
 import com.jhhy.cuiweitourism.moudle.CityRecommend;
+import com.jhhy.cuiweitourism.moudle.HotDestination;
+import com.jhhy.cuiweitourism.moudle.PhoneBean;
 import com.jhhy.cuiweitourism.moudle.Travel;
+import com.jhhy.cuiweitourism.net.biz.ForeEndActionBiz;
+import com.jhhy.cuiweitourism.net.models.FetchModel.ForeEndAdvertise;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.ForeEndAdvertisingPositionInfo;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
+import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.Consts;
+import com.jhhy.cuiweitourism.net.utils.LogUtil;
+import com.jhhy.cuiweitourism.ui.easemob.EasemobLoginActivity;
+import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.jhhy.cuiweitourism.utils.Utils;
 import com.jhhy.cuiweitourism.view.MyGridView;
+import com.jhhy.cuiweitourism.view.MyScrollView;
+import com.just.sun.pricecalendar.ToastCommon;
 import com.markmao.pulltorefresh.widght.XScrollView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class InnerTravelMainActivity extends BaseActivity implements XScrollView.IXScrollViewListener, GestureDetector.OnGestureListener, View.OnClickListener, ArgumentOnClick {
+public class InnerTravelMainActivity extends BaseActionBarActivity implements XScrollView.IXScrollViewListener, GestureDetector.OnGestureListener, View.OnClickListener, ArgumentOnClick, View.OnTouchListener {
+
+    private String TAG = InnerTravelMainActivity.class.getSimpleName();
 
     private MyGridView gvHotDestination; //热门目的地
-    private HotDestinationGridViewAdapter gvHotDestAdapter;
-    private List<String> citiesHotDest;
-
+    private List<HotDestination> listHotDestination = new ArrayList<>();
+    private HotDestinationAdapter hotDestAdapter;
+//
     private MyGridView gvHotRecommend; //热门推荐
-    private HotRecommendGridViewAdapter gvHotRecomAdapter;
-    private List<CityRecommend> citiesHotRecom;
+    private List<CityRecommend> listHotRecommend = new ArrayList<>();
+    private HotRecommendGridViewAdapter hotRecomAdapter;
+    private TextView tvHotRecommendExchange; //热门推荐，换一换
 
-    private List<String> titles = new ArrayList<>();
-
+//    private List<String> titles = new ArrayList<>();
 
     private GestureDetector mGestureDetector; // mScrollView的手势
     private LinearLayout layoutIndicatorTop; //顶部悬浮导航栏
-    private RelativeLayout layoutTitle; //顶部Title
+    private TextView tvIndicatorTopFollow; //顶部跟团游
+    private View viewIndicatorTopFollow;
+    private TextView tvIndicatorTopFreedom; //顶部自由游
+    private View viewIndicatorTopFreedom;
+//    private RelativeLayout layoutTitle; //顶部Title
     private XScrollView mScrollView;
     private View content;
+
     private LinearLayout layoutIndicator;//底部GridView的导航栏(跟团游，自由游)
-    private TextView tvFollow; //跟团游导航按钮
-    private TextView tvFreedom; //自由游导航按钮
-    private View viewFollow; //绿色条
-    private View viewFreedom; //绿色条
-    private MyGridView gridViewFollow; //底部Gridview
+    private TextView tvFollow; //跟团游,导航按钮
+    private TextView tvFreedom; //自由游,导航按钮
+    private View viewFollow; //绿色条,跟团游
+    private View viewFreedom; //绿色条,自由游
+    private MyGridView gridViewFollow; //底部Gridview:自由游/跟团游数据
     private Tab1GridViewAdapter gvAdapter;
-    private List<Travel> listsFollow = new ArrayList<>();
-    private List<Travel> listsFreedom = new ArrayList<>();
+
+    private List<Travel> listsFollow = new ArrayList<>(); //跟团游
+    private List<Travel> listsFreedom = new ArrayList<>(); //自由游
+    private List<Travel> lists = new ArrayList<>(); //填充数据使用
+
+    private int type; // 1：国内游，2：出境游
+    private PhoneBean selectCity;
+
+    private int page = 1; //此处有分页
+    private int attr = 1; //1:跟团游，142:自由游
+    private boolean refresh = true;
+    private boolean loadMore;
+
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case Consts.MESSAGE_INNER_FOLLOW: //attr: 1—>跟团游，142—>自由游
+                    if (msg.arg1 == 1){
+                        List<Travel> follow = (List<Travel>) msg.obj;
+                        if (follow == null || follow.size() == 0){
+                            ToastUtil.show(getApplicationContext(), "获取数据为空");
+                            resetValue();
+                        }else{
+                            if (refresh){
+                                refresh = false;
+                                if (attr == 1) {
+                                    listsFollow = follow;
+                                    lists = listsFollow;
+                                }else if (attr == 142){
+                                    listsFreedom = follow;
+                                    lists = listsFreedom;
+                                }
+                                gvAdapter.setData(lists);
+                                mScrollView.stopRefresh();
+                            }
+                            if (loadMore){
+                                loadMore = false;
+                                if (attr == 1) {
+                                    listsFollow.addAll(follow);
+                                    lists = listsFollow;
+                                }else if (attr == 142){
+                                    listsFreedom.addAll(follow);
+                                    listsFreedom = follow;
+                                }
+                                gvAdapter.setData(lists);
+                                mScrollView.stopLoadMore();
+                            }
+                        }
+                    }else{
+                        ToastUtil.show(getApplicationContext(), (String) msg.obj);
+                        resetValue();
+                    }
+                    break;
+                case Consts.MESSAGE_INNER_TRAVEL_HOT_DESTINATION:
+                    if (msg.arg1 == 1){
+                        List<HotDestination> listDest = (List<HotDestination>) msg.obj;
+                        if (listDest == null || listDest.size() == 0){
+                            ToastUtil.show(getApplicationContext(), "没有热门目的地");
+                        }else{
+                            listHotDestination = listDest;
+                            hotDestAdapter.setData(listHotDestination);
+                            setListViewHeightBasedOnChildren(gvHotDestination);
+                        }
+                    }else{
+                        ToastUtil.show(getApplicationContext(), (String) msg.obj);
+                    }
+                    break;
+                case Consts.MESSAGE_EXCHANGE:
+                    exchange = false;
+                    if (msg.arg1 == 1){
+                        List<CityRecommend> listDest = (List<CityRecommend>) msg.obj;
+                        if (listDest == null || listDest.size() == 0){
+                            ToastUtil.show(getApplicationContext(), "没有热门推荐");
+                        }else{
+                            listHotRecommend = listDest;
+                            hotRecomAdapter.setData(listHotRecommend);
+                        }
+                    }else{
+                        ToastUtil.show(getApplicationContext(), (String) msg.obj);
+                    }
+                    break;
+                case WHEEL:
+                    if(flipper.getChildCount() != 0){
+                        if(!isScrolling){
+                            //向前滑向后滑
+                            showNextView();
+                        }
+                    }
+                    releaseTime = System.currentTimeMillis();
+                    handler.removeCallbacks(runnable);
+                    handler.postDelayed(runnable, Consts.TIME_PERIOD);
+                    break;
+                case WHEEL_WAIT:
+                    if(flipper.getChildCount() != 0){
+                        handler.removeCallbacks(runnable);
+                        handler.postDelayed(runnable, Consts.TIME_PERIOD);
+                    }
+                    break;
+                case Consts.NET_ERROR:
+                    ToastUtil.show(getApplicationContext(), "请检查网络后重试");
+                    break;
+                case Consts.NET_ERROR_SOCKET_TIMEOUT:
+                    ToastUtil.show(getApplicationContext(), "与服务器链接超时，请重试");
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inner_travel_main);
-        setupView();
-        addListener();
-        initData();
+        getData();
+        super.onCreate(savedInstanceState);
+        getBannerData();
+        getInternetData();
+        getTravelData();
     }
 
+    private void getTravelData() {
+        InnerTravelMainBiz biz = new InnerTravelMainBiz(getApplicationContext(), handler, Consts.MESSAGE_INNER_FOLLOW);
+        biz.getInnerTravelData(String.valueOf(type), String.valueOf(attr), String.valueOf(page));
+    }
 
-    private void setupView() {
-        for(int i = 0; i < 11; i++){
-            Travel travel = new Travel();
-            travel.setTravelPrice("2258");
-            listsFollow.add(travel);
+    private void getData() {
+        Bundle bundle = getIntent().getExtras();
+        type = bundle.getInt("type");
+        selectCity = (PhoneBean) bundle.getSerializable("selectCity");
+        if (selectCity == null){
+            selectCity = new PhoneBean();
+            selectCity.setCity_id("20");
+            selectCity.setName("北京");
         }
-        for(int i = 0; i < 11; i++){
-            Travel travel = new Travel();
-            travel.setTravelPrice("8256");
-            listsFreedom.add(travel);
+    }
+
+    private void getInternetData() {
+        //热门目的地推荐
+        InnerTravelMainBiz biz = new InnerTravelMainBiz(getApplicationContext(), handler, Consts.MESSAGE_INNER_TRAVEL_HOT_DESTINATION);
+        biz.getHotDestination(String.valueOf(type));
+        //热门推荐，换一换
+        exchangeHotRecommend();
+    }
+
+    @Override
+    protected void setupView() {
+        super.setupView();
+        imageUrls.add("drawable://" + R.drawable.ic_empty);
+        if (type == 1){
+            tvTitle.setText("国内游");
+        }else if(type == 2){
+            tvTitle.setText("出境游");
         }
 
-        layoutTitle = (RelativeLayout) findViewById(R.id.layout_inner_travel_main_title);
-        layoutIndicatorTop = (LinearLayout) findViewById(R.id.layout_inner_travel_main_indicator_top);
+//        layoutTitle = (RelativeLayout) findViewById(R.id.layout_inner_travel_main_title);
+        layoutIndicatorTop      = (LinearLayout) findViewById(R.id.layout_inner_travel_main_indicator_top);
+        tvIndicatorTopFollow    = (TextView) findViewById(R.id.tv_travel_main_indicator_top_follow);
+        tvIndicatorTopFreedom   = (TextView) findViewById(R.id.tv_travel_main_indicator_top_freedom);
+        viewIndicatorTopFollow  = findViewById(R.id.view_travel_main_indicator_top_follow);
+        viewIndicatorTopFreedom = findViewById(R.id.view_travel_main_indicator_top_freedom);
 
         mScrollView = (XScrollView)findViewById(R.id.scroll_view);
         mScrollView.setPullRefreshEnable(true);
@@ -89,9 +256,16 @@ public class InnerTravelMainActivity extends BaseActivity implements XScrollView
 
         content = LayoutInflater.from(getApplicationContext()).inflate(R.layout.activity_inner_travel_main_content, null);
         if (null != content) {
+            View ivSearchLeft = content.findViewById(R.id.iv_title_search_left);
+            ivSearchLeft.setVisibility(View.GONE);
+            TextView etSearchText = (TextView) content.findViewById(R.id.edit_search);
+            etSearchText.setHint("输入你想去的地方");
+            etSearchText.setOnClickListener(this);
+
             gvHotDestination = (MyGridView) content.findViewById(R.id.gv_inner_travel_main_hot); //热门目的地
 
             gvHotRecommend = (MyGridView) content.findViewById(R.id.gv_inner_travel_main_recommend); //热门推荐
+            tvHotRecommendExchange = (TextView) content.findViewById(R.id.tv_hot_recommend_exchange); //热门推荐，换一换
 
             layoutIndicator = (LinearLayout) content.findViewById(R.id.layout_inner_travel_main_indicator); //底部GridView的导航栏
             tvFollow = (TextView) content.findViewById(R.id.tv_inner_travel_main_follow);
@@ -103,10 +277,24 @@ public class InnerTravelMainActivity extends BaseActivity implements XScrollView
             gridViewFollow.setFocusable(false);
             gridViewFollow.setFocusableInTouchMode(false);
 
-            gvAdapter = new Tab1GridViewAdapter(getApplicationContext(), listsFollow, this);
+            lists = listsFollow;
+            gvAdapter = new Tab1GridViewAdapter(getApplicationContext(), lists, this);
             gridViewFollow.setAdapter(gvAdapter);
 
             mGestureDetector = new GestureDetector(getApplicationContext(), this);
+
+            flipper = (ViewFlipper)content.findViewById(R.id.viewflipper);
+            layoutPoint =(LinearLayout)content.findViewById(R.id.layout_indicator_point);
+
+            addImageView(imageUrls.size());
+            addIndicator(imageUrls.size());
+            setIndicator(currentPosition);
+
+            flipper.setOnTouchListener(this);
+
+            dianSelect(currentPosition);
+            MyScrollView myScrollView = (MyScrollView)content.findViewById(R.id.viewflipper_myScrollview);
+            myScrollView.setGestureDetector(mGestureDetector);
         }
         mScrollView.setView(content);
 
@@ -119,12 +307,72 @@ public class InnerTravelMainActivity extends BaseActivity implements XScrollView
                 int[] s = new int[2];
                 layoutIndicator.getLocationOnScreen(s);
                 int statusHeight = Utils.getStatusBarHeight(getApplicationContext());
-                int titleHeight = layoutTitle.getHeight();
+//                int titleHeight = layoutTitle.getHeight();
+                int titleHeight = actionBar.getHeight();
                 if(statusHeight + titleHeight >= s[1]){
                     layoutIndicatorTop.setVisibility(View.VISIBLE);
                 }else{
                     layoutIndicatorTop.setVisibility(View.GONE);
                 }
+            }
+        });
+
+        for (int i=0; i < 8; i++) {
+            Travel travel = new Travel();
+            travel.setTravelPrice(String.valueOf(121 + i));
+            travel.setTravelTitle("旅游" + i);
+            travel.setTravelIconPath("drawable://" + R.mipmap.travel_icon);
+            listsFollow.add(travel);
+        }
+
+        hotDestAdapter = new HotDestinationAdapter(this, listHotDestination);
+        gvHotDestination.setAdapter(hotDestAdapter);
+
+        hotRecomAdapter = new HotRecommendGridViewAdapter(getApplicationContext(), listHotRecommend);
+        gvHotRecommend.setAdapter(hotRecomAdapter);
+    }
+
+    //顶部图片展示
+    private List<ADInfo> infos = new ArrayList<ADInfo>();
+    private ViewFlipper flipper;
+    private LinearLayout layoutPoint;
+    private List<String> imageUrls = new ArrayList<>();
+    private ImageView[] indicators; // 轮播图片数组
+    private int currentPosition = 0; // 轮播当前位置
+
+    private static final int FLING_MIN_DISTANCE = 20;
+    private static final int FLING_MIN_VELOCITY = 0;
+
+    private final int WHEEL = 100; // 转动
+    private final int WHEEL_WAIT = 101; // 等待
+    private boolean isScrolling = false; // 滚动框是否滚动着
+    private long releaseTime = 0; // 手指松开、页面不滚动时间，防止手机松开后短时间进行切换
+
+    private void getBannerData() {
+        //广告位
+        ForeEndActionBiz fbiz = new ForeEndActionBiz();
+//        mark:index（首页）、line_index(国内游、出境游)、header（分类上方）、visa_index（签证）、customize_index(个性定制)
+        ForeEndAdvertise ad = new ForeEndAdvertise("line_index");
+        fbiz.foreEndGetAdvertisingPosition(ad, new BizGenericCallback<ArrayList<ForeEndAdvertisingPositionInfo>>() {
+            @Override
+            public void onCompletion(GenericResponseModel<ArrayList<ForeEndAdvertisingPositionInfo>> model) {
+                if ("0000".equals(model.headModel.res_code)) {
+                    ArrayList<ForeEndAdvertisingPositionInfo> array = model.body;
+                    LogUtil.e(TAG,"foreEndGetAdvertisingPosition =" + array.toString());
+                    refreshViewBanner(array);
+                }else{
+                    ToastCommon.toastShortShow(getApplicationContext(), null, "获取广告位数据失败");
+                }
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                if (error.localReason != null){
+                    ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
+                }else{
+                    ToastCommon.toastShortShow(getApplicationContext(), null, "获取广告位数据出错");
+                }
+                LogUtil.e(TAG, "foreEndGetAdvertisingPosition: " + error.toString());
             }
         });
     }
@@ -133,66 +381,121 @@ public class InnerTravelMainActivity extends BaseActivity implements XScrollView
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.tv_inner_travel_main_follow: //跟团游
-                gvAdapter.setData(listsFollow);
+            case R.id.tv_travel_main_indicator_top_follow: //跟团游
+                if (attr == 1)  return;
+                lists.clear();
+                gvAdapter.notifyDataSetChanged();
+                attr = 1;
+                page = 1;
+                refresh = true;
+                changeIndicator();
+                if (listsFollow.size() != 0) {
+                    if (listsFollow.size() > 10){
+                        listsFollow.subList(0, 10);
+                    }
+                    lists = listsFollow;
+                    gvAdapter.setData(lists);
+                    return;
+                }
+                getTravelData();
+                break;
+            case R.id.tv_inner_travel_main_freedom: //自由游
+            case R.id.tv_travel_main_indicator_top_freedom: //自由游
+                if (attr == 142)    return;
+                lists.clear();
+                gvAdapter.notifyDataSetChanged();
+                attr = 142;
+                page = 1;
+                refresh = true;
+                changeIndicator();
+                if (listsFreedom.size() != 0){
+                    if (listsFreedom.size() > 10 ) {
+                        listsFreedom.subList(0, 10);
+                    }
+                    lists = listsFreedom;
+                    gvAdapter.setData(lists);
+                    return;
+                }
+                getTravelData();
+                break;
+            case R.id.tv_hot_recommend_exchange: //换一换
+                exchangeHotRecommend();
+                break;
+            case R.id.edit_search: //搜索
+                Bundle bundleSearch = new Bundle();
+                bundleSearch.putSerializable("selectCity", selectCity);
+                SearchActivity.actionStart(getApplicationContext(), bundleSearch);
+                break;
+        }
+    }
+
+    private void changeIndicator(){
+        switch (attr){
+            case 1:
                 tvFollow.setTextColor(getResources().getColor(R.color.colorTab1RecommendForYouArgument));
                 viewFollow.setVisibility(View.VISIBLE);
                 tvFreedom.setTextColor(getResources().getColor(android.R.color.black));
                 viewFreedom.setVisibility(View.INVISIBLE);
+
+                tvIndicatorTopFollow.setTextColor(getResources().getColor(R.color.colorTab1RecommendForYouArgument));
+                viewIndicatorTopFollow.setVisibility(View.VISIBLE);
+                tvIndicatorTopFreedom.setTextColor(getResources().getColor(android.R.color.black));
+                viewIndicatorTopFreedom.setVisibility(View.INVISIBLE);
                 break;
-            case R.id.tv_inner_travel_main_freedom: //国内游
-                gvAdapter.setData(listsFreedom);
+            case 142:
                 tvFreedom.setTextColor(getResources().getColor(R.color.colorTab1RecommendForYouArgument));
                 viewFreedom.setVisibility(View.VISIBLE);
                 tvFollow.setTextColor(getResources().getColor(android.R.color.black));
                 viewFollow.setVisibility(View.INVISIBLE);
-                break;
 
+                tvIndicatorTopFreedom.setTextColor(getResources().getColor(R.color.colorTab1RecommendForYouArgument));
+                viewIndicatorTopFreedom.setVisibility(View.VISIBLE);
+                tvIndicatorTopFollow  .setTextColor(getResources().getColor(android.R.color.black));
+                viewIndicatorTopFollow.setVisibility(View.INVISIBLE);
+                break;
         }
     }
 
+    private boolean exchange; //是否正在进行换一换
+    private void exchangeHotRecommend() {
+        if (exchange)   return;
+        exchange = true;
+        //热门推荐，换一换
+        ExchangeBiz bizE = new ExchangeBiz(getApplicationContext(), handler);
+        bizE.getHotRecommend();
+    }
 
-
-    private void addListener() {
+    @Override
+    protected void addListener() {
+        super.addListener();
         gvHotDestination.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                //热门目的地详情
+                HotDestination item = listHotDestination.get(position);
+                String cityId = item.getCityId();
+                Bundle bundle = new Bundle();
+                bundle.putString("cityId", cityId);
+                bundle.putString("cityName", item.getCityName());
+                InnerTravelCityActivity.actionStart(getApplicationContext(), bundle);
+            }
+        });
+        gvHotRecommend.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                clickHotDestinationItem(adapterView, view, i, l);
+                //热门推荐详情，没有UI设计，此处不正确
+//                CityRecommend item = listHotRecommend.get(i);
+//                Bundle bundle = new Bundle();
+//                bundle.putString("id", item.getCityId());
+//                InnerTravelDetailActivity.actionStart(getApplicationContext(), bundle);
             }
         });
 
         tvFollow.setOnClickListener(this);
         tvFreedom.setOnClickListener(this);
+        tvHotRecommendExchange.setOnClickListener(this); //换一换
     }
 
-    private void initData() {
-        titles.add("跟团游");
-        titles.add("自由游");
-
-        citiesHotDest = new ArrayList<>();
-        citiesHotDest.add("北京");
-        citiesHotDest.add("南京");
-        citiesHotDest.add("西安");
-        citiesHotDest.add("海南");
-        citiesHotDest.add("云南");
-        citiesHotDest.add("深圳");
-        citiesHotDest.add("厦门");
-        citiesHotDest.add("香港");
-        citiesHotDest.add("上海");
-        citiesHotDest.add("杭州");
-        gvHotDestAdapter = new HotDestinationGridViewAdapter(this, citiesHotDest);
-        gvHotDestination.setAdapter(gvHotDestAdapter);
-
-
-        citiesHotRecom = new ArrayList<>();
-        for(int i = 0; i < 2; i ++){
-            CityRecommend city = new CityRecommend();
-            city.setCityName("深圳" + i);
-            citiesHotRecom.add(city);
-        }
-        gvHotRecomAdapter = new HotRecommendGridViewAdapter(getApplicationContext(), citiesHotRecom);
-        gvHotRecommend.setAdapter(gvHotRecomAdapter);
-
-    }
 
     /**
      * 热门目的地推荐回调
@@ -201,18 +504,21 @@ public class InnerTravelMainActivity extends BaseActivity implements XScrollView
      * @param i
      * @param l
      */
-    private void clickHotDestinationItem(AdapterView<?> adapterView, View view, int i, long l) {
-        Bundle bundle = new Bundle();
-        bundle.putString(Consts.KEY_INNER_CITY_NAME, citiesHotDest.get(i));
-        InnerTravelCityActivity.actionStart(getApplicationContext(), bundle);
-    }
+//    private void clickHotDestinationItem(AdapterView<?> adapterView, View view, int i, long l) {
+//        Bundle bundle = new Bundle();
+//        bundle.putString(Consts.KEY_INNER_CITY_NAME, listHotDestination.get(i));
+//        InnerTravelCityActivity.actionStart(getApplicationContext(), bundle);
+//    }
 
     /**
      * 下拉刷新回调
      */
     @Override
     public void onRefresh() {
-
+        if (refresh)    return;
+        refresh = true;
+        page = 1;
+        getTravelData();
     }
 
     /**
@@ -220,13 +526,16 @@ public class InnerTravelMainActivity extends BaseActivity implements XScrollView
      */
     @Override
     public void onLoadMore() {
-
+        if (loadMore)   return;
+        loadMore = true;
+        page ++;
+        getTravelData();
     }
 
     public static void actionStart(Context context, Bundle bundle){
         Intent intent = new Intent(context, InnerTravelMainActivity.class);
-        if(bundle !=null){
-            intent.putExtra("bundle", bundle);
+        if(bundle != null){
+            intent.putExtras(bundle);
         }
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
@@ -285,15 +594,31 @@ public class InnerTravelMainActivity extends BaseActivity implements XScrollView
 
     /**
      * GestureDetector.OnGestureListener 回调
-     * @param motionEvent
-     * @param motionEvent1
-     * @param v
-     * @param v1
-     * @return
      */
     @Override
-    public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        if (e1.getX() - e2.getX() > FLING_MIN_DISTANCE &&
+                Math.abs(velocityX) > FLING_MIN_VELOCITY) {
+//            LogUtil.i(TAG, "==============开始向左滑动了================");
+            showNextView();
+            resetTime();
+            return true;
+        } else if (e2.getX() - e1.getX() > FLING_MIN_DISTANCE &&
+                Math.abs(velocityX) > FLING_MIN_VELOCITY) {
+//            Log.i(TAG, "==============开始向右滑动了================");
+            showPreviousView();
+            resetTime();
+            return true;
+        }
         return false;
+    }
+
+    private void resetTime() {
+        if (infos.size() <= 1) {
+            return;
+        }
+        handler.removeCallbacks(runnable);
+        handler.postDelayed(runnable, Consts.TIME_PERIOD);
     }
 
     /**
@@ -305,5 +630,176 @@ public class InnerTravelMainActivity extends BaseActivity implements XScrollView
     @Override
     public void goToArgument(View view, View viewGroup, int position, int which) {
         //讨价还价
+        Intent intent = new Intent(getApplicationContext(), EasemobLoginActivity.class);
+        startActivity(intent);
+    }
+
+    private Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            if (!InnerTravelMainActivity.this.isFinishing()) {
+                long now = System.currentTimeMillis();
+                // 检测上一次滑动时间与本次之间是否有触击(手滑动)操作，有的话等待下次轮播
+                if (now - releaseTime > Consts.TIME_PERIOD - 500) {
+                    handler.sendEmptyMessage(WHEEL);
+                } else {
+                    handler.sendEmptyMessage(WHEEL_WAIT);
+                }
+            }
+        }
+    };
+
+    private void refreshViewBanner(ArrayList<ForeEndAdvertisingPositionInfo> array) {
+        ArrayList<ADInfo> infosNew = new ArrayList<>();
+//        for (int i = 0; i < array.size(); i++){
+        ForeEndAdvertisingPositionInfo item = array.get(0);
+        ArrayList<String> picList = item.getT();
+        ArrayList<String> linkList = item.getL();
+        for (int j = 0; j < picList.size(); j++){
+            ADInfo ad = new ADInfo();
+            ad.setUrl(picList.get(j));
+            ad.setContent(linkList.get(j));
+            infosNew.add(ad);
+        }
+//        }
+        updateBanner(infosNew);
+    }
+    private void updateBanner(ArrayList<ADInfo> listsBanner) {
+        infos = listsBanner;
+        flipper.removeAllViews();
+        for (int i = 0; i < infos.size(); i++) {
+            flipper.addView(ViewFactory.getImageView(getApplicationContext(), infos.get(i).getUrl()));
+        }
+        addIndicator(infos.size());
+        setIndicator(0);
+        handler.postDelayed(runnable, Consts.TIME_PERIOD);
+    }
+
+    private void addIndicator(int size){
+//        if(indicators == null) {
+        indicators = new ImageView[size];
+//        }
+        layoutPoint.removeAllViews();
+        for (int i = 0; i < size; i++) {
+            View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.view_cycle_viewpager_indicator, null);
+            indicators[i] = (ImageView) view.findViewById(R.id.image_indicator);
+            layoutPoint.addView(view);
+        }
+
+    }
+
+    private void setIndicator(int current){
+        for(int i = 0; i < indicators.length; i++) {
+            if(i == current) {
+                indicators[current].setImageResource(R.drawable.icon_point_pre);
+            }else{
+                indicators[i].setImageResource(R.drawable.icon_point);
+            }
+        }
+    }
+
+    private void addImageView(int length) {
+        for(int i=0; i < length; i++){
+            ADInfo info = new ADInfo();
+            info.setUrl(imageUrls.get(i));
+            info.setContent("图片-->" + i);
+            infos.add(info);
+            flipper.addView(ViewFactory.getImageView(getApplicationContext(), infos.get(i).getUrl()));
+        }
+    }
+
+    /**
+     * 对应被选中的点的图片
+     * @param id
+     */
+    private void dianSelect(int id) {
+        indicators[id].setImageResource(R.drawable.icon_point_pre);
+    }
+    /**
+     * 对应未被选中的点的图片
+     * @param id
+     */
+    private void dianUnselect(int id){
+        indicators[id].setImageResource(R.drawable.icon_point);
+    }
+
+    private void showNextView() {
+//        Log.i(TAG, "========showNextView=======向左滑动=======");
+        flipper.setInAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.push_left_in));
+        flipper.setOutAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.push_left_out));
+        flipper.showNext();
+        currentPosition++;
+        if(currentPosition == flipper.getChildCount()){
+            dianUnselect(currentPosition - 1);
+            currentPosition = 0;
+            dianSelect(currentPosition);
+        }else{
+            dianUnselect(currentPosition - 1);
+            dianSelect(currentPosition);
+        }
+//		Log.i(TAG, "==============第"+currentPage+"页==========");
+    }
+
+    private void showPreviousView() {
+//        Log.i(TAG, "========showPreviousView=======向右滑动=======");
+        dianSelect(currentPosition);
+        flipper.setInAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.push_right_in));
+        flipper.setOutAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.push_right_out));
+        flipper.showPrevious();
+        currentPosition--;
+        if(currentPosition == -1){
+            dianUnselect(currentPosition + 1);
+            currentPosition = flipper.getChildCount() - 1;
+            dianSelect(currentPosition);
+        }else{
+            dianUnselect(currentPosition + 1);
+            dianSelect(currentPosition);
+        }
+//		Log.i(TAG, "==============第"+currentPage+"页==========");
+    }
+
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        return mGestureDetector.onTouchEvent(motionEvent);
+    }
+
+    private void resetValue() {
+        if (loadMore){
+            loadMore = false;
+            page --;
+            mScrollView.stopLoadMore();
+        }
+        if (refresh){
+            refresh = false;
+            mScrollView.stopRefresh();
+        }
+    }
+    public void setListViewHeightBasedOnChildren(GridView listView) {
+        // 获取listview的adapter
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) {
+            return;
+        }
+        // 固定列宽，有多少列
+        int col = 4;// listView.getNumColumns();
+        int totalHeight = 0;
+        // i每次加4，相当于listAdapter.getCount()小于等于4时 循环一次，计算一次item的高度，
+        // listAdapter.getCount()小于等于8时计算两次高度相加
+        for (int i = 0; i < listAdapter.getCount(); i += col) {
+            // 获取listview的每一个item
+            View listItem = listAdapter.getView(i, null, listView);
+            listItem.measure(0, 0);
+            // 获取item的高度和
+            totalHeight += listItem.getMeasuredHeight();
+        }
+
+        // 获取listview的布局参数
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        // 设置高度
+        params.height = totalHeight;
+        // 设置margin
+        ((ViewGroup.MarginLayoutParams) params).setMargins(10, 10, 10, 10);
+        // 设置参数
+        listView.setLayoutParams(params);
     }
 }

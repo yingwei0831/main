@@ -45,22 +45,23 @@
 
     </com.jhhy.cuiweitourism.view.MyScrollView>
 
-    <SearchView
-        android:id="@+id/tab2_searchview"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/bg_tab2_searchview_border"
-        android:focusableInTouchMode="true"
-        android:imeOptions="actionSearch"
-        android:inputType="textCapWords"
-        android:queryHint="@string/tab2_search_hint">
+    <!--<SearchView-->
+        <!--android:id="@+id/tab2_searchview"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="45dp"-->
+        <!--android:layout_marginBottom="8dp"-->
+        <!--android:layout_marginLeft="20dp"-->
+        <!--android:layout_marginRight="20dp"-->
+        <!--android:layout_marginTop="8dp"-->
+        <!--android:background="@drawable/bg_tab2_searchview_border"-->
+        <!--android:focusableInTouchMode="true"-->
+        <!--android:imeOptions="actionSearch"-->
+        <!--android:inputType="textCapWords"-->
+        <!--android:queryHint="@string/tab2_search_hint"-->
+        <!--&gt;-->
 
-    </SearchView>
-
+    <!--</SearchView>-->
+    <include layout="@layout/search_bar_simple_out"/>
 
     <RelativeLayout
         android:layout_width="match_parent"

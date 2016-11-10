@@ -84,6 +84,7 @@ public class WelcomeActivity extends BaseActivity {
         sp = SharedPreferencesUtils.getInstance(getApplicationContext());
         if(NetworkUtil.checkNetwork(getApplicationContext())){
             new LocationUtil(getApplicationContext(), handler).start();
+            MainActivity.netOk = true;
         }else{
 //            ToastUtil.show(getApplicationContext(), getString(R.string.net_error_notice));
         }
@@ -105,12 +106,15 @@ public class WelcomeActivity extends BaseActivity {
             //登录——>主页面（成功）
             //登录——>登录页面（失败）
             SharedPreferencesUtils sp = SharedPreferencesUtils.getInstance(getApplicationContext());
-            if(TextUtils.isEmpty(sp.getTelephoneNumber()) || TextUtils.isEmpty(sp.getPassword())){
+            String mobile = sp.getTelephoneNumber();
+            String pwd = sp.getPassword();
+            LogUtil.e(TAG, "number = " + sp.getTelephoneNumber() + ", pwd = " + sp.getPassword());
+            if(mobile == null || pwd == null || TextUtils.isEmpty(mobile) || TextUtils.isEmpty(pwd)){
 //                gotoLogin();
                 gotoMain();
             } else {
                 LoginBiz biz = new LoginBiz(getApplicationContext(), handler);
-                biz.login(sp.getTelephoneNumber(), sp.getPassword());
+                biz.login(mobile, pwd);
             }
         }
     }

@@ -38,6 +38,7 @@ import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.ui.InnerTravelCityActivity;
 import com.jhhy.cuiweitourism.net.utils.Consts;
+import com.jhhy.cuiweitourism.ui.SearchActivity;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.jhhy.cuiweitourism.view.MyGridView;
 import com.jhhy.cuiweitourism.view.MyScrollView;
@@ -224,6 +225,12 @@ public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.I
 
     private void setupView(View view) {
         getRecommend();
+        View ivSearchLeft = view.findViewById(R.id.iv_title_search_left);
+        ivSearchLeft.setVisibility(View.GONE);
+        TextView etSearchText = (TextView) view.findViewById(R.id.edit_search);
+        etSearchText.setHint("输入你想去的地方");
+        etSearchText.setOnClickListener(this);
+
         tvHotRecommendNext = (TextView) view.findViewById(R.id.tv_tab2_hot_recommend_next);
         gridViewHotRecommend = (MyGridView) view.findViewById(R.id.gv_tab2_top_hot_recommend);
         for(int i = 0; i < 2; i++){
@@ -318,6 +325,11 @@ public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.I
                 }else if (loadErrorHot){
                     getRecommend();
                 }
+                break;
+            case R.id.edit_search: //搜索
+                Bundle bundleSearch = new Bundle();
+//                bundleSearch.putSerializable("selectCity", selectCity);
+                SearchActivity.actionStart(getContext(), bundleSearch);
                 break;
         }
     }

@@ -57,6 +57,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 case Consts.NET_ERROR_SOCKET_TIMEOUT:
                     ToastUtil.show(getApplicationContext(), "与服务器链接超时，请重试");
                     break;
+                case -2:
+                    ToastUtil.show(getApplicationContext(), "注册发生错误，请重试");
+                    break;
             }
             LoadingIndicator.cancel();
         }

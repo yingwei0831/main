@@ -109,13 +109,6 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 finish();
             }
         });
-        View view = findViewById(R.id.layout_login);
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish(); //回到登录页面
-            }
-        });
 
         tvGetCheckCode = (TextView) findViewById(R.id.tv_activity_register_get_check_code);
 
@@ -163,7 +156,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             case R.id.tv_activity_register_get_check_code:
                 getCheckCode();
                 break;
-            case R.id.tv_register_to_login:
+            case R.id.tv_register_to_login: //回到登录页面
                 finish();
                 break;
         }

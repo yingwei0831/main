@@ -118,7 +118,6 @@ public class InnerActivity4 extends AppCompatActivity  implements ISlideCallback
                             listHotDestination = listDest;
                             hotDestAdapter.setData(listHotDestination);
                         }
-
                     }
                     break;
                 case Consts.MESSAGE_EXCHANGE:
@@ -132,7 +131,6 @@ public class InnerActivity4 extends AppCompatActivity  implements ISlideCallback
                             listHotRecommend = listDest;
                             hotRecomAdapter.setData(listHotRecommend);
                         }
-
                     }
                     break;
                 case WHEEL:
@@ -167,7 +165,7 @@ public class InnerActivity4 extends AppCompatActivity  implements ISlideCallback
     private Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            if (InnerActivity4.this != null && !InnerActivity4.this.isFinishing()) {
+            if (!InnerActivity4.this.isFinishing()) {
                 long now = System.currentTimeMillis();
                 // 检测上一次滑动时间与本次之间是否有触击(手滑动)操作，有的话等待下次轮播
                 if (now - releaseTime > Consts.TIME_PERIOD - 500) {
@@ -285,7 +283,6 @@ public class InnerActivity4 extends AppCompatActivity  implements ISlideCallback
 
         ExchangeBiz bizE = new ExchangeBiz(getApplicationContext(), handler);
         bizE.getHotRecommend();
-
     }
 
     private void setupView() {
@@ -359,7 +356,6 @@ public class InnerActivity4 extends AppCompatActivity  implements ISlideCallback
         pagerAdapter = new OrdersPagerAdapter(getSupportFragmentManager(), mTitles, mContent);
         viewPager.setAdapter(pagerAdapter);
         tabIndicator.setupWithViewPager(viewPager);
-
     }
 
     @Override

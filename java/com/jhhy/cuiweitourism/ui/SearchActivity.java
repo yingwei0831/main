@@ -93,11 +93,11 @@ public class SearchActivity extends BaseActionBarActivity implements ArgumentOnC
         Bundle bundle = getIntent().getExtras();
         if (bundle != null){
             selectCity = (PhoneBean) bundle.getSerializable("selectCity");
-            if (selectCity == null){
-                selectCity = new PhoneBean();
-                selectCity.setCity_id("20");
-                selectCity.setName("北京");
-            }
+        }
+        if (selectCity == null){
+            selectCity = new PhoneBean();
+            selectCity.setCity_id("20");
+            selectCity.setName("北京");
         }
         city = selectCity.getName();
     }

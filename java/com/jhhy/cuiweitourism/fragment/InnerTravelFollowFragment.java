@@ -171,6 +171,7 @@ public class InnerTravelFollowFragment extends Fragment implements ArgumentOnCli
     @Override
     public void goToArgument(View view, View viewGroup, int position, int which) {
         ToastUtil.showShortToast(getContext(), "讨价还价");
+
     }
 
     @Override

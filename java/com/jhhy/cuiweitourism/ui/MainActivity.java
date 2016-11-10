@@ -30,7 +30,7 @@ import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.just.sun.pricecalendar.ToastCommon;
 
 public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedChangeListener
-//        implements View.OnClickListener
+        , View.OnClickListener
 {
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -51,6 +51,7 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
     //    private Tab4Fragment tab4Fragment;
     private Tab4Fragment2 tab4Fragment2;
 
+    public static boolean netOk = false;
     public static boolean logged; //记录用户是否登录
     public static User user;
 
@@ -133,11 +134,11 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
     }
 
     private void addListener() {
-        radioGroup.setOnCheckedChangeListener(this);
-//        rb1.setOnClickListener(this);
-//        rb2.setOnClickListener(this);
-//        rb3.setOnClickListener(this);
-//        rb4.setOnClickListener(this);
+//        radioGroup.setOnCheckedChangeListener(this);
+        rb1.setOnClickListener(this);
+        rb2.setOnClickListener(this);
+        rb3.setOnClickListener(this);
+        rb4.setOnClickListener(this);
     }
 
     private void setDefaultFragment(Bundle savedInstanceState) {
@@ -237,47 +238,63 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
 //        }
     }
 
-//    @Override
-//    public void onClick(View view) {
-//        Fragment to = null;
-//        Fragment from = mContent;
-//        switch (view.getId()){
-//            case R.id.tab1:
-//                index = 1;
-//                to = tab1Fragment;
-//                break;
-//            case R.id.tab2:
-//                index = 2;
-//                if (tab2Fragment_2 == null) {
-//                    tab2Fragment_2 = Tab2Fragment_2.newInstance(null, null);
-//                }
-//                to = tab2Fragment_2;
-//                break;
-//            case R.id.tab3:
-//                index = 3;
-//                if (tab3Fragment == null) {
-//                    tab3Fragment = Tab3Fragment.newInstance(null, null);
-//                }
-//                to = tab3Fragment;
-//                break;
-//            case R.id.tab4:
-//                index = 4;
-//                if (tab4Fragment2 == null) {
-//                    tab4Fragment2 = Tab4Fragment2.newInstance(null);
-//                }
-//                to = tab4Fragment2;
-//                break;
-//        }
-//        if (mContent != to) {
-//            mContent = to;
-//            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction(); //fm.beginTransaction().setCustomAnimations(android.R.anim.fade_in, R.anim.slide_out);
-//            if (!to.isAdded()) {    // 先判断是否被add过
-//                transaction.hide(from).add(R.id.main_content, to, index + "").commit(); //transaction.hide(from).add(R.id.content_frame, to).commit(); // 隐藏当前的fragment，add下一个到Activity中
-//            } else {
-//                transaction.hide(from).show(to).commit(); //transaction.hide(from).show(to).commit(); // 隐藏当前的fragment，显示下一个
-//            }
-//        }
-//    }
+    @Override
+    public void onClick(View view) {
+        Fragment to = null;
+        Fragment from = mContent;
+        switch (view.getId()){
+            case R.id.tab1:
+                index = 1;
+                to = tab1Fragment;
+                break;
+            case R.id.tab2:
+                index = 2;
+                if (tab2Fragment_2 == null) {
+                    tab2Fragment_2 = Tab2Fragment_2.newInstance(null, null);
+                }
+                to = tab2Fragment_2;
+                break;
+            case R.id.tab3:
+                if (!logged) {
+                    ToastUtil.show(getApplicationContext(), "请登录后查看订单信息");
+                    changeIndicator();
+                    return;
+                }
+                index = 3;
+                if (tab3Fragment == null) {
+                    tab3Fragment = Tab3Fragment.newInstance(null, null);
+                }
+                to = tab3Fragment;
+                break;
+            case R.id.tab4:
+                index = 4;
+                if (tab4Fragment2 == null) {
+                    tab4Fragment2 = Tab4Fragment2.newInstance(null);
+                }
+                to = tab4Fragment2;
+                break;
+        }
+        if (mContent != to) {
+            mContent = to;
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction(); //fm.beginTransaction().setCustomAnimations(android.R.anim.fade_in, R.anim.slide_out);
+            if (!to.isAdded()) {    // 先判断是否被add过
+                transaction.hide(from).add(R.id.main_content, to, index + "").commit(); //transaction.hide(from).add(R.id.content_frame, to).commit(); // 隐藏当前的fragment，add下一个到Activity中
+            } else { //被添加过
+                transaction.hide(from).show(to).commit(); //transaction.hide(from).show(to).commit(); // 隐藏当前的fragment，显示下一个
+//                transaction.hide(from).replace(R.id.main_content, to, index + ""); //此处是替换？待研究
+            }
+        }
+    }
+
+    private void changeIndicator() {
+        if (index == 1){
+            rb1.toggle();
+        }else if (index == 2){
+            rb2.toggle();
+        }else if (index == 4){
+            rb4.toggle();
+        }
+    }
 
     // 保存当前Fragment的下标,内存重启时调用
     private final String KEY_INDEX = "index";
@@ -321,12 +338,18 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
             String action = intent.getAction();
             if ("android.net.conn.CONNECTIVITY_CHANGE".equals(action)) {
                 if (NetworkUtil.checkNetwork(context)) {
-//                    LogUtil.e(TAG, "网络已连接");
-                    if (!logged) {
+                    LogUtil.e(TAG, "网络已连接");
+                    if (!logged) { //未登录
                         SharedPreferencesUtils sp = SharedPreferencesUtils.getInstance(getApplicationContext());
-                        LoginBiz biz = new LoginBiz(getApplicationContext(), handler);
-                        biz.login(sp.getTelephoneNumber(), sp.getPassword());
-
+                        String mobile = sp.getTelephoneNumber();
+                        String pwd = sp.getPassword();
+                        if (mobile != null && pwd != null) {
+                            LoginBiz biz = new LoginBiz(getApplicationContext(), handler);
+                            biz.login(mobile, pwd);
+                        }
+                    }
+                    if (!netOk) { //无网络
+                        netOk = true;
                         if (tab1Fragment != null) {
                             tab1Fragment.getBannerData();
                             tab1Fragment.getData();
@@ -337,7 +360,9 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
                         }
                     }
                 } else {
-//                    ToastCommon.toastShortShow(getApplicationContext(), null, "网络已断开");
+                    netOk = false;
+                    LogUtil.e(TAG, "网络已断开");
+                    ToastCommon.toastShortShow(getApplicationContext(), null, "网络已断开");
                 }
             }
         }

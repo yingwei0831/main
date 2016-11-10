@@ -44,7 +44,8 @@ public class Consts {
     public static final String KEY_RESULT = "request_data"; //关闭Activity携带数据
 
 //    登录
-    public static final int MESSAGE_LOGIN = 110;
+    public static final int MESSAGE_LOGIN = 110; //翠微登录
+    public static final int MESSAGE_LOGIN_EASE = 166; //环信登录
 
     //注册返回
     public static final String KEY_USER_USER_MID = "mid";
@@ -58,6 +59,7 @@ public class Consts {
 
     //注册
     public static final int MESSAGE_REGISTER = 111;
+    public static final int MESSAGE_FIND_PWD = 161; //忘记密码，找回密码
     public static final int REQUEST_CODE_REGISTER = 1011; //请求码
 
     public static final String KEY_USER_MOBILE = "mobile";//手机号码
