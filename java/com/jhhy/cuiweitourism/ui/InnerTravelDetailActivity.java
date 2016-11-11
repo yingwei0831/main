@@ -101,7 +101,7 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
     private TextView tvNickName;
     private TextView tvAddTime;
     private TextView tvCommentContent;
-    private MyGridView gvImages; //评论中的图片
+    private MyGridView gvCommentImages; //评论中的图片
 
     private int bottom; //底部控件在屏幕的起始高度
     private boolean click; //是否是点击indicator
@@ -225,7 +225,7 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
             tvNickName = (TextView) content.findViewById(R.id.inner_travel_detail_comment_username);
             tvAddTime = (TextView) content.findViewById(R.id.tv_travel_comment_add_time);
             tvCommentContent = (TextView) content.findViewById(R.id.tv_comment_content);
-            gvImages = (MyGridView) content.findViewById(R.id.inner_travel_detail_gridview);
+            gvCommentImages = (MyGridView) content.findViewById(R.id.inner_travel_detail_gridview);
 
             mWebViewProduct = (WebView) content.findViewById(R.id.webview_inner_travel_detail_content_product);
             layoutPrice = (LinearLayout) content.findViewById(R.id.layout_travel_price);
@@ -308,66 +308,7 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
 
     }
 
-    private void addImageView(int length) {
-        for (int i = 0; i < length; i++) {
-            ADInfo info = new ADInfo();
-            info.setUrl(imageUrls.get(i));
-            info.setContent("图片-->" + i);
-            infos.add(info);
-            flipper.addView(ViewFactory.getImageView(getApplicationContext(), infos.get(i).getUrl()));
-        }
-    }
 
-    private void addIndicator(int size) {
-//        if(indicators == null) {
-        indicators = new ImageView[size];
-//        }
-        layoutPoint.removeAllViews();
-        for (int i = 0; i < size; i++) {
-            View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.view_cycle_viewpager_indicator, null);
-            indicators[i] = (ImageView) view.findViewById(R.id.image_indicator);
-            layoutPoint.addView(view);
-        }
-
-    }
-
-    private void setIndicator(int current) {
-        for (int i = 0; i < indicators.length; i++) {
-            if (i == current) {
-                indicators[current].setImageResource(R.drawable.icon_point_pre);
-            } else {
-                indicators[i].setImageResource(R.drawable.icon_point);
-            }
-        }
-    }
-
-    /**
-     * 对应被选中的点的图片
-     *
-     * @param id
-     */
-    private void dianSelect(int id) {
-        indicators[id].setImageResource(R.drawable.icon_point_pre);
-    }
-
-    /**
-     * 对应未被选中的点的图片
-     *
-     * @param id
-     */
-    private void dianUnselect(int id) {
-        indicators[id].setImageResource(R.drawable.icon_point);
-    }
-
-    public void updateBinner(List<ADInfo> listsBinner) {
-        infos = listsBinner;
-        flipper.removeAllViews();
-        for (int i = 0; i < infos.size(); i++) {
-            flipper.addView(ViewFactory.getImageView(getApplicationContext(), infos.get(i).getUrl()));
-        }
-        addIndicator(infos.size());
-        setIndicator(0);
-    }
 
     private void refreshView() {
         String start = "<html><style>body img{width:100%;}</style><body>";
@@ -547,7 +488,7 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
         btnNoticeTop.setOnClickListener(this);
         tvCommentCount.setOnClickListener(this);
 
-        gvImages.setOnItemClickListener(this);
+        gvCommentImages.setOnItemClickListener(this);
         mWebViewProduct.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -647,6 +588,67 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
         } else {
             return false;
         }
+    }
+
+    private void addImageView(int length) {
+        for (int i = 0; i < length; i++) {
+            ADInfo info = new ADInfo();
+            info.setUrl(imageUrls.get(i));
+            info.setContent("图片-->" + i);
+            infos.add(info);
+            flipper.addView(ViewFactory.getImageView(getApplicationContext(), infos.get(i).getUrl()));
+        }
+    }
+
+    private void addIndicator(int size) {
+//        if(indicators == null) {
+        indicators = new ImageView[size];
+//        }
+        layoutPoint.removeAllViews();
+        for (int i = 0; i < size; i++) {
+            View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.view_cycle_viewpager_indicator, null);
+            indicators[i] = (ImageView) view.findViewById(R.id.image_indicator);
+            layoutPoint.addView(view);
+        }
+
+    }
+
+    private void setIndicator(int current) {
+        for (int i = 0; i < indicators.length; i++) {
+            if (i == current) {
+                indicators[current].setImageResource(R.drawable.icon_point_pre);
+            } else {
+                indicators[i].setImageResource(R.drawable.icon_point);
+            }
+        }
+    }
+
+    /**
+     * 对应被选中的点的图片
+     *
+     * @param id
+     */
+    private void dianSelect(int id) {
+        indicators[id].setImageResource(R.drawable.icon_point_pre);
+    }
+
+    /**
+     * 对应未被选中的点的图片
+     *
+     * @param id
+     */
+    private void dianUnselect(int id) {
+        indicators[id].setImageResource(R.drawable.icon_point);
+    }
+
+    public void updateBinner(List<ADInfo> listsBinner) {
+        infos = listsBinner;
+        flipper.removeAllViews();
+        for (int i = 0; i < infos.size(); i++) {
+            flipper.addView(ViewFactory.getImageView(getApplicationContext(), infos.get(i).getUrl()));
+        }
+        addIndicator(infos.size());
+        setIndicator(0);
     }
 
     private void showNextView() {

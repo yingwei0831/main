@@ -41,7 +41,7 @@ public class Tab4Fragment2 extends Fragment implements View.OnClickListener {
     private TextView tvLoginOrRegister;
     private View viewLoggedIn;
     private TextView tvUserName;
-    private TextView tvCertivicated;
+    private TextView tvCertificated;
 
     public Tab4Fragment2() {
         // Required empty public constructor
@@ -99,7 +99,7 @@ public class Tab4Fragment2 extends Fragment implements View.OnClickListener {
         tvLoginOrRegister = (TextView) view.findViewById(R.id.tv_go_register_login); //去登录/注册
         viewLoggedIn = view.findViewById(R.id.layout_user_logged_in);
         tvUserName = (TextView) view.findViewById(R.id.tab4_user_nickname);
-        tvCertivicated = (TextView) view.findViewById(R.id.tv_user_certificated);
+        tvCertificated = (TextView) view.findViewById(R.id.tv_user_certificated);
         refreshView();
         ivEditInfo.setOnClickListener(this);
 
@@ -124,7 +124,7 @@ public class Tab4Fragment2 extends Fragment implements View.OnClickListener {
             tvLoginOrRegister.setVisibility(View.GONE);
             viewLoggedIn.setVisibility(View.VISIBLE);
             tvUserName.setText(MainActivity.user.getUserNickName());
-            tvCertivicated.setText("是否认证");
+            tvCertificated.setText("是否认证");
         }else{ //未登录，显示注册登录
             tvLoginOrRegister.setVisibility(View.VISIBLE);
             viewLoggedIn.setVisibility(View.GONE);

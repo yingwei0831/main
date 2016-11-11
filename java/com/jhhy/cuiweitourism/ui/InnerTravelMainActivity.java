@@ -201,8 +201,8 @@ public class InnerTravelMainActivity extends BaseActionBarActivity implements XS
         setContentView(R.layout.activity_inner_travel_main);
         getData();
         super.onCreate(savedInstanceState);
-        getBannerData();
         getInternetData();
+        getBannerData();
         getTravelData();
     }
 
@@ -494,6 +494,12 @@ public class InnerTravelMainActivity extends BaseActionBarActivity implements XS
         tvFollow.setOnClickListener(this);
         tvFreedom.setOnClickListener(this);
         tvHotRecommendExchange.setOnClickListener(this); //换一换
+        gridViewFollow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+            }
+        });
     }
 
 
