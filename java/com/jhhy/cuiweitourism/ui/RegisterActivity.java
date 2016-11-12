@@ -184,6 +184,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
     private void register() {
         if (!cbRegisterDeal.isChecked()){
+            ToastUtil.show(getApplicationContext(), "请阅读并同意翠微旅游服务条款");
             return;
         }
         String mobile = etMobile.getText().toString().trim();

@@ -810,8 +810,15 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
      */
     @Override
     public void goToArgument(View view, View viewGroup, int position, int which) {
-        Intent intent = new Intent(getContext(), EasemobLoginActivity.class);
-        startActivity(intent);
+//        SharedPreferencesUtils sp = SharedPreferencesUtils.getInstance(getContext());
+//        String number = sp.getTelephoneNumber();
+//        String pwd = sp.getPassword();
+        if (MainActivity.logged) { //|| (number != null && !"null".equals(number) && pwd != null && !"null".equals(pwd))
+            Intent intent = new Intent(getContext(), EasemobLoginActivity.class);
+            startActivity(intent);
+        }else{
+            ToastUtil.show(getContext(), "请登录后再试");
+        }
     }
 
     @Override

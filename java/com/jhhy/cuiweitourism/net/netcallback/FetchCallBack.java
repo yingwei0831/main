@@ -39,7 +39,7 @@ public class FetchCallBack implements Callback.CommonCallback<String> {
             String headStr = resultObj.getString("head");
             FetchResponseModel model =  new FetchResponseModel(); //new Gson().fromJson(result,FetchResponseModel.class);
             model.body = bodyStr;
-            model.head = new Gson().fromJson(headStr,FetchResponseModel.HeadModel.class);
+            model.head = new Gson().fromJson(headStr, FetchResponseModel.HeadModel.class);
             this.response.onCompletion(model);
             //handler.sendMessage(new Message());
         } catch (JSONException e) {

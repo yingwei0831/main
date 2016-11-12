@@ -78,7 +78,12 @@ public class Tab1GridViewAdapter extends BaseAdapter {
 
         final View finalConvertView = view;
         Travel travel = (Travel) getItem(position);
-        holder.tvPrice.setText(travel.getTravelPrice());
+        String price = travel.getTravelPrice();
+        if (price == null || price.length() == 0 || "null".equals(price)){
+            holder.tvPrice.setText("0");
+        }else {
+            holder.tvPrice.setText(price);
+        }
         final int id = holder.tvArgument.getId();
 
         holder.tvArgument.setOnClickListener(new View.OnClickListener() {

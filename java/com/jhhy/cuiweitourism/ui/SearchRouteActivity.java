@@ -373,8 +373,12 @@ public class SearchRouteActivity extends BaseActivity implements View.OnClickLis
 //        ToastUtil.show(getApplicationContext(), "讨价还价");
         switch (which){
             case R.id.tv_inner_travel_item_argument:
-                Intent intent = new Intent(getApplicationContext(), EasemobLoginActivity.class);
-                startActivity(intent);
+                if (MainActivity.logged) { //|| (number != null && !"null".equals(number) && pwd != null && !"null".equals(pwd))
+                    Intent intent = new Intent(getApplicationContext(), EasemobLoginActivity.class);
+                    startActivity(intent);
+                }else{
+                    ToastUtil.show(getApplicationContext(), "请登录后再试");
+                }
                 break;
         }
     }

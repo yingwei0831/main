@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.GestureDetector;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
@@ -58,10 +60,12 @@ public class InnerTravelMainActivity extends BaseActionBarActivity implements XS
 
     private String TAG = InnerTravelMainActivity.class.getSimpleName();
 
-    private MyGridView gvHotDestination; //热门目的地
+//    private MyGridView gvHotDestination; //热门目的地
     private List<HotDestination> listHotDestination = new ArrayList<>();
-    private HotDestinationAdapter hotDestAdapter;
-//
+//    private HotDestinationAdapter hotDestAdapter;
+
+    private LinearLayout layoutDestContainer;
+
     private MyGridView gvHotRecommend; //热门推荐
     private List<CityRecommend> listHotRecommend = new ArrayList<>();
     private HotRecommendGridViewAdapter hotRecomAdapter;
@@ -148,8 +152,9 @@ public class InnerTravelMainActivity extends BaseActionBarActivity implements XS
                             ToastUtil.show(getApplicationContext(), "没有热门目的地");
                         }else{
                             listHotDestination = listDest;
-                            hotDestAdapter.setData(listHotDestination);
-                            setListViewHeightBasedOnChildren(gvHotDestination);
+                            setContainerData();
+//                            hotDestAdapter.setData(listHotDestination);
+//                            setListViewHeightBasedOnChildren(gvHotDestination);
                         }
                     }else{
                         ToastUtil.show(getApplicationContext(), (String) msg.obj);
@@ -195,6 +200,89 @@ public class InnerTravelMainActivity extends BaseActionBarActivity implements XS
             }
         }
     };
+
+    private int COLUMNS = 4; //列
+
+    private void setContainerData() {
+//        listHotDestination
+        layoutDestContainer.removeAllViews();
+        int row = 0;// 计算需要行数
+        if ((listHotDestination.size() % COLUMNS) == 0) {
+            row = listHotDestination.size() / COLUMNS;
+        } else {
+            row = (listHotDestination.size() / COLUMNS) + 1;
+        }
+
+        for (int i = 0; i < row; i++) {
+
+            LinearLayout rowLayout = new LinearLayout(getApplicationContext());
+
+            rowLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+            rowLayout.setWeightSum(COLUMNS);
+
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+            addActivityTag(i, rowLayout);
+
+            rowLayout.setLayoutParams(params);
+
+            layoutDestContainer.addView(rowLayout);
+        }
+    }
+    /**
+     * 添加每行数据
+     * @param row 行
+     * @param layout
+     */
+    private void addActivityTag(int row, LinearLayout layout) {
+
+        for (int i = 0; i < COLUMNS; i++) {
+
+            final int position = (row * COLUMNS + i);
+
+            TextView textView = new TextView(this);
+            LinearLayout.LayoutParams tvParams = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
+            tvParams.weight = 1;// 此处weight必须置为1
+            tvParams.bottomMargin = 10;
+            if (i == 1 || i == 2){ //左边，右边 margin
+                tvParams.leftMargin = 5;
+                tvParams.rightMargin = 5;
+            }
+            if (i == 0){ //右边 margin
+                tvParams.rightMargin = 5;
+            }
+            if (i == 3){ //左边 margin
+                tvParams.leftMargin = 5;
+            }
+            textView.setLayoutParams(tvParams);
+            if (position < listHotDestination.size()) {
+                textView.setText(listHotDestination.get(position).getCityName());
+                textView.setBackgroundResource(R.drawable.bg_et_city_unselected_corner_border);
+                textView.setTextSize(16f);
+                textView.setGravity(Gravity.CENTER);
+                textView.setTextColor(getResources().getColor(android.R.color.black));
+                textView.setPadding(0, 6, 0, 6);
+
+                textView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        HotDestination item = listHotDestination.get(position);
+                        String cityId = item.getCityId();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("cityId", cityId);
+                        bundle.putString("cityName", item.getCityName());
+                        InnerTravelCityActivity.actionStart(getApplicationContext(), bundle);
+                    }
+                });
+            }else{
+                textView.setVisibility(View.INVISIBLE);
+            }
+            layout.addView(textView);
+        }
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -262,7 +350,9 @@ public class InnerTravelMainActivity extends BaseActionBarActivity implements XS
             etSearchText.setHint("输入你想去的地方");
             etSearchText.setOnClickListener(this);
 
-            gvHotDestination = (MyGridView) content.findViewById(R.id.gv_inner_travel_main_hot); //热门目的地
+//            gvHotDestination = (MyGridView) content.findViewById(R.id.gv_inner_travel_main_hot); //热门目的地
+            layoutDestContainer = (LinearLayout) content.findViewById(R.id.layout_dest_container);
+            layoutDestContainer.setVisibility(View.VISIBLE);
 
             gvHotRecommend = (MyGridView) content.findViewById(R.id.gv_inner_travel_main_recommend); //热门推荐
             tvHotRecommendExchange = (TextView) content.findViewById(R.id.tv_hot_recommend_exchange); //热门推荐，换一换
@@ -317,16 +407,16 @@ public class InnerTravelMainActivity extends BaseActionBarActivity implements XS
             }
         });
 
-        for (int i=0; i < 8; i++) {
-            Travel travel = new Travel();
-            travel.setTravelPrice(String.valueOf(121 + i));
-            travel.setTravelTitle("旅游" + i);
-            travel.setTravelIconPath("drawable://" + R.mipmap.travel_icon);
-            listsFollow.add(travel);
-        }
+//        for (int i=0; i < 8; i++) {
+//            Travel travel = new Travel();
+//            travel.setTravelPrice(String.valueOf(121 + i));
+//            travel.setTravelTitle("旅游" + i);
+//            travel.setTravelIconPath("drawable://" + R.mipmap.travel_icon);
+//            listsFollow.add(travel);
+//        }
 
-        hotDestAdapter = new HotDestinationAdapter(this, listHotDestination);
-        gvHotDestination.setAdapter(hotDestAdapter);
+//        hotDestAdapter = new HotDestinationAdapter(this, listHotDestination);
+//        gvHotDestination.setAdapter(hotDestAdapter);
 
         hotRecomAdapter = new HotRecommendGridViewAdapter(getApplicationContext(), listHotRecommend);
         gvHotRecommend.setAdapter(hotRecomAdapter);
@@ -468,7 +558,7 @@ public class InnerTravelMainActivity extends BaseActionBarActivity implements XS
     @Override
     protected void addListener() {
         super.addListener();
-        gvHotDestination.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+       /* gvHotDestination.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 //热门目的地详情
@@ -479,7 +569,7 @@ public class InnerTravelMainActivity extends BaseActionBarActivity implements XS
                 bundle.putString("cityName", item.getCityName());
                 InnerTravelCityActivity.actionStart(getApplicationContext(), bundle);
             }
-        });
+        });*/
         gvHotRecommend.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -636,8 +726,12 @@ public class InnerTravelMainActivity extends BaseActionBarActivity implements XS
     @Override
     public void goToArgument(View view, View viewGroup, int position, int which) {
         //讨价还价
-        Intent intent = new Intent(getApplicationContext(), EasemobLoginActivity.class);
-        startActivity(intent);
+        if (MainActivity.logged) { //|| (number != null && !"null".equals(number) && pwd != null && !"null".equals(pwd))
+            Intent intent = new Intent(getApplicationContext(), EasemobLoginActivity.class);
+            startActivity(intent);
+        }else{
+            ToastUtil.show(getApplicationContext(), "请登录后再试");
+        }
     }
 
     private Runnable runnable = new Runnable() {
@@ -780,6 +874,7 @@ public class InnerTravelMainActivity extends BaseActionBarActivity implements XS
             mScrollView.stopRefresh();
         }
     }
+    //这种方式不可用，高度总是固定的
     public void setListViewHeightBasedOnChildren(GridView listView) {
         // 获取listview的adapter
         ListAdapter listAdapter = listView.getAdapter();
@@ -789,6 +884,35 @@ public class InnerTravelMainActivity extends BaseActionBarActivity implements XS
         // 固定列宽，有多少列
         int col = 4;// listView.getNumColumns();
         int totalHeight = 0;
+
+           /*
+           int totalHeight1 = 0;
+            //每4次，进行一次总高度相加
+            //求出4个元素的最大高度，才进行一次高度相加操作
+            for (int j = 0; j < listAdapter.getCount(); j += col){
+                LogUtil.e(TAG, "j = " + j);
+
+                int temp = j + 4;
+                if (j + 4 >= listAdapter.getCount()){
+                    temp = listAdapter.getCount();
+                }
+                int tempHeight = 0; //保存4个元素中高度较大的值
+                for (int i = j; i < temp; i++) {
+                    //计算每个item的高度
+                    View listItem = listAdapter.getView(i, null, listView);
+                    listItem.measure(0, 0);
+                    int itemHeight = listItem.getMeasuredHeight();
+                    LogUtil.e(TAG, "i = " + i + ", itemHeight = " + itemHeight);
+                    //单个高度较大的，计入高度值
+                    if (itemHeight > tempHeight){
+                        tempHeight = itemHeight;
+                        LogUtil.e(TAG, "itemHeight = " + itemHeight +", tempHeight = " + tempHeight);
+                    }
+                }
+                totalHeight1 += tempHeight;
+            }
+            LogUtil.e(TAG, "totalHeight1 = " + totalHeight1);*/
+
         // i每次加4，相当于listAdapter.getCount()小于等于4时 循环一次，计算一次item的高度，
         // listAdapter.getCount()小于等于8时计算两次高度相加
         for (int i = 0; i < listAdapter.getCount(); i += col) {
@@ -803,6 +927,7 @@ public class InnerTravelMainActivity extends BaseActionBarActivity implements XS
         ViewGroup.LayoutParams params = listView.getLayoutParams();
         // 设置高度
         params.height = totalHeight;
+        LogUtil.e(TAG, "totalHeight = " + totalHeight);
         // 设置margin
         ((ViewGroup.MarginLayoutParams) params).setMargins(10, 10, 10, 10);
         // 设置参数

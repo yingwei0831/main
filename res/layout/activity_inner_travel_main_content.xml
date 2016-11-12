@@ -55,7 +55,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="热门目的地" />
+                android:text="热门目的地"
+                android:textColor="@android:color/black"/>
 
             <com.jhhy.cuiweitourism.view.MyGridView
                 android:id="@+id/gv_inner_travel_main_hot"
@@ -65,7 +66,16 @@
                 android:paddingBottom="4dp"
                 android:horizontalSpacing="10dp"
                 android:numColumns="4"
-                android:verticalSpacing="10dp" />
+                android:verticalSpacing="10dp"
+                android:visibility="gone"/>
+            <LinearLayout
+                android:id="@+id/layout_dest_container"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                />
         </LinearLayout>
 
         <RelativeLayout
@@ -83,7 +93,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:text="热门推荐" />
+                android:text="热门推荐"
+                android:textColor="@android:color/black"/>
 
             <TextView
                 android:id="@+id/tv_hot_recommend_exchange"
@@ -91,7 +102,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:padding="6dp"
-                android:text="换一批" />
+                android:text="换一批"
+                android:textColor="@android:color/black"/>
 
             <com.jhhy.cuiweitourism.view.MyGridView
                 android:id="@+id/gv_inner_travel_main_recommend"
@@ -99,6 +111,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tv_hot_recommend_title"
                 android:layout_marginTop="10dp"
+                android:horizontalSpacing="10dp"
                 android:numColumns="2" />
         </RelativeLayout>
 

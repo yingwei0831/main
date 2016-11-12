@@ -167,11 +167,13 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
         activityBiz.activitiesHotGetDetailInfo(detailC, new BizGenericCallback<ActivityHotDetailInfo>() {
             @Override
             public void onCompletion(GenericResponseModel<ActivityHotDetailInfo> model) {
+                LogUtil.e(TAG,"--------------- onCompletion ---------------");
+                LogUtil.e(TAG,"activitiesHotGetDetailInfo " + model.toString());
                 if ("0001".equals(model.headModel.res_code)){
                     ToastUtil.show(getApplicationContext(), "获取热门线路详情失败，请返回重试");
                 }else if ("0000".equals(model.headModel.res_code)){
                     ActivityHotDetailInfo info = model.body;
-                    LogUtil.e(TAG,"activitiesHotGetInfo " );
+                    LogUtil.e(TAG,"activitiesHotGetDetailInfo " + info.toString());
                     detail = info;
                     refreshView();
                 }

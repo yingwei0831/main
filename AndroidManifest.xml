@@ -151,8 +151,7 @@
         <activity
             android:name=".ui.LoginActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.RegisterActivity"
             android:screenOrientation="portrait"
@@ -160,8 +159,7 @@
         <activity
             android:name=".ui.FindPasswordActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.CitySelectionActivity"
             android:screenOrientation="portrait"
@@ -198,10 +196,10 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.InnerTravelMainActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/ActionBarTheme"
-            android:launchMode="singleTop"
-            android:windowSoftInputMode="stateHidden|adjustResize"/>
+            android:windowSoftInputMode="stateHidden|adjustResize" />
         <!-- <activity android:name=".ui.OutsideTravelMainActivity" /> -->
         <activity
             android:name=".ui.StartActivityEditActivity"
@@ -344,8 +342,7 @@
             android:name=".ui.SearchActivity"
             android:screenOrientation="portrait"
             android:theme="@style/ActionBarTheme"
-            android:windowSoftInputMode="adjustPan|stateHidden"
-            />
+            android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".ui.SearchShopActivity"
             android:screenOrientation="portrait"
@@ -392,8 +389,7 @@
             android:name=".ui.easemob.EasemobLoginActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.easemob.ChatActivity"
             android:launchMode="singleTop"
@@ -657,7 +653,7 @@
         <!-- 定位需要的服务 使用2.0的定位需要加上这个 -->
         <service android:name="com.amap.api.location.APSService" />
 
-
+        <activity android:name=".test.ActivityTest"></activity>
     </application>
 
 </manifest>
