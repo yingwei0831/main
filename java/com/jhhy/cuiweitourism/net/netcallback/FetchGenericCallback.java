@@ -40,7 +40,7 @@ public class FetchGenericCallback<T> implements Callback.CommonCallback<String> 
             //handler.sendMessage(new Message());
         } catch (JSONException e) {
             e.printStackTrace();
-//            onError(e, true);
+            onError(e, true);
         }
     }
 

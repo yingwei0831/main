@@ -1,6 +1,7 @@
 package com.jhhy.cuiweitourism.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,7 +60,14 @@ public class Tab2ContentListViewAdapter extends BaseAdapter {
         }
         ClassifyArea travel = getItem(i);
         holder.tvDestinationName.setText(travel.getAreaName());
-//        ImageLoaderUtil.getInstance(context).displayImage(travel.getAreaPic(), holder.ivDestinationImg);
+        ImageLoaderUtil.getInstance(context).displayImage(travel.getAreaPic().substring(travel.getAreaPic().lastIndexOf("http://")), holder.ivDestinationImg);
+//        ImageLoaderUtil.getInstance(context).getImage( holder.ivDestinationImg, travel.getAreaPic().substring(travel.getAreaPic().lastIndexOf("http://")));
+//        ImageLoaderUtil.getInstance(context).setCallBack(new ImageLoaderUtil.ImageLoaderCallBack() {
+//            @Override
+//            public void refreshAdapter(Bitmap loadedImage) {
+//
+//            }
+//        });
         return view;
     }
 

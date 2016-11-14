@@ -61,6 +61,9 @@ public class StartActivityEditActivity extends BaseActivity implements AdapterVi
     private ImageView   ivAddImage;
     private ArrayList<String> listImagePath = new ArrayList<>(); //存放图片列表中 图片的地址
 
+    private ImageView ivLeft;
+    private TextView tvTitle;
+
     private EditText etTitle;
     private EditText etPrice;
     private TextView tvSelectFromCity;
@@ -104,6 +107,10 @@ public class StartActivityEditActivity extends BaseActivity implements AdapterVi
     }
 
     private void setupView() {
+        ivLeft = (ImageView) findViewById(R.id.title_main_tv_left_location);
+        tvTitle = (TextView) findViewById(R.id.tv_title_inner_travel);
+        tvTitle.setText(getString(R.string.tab1_tablelayout_item4));
+
         gvImages    = (MyGridView) findViewById(R.id.gv_start_activity_edit_imgs);
         ivAddImage  = (ImageView) findViewById(R.id.iv_start_activity_edit_add_images);
 
@@ -136,6 +143,7 @@ public class StartActivityEditActivity extends BaseActivity implements AdapterVi
         tvSelectFromCity.setOnClickListener(this);
         tvSelectFromTime.setOnClickListener(this);
         btnCommit.setOnClickListener(this);
+        ivLeft.setOnClickListener(this);
     }
 
     @Override
@@ -143,17 +151,18 @@ public class StartActivityEditActivity extends BaseActivity implements AdapterVi
         // 浏览图片，删除图片
         Intent intent = new Intent(getApplicationContext(), PhotoActivity.class);
         intent.putExtra("ID", position);
-        startActivity(intent);
+        startActivityForResult(intent, VIEW_IMAGE_LARGE);
     }
 
-    protected void onRestart() {
-        adapter.update();
-        super.onRestart();
-    }
+//    protected void onRestart() {
+//        super.onRestart();
+//        adapter.update();
+//    }
 
 private String TAG = getClass().getSimpleName();
 private int SELECT_CITY = 111;
 private int SELECT_TIME = 112;
+private int VIEW_IMAGE_LARGE = 113; //查看大图
 
     @Override
     public void onClick(View view) {
@@ -172,8 +181,11 @@ private int SELECT_TIME = 112;
                 Intent intentTime = new Intent(getApplicationContext(), DatePickerActivity.class);
                 startActivityForResult(intentTime, SELECT_TIME);
                 break;
-            case R.id.btn_start_activity_commit:
+            case R.id.btn_start_activity_commit: //发布活动
                 commitActivity();
+                break;
+            case R.id.title_main_tv_left_location:
+                finish();
                 break;
         }
     }
@@ -181,13 +193,10 @@ private int SELECT_TIME = 112;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        LogUtil.i(TAG, "----- onActivityResult-----， resultCode = " + resultCode + ", requestCode = " + requestCode);
-        LogUtil.i(TAG, "other picture = " + OTHER_PICTURE);
+        LogUtil.e(TAG, "----- onActivityResult-----， resultCode = " + resultCode + ", requestCode = " + requestCode);
+        LogUtil.e(TAG, "other picture = " + OTHER_PICTURE);
         if (resultCode == RESULT_OK) {
             if (TAKE_PICTURE == requestCode) { //照相：
-                if (resultCode == RESULT_CANCELED) {
-                    return;
-                }
                 if (Bimp.drr.size() < Consts.IMAGE_COUNT) {
                     Bimp.drr.add(path);
                 }
@@ -205,6 +214,7 @@ private int SELECT_TIME = 112;
                 LogUtil.e(TAG, "bimp.size = " + Bimp.drr.size());
                 LogUtil.e(TAG, "imagePath = "+ Bimp.drr.get(Bimp.drr.size()-1) );
                 upLoadBitmap.add(BitmapUtil.loadBitmap(Bimp.drr.get(Bimp.drr.size()-1), Utils.getScreenWidth(getApplicationContext()), Utils.getScreenHeight(getApplicationContext())));
+                adapter.update();
 //            if (userIcon != null) {
 //                BitmapUtils.photo2Sd(userIcon, mResultPicPath, mPicName);
 //            } else {
@@ -217,6 +227,7 @@ private int SELECT_TIME = 112;
             } else if (PHOTO_RESOULT == requestCode) { //保存拍照的图片
                 try {
                 upLoadBitmap.add(BitmapFactory.decodeStream(getContentResolver().openInputStream(uritempFile)));
+                    adapter.update();
 //                if (userIcon != null) {
 //                    userInfo.setUserIconPath(mPicName);
 //                    BitmapUtils.photo2Sd(userIcon, mResultPicPath, mPicName);
@@ -236,6 +247,16 @@ private int SELECT_TIME = 112;
             }
         }else{
 
+        }
+        if (requestCode == VIEW_IMAGE_LARGE){ //有可能删除图片
+            adapter.update();
+            LogUtil.e(TAG, "Bimp.drr.size = " + Bimp.drr.size() +", —> "+Bimp.drr);
+            LogUtil.e(TAG, "Bimp.bmp.size = " + Bimp.bmp.size() +", —> "+Bimp.bmp);
+            upLoadBitmap = Bimp.bmp;
+            LogUtil.e(TAG, "Bimp.bmp.size = " + upLoadBitmap.size() +", —> "+upLoadBitmap);
+            if (Bimp.drr.size() < 4){
+                ivAddImage.setVisibility(View.VISIBLE);
+            }
         }
     }
 

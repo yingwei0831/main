@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -25,16 +26,16 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-public class ImageGridActivity extends Activity {
+public class ImageGridActivity extends Activity implements OnClickListener {
 	public static final String EXTRA_IMAGE_LIST = "imagelist";
 	private String TAG = ImageGridActivity.class.getSimpleName();
 
 	// ArrayList<Entity> dataList;//鐢ㄦ潵瑁呰浇鏁版嵁婧愮殑鍒楄〃
-	List<ImageItem> dataList;
-	GridView gridView;
-	ImageGridAdapter adapter;// 鑷畾涔夌殑閫傞厤鍣�
-	AlbumHelper helper;
-	Button bt;
+	private List<ImageItem> dataList;
+	private GridView gridView;
+	private ImageGridAdapter adapter;// 鑷畾涔夌殑閫傞厤鍣�
+	private AlbumHelper helper;
+	private Button bt;
 
 	public static int number = -1; //此处为允许上传图片的个数
 
@@ -136,5 +137,17 @@ public class ImageGridActivity extends Activity {
 
 		});
 
+		TextView tvCancel = (TextView) findViewById(R.id.tv_image_grid_cancel);
+		tvCancel.setOnClickListener(this);
+	}
+
+	@Override
+	public void onClick(View view) {
+		switch (view.getId()){
+			case R.id.tv_image_grid_cancel:
+				setResult(RESULT_CANCELED);
+				finish();
+				break;
+		}
 	}
 }

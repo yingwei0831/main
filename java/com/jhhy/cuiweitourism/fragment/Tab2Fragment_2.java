@@ -218,7 +218,6 @@ public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.I
                     ToastCommon.toastShortShow(getContext(), null, "获取广告位数据出错, 点击广告位重试");
                 }
                 LogUtil.e(TAG, "foreEndGetAdvertisingPosition: " + error.toString());
-
             }
         });
     }

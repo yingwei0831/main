@@ -7,6 +7,8 @@
 
 
     <!--首页-->
+    <color name="colorFlash">#FF9369</color>
+    <color name="colorFlashBorder">#FEFD02</color>
     <color name="colorTab1TitleText">#0BC106</color>
     <color name="colorTab1BgSearchBar">#4AC76C</color>
 

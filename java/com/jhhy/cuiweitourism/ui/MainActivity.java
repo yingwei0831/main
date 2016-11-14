@@ -204,9 +204,9 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
                     break;
                 case R.id.tab2:
                     index = 2;
-//                    if (tab2Fragment_2 == null) {
+                    if (tab2Fragment_2 == null) {
                         tab2Fragment_2 = Tab2Fragment_2.newInstance(null, null);
-//                    }
+                    }
                     to = tab2Fragment_2;
                     break;
                 case R.id.tab3:
@@ -249,9 +249,9 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
                 break;
             case R.id.tab2:
                 index = 2;
-//                if (tab2Fragment_2 == null) {
+                if (tab2Fragment_2 == null) {
                     tab2Fragment_2 = Tab2Fragment_2.newInstance(null, null);
-//                }
+                }
                 to = tab2Fragment_2;
                 break;
             case R.id.tab3:
@@ -277,7 +277,7 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
         if (mContent != to) {
             mContent = to;
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction(); //fm.beginTransaction().setCustomAnimations(android.R.anim.fade_in, R.anim.slide_out);
-            if (!to.isAdded()) {    // 先判断是否被add过
+            if (!to.isAdded()) {  // 先判断是否被add过
                 transaction.hide(from).add(R.id.main_content, to, index + "").commit(); //transaction.hide(from).add(R.id.content_frame, to).commit(); // 隐藏当前的fragment，add下一个到Activity中
             } else { //被添加过
                 transaction.hide(from).show(to).commit(); //transaction.hide(from).show(to).commit(); // 隐藏当前的fragment，显示下一个

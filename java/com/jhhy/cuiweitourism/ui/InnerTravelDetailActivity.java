@@ -24,6 +24,7 @@ import android.widget.ViewFlipper;
 
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.ImageGridViewAdapter;
+import com.jhhy.cuiweitourism.adapter.InnerTravelCommentImageGridAdapter;
 import com.jhhy.cuiweitourism.biz.InnerTravelDetailBiz;
 import com.jhhy.cuiweitourism.biz.UserCollectionBiz;
 import com.jhhy.cuiweitourism.circleviewpager.ViewFactory;
@@ -34,6 +35,7 @@ import com.jhhy.cuiweitourism.moudle.UserComment;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.picture.ImageGridAdapter;
+import com.jhhy.cuiweitourism.ui.easemob.EasemobLoginActivity;
 import com.jhhy.cuiweitourism.utils.ImageLoaderUtil;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.utils.MyFileUtils;
@@ -102,6 +104,8 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
     private TextView tvAddTime;
     private TextView tvCommentContent;
     private MyGridView gvCommentImages; //评论中的图片
+    private InnerTravelCommentImageGridAdapter imageAdapter; //评论中的图片适配器
+    private List<String> listImages = new ArrayList<>();
 
     private int bottom; //底部控件在屏幕的起始高度
     private boolean click; //是否是点击indicator
@@ -163,7 +167,6 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
         getData();
         setupView();
         addListener();
-
     }
 
     private void getData() {
@@ -225,7 +228,7 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
             tvNickName = (TextView) content.findViewById(R.id.inner_travel_detail_comment_username);
             tvAddTime = (TextView) content.findViewById(R.id.tv_travel_comment_add_time);
             tvCommentContent = (TextView) content.findViewById(R.id.tv_comment_content);
-            gvCommentImages = (MyGridView) content.findViewById(R.id.inner_travel_detail_gridview);
+            gvCommentImages = (MyGridView) content.findViewById(R.id.inner_travel_detail_gridview); //评论中的图片
 
             mWebViewProduct = (WebView) content.findViewById(R.id.webview_inner_travel_detail_content_product);
             layoutPrice = (LinearLayout) content.findViewById(R.id.layout_travel_price);
@@ -305,9 +308,9 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
                 }
             }
         });
-
+        imageAdapter = new InnerTravelCommentImageGridAdapter(getApplicationContext(), listImages);
+        gvCommentImages.setAdapter(imageAdapter);
     }
-
 
 
     private void refreshView() {
@@ -340,6 +343,9 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
             tvNickName.setText(comment.getNickName());
             tvAddTime.setText(comment.getCommentTime());
             tvCommentContent.setText(comment.getContent());
+            listImages = comment.getPicList();
+            imageAdapter.setData(listImages);
+            imageAdapter.notifyDataSetChanged();
         } else {
             layoutComment.setVisibility(View.GONE);
         }
@@ -440,16 +446,25 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
                 showShare(getApplicationContext());
                 break;
             case R.id.btn_inner_travel_argument: //讨价还价
-
+                if (MainActivity.logged) {
+                    Intent intent = new Intent(getApplicationContext(), EasemobLoginActivity.class);
+                    startActivity(intent);
+                } else {
+                    ToastUtil.show(getApplicationContext(), "请登录后再试");
+                }
                 break;
-            case R.id.btn_inner_travel_reserve:
-                Bundle bundle = new Bundle();
-                bundle.putString("id", id);
-                bundle.putSerializable("detail", detail);
-                Intent intent = new Intent(getApplicationContext(), PriceCalendarReserveActivity.class);
-                intent.putExtras(bundle);
-                startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_SELECT_DATE); //选择日期
+            case R.id.btn_inner_travel_reserve: //立即预定
+                if (MainActivity.logged) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("id", id);
+                    bundle.putSerializable("detail", detail);
+                    Intent intent = new Intent(getApplicationContext(), PriceCalendarReserveActivity.class);
+                    intent.putExtras(bundle);
+                    startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_SELECT_DATE); //选择日期
 //                PriceCalendarReserveActivity.actionStart(getApplicationContext(), bundle);
+                } else {
+                    ToastUtil.show(getApplicationContext(), "请登录后再试");
+                }
                 break;
         }
     }
@@ -462,6 +477,7 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
         } else {
             if (requestCode == Consts.REQUEST_CODE_RESERVE_SELECT_DATE) { //选择日期
                 //TODO 日期选择返回
+
             }
         }
     }
@@ -767,8 +783,12 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
     }
 
     private void doCollection() {
-        UserCollectionBiz biz = new UserCollectionBiz(getApplicationContext(), handler);
-        biz.doCollection(MainActivity.user.getUserId(), "1", detail.getId());
+        if (MainActivity.logged) {
+            UserCollectionBiz biz = new UserCollectionBiz(getApplicationContext(), handler);
+            biz.doCollection(MainActivity.user.getUserId(), "1", detail.getId());
+        } else {
+            ToastUtil.show(getApplicationContext(), "请登录后再试");
+        }
     }
 
     private void showShare(Context context) {

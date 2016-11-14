@@ -101,7 +101,6 @@ public class FlashActivity extends AppCompatActivity implements ILauncherView, V
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { //不断回调
-
     }
 
     @Override
@@ -119,7 +118,7 @@ public class FlashActivity extends AppCompatActivity implements ILauncherView, V
         for(int i = 0; i < mAdapter.getCount(); i++){
             if(position == i){
                 indicators[i].setImageResource(R.mipmap.icon_point_pre);
-            }else {
+            } else {
                 indicators[i].setImageResource(R.mipmap.icon_point);
             }
         }

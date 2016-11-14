@@ -23,14 +23,14 @@ import java.util.Map;
 public class ImageGridAdapter extends BaseAdapter {
 
 	private TextCallback textcallback = null;
-	final String TAG = getClass().getSimpleName();
-	Activity act;
-	List<ImageItem> dataList;
-	Map<String, String> map = new HashMap<String, String>();
-	BitmapCacheActivity cache;
+	private final String TAG = getClass().getSimpleName();
+	private Activity act;
+	private List<ImageItem> dataList;
+	protected Map<String, String> map = new HashMap<String, String>();
+	private BitmapCacheActivity cache;
 	private Handler mHandler;
 	private int selectTotal = 0;
-	BitmapCacheActivity.ImageCallback callback = new BitmapCacheActivity.ImageCallback() {
+	private BitmapCacheActivity.ImageCallback callback = new BitmapCacheActivity.ImageCallback() {
 		@Override
 		public void imageLoad(ImageView imageView, Bitmap bitmap, Object... params) {
 			if (imageView != null && bitmap != null) {

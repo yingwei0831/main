@@ -4,6 +4,7 @@
     <string name="http_notice">网络请求中，请稍后...</string>
     <string name="net_error_notice">网络已断开</string>
     <string name="empty_input">输入不能为空</string>
+    <string name="start_activity">开启我的旅程</string>
     <!--首页-->
     <string name="activity_main_home">首页</string>
     <string name="activity_main_sort">分类</string>

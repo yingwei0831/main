@@ -113,9 +113,10 @@ public class CommentAllActivity extends BaseActivity implements AdapterView.OnIt
         listView = (PullToRefreshListView) findViewById(R.id.listView);
         listView.getLoadingLayoutProxy().setLastUpdatedLabel(Utils.getCurrentTime());
         listView.getLoadingLayoutProxy().setPullLabel("下拉刷新");
-        listView.getLoadingLayoutProxy().setRefreshingLabel("refreshingLabel");
-        listView.getLoadingLayoutProxy().setReleaseLabel("松开加载更多");
+        listView.getLoadingLayoutProxy().setRefreshingLabel("正在刷新");
+        listView.getLoadingLayoutProxy().setReleaseLabel("加载更多");
 
+        listView.setMode(PullToRefreshBase.Mode.DISABLED);
 //        listView.setEmptyView();
 
         refreshView = listView.getRefreshableView();
@@ -124,6 +125,7 @@ public class CommentAllActivity extends BaseActivity implements AdapterView.OnIt
             public void onItemClickI(AdapterView<?> adapterView, View view, int position, long id, int parentPosition) {
                 //TODO 进入图片大图浏览页面
                 ToastCommon.toastShortShow(getApplicationContext(), null, "进入图片大图浏览页面 " + parentPosition + ", " + position);
+
             }
         };
 

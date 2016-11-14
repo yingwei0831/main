@@ -587,7 +587,12 @@ public class InnerTravelMainActivity extends BaseActionBarActivity implements XS
         gridViewFollow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
+                //进入旅游详情页
+                LogUtil.e(TAG, "i = " + i + ", l = " + l);
+                Travel travel = lists.get((int) l);
+                Bundle bundle = new Bundle();
+                bundle.putString("id", travel.getId());
+                InnerTravelDetailActivity.actionStart(getApplicationContext(), bundle);
             }
         });
     }

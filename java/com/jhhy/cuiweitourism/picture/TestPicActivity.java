@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
+import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.popupwindows.PopupWindowImage;
@@ -16,7 +17,7 @@ import com.jhhy.cuiweitourism.popupwindows.PopupWindowImage;
 import java.io.Serializable;
 import java.util.List;
 
-public class TestPicActivity extends Activity {
+public class TestPicActivity extends Activity implements View.OnClickListener {
 	// ArrayList<Entity> dataList;//用来装载数据源的列表
 	List<ImageBucket> dataList;
 	GridView gridView;
@@ -102,6 +103,8 @@ public class TestPicActivity extends Activity {
 			}
 
 		});
+		TextView tvCancel = (TextView) findViewById(R.id.tv_select_image_cancel);
+		tvCancel.setOnClickListener(this);
 	}
 //	private int SELECT_PICTURE = 101;
 
@@ -123,6 +126,19 @@ public class TestPicActivity extends Activity {
 //				setResult(1, retIntent);
 //				finish();
 //			}
+		}else{
+			setResult(RESULT_CANCELED);
+			finish();
+		}
+	}
+
+	@Override
+	public void onClick(View view) {
+		switch (view.getId()){
+			case R.id.tv_select_image_cancel:
+				setResult(RESULT_CANCELED);
+				finish();
+				break;
 		}
 	}
 }
