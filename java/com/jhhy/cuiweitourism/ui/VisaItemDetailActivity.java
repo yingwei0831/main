@@ -238,32 +238,32 @@ public class VisaItemDetailActivity extends BaseActivity implements View.OnClick
     }
 
     private void getInternetData() {
-//        VisaBiz biz = new VisaBiz(getApplicationContext(), handler);
-//        biz.getVisaDetail(id);
-        com.jhhy.cuiweitourism.net.models.FetchModel.VisaDetail visaDetail = new com.jhhy.cuiweitourism.net.models.FetchModel.VisaDetail();
-        visaDetail.setProductID(id);
-        VisaActionBiz biz = new VisaActionBiz(getApplicationContext(), handler);
-        biz.getVisaDetail(visaDetail, new BizGenericCallback<VisaDetailInfo>() {
-            @Override
-            public void onCompletion(GenericResponseModel<VisaDetailInfo> model) {
-                if ("0000".equals(model.headModel.res_code)) {
-                    VisaDetailInfo visaDetailInfo = model.body;
-                    LogUtil.e(TAG,"visaDetailInfo: " + visaDetailInfo.toString());
-                }else{
-                    ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);
-                }
-            }
-
-            @Override
-            public void onError(FetchError error) {
-                if (error.localReason != null){
-                    ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
-                }else{
-                    ToastCommon.toastShortShow(getApplicationContext(), null, "签证详情出错");
-                }
-                LogUtil.e(TAG, "visaDetailInfo: " + error.toString());
-            }
-        });
+        VisaBiz biz = new VisaBiz(getApplicationContext(), handler);
+        biz.getVisaDetail(id);
+//        com.jhhy.cuiweitourism.net.models.FetchModel.VisaDetail visaDetail = new com.jhhy.cuiweitourism.net.models.FetchModel.VisaDetail();
+//        visaDetail.setProductID(id);
+//        VisaActionBiz biz = new VisaActionBiz(getApplicationContext(), handler);
+//        biz.getVisaDetail(visaDetail, new BizGenericCallback<VisaDetailInfo>() {
+//            @Override
+//            public void onCompletion(GenericResponseModel<VisaDetailInfo> model) {
+//                if ("0000".equals(model.headModel.res_code)) {
+//                    VisaDetailInfo visaDetailInfo = model.body;
+//                    LogUtil.e(TAG,"visaDetailInfo: " + visaDetailInfo.toString());
+//                }else{
+//                    ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);
+//                }
+//            }
+//
+//            @Override
+//            public void onError(FetchError error) {
+//                if (error.localReason != null){
+//                    ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
+//                }else{
+//                    ToastCommon.toastShortShow(getApplicationContext(), null, "签证详情出错");
+//                }
+//                LogUtil.e(TAG, "visaDetailInfo: " + error.toString());
+//            }
+//        });
     }
 
     @Override

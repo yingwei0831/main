@@ -12,8 +12,6 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-
-
         <com.jhhy.cuiweitourism.view.MyScrollViewIS
             android:id="@+id/scrollview_visa_detail"
             android:layout_width="match_parent"
@@ -324,7 +322,7 @@
                 </LinearLayout>
             </LinearLayout>
         </com.jhhy.cuiweitourism.view.MyScrollViewIS>
-
+        <!--顶部导航-->
         <LinearLayout
             android:id="@+id/layout_visa_item_main_indicator_top"
             android:layout_width="match_parent"

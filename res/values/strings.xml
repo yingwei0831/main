@@ -154,6 +154,11 @@
     <string name="visa_hot_country">热门签证国家</string>
     <string name="visa_hot_country_all">查看全部国家和地区</string>
 
+    <string name="visa_detail_name">资料名称</string>
+    <string name="visa_detail_required">是否必须</string>
+    <string name="visa_detail_model">模板</string>
+    <string name="visa_detail_remark">备注</string>
+
     <!--分类-->
     <string name="tab2_search_hint">输入你想去的地方</string>
     <string name="tab2_recommend_exchange">换一批</string>
@@ -319,6 +324,12 @@
     <string name="visa_material">所需材料</string>
     <string name="visa_other">签证附件</string>
     <string name="visa_reserve_notice">预订须知</string>
+
+    <string name="visa_detail_indicator_worker">在职人员</string>
+    <string name="visa_detail_indicator_freedom">自由职业者</string>
+    <string name="visa_detail_indicator_retired">退休人员</string>
+    <string name="visa_detail_indicator_student">学生</string>
+    <string name="visa_detail_indicator_children">学龄前儿童</string>
 
     <!--酒店-->
     <string name="hotel_title">酒店</string>
