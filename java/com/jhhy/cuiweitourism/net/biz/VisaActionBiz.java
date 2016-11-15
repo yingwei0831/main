@@ -24,6 +24,9 @@ import com.jhhy.cuiweitourism.net.netcallback.FetchGenericResponse;
 import com.jhhy.cuiweitourism.net.netcallback.FetchResponse;
 import com.jhhy.cuiweitourism.net.netcallback.HttpUtils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -151,7 +154,7 @@ public class VisaActionBiz extends  BasicActionBiz {
                 visaDetailInfo.visaPrice = array.get(11);
                 visaDetailInfo.visaTime = array.get(12);
                 visaDetailInfo. needInterview = array.get(13).equals("1");
-                visaDetailInfo.visaPeriodOfValidaty = array.get(14);
+                visaDetailInfo.visaPeriodOfValidate = array.get(14);
                 visaDetailInfo.visaStayPeriod = array.get(15);
                 visaDetailInfo.innerTimes = array.get(16);
                 visaDetailInfo.notice = array.get(17);
@@ -163,7 +166,14 @@ public class VisaActionBiz extends  BasicActionBiz {
 
 //                ArrayList<VisaClassification> visaClassification = new ArrayList<>();
 //                LinkedHashMap<String, VisaClassification> visaClassification = parseJsonToObject(, LinkedHashMap.class);
+                try {
+                    JSONObject classificObj = new JSONObject(array.get(20));
 
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
 //                visaDetailInfo.classification = visaClassification;
                 GenericResponseModel<VisaDetailInfo> returnModel  = new GenericResponseModel<>(response.head, visaDetailInfo);

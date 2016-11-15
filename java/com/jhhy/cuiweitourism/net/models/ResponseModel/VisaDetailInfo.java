@@ -84,7 +84,7 @@ public class VisaDetailInfo {
     public String visaTime;
 
     public boolean needInterview;
-    public String visaPeriodOfValidaty;
+    public String visaPeriodOfValidate;
     public String visaStayPeriod;
     public String innerTimes;
 
@@ -103,7 +103,7 @@ public class VisaDetailInfo {
 
     public VisaDetailInfo(String visaId, String visaName, String visaType, String continentCode, String continentName,
                           String countryCode, String countryName, String countryFlagUrl, String visaAddressCode, String visaAddress,
-                          boolean visaHurry, String visaPrice, String visaTime, boolean needInterview, String visaPeriodOfValidaty,
+                          boolean visaHurry, String visaPrice, String visaTime, boolean needInterview, String visaPeriodOfValidate,
                           String visaStayPeriod, String innerTimes, String notice, String acceptArea, String remark, String visaPriceLower,
                           String visaPriceAdditional, ArrayList<VisaClassification> classification) {
         this.visaId = visaId;
@@ -120,7 +120,7 @@ public class VisaDetailInfo {
         this.visaPrice = visaPrice;
         this.visaTime = visaTime;
         this.needInterview = needInterview;
-        this.visaPeriodOfValidaty = visaPeriodOfValidaty;
+        this.visaPeriodOfValidate = visaPeriodOfValidate;
         this.visaStayPeriod = visaStayPeriod;
         this.innerTimes = innerTimes;
         this.notice = notice;
@@ -251,12 +251,12 @@ public class VisaDetailInfo {
         this.needInterview = needInterview;
     }
 
-    public String getVisaPeriodOfValidaty() {
-        return visaPeriodOfValidaty;
+    public String getVisaPeriodOfValidate() {
+        return visaPeriodOfValidate;
     }
 
-    public void setVisaPeriodOfValidaty(String visaPeriodOfValidaty) {
-        this.visaPeriodOfValidaty = visaPeriodOfValidaty;
+    public void setVisaPeriodOfValidate(String visaPeriodOfValidate) {
+        this.visaPeriodOfValidate = visaPeriodOfValidate;
     }
 
     public String getVisaStayPeriod() {
