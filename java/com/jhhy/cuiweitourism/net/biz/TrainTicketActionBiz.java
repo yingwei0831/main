@@ -129,7 +129,7 @@ public class TrainTicketActionBiz extends BasicActionBiz {
                     statios.add(itemStation);
                 }
 
-                GenericResponseModel<ArrayList<TrainStationInfo>> model = new GenericResponseModel<>(response.head,statios);
+                GenericResponseModel<ArrayList<TrainStationInfo>> model = new GenericResponseModel<>(response.head, statios);
                 this.bizCallback.onCompletion(model);
             }
 
@@ -139,7 +139,7 @@ public class TrainTicketActionBiz extends BasicActionBiz {
             }
         };
 
-        HttpUtils.executeXutils(fetchModel,new FetchGenericCallback<>(fetchResponse));
+        HttpUtils.executeXutils(fetchModel, new FetchGenericCallback<>(fetchResponse));
     }
 
     /**

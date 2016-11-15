@@ -19,6 +19,13 @@ import com.jhhy.cuiweitourism.biz.VisaBiz;
 import com.jhhy.cuiweitourism.moudle.PhoneBean;
 import com.jhhy.cuiweitourism.moudle.VisaHotCountryCity;
 import com.jhhy.cuiweitourism.moudle.VisaType;
+import com.jhhy.cuiweitourism.net.biz.VisaActionBiz;
+import com.jhhy.cuiweitourism.net.models.FetchModel.VisaHot;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.VisaHotInfo;
+import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
+import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.popupwindows.PopupWindowVisaType;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.utils.Utils;
@@ -41,7 +48,7 @@ public class VisaListActivity extends BaseActivity implements AdapterView.OnItem
     private ListView listVisa;
     private VisaListAdapter adapter;
 
-    private List<VisaHotCountryCity> lists = new ArrayList<>();
+    private List<VisaHotInfo> lists = new ArrayList<>();
 
     private TextView tvOrder;
     private TextView tvType;
@@ -63,7 +70,7 @@ public class VisaListActivity extends BaseActivity implements AdapterView.OnItem
             switch (msg.what){
                 case Consts.MESSAGE_VISA_HOT_COUNTRY_LIST:
                     if (msg.arg1 == 1){
-                        lists = (List<VisaHotCountryCity>) msg.obj;
+                        lists = (List<VisaHotInfo>) msg.obj;
                         if (lists.size() != 0){
                             adapter.setData(lists);
                         }else{
@@ -124,7 +131,6 @@ public class VisaListActivity extends BaseActivity implements AdapterView.OnItem
         tvOrder.setOnClickListener(this);
         tvType.setOnClickListener(this);
         tvFromCity.setOnClickListener(this);
-
     }
 
     private void setupView() {
@@ -148,6 +154,8 @@ public class VisaListActivity extends BaseActivity implements AdapterView.OnItem
         visaOrderList.add(orderDefault);
         visaOrderList.add(orderIncrese);
         visaOrderList.add(orderDecrese);
+
+        biz = new VisaActionBiz(getApplicationContext(), handler);
     }
 
     private void getData() {
@@ -155,18 +163,44 @@ public class VisaListActivity extends BaseActivity implements AdapterView.OnItem
         nationId = bundle.getString("nationId");
         nationName = bundle.getString("nationName");
     }
+    private VisaActionBiz biz; //热门签证国家，查看全部国家和地区
 
     private void getInternetData() {
-        VisaBiz biz = new VisaBiz(getApplicationContext(), handler);
-        biz.getCountryList(nationId, order, type, fromCity.getName());
+//        VisaBiz biz = new VisaBiz(getApplicationContext(), handler);
+//        biz.getCountryList(nationId, order, type, fromCity.getName());
+//        biz.getVisaType();
+//        biz.getVisaCity();
+        VisaHot visaHot = new VisaHot();
+        visaHot.setCountryCode(nationId);
+        visaHot.setDistributionArea(""); //送签地（三字码）
+        biz.getVisaHotList(visaHot, new BizGenericCallback<ArrayList<VisaHotInfo>>() {
+            @Override
+            public void onCompletion(GenericResponseModel<ArrayList<VisaHotInfo>> model) {
+                if ("0000".equals(model.headModel.res_code)) {
+                    lists = model.body;
+                    LogUtil.e(TAG,"visaHotInfo: " + lists.toString());
+                    adapter.setData(lists);
+                }else{
+                    ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);
+                }
+            }
 
-        biz.getVisaType();
-        biz.getVisaCity();
+            @Override
+            public void onError(FetchError error) {
+                if (error.localReason != null){
+                    ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
+                }else{
+                    ToastCommon.toastShortShow(getApplicationContext(), null, "热门签证数据出错");
+                }
+                LogUtil.e(TAG, "visaHotInfo: " + error.toString());
+            }
+        });
+
     }
 
     @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        String id = lists.get(i).getId();
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) { //进入签证详情
+        String id = lists.get(i).getVisaId();
         Intent intent = new Intent(getApplicationContext(), VisaItemDetailActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString("id", id);

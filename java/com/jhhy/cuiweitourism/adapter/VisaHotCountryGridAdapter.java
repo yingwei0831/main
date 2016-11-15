@@ -1,6 +1,7 @@
 package com.jhhy.cuiweitourism.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,8 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
-import com.jhhy.cuiweitourism.moudle.CityRecommend;
-import com.jhhy.cuiweitourism.moudle.HotDestination;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.VisaCountryInfo;
 import com.jhhy.cuiweitourism.utils.ImageLoaderUtil;
 
 import java.util.List;
@@ -18,8 +18,6 @@ import java.util.List;
  * Created by jiahe008 on 2016/9/26.
  */
 public class VisaHotCountryGridAdapter extends MyBaseAdapter {
-
-
 
     public VisaHotCountryGridAdapter(Context ct, List list) {
         super(ct, list);
@@ -37,9 +35,14 @@ public class VisaHotCountryGridAdapter extends MyBaseAdapter {
         }else{
             holder = (ViewHolder) view.getTag();
         }
-        CityRecommend hotVisa = (CityRecommend) list.get(i);
-        holder.tvName.setText(hotVisa.getCityName());
-        ImageLoaderUtil.getInstance(context).displayImage(hotVisa.getCityImage(), holder.imageView);
+        VisaCountryInfo hotVisa = (VisaCountryInfo) list.get(i);
+        holder.tvName.setText(hotVisa.getCountryName());
+        ImageLoaderUtil.getInstance(context).getImage( holder.imageView, hotVisa.getCountryFlagUrl());
+        ImageLoaderUtil.getInstance(context).setCallBack(new ImageLoaderUtil.ImageLoaderCallBack() {
+            @Override
+            public void refreshAdapter(Bitmap loadedImage) {
+            }
+        });
         return view;
     }
 
@@ -48,10 +51,6 @@ public class VisaHotCountryGridAdapter extends MyBaseAdapter {
         super.setData(list);
         notifyDataSetChanged();
     }
-//    public void setData(List<CityRecommend> listHotCountry) {
-//        this.list = listHotCountry;
-//        notifyDataSetChanged();
-//    }
 
     class ViewHolder{
         private ImageView imageView;

@@ -9,8 +9,10 @@ import android.widget.TextView;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.moudle.VisaHotCountry;
 import com.jhhy.cuiweitourism.moudle.VisaHotCountryCity;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.VisaHotInfo;
 
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by jiahe008 on 2016/9/27.
@@ -35,11 +37,11 @@ public class VisaListAdapter extends MyBaseAdapter {
         }else{
             holder = (ViewHolder) view.getTag();
         }
-        VisaHotCountryCity city = (VisaHotCountryCity) getItem(i);
-        holder.tvTitle.setText(city.getTitle());
-        holder.tvPeriod.setText(city.getHandleDay());
-        holder.tvLocation.setText(city.getCityName());
-        holder.tvPrice.setText(city.getPrice());
+        VisaHotInfo city = (VisaHotInfo) getItem(i);
+        holder.tvTitle.setText(city.getVisaName());
+        holder.tvPeriod.setText(String.format(Locale.getDefault(), "办理时长预计送签后的%s个工作日", city.getVisaTime()));
+        holder.tvLocation.setText(String.format(Locale.getDefault(), "%s领区", city.getVisaAddress()));
+        holder.tvPrice.setText(city.getVisaPrice());
         return view;
     }
 
@@ -48,11 +50,6 @@ public class VisaListAdapter extends MyBaseAdapter {
         super.setData(list);
         notifyDataSetChanged();
     }
-
-//    public void setData(List<VisaHotCountryCity> listCity){
-//        this.list = listCity;
-//        notifyDataSetChanged();
-//    }
 
     class ViewHolder {
         private TextView tvTitle;

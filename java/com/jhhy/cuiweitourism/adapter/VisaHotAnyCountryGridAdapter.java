@@ -1,6 +1,7 @@
 package com.jhhy.cuiweitourism.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.moudle.VisaHotCountry;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.VisaHotInfo;
 import com.jhhy.cuiweitourism.utils.ImageLoaderUtil;
 
 import java.util.List;
@@ -36,10 +38,15 @@ public class VisaHotAnyCountryGridAdapter extends MyBaseAdapter {
             holder = (ViewHolder) view.getTag();
         }
 
-        VisaHotCountry country = (VisaHotCountry) list.get(i);
-        holder.title.setText(country.getTitle());
-        holder.price.setText(country.getPrice());
-        ImageLoaderUtil.getInstance(context).displayImage(country.getLitpic(), holder.imageView);
+        VisaHotInfo country = (VisaHotInfo) list.get(i);
+        holder.title.setText(country.getVisaName());
+        holder.price.setText(country.getVisaPrice());
+        ImageLoaderUtil.getInstance(context).getImage(holder.imageView, country.getVisaFlagUrl());
+        ImageLoaderUtil.getInstance(context).setCallBack(new ImageLoaderUtil.ImageLoaderCallBack() {
+            @Override
+            public void refreshAdapter(Bitmap loadedImage) {
+            }
+        });
         return view;
     }
 

@@ -48,7 +48,6 @@ import java.util.Map;
     }
 
     public String toBizJsonString(){
-
         JSONObject json = this.toBizJsonObject();
         String entityString = json.toString();
         return entityString;
@@ -56,10 +55,9 @@ import java.util.Map;
 
     public JSONObject toBizJsonObject(){
         JSONObject json = new JSONObject();
-
         try {
             JSONObject headJson = new JSONObject();
-            headJson.put(Consts.KEY_CODE,this.code);
+            headJson.put(Consts.KEY_CODE, this.code);
             json.put(Consts.KEY_HEAD, headJson);
             json.put(Consts.KEY_FIELD, toFieldJsonObject(this.toMapObject()));
 

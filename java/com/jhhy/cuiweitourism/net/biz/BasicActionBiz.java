@@ -38,8 +38,6 @@ public class BasicActionBiz {
         else {
             return null;
         }
-
-
     }
 
     public  ArrayList<ArrayList<String>> parseJsonTotwoLevelArray(FetchResponseModel model){

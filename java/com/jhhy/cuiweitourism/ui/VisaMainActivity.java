@@ -26,10 +26,15 @@ import com.jhhy.cuiweitourism.moudle.ADInfo;
 import com.jhhy.cuiweitourism.moudle.CityRecommend;
 import com.jhhy.cuiweitourism.moudle.VisaHotCountry;
 import com.jhhy.cuiweitourism.net.biz.ForeEndActionBiz;
+import com.jhhy.cuiweitourism.net.biz.VisaActionBiz;
 import com.jhhy.cuiweitourism.net.models.FetchModel.ForeEndAdvertise;
+import com.jhhy.cuiweitourism.net.models.FetchModel.VisaCountry;
+import com.jhhy.cuiweitourism.net.models.FetchModel.VisaHot;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.ForeEndAdvertisingPositionInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.VisaCountryInfo;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.VisaHotInfo;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
@@ -68,17 +73,16 @@ public class VisaMainActivity extends BaseActivity implements XScrollView.IXScro
 //    private int time = 4000; // 默认轮播时间
 
     private View content;
-//    private Button btnStartCustom; //开始定制按钮
 
     private MyGridView gvHotVisaCountry; //热门签证国家(top)
     private VisaHotCountryGridAdapter adapterHotCountry;
-    private List<CityRecommend> listHotCountry = new ArrayList<>();
+    private List<VisaCountryInfo> listHotCountry = new ArrayList<>();
 
     private Button btnVisaViewMore; //查看全部国家和地区
 
     private MyGridView gvHotVisaAny; //热门签证（bottom）
     private VisaHotAnyCountryGridAdapter adapterHotAny;
-    private List<VisaHotCountry> listHotAny = new ArrayList<>();
+    private List<VisaHotInfo> listHotAny = new ArrayList<>();
 
 
     private Handler handler = new Handler(){
@@ -89,7 +93,7 @@ public class VisaMainActivity extends BaseActivity implements XScrollView.IXScro
             switch (msg.what){
                 case Consts.MESSAGE_VISA_HOT: //热门签证（bottom）
                     if (msg.arg1 == 1){
-                        listHotAny = (List<VisaHotCountry>) msg.obj;
+                        listHotAny = (List<VisaHotInfo>) msg.obj;
                         if (listHotAny != null || listHotAny.size() > 0){
                             adapterHotAny.setData(listHotAny);
                         }else{
@@ -101,7 +105,7 @@ public class VisaMainActivity extends BaseActivity implements XScrollView.IXScro
                     break;
                 case Consts.MESSAGE_VISA_HOT_COUNTRY: //热门签证国家（top）
                     if (msg.arg1 == 1){
-                        listHotCountry = (List<CityRecommend>) msg.obj;
+                        listHotCountry = (List<VisaCountryInfo>) msg.obj;
                         if (listHotCountry != null || listHotCountry.size() > 0){
                             adapterHotCountry.setData(listHotCountry);
                         }else{
@@ -149,14 +153,19 @@ public class VisaMainActivity extends BaseActivity implements XScrollView.IXScro
         }
     };
 
+    private VisaActionBiz biz; //热门签证国家，查看全部国家和地区
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_visa_main);
         getInternetData();
         setupView();
+        LoadingIndicator.show(VisaMainActivity.this, getString(R.string.http_notice));
+        getHotVisaCountry();
+        getHotVisaAny();
         addListener();
-
     }
 
     @Override
@@ -241,19 +250,67 @@ public class VisaMainActivity extends BaseActivity implements XScrollView.IXScro
             myScrollView.setGestureDetector(mGestureDetector);
         }
         mScrollView.setView(content);
-        LoadingIndicator.show(VisaMainActivity.this, getString(R.string.http_notice));
-        getHotVisaCountry();
-        getHotVisaAny();
+        biz = new VisaActionBiz(getApplicationContext(), handler);
     }
 
     private void getHotVisaAny() { //热门签证
-        VisaBiz biz = new VisaBiz(getApplicationContext(), handler);
-        biz.getHotVisa();
+//        VisaBiz biz = new VisaBiz(getApplicationContext(), handler);
+//        biz.getHotVisa();
+        VisaHot visaHot = new VisaHot();
+        visaHot.setCountryCode("");
+        visaHot.setDistributionArea("");
+        biz.getVisaHotList(visaHot, new BizGenericCallback<ArrayList<VisaHotInfo>>() {
+            @Override
+            public void onCompletion(GenericResponseModel<ArrayList<VisaHotInfo>> model) {
+                if ("0000".equals(model.headModel.res_code)) {
+                    listHotAny = model.body;
+                    LogUtil.e(TAG,"visaHotInfo: " + listHotAny.toString());
+                    adapterHotAny.setData(listHotAny);
+                }else{
+                    ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);
+                }
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                if (error.localReason != null){
+                    ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
+                }else{
+                    ToastCommon.toastShortShow(getApplicationContext(), null, "热门签证数据出错");
+                }
+                LogUtil.e(TAG, "visaHotInfo: " + error.toString());
+            }
+        });
     }
 
     private void getHotVisaCountry() { //热门签证国家
-        VisaBiz biz = new VisaBiz(getApplicationContext(), handler);
-        biz.getHotCountry();
+//        VisaBiz biz = new VisaBizsaBiz(getApplicationContext(), handler);
+//        biz.getHotCountry();
+
+        VisaCountry visaCountry = new VisaCountry();
+        visaCountry.setIsHot("Y");
+        biz.getVisaCountry(visaCountry, new BizGenericCallback<ArrayList<VisaCountryInfo>>() {
+            @Override
+            public void onCompletion(GenericResponseModel<ArrayList<VisaCountryInfo>> model) {
+                if ("0000".equals(model.headModel.res_code)) {
+                    listHotCountry = model.body;
+                    LogUtil.e(TAG,"visaCountryInfo: " + listHotCountry.toString());
+                    adapterHotCountry.setData(listHotCountry);
+                }else{
+                    ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);
+                }
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                if (error.localReason != null){
+                    ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
+                }else{
+                    ToastCommon.toastShortShow(getApplicationContext(), null, "热门签证国家数据出错");
+                }
+                LogUtil.e(TAG, "visaCountryInfo: " + error.toString());
+            }
+        });
     }
 
     private void addListener(){
@@ -264,12 +321,12 @@ public class VisaMainActivity extends BaseActivity implements XScrollView.IXScro
         //热门签证国家
         gvHotVisaCountry.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) { //进入国家下面的各种签证 列表
 
                 Intent intent = new Intent(getApplicationContext(), VisaListActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("nationId", listHotCountry.get(i).getCityId());
-                bundle.putString("nationName", listHotCountry.get(i).getCityName());
+                bundle.putString("nationId", listHotCountry.get(i).getCountryCode());
+                bundle.putString("nationName", listHotCountry.get(i).getCountryName());
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
@@ -279,8 +336,8 @@ public class VisaMainActivity extends BaseActivity implements XScrollView.IXScro
         gvHotVisaAny.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                LogUtil.e(TAG, "position = " + i +", l = " + l);
-                String id = listHotAny.get(i).getId();
+                LogUtil.e(TAG, "position = " + i +", l = " + l); //进入详情
+                String id = listHotAny.get(i).getVisaId();
                 Intent intent = new Intent(getApplicationContext(), VisaItemDetailActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("id", id);
