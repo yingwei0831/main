@@ -92,7 +92,17 @@ public class VisaDetailInfo {
     public String acceptArea; //受理范围
     public String remark;
 
-    public ArrayList<VisaClassification> classification; //签证人员类别
+
+    public  VisaMaterialCollection materialCollectionl;
+
+    public VisaMaterialCollection getMaterialCollectionl()
+    {
+        if (materialCollectionl == null){
+            materialCollectionl = new VisaMaterialCollection();
+        }
+        return materialCollectionl;
+    }
+//    public ArrayList<VisaClassification> classification; //签证人员类别
 //    public LinkedList<VisaClassification> classification; //签证人员类别
 //    public LinkedHashMap<String, VisaClassification> classification; //签证人员类别
     public String visaPriceLower;
@@ -105,7 +115,7 @@ public class VisaDetailInfo {
                           String countryCode, String countryName, String countryFlagUrl, String visaAddressCode, String visaAddress,
                           boolean visaHurry, String visaPrice, String visaTime, boolean needInterview, String visaPeriodOfValidate,
                           String visaStayPeriod, String innerTimes, String notice, String acceptArea, String remark, String visaPriceLower,
-                          String visaPriceAdditional, ArrayList<VisaClassification> classification) {
+                          String visaPriceAdditional, VisaMaterialCollection materialCollectionl) {
         this.visaId = visaId;
         this.visaName = visaName;
         this.visaType = visaType;
@@ -128,15 +138,15 @@ public class VisaDetailInfo {
         this.remark = remark;
         this.visaPriceLower = visaPriceLower;
         this.visaPriceAdditional = visaPriceAdditional;
-        this.classification = classification;
+        this.materialCollectionl = materialCollectionl;
     }
 
-    public ArrayList<VisaClassification> getClassification() {
-        return classification;
+    public VisaMaterialCollection getClassification() {
+        return materialCollectionl;
     }
 
-    public void setClassification(ArrayList<VisaClassification> classification) {
-        this.classification = classification;
+    public void setClassification(VisaMaterialCollection classification) {
+        this.materialCollectionl = classification;
     }
 
     public String getVisaId() {
@@ -313,5 +323,34 @@ public class VisaDetailInfo {
 
     public void setVisaPriceAdditional(String visaPriceAdditional) {
         this.visaPriceAdditional = visaPriceAdditional;
+    }
+
+    @Override
+    public String toString() {
+        return "VisaDetailInfo{" +
+                "visaId='" + visaId + '\'' +
+                ", visaName='" + visaName + '\'' +
+                ", visaType='" + visaType + '\'' +
+                ", continentCode='" + continentCode + '\'' +
+                ", continentName='" + continentName + '\'' +
+                ", countryCode='" + countryCode + '\'' +
+                ", countryName='" + countryName + '\'' +
+                ", countryFlagUrl='" + countryFlagUrl + '\'' +
+                ", visaAddressCode='" + visaAddressCode + '\'' +
+                ", visaAddress='" + visaAddress + '\'' +
+                ", visaHurry=" + visaHurry +
+                ", visaPrice='" + visaPrice + '\'' +
+                ", visaTime='" + visaTime + '\'' +
+                ", needInterview=" + needInterview +
+                ", visaPeriodOfValidate='" + visaPeriodOfValidate + '\'' +
+                ", visaStayPeriod='" + visaStayPeriod + '\'' +
+                ", innerTimes='" + innerTimes + '\'' +
+                ", notice='" + notice + '\'' +
+                ", acceptArea='" + acceptArea + '\'' +
+                ", remark='" + remark + '\'' +
+                ", materialCollectionl=" + materialCollectionl +
+                ", visaPriceLower='" + visaPriceLower + '\'' +
+                ", visaPriceAdditional='" + visaPriceAdditional + '\'' +
+                '}';
     }
 }

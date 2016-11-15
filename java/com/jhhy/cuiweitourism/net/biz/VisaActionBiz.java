@@ -3,6 +3,7 @@ package com.jhhy.cuiweitourism.net.biz;
 import android.content.Context;
 import android.os.Handler;
 
+import com.google.gson.internal.LinkedTreeMap;
 import com.jhhy.cuiweitourism.net.models.FetchModel.VisaCountry;
 import com.jhhy.cuiweitourism.net.models.FetchModel.VisaDetail;
 import com.jhhy.cuiweitourism.net.models.FetchModel.VisaHot;
@@ -16,6 +17,7 @@ import com.jhhy.cuiweitourism.net.models.ResponseModel.VisaCountryInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.VisaDetailInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.VisaHotCountryInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.VisaHotInfo;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.VisaMaterial;
 import com.jhhy.cuiweitourism.net.netcallback.BizCallback;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.netcallback.FetchCallBack;
@@ -28,8 +30,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -131,49 +136,119 @@ public class VisaActionBiz extends  BasicActionBiz {
     /**
      * 签证详情
      */
-    public void getVisaDetail(VisaDetail visaDetail, BizGenericCallback<VisaDetailInfo> callBack) {
+    public void getVisaDetail(final VisaDetail visaDetail, BizGenericCallback<VisaDetailInfo> callBack) {
         visaDetail.setBizCode("Visa_getvisadetial");
         visaDetail.setPltType("A");
         final FetchGenericResponse<VisaDetailInfo> fetchResponse = new FetchGenericResponse<VisaDetailInfo>(callBack){
             @Override
             public void onCompletion(FetchResponseModel response) {
 //                ArrayList<String> array = parseJsonTotwoLevelArray(response);
-                ArrayList<String> array = parseJsonToObject(response, ArrayList.class);
+                ArrayList<Object> array = parseJsonToObject(response, ArrayList.class);
                 VisaDetailInfo visaDetailInfo = new VisaDetailInfo();
-                visaDetailInfo.visaId = array.get(0);
-                visaDetailInfo.visaName = array.get(1);
-                visaDetailInfo.visaType = array.get(2);
-                visaDetailInfo.continentCode = array.get(3);
-                visaDetailInfo.continentName = array.get(4);
-                visaDetailInfo.countryCode = array.get(5);
-                visaDetailInfo.countryName = array.get(6);
-                visaDetailInfo.countryFlagUrl = array.get(7);
-                visaDetailInfo.visaAddressCode = array.get(8);
-                visaDetailInfo.visaAddress = array.get(9);
+                visaDetailInfo.visaId = (String) array.get(0);
+                visaDetailInfo.visaName = (String)  array.get(1);
+                visaDetailInfo.visaType = (String)  array.get(2);
+                visaDetailInfo.continentCode =  (String) array.get(3);
+                visaDetailInfo.continentName =  (String) array.get(4);
+                visaDetailInfo.countryCode =  (String) array.get(5);
+                visaDetailInfo.countryName = (String)  array.get(6);
+                visaDetailInfo.countryFlagUrl = (String)  array.get(7);
+                visaDetailInfo.visaAddressCode = (String)  array.get(8);
+                visaDetailInfo.visaAddress = (String)  array.get(9);
                 visaDetailInfo. visaHurry = array.get(10).equals("Y");
-                visaDetailInfo.visaPrice = array.get(11);
-                visaDetailInfo.visaTime = array.get(12);
+                visaDetailInfo.visaPrice =  (String) array.get(11);
+                visaDetailInfo.visaTime =  (String) array.get(12);
                 visaDetailInfo. needInterview = array.get(13).equals("1");
-                visaDetailInfo.visaPeriodOfValidate = array.get(14);
-                visaDetailInfo.visaStayPeriod = array.get(15);
-                visaDetailInfo.innerTimes = array.get(16);
-                visaDetailInfo.notice = array.get(17);
-                visaDetailInfo.acceptArea = array.get(18);
-                visaDetailInfo.remark = array.get(19);
+                visaDetailInfo.visaPeriodOfValidate = (String)array.get(14);
+                visaDetailInfo.visaStayPeriod =(String) array.get(15);
+                visaDetailInfo.innerTimes =(String) array.get(16);
+                visaDetailInfo.notice = (String)array.get(17);
+                visaDetailInfo.acceptArea =(String) array.get(18);
+                visaDetailInfo.remark =(String) array.get(19);
 //                visaDetailInfo.classification = array.get(20);
-                visaDetailInfo.visaPriceLower = array.get(21);
-                visaDetailInfo.visaPriceAdditional = array.get(22);
+                visaDetailInfo.visaPriceLower = (String)array.get(21);
+                visaDetailInfo.visaPriceAdditional = (String)array.get(22);
 
 //                ArrayList<VisaClassification> visaClassification = new ArrayList<>();
 //                LinkedHashMap<String, VisaClassification> visaClassification = parseJsonToObject(, LinkedHashMap.class);
-                try {
-                    JSONObject classificObj = new JSONObject(array.get(20));
+                LinkedTreeMap<String,ArrayList<ArrayList<String>>> map =(LinkedTreeMap<String,ArrayList<ArrayList<String>>>) array.get(20);
+                Set<String> keys = map.keySet();
+                Iterator<String> it = keys.iterator();
+                while (it.hasNext()){
+                    //ArrayList<ArrayList<String>> list = it.next();
+                    String key = it.next();
+                    ArrayList<ArrayList<String>> list = map.get(key);
+                    ArrayList<VisaMaterial> listMaterial = new ArrayList<>();
+                    VisaMaterial material = new VisaMaterial();
+                    for (ArrayList<String> item : list) {
+                        material.materialName = item.get(0);
+                        material.materialMust = item.get(2);
+                        material.materialModel = item.get(3);
+                        material.materialRemark = item.get(4);
+                        listMaterial.add(material);
+                    }
 
+                    switch (key){
+                        case "在职人员":
+                            visaDetailInfo.getMaterialCollectionl().worker = listMaterial;
+                            //listMaterial.add(0, material);
+                        break;
+                        case "自由职业者":
+                            visaDetailInfo.getMaterialCollectionl().freedom = listMaterial;
+                            //listMaterial.add(1, material);
+                            break;
+                        case "退休人员":
+                            visaDetailInfo.getMaterialCollectionl().retired = listMaterial;
+                            //listMaterial.add(2, material);
+                            break;
+                        case "学生":
+                            visaDetailInfo.getMaterialCollectionl().student = listMaterial;
+                            //listMaterial.add(3, material);
+                            break;
+                        case "学龄前儿童":
+                            visaDetailInfo.getMaterialCollectionl().children = listMaterial;
+                            //listMaterial.add(4, material);
+                            break;
 
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                    }
                 }
+//                if (map.containsKey("在职人员")){
+//                    ArrayList<ArrayList<String>> list = map.get("在职人员");
+//                    ArrayList<VisaMaterial> listMaterial = new ArrayList<>();
+//                    for (ArrayList<String> item : list) {
+//                        VisaMaterial material = new VisaMaterial();
+//                        material.materialName = item.get(0);
+//                        material.materialMust = item.get(2);
+//                        material.materialModel = item.get(3);
+//                        material.materialRemark = item.get(4);
+//                        listMaterial.add(material);
+//                    }
+//                }
+//                if (map.containsKey("自由职业者")){
+//
+//                }
+//
+//                if (map.containsKey("退休人员")){
+//
+//                }
+//
+//
+//                if (map.containsKey("学生")){
+//
+//                }
+
+
+//                if (map.containsKey("学龄前儿童")){
+//
+//                }
+//                try {
+//                    //JSONObject classificObj = new JSONObject(array.get(20));
+//
+//
+//
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
 
 //                visaDetailInfo.classification = visaClassification;
                 GenericResponseModel<VisaDetailInfo> returnModel  = new GenericResponseModel<>(response.head, visaDetailInfo);

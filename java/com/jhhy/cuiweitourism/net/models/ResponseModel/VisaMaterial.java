@@ -58,4 +58,14 @@ public class VisaMaterial {
         this.materialModel = materialModel;
         this.materialRemark = materialRemark;
     }
+
+    @Override
+    public String toString() {
+        return "VisaMaterial{" +
+                "materialName='" + materialName + '\'' +
+                ", materialMust='" + materialMust + '\'' +
+                ", materialModel='" + materialModel + '\'' +
+                ", materialRemark='" + materialRemark + '\'' +
+                '}';
+    }
 }
