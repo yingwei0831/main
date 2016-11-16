@@ -8,13 +8,14 @@
         android:id="@+id/iv_shop_logo"
         android:layout_width="match_parent"
         android:layout_height="160dp"
-        android:scaleType="centerInside"/>
+        android:scaleType="fitCenter"/>
     <TextView
         android:id="@+id/tv_shop_name"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:gravity="center"
         android:text="平安旅行社"
-        android:background="@color/colorLineGray3"/>
+        android:background="@color/colorLineGray3"
+        android:textColor="@android:color/black"/>
 
 </LinearLayout>

@@ -38,7 +38,7 @@ public class SearchListAdapter extends MyBaseAdapter {
             holder.tvPrice = (TextView) view.findViewById(R.id.tv_tab1_2_inner_travle_prirce);
             holder.tvType = (TextView) view.findViewById(R.id.tv_tab1_2_inner_travel_type);
             holder.tvArgument = (TextView) view.findViewById(R.id.tv_inner_travel_item_argument);
-            holder.tvPrice.setVisibility(View.GONE);
+//            holder.tvPrice.setVisibility(View.GONE);
             holder.tvType.setVisibility(View.GONE);
             holder.tvArgument.setVisibility(View.GONE);
             view.setTag(holder);
@@ -71,6 +71,7 @@ public class SearchListAdapter extends MyBaseAdapter {
 //                    holder.tvType.setVisibility(View.GONE);
 //                }
 //            }
+            holder.tvPrice.setText("0");
             holder.tvTitle.setText(searchInfo.getTitle());
             ImageLoaderUtil.getInstance(context).displayImage(searchInfo.getLitpic(), holder.imageView);
         }

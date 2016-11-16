@@ -25,6 +25,7 @@
         android:maxLines="2"
         android:paddingBottom="4dp"
         android:paddingTop="4dp"
+        android:textColor="@android:color/black"
         android:text="@string/tab1_recommend_for_you_title"
         />
 
@@ -58,7 +59,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/iv_tab1_2_hot_activity"
-
+        android:textColor="@android:color/black"
         android:layout_toLeftOf="@+id/tv_tab1_hot_activity_account_notice"
         android:gravity="bottom"
         android:text="1" />
@@ -69,7 +70,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/iv_tab1_2_hot_activity"
         android:layout_alignParentRight="true"
-
+        android:textColor="@android:color/black"
         android:gravity="bottom"
         android:text="人已报名" />
 

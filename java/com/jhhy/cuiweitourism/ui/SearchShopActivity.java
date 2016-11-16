@@ -166,6 +166,7 @@ public class SearchShopActivity extends BaseActivity implements View.OnClickList
 
     private void refresh() {
         if (refresh)    return;
+        page = 1;
         refresh = true;
         getInternetData();
     }

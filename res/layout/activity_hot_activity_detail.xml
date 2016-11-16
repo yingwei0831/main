@@ -11,13 +11,13 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <include layout="@layout/layout_indicator_line_detail"/>
-
         <com.markmao.pulltorefresh.widght.XScrollView
             android:id="@+id/scroll_view_detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fillViewport="true" />
+
+        <include layout="@layout/layout_indicator_line_detail"/>
 
     </FrameLayout>
 

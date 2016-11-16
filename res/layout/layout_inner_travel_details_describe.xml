@@ -12,6 +12,7 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:textSize="16sp"
+        android:textColor="@android:color/black"
         />
 
     <LinearLayout
@@ -25,7 +26,7 @@
 
         <View
             android:id="@+id/view_inner_travel_details_describe_top"
-            android:layout_width="1dp"
+            android:layout_width="2dp"
             android:background="@color/colorBgDescribe"
             android:layout_height="6dp"
             android:layout_gravity="center_horizontal"
@@ -40,7 +41,7 @@
         <View
             android:id="@+id/view_inner_travel_details_describe_bottom"
             android:layout_gravity="center_horizontal"
-            android:layout_width="1dp"
+            android:layout_width="2dp"
             android:layout_height="match_parent"
             android:background="@color/colorBgDescribe"
             />
@@ -53,8 +54,10 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/layout_line_circle"
         android:text="飞往三亚"
+        android:textSize="16sp"
         android:paddingLeft="20dp"
         android:layout_gravity="center"
+        android:textColor="@android:color/black"
         />
 
     <TextView
@@ -64,6 +67,6 @@
         android:layout_below="@+id/tv_inner_travel_details_describe_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="三餐请自理顶顶顶顶顶顶顶顶顶是是是是顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶"
+        android:textColor="@android:color/black"
         />
 </RelativeLayout>

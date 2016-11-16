@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.ContextCompat;
+import android.text.Html;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -90,7 +91,7 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
     private LinearLayout layoutComment; //评论
     private WebView mWebViewProduct; //商品详情
     private LinearLayout layoutPrice; //费用说明
-    private TextView tvPriceInclude; //费用说明——>费用包含
+    private TextView tvStandard; //费用说明——>标准
     private TextView tvPriceNotInclude; //费用说明——>费用不包含
     private LinearLayout layoutTravelDescribe; //行程描述
     private LinearLayout layoutReserveNotice; //预订须知
@@ -232,7 +233,7 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
 
             mWebViewProduct = (WebView) content.findViewById(R.id.webview_inner_travel_detail_content_product);
             layoutPrice = (LinearLayout) content.findViewById(R.id.layout_travel_price);
-            tvPriceInclude = (TextView) content.findViewById(R.id.tv_travel_price_include);
+            tvStandard = (TextView) content.findViewById(R.id.tv_travel_price_include);
             tvPriceNotInclude = (TextView) content.findViewById(R.id.tv_travel_price_not_include);
             layoutTravelDescribe = (LinearLayout) content.findViewById(R.id.layout_travel_describe);
             layoutReserveNotice = (LinearLayout) content.findViewById(R.id.layout_reserve_notice);
@@ -315,6 +316,7 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
 
     private void refreshView() {
         String start = "<html><style>body img{width:100%;}</style><body>";
+        String start2 = "<html><style></style><body>";
         String end = "</body></html>";
         //TODO 顶部图片
         List<String> picAddr = detail.getPictureList();
@@ -355,7 +357,7 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
         //费用说明——>标准
 //        String priceContain = detail.getPriceInclude();
 //        String priceNotContain = detail.getPriceNotContain();
-        tvPriceInclude.setText(detail.getStandard());
+        tvStandard.setText(Html.fromHtml(start2 + detail.getStandard() + end));
 //        tvPriceNotInclude.setText(priceNotContain);
         //行程描述——>行程安排
         List<TravelDetailDay> tripDescribe = detail.getTripDescribe();
@@ -376,8 +378,7 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
             }
         }
         //预订须知
-        String remark = detail.getRemark();
-        tvReserveNotice.setText(remark);
+        tvReserveNotice.setText(Html.fromHtml(start2 + detail.getRemark() + end));
     }
 
     @Override
