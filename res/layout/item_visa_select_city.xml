@@ -11,5 +11,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:text="美洲"
-        android:textSize="16sp"/>
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        />
 </LinearLayout>

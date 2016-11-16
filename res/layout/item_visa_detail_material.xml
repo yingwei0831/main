@@ -19,7 +19,8 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:paddingTop="5dp"
-            android:text="@string/visa_detail_name" />
+            android:text="@string/visa_detail_name"
+            android:textColor="@android:color/black"/>
 
         <View
             android:layout_width="1.2px"
@@ -35,7 +36,8 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:paddingTop="5dp"
-            android:text="@string/visa_detail_name" />
+            android:text="@string/visa_detail_name"
+            android:textColor="@android:color/black"/>
     </LinearLayout>
 
     <View
@@ -57,7 +59,8 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:paddingTop="5dp"
-            android:text="@string/visa_detail_required" />
+            android:text="@string/visa_detail_required"
+            android:textColor="@android:color/black"/>
 
         <View
             android:layout_width="1.2px"
@@ -73,7 +76,8 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:paddingTop="5dp"
-            android:text="@string/visa_detail_required" />
+            android:text="@string/visa_detail_required"
+            android:textColor="@android:color/black"/>
     </LinearLayout>
 
     <View
@@ -95,7 +99,8 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:paddingTop="5dp"
-            android:text="@string/visa_detail_model" />
+            android:text="@string/visa_detail_model"
+            android:textColor="@android:color/black"/>
 
         <View
             android:layout_width="1.2px"
@@ -111,7 +116,8 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:paddingTop="5dp"
-            android:text="@string/visa_detail_model" />
+            android:text="@string/visa_detail_model"
+            android:textColor="@android:color/black"/>
     </LinearLayout>
 
     <View
@@ -133,7 +139,8 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:paddingTop="5dp"
-            android:text="@string/visa_detail_remark" />
+            android:text="@string/visa_detail_remark"
+            android:textColor="@android:color/black"/>
 
         <View
             android:layout_width="1.2px"
@@ -149,7 +156,8 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:paddingTop="5dp"
-            android:text="@string/visa_detail_remark" />
+            android:text="@string/visa_detail_remark"
+            android:textColor="@android:color/black"/>
     </LinearLayout>
 
 </LinearLayout>

@@ -42,13 +42,14 @@
         android:maxLines="2"
         android:paddingBottom="4dp"
         android:paddingTop="4dp"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:textColor="@android:color/black"/>
 
     <TextView
         android:id="@+id/tv_tab1_2_inner_travle_money"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/layout_tab1_2_inner_travel"
+        android:layout_alignBaseline="@+id/tv_tab1_2_inner_travle_prirce"
         android:layout_toRightOf="@+id/layout_tab1_2_inner_travel"
         android:gravity="bottom"
         android:text="￥"
@@ -59,20 +60,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/layout_tab1_2_inner_travel"
-        android:layout_alignBaseline="@+id/tv_tab1_2_inner_travle_money"
         android:layout_toRightOf="@+id/tv_tab1_2_inner_travle_money"
         android:gravity="bottom"
-        android:text="15263"
+        android:text="0"
         android:textColor="@color/colorTab1RecommendForYouMoney"
         android:textSize="18sp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/layout_tab1_2_inner_travel"
+        android:layout_alignBaseline="@+id/tv_tab1_2_inner_travle_prirce"
         android:layout_toRightOf="@+id/tv_tab1_2_inner_travle_prirce"
         android:gravity="bottom"
-        android:text="起" />
+        android:text="起"
+        android:paddingLeft="2dp"
+        android:textColor="@android:color/black"/>
 
     <TextView
         android:id="@+id/tv_inner_travel_item_argument"

@@ -8,7 +8,6 @@ import java.util.ArrayList;
  */
 public class ActivityHotDetailInfo implements Serializable{
 
-
 //    "id": "1",
 //    "title": "撒哈拉沙漠",
 //    "price": "50000.00",
@@ -46,6 +45,25 @@ public class ActivityHotDetailInfo implements Serializable{
 //    },
 //    "ctnum": "1"
 
+//2016.11.16发现接口修改了，擦
+//    "id": "41",
+//    "ydxz": "离休人员凭离休证免门票残疾人凭残疾证免门票",
+//    "title": "龙庆峡赏冰灯一日",
+//    "price": "198.00",
+//    "num": "40",
+//    "days": "1",
+//    "cftime": "1516377600",
+//    "cfcity": "20",
+//    "feeinclude": "费用包含：1、往返旅游大巴2、青龙峡门票及冰灯门票3、晚餐",
+//    "features": "延庆龙庆峡冰灯历年来都是非常出名的。历届冰灯节的主题尽管不同，但顺水库大坝飞流直下的 冰瀑奇观，却年年保留，70米高的巨坝上垂下巨大冰瀑，下饰冰花、冰柱，形成一座飞流千尺晶莹剔透的冰雪乐园。",
+//    "xlxq": "小贴士1. 冬季气温比较低，请大家游玩的时候带上常用的感冒发烧药，以便使用。2. 龙庆峡冰灯建议晚上观赏，白天就没有什么效果了。",
+//    "xcinfo": "下午15:30公主坟新兴宾馆集合乘车前往延庆龙庆峡17：30晚餐19:00进入龙庆峡景区游览22:00乘车返回市内",
+//    "piclist": [
+//    "http://www.cwly1118.com/uploads/activity/2016/1113/58282ec6cd2d6.jpg"
+//    ],
+//    "ctnum": "1"
+
+    public String ydxz;
     public String id;
     public String title;
     public String price;
@@ -63,7 +81,9 @@ public class ActivityHotDetailInfo implements Serializable{
 
     public String ctnum;
 
-    public ActivityHotDetailInfo(String id, String title, String price, String num, String days, String cftime, String cfcity, String feeinclude, String features, ArrayList<String> piclist, ActivityComment comment, String ctnum, String xlxq, String xcinfo) {
+    public ActivityHotDetailInfo(String ctnum, String ydxz, String id, String title, String price, String num, String days, String cftime, String cfcity, String feeinclude, String features, String xlxq, String xcinfo, ArrayList<String> piclist, ActivityComment comment) {
+        this.ctnum = ctnum;
+        this.ydxz = ydxz;
         this.id = id;
         this.title = title;
         this.price = price;
@@ -73,14 +93,21 @@ public class ActivityHotDetailInfo implements Serializable{
         this.cfcity = cfcity;
         this.feeinclude = feeinclude;
         this.features = features;
-        this.piclist = piclist;
-        this.comment = comment;
-        this.ctnum = ctnum;
         this.xlxq = xlxq;
         this.xcinfo = xcinfo;
+        this.piclist = piclist;
+        this.comment = comment;
     }
 
     public ActivityHotDetailInfo() {
+    }
+
+    public String getYdxz() {
+        return ydxz;
+    }
+
+    public void setYdxz(String ydxz) {
+        this.ydxz = ydxz;
     }
 
     public String getId() {
@@ -198,7 +225,8 @@ public class ActivityHotDetailInfo implements Serializable{
     @Override
     public String toString() {
         return "ActivityHotDetailInfo{" +
-                "id='" + id + '\'' +
+                "ydxz='" + ydxz + '\'' +
+                ", id='" + id + '\'' +
                 ", title='" + title + '\'' +
                 ", price='" + price + '\'' +
                 ", num='" + num + '\'' +
@@ -207,11 +235,11 @@ public class ActivityHotDetailInfo implements Serializable{
                 ", cfcity='" + cfcity + '\'' +
                 ", feeinclude='" + feeinclude + '\'' +
                 ", features='" + features + '\'' +
-                ", piclist=" + piclist +
-                ", comment=" + comment.toString() +
-                ", ctnum='" + ctnum + '\'' +
                 ", xlxq='" + xlxq + '\'' +
                 ", xcinfo='" + xcinfo + '\'' +
+                ", piclist=" + piclist +
+                ", comment=" + (comment == null ? "" : comment) +
+                ", ctnum='" + ctnum + '\'' +
                 '}';
     }
 }

@@ -64,8 +64,8 @@ public class ActivityActionBiz extends BasicActionBiz {
         final FetchGenericResponse<ActivityHotDetailInfo> fetchResponse = new FetchGenericResponse<ActivityHotDetailInfo>(callback) {
             @Override
             public void onCompletion(FetchResponseModel response) {
-                ActivityHotDetailInfo info = parseJsonToObject(response,ActivityHotDetailInfo.class);
-                GenericResponseModel<ActivityHotDetailInfo> returnModel = new GenericResponseModel<ActivityHotDetailInfo>(response.head,info);
+                ActivityHotDetailInfo info = parseJsonToObject(response, ActivityHotDetailInfo.class);
+                GenericResponseModel<ActivityHotDetailInfo> returnModel = new GenericResponseModel<ActivityHotDetailInfo>(response.head, info);
                 this.bizCallback.onCompletion(returnModel);
             }
 

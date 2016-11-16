@@ -216,6 +216,7 @@ public class Tab4AccountCertificationActivity extends BaseActivity implements Vi
                 File picture = new File(Consts.IMG_TEMP_PATH + picName);
                 picPath = picture.getPath();
                 LogUtil.e(TAG, "picPath = " + picPath); // /storage/emulated/0/cuiweiTemp/1474785184315.jpg
+                LogUtil.e(TAG, "Bimp.drr = " + Bimp.drr.get(0) + ", Bimp.bmp.size = " + Bimp.bmp.size());
 //                Bimp.drr.add(picPath);
 //                position = Bimp.drr.indexOf(picPath);
                 startPhotoZoom(Uri.fromFile(picture), Consts.IMG_TEMP_PATH + picName,

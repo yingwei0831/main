@@ -158,14 +158,14 @@ public class FindShopBiz {
                         ShopRecommend shop = new ShopRecommend();
                         shop.setId(shopObj.getString("sid"));
                         shop.setName(shopObj.getString("suppliername"));
-                        shop.setLitpic(shopObj.getString(Consts.PIC_PATH_LITPIC));
+                        shop.setLitpic(shopObj.getString("logo"));
                         listShop.add(shop);
                     }
-
                     msg.obj = listShop;
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
+                onError(e, true);
             } finally {
                 handler.sendMessage(msg);
             }

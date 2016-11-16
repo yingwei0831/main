@@ -85,8 +85,11 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
     private TextView tvTravelDescribe; //行程描述
     private TextView tvReserveNotice; //预订须知
 
+    private View layoutTitle;
     private TextView tvTitle;
     private TextView tvPrice; //价格
+
+    private View layoutComment; //评论大布局
     private TextView tvCommentCount;
     private CircleImageView civIcon;
     private TextView tvNickName;
@@ -202,6 +205,7 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
     }
 
     private void setupView() {
+        layoutTitle = findViewById(R.id.layout_title_inner_travel);
         tvTitleTop = (TextView) findViewById(R.id.tv_title_inner_travel);
         tvTitleTop.setText("热门活动详情");
         ivTitleLeft = (ImageView) findViewById(R.id.title_main_tv_left_location);
@@ -243,6 +247,7 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
 
             tvTitle = (TextView) content.findViewById(R.id.tv_travel_detail_title);
             tvPrice = (TextView) content.findViewById(R.id.tv_travel_price);
+            layoutComment = content.findViewById(R.id.layout_comment);
             tvCommentCount = (TextView) content.findViewById(R.id.tv_travel_comment_count);
             civIcon = (CircleImageView) content.findViewById(R.id.inner_travel_detail_comment_user_icon);
             tvNickName = (TextView) content.findViewById(R.id.inner_travel_detail_comment_username);
@@ -284,8 +289,9 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
                 int[] s = new int[2];
                 layoutIndicatorBottom.getLocationOnScreen(s);
                 int statusHeight = Utils.getStatusBarHeight(getApplicationContext());
-//                int titleHeight = layoutTitle.getHeight();
-                if(statusHeight >= s[1]){ // + titleHeight
+                int titleHeight = layoutTitle.getHeight();
+//                LogUtil.e(TAG, "statusHeight = " + statusHeight + ", titleHeight = " + titleHeight + ", s[1] = " + s[1]);
+                if(statusHeight + titleHeight >= s[1]){ // + titleHeight
                     layoutIndicatorTop.setVisibility(View.VISIBLE);
                 }else{
                     layoutIndicatorTop.setVisibility(View.GONE);
@@ -377,13 +383,17 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
         tvCommentCount.setText("累计评价（" + count + "）");
         //TODO comment, 头像
         ActivityComment comment = detail.getComment();
-        setIconData(comment.getFace());
-        tvNickName.setText(comment.getNickname());
-        String time = comment.getAddtime();
-        if (time != null && !"null".equals(time)) {
-            tvAddTime.setText(Utils.getTimeStrYMD(Long.parseLong(time) * 1000));
+        if (comment != null) {
+            setIconData(comment.getFace());
+            tvNickName.setText(comment.getNickname());
+            String time = comment.getAddtime();
+            if (time != null && !"null".equals(time)) {
+                tvAddTime.setText(Utils.getTimeStrYMD(Long.parseLong(time) * 1000));
+            }
+            tvCommentContent.setText(comment.getContent());
+        }else{
+            layoutComment.setVisibility(View.GONE);
         }
-        tvCommentContent.setText(comment.getContent());
         //商品详情
         String tripDetail = detail.getFeatures();
         mWebViewProduct.loadDataWithBaseURL(null, start + tripDetail + end, "text/html", "utf-8", null);
