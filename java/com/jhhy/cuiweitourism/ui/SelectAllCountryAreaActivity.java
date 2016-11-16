@@ -114,7 +114,7 @@ public class SelectAllCountryAreaActivity extends BaseActivity implements View.O
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 //                listSecond = listFirst.get(firstSelection).getListProvince();
-                VisaCountryInfo info = listSecond.get(firstSelection);
+                VisaCountryInfo info = listSecond.get(i);
                 Intent intent = new Intent(getApplicationContext(), VisaListActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("nationId", info.getCountryCode());
