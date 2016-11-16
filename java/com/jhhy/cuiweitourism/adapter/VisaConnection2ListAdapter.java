@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.moudle.ClassifyArea;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.VisaCountryInfo;
 
 import java.util.List;
 
@@ -34,8 +35,8 @@ public class VisaConnection2ListAdapter extends MyBaseAdapter {
         }else{
             holder = (ViewHolder) view.getTag();
         }
-        ClassifyArea area = (ClassifyArea) list.get(i);
-        holder.tvName.setText(area.getAreaName());
+        VisaCountryInfo area = (VisaCountryInfo) list.get(i);
+        holder.tvName.setText(area.getCountryName());
 //        if (selection == i){
 //            holder.tvName.setBackgroundColor(Color.WHITE);
 //        }else{

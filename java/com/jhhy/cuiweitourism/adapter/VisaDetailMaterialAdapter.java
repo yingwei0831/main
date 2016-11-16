@@ -27,16 +27,16 @@ public class VisaDetailMaterialAdapter extends MyBaseAdapter {
             view = LayoutInflater.from(context).inflate(R.layout.item_visa_detail_material, null);
             holder = new ViewHolder();
             holder.tvMaterialName = (TextView) view.findViewById(R.id.tv_visa_detail_material_name_value);
-            holder.tvMaterialRequired = (TextView) view.findViewById(R.id.tv_visa_detail_material_name_value);
-            holder.tvMaterialModel = (TextView) view.findViewById(R.id.tv_visa_detail_material_name_value);
-            holder.tvMaterialRemark = (TextView) view.findViewById(R.id.tv_visa_detail_material_name_value);
+            holder.tvMaterialRequired = (TextView) view.findViewById(R.id.tv_visa_detail_material_required_value);
+            holder.tvMaterialModel = (TextView) view.findViewById(R.id.tv_visa_detail_material_model_value);
+            holder.tvMaterialRemark = (TextView) view.findViewById(R.id.tv_visa_detail_material_remark_value);
             view.setTag(holder);
         }else{
             holder = (ViewHolder) view.getTag();
         }
         VisaMaterial material = (VisaMaterial) getItem(i);
         holder.tvMaterialName.setText(material.getMaterialName());
-        holder.tvMaterialRequired.setText(material.getMaterialMust());
+        holder.tvMaterialRequired.setText("Y".equals(material.getMaterialMust())?"是":"否");
         holder.tvMaterialModel.setText(material.getMaterialModel());
         holder.tvMaterialRemark.setText(material.getMaterialRemark());
         return view;

@@ -56,10 +56,11 @@ public class Tab4MyReleaseActivity extends BaseActivity implements View.OnClickL
                 case Consts.MESSAGE_GET_MY_RELEASE: //获取我的收藏
                     if (msg.arg1 == 1){
                         List<CustomActivity> newlists = (List<CustomActivity>) msg.obj;
-//                        if (newlists == null || newlists.size() == 0){
-//                            LogUtil.e(TAG, "if ----- newlists = " + newlists );
+                        if (newlists == null || newlists.size() == 0){
 //                            ToastCommon.toastShortShow(getApplicationContext(), null, "获取收藏数据为空");
-//                        } else {
+                            tvTitleRight.setVisibility(View.INVISIBLE);
+                        }
+//                        else {
                             LogUtil.e(TAG, "else ----- newlists = " + newlists);
                             lists = newlists;
                             adapter.setData(newlists);

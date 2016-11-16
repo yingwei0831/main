@@ -73,7 +73,7 @@ public class Tab4MyTourismCoinActivity extends BaseActivity implements View.OnCl
 
     private void getData() {
         UserInformationBiz biz = new UserInformationBiz(getApplicationContext(), handler);
-        biz.getUserCoin("1"); //MainActivity.user.getUserId()
+        biz.getUserCoin(MainActivity.user.getUserId()); //
     }
 
     private void setupView() {

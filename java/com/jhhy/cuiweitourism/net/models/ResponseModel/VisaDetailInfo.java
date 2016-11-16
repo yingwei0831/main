@@ -1,5 +1,6 @@
 package com.jhhy.cuiweitourism.net.models.ResponseModel;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -8,7 +9,7 @@ import java.util.LinkedList;
  * Created by jiahe008 on 2016/11/15.
  * 签证详情
  */
-public class VisaDetailInfo {
+public class VisaDetailInfo implements Serializable{
 
 //            "签证产品ID",
 //            "签证产品名称",
@@ -72,7 +73,6 @@ public class VisaDetailInfo {
 
     public String continentCode;
     public String continentName;
-
     public String countryCode;
     public String countryName;
     public String countryFlagUrl;
@@ -81,7 +81,7 @@ public class VisaDetailInfo {
     public String visaAddress;
     public boolean visaHurry;
     public String visaPrice;
-    public String visaTime;
+    public String visaTime; //时间
 
     public boolean needInterview;
     public String visaPeriodOfValidate;

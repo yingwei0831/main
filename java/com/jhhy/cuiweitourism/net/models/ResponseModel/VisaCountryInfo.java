@@ -84,4 +84,16 @@ public class VisaCountryInfo {
         isHot = hot;
     }
 
+    @Override
+    public String toString() {
+        return "VisaCountryInfo{" +
+                "countryCode='" + countryCode + '\'' +
+                ", countryName='" + countryName + '\'' +
+                ", countryNameEn='" + countryNameEn + '\'' +
+                ", countryFlagUrl='" + countryFlagUrl + '\'' +
+                ", continentCode='" + continentCode + '\'' +
+                ", continentName='" + continentName + '\'' +
+                ", isHot=" + isHot +
+                '}';
+    }
 }

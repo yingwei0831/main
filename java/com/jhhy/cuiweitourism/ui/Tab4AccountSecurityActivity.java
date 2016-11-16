@@ -1,6 +1,7 @@
 package com.jhhy.cuiweitourism.ui;
 
 import android.content.Intent;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -49,6 +50,11 @@ public class Tab4AccountSecurityActivity extends BaseActivity implements View.On
         tvTrueCertification = (TextView) findViewById(R.id.tv_certification_true);
 
         btnLoginOut = (Button) findViewById(R.id.btn_login_out);
+
+        tvTrueCertification.setText(MainActivity.user.getStatus());
+        if ("已认证".equals(MainActivity.user.getStatus())){
+            tvTrueCertification.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorActionBar));
+        }
     }
 
     private void addListener() {

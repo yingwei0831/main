@@ -1,14 +1,18 @@
 package com.jhhy.cuiweitourism.ui;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -60,6 +64,7 @@ public class Tab4UserInfoActivity extends BaseActivity implements View.OnClickLi
     private TextView tvID;
 
     private String gender;
+    private boolean changeIcon;
 
     private Handler handler = new Handler(){
         @Override
@@ -71,6 +76,7 @@ public class Tab4UserInfoActivity extends BaseActivity implements View.OnClickLi
                         civUserIcon.setImageBitmap(Bimp.bmp.get(0));//把图片显示在ImageView控件上
                         ImageLoaderUtil.getInstance(getApplicationContext()).loadImage(String.valueOf(msg.obj));
                         MainActivity.user.setUserIconPath(String.valueOf(msg.obj));
+                        changeIcon = true;
                     }else{
                         ToastCommon.toastShortShow(getApplicationContext(), null, String.valueOf(msg.obj));
                     }
@@ -88,7 +94,6 @@ public class Tab4UserInfoActivity extends BaseActivity implements View.OnClickLi
                     LoadingIndicator.cancel();
                     break;
             }
-
         }
     };
 
@@ -145,7 +150,18 @@ public class Tab4UserInfoActivity extends BaseActivity implements View.OnClickLi
 //        }
         tvRealName.setText(MainActivity.user.getUserTrueName());
         tvID.setText(MainActivity.user.getUserCardId());
+    }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK){
+            if (changeIcon){
+                Intent data = new Intent();
+                data.putExtra("tag", changeIcon);
+                setResult(RESULT_OK, data);
+            }
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     private void addListener() {
@@ -157,11 +173,15 @@ public class Tab4UserInfoActivity extends BaseActivity implements View.OnClickLi
         layoutMobile.setOnClickListener(this);
     }
 
-
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.title_main_tv_left_location:
+                if (changeIcon){
+                    Intent data = new Intent();
+                    data.putExtra("tag", changeIcon);
+                    setResult(RESULT_OK, data);
+                }
                 finish();
                 break;
             case R.id.fragment_userinfo_layout_change_icon:
@@ -184,7 +204,6 @@ public class Tab4UserInfoActivity extends BaseActivity implements View.OnClickLi
                 Intent intentTel = new Intent(getApplicationContext(), ModifyTelephoneNumberActivity.class);
                 startActivityForResult(intentTel, REQUEST_CHANGE_MOBILE);
                 break;
-
         }
     }
 
@@ -220,7 +239,6 @@ public class Tab4UserInfoActivity extends BaseActivity implements View.OnClickLi
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         LogUtil.e(TAG, "----- onActivityResult-----， resultCode = " + resultCode + ", requestCode = " + requestCode);
-
         if (requestCode == REQUEST_CHANGE_NICK_NAME) {
             if (resultCode == RESULT_OK) {
                 //TODO 更新用户名

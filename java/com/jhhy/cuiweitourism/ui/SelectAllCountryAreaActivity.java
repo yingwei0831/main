@@ -15,15 +15,28 @@ import android.widget.TextView;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.VisaConnection2ListAdapter;
 import com.jhhy.cuiweitourism.adapter.VisaConnectionListAdapter;
+import com.jhhy.cuiweitourism.adapter.VisaHotCountryGridAdapter;
 import com.jhhy.cuiweitourism.biz.VisaBiz;
 import com.jhhy.cuiweitourism.moudle.ClassifyArea;
+import com.jhhy.cuiweitourism.net.biz.VisaActionBiz;
+import com.jhhy.cuiweitourism.net.models.FetchModel.VisaCountry;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.VisaCountryInfo;
+import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.Consts;
+import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.just.sun.pricecalendar.ToastCommon;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class SelectAllCountryAreaActivity extends BaseActivity implements View.OnClickListener {
+
+    private String TAG = SelectAllCountryAreaActivity.class.getSimpleName();
 
     private ImageView ivTitleLeft;
     private TextView tvTitle;
@@ -32,13 +45,17 @@ public class SelectAllCountryAreaActivity extends BaseActivity implements View.O
     private ListView listViewFirst;
     private ListView listViewSecond;
 
-    private List<ClassifyArea> listFirst = new ArrayList<>();
+    private List listFirst = new ArrayList<>();
     private VisaConnectionListAdapter adapterFirst;
-
-    private List<ClassifyArea> listSecond = new ArrayList<>();
+//
+    private List<VisaCountryInfo> listSecond = new ArrayList<>();
     private VisaConnection2ListAdapter adapterSecond;
 
+    private List<VisaCountryInfo> listCountry = new ArrayList<>(); //所有list
+    private LinkedHashMap<String, List<VisaCountryInfo>> leftContinent = new LinkedHashMap<>(); //左边洲,对应右边国家集合
+
     private int firstSelection;
+    private VisaActionBiz biz; //热门签证国家，查看全部国家和地区
 
     private Handler handler = new Handler(){
         @Override
@@ -47,14 +64,14 @@ public class SelectAllCountryAreaActivity extends BaseActivity implements View.O
             switch (msg.what){
                 case Consts.MESSAGE_VISA_MORE_COUNTRY:
                     if (msg.arg1 == 1){
-                        listFirst = (List<ClassifyArea>) msg.obj;
-                        if (listFirst == null || listFirst.size() == 0){
-                            ToastCommon.toastShortShow(getApplicationContext(), null, "获取全部签证地区失败");
-                        }else{
-                            adapterFirst.setSelection(0);
-                            adapterFirst.setData(listFirst);
-                            adapterSecond.setData(listFirst.get(0).getListProvince());
-                        }
+//                        listFirst = (List<ClassifyArea>) msg.obj;
+//                        if (listFirst == null || listFirst.size() == 0){
+//                            ToastCommon.toastShortShow(getApplicationContext(), null, "获取全部签证地区失败");
+//                        }else{
+//                            adapterFirst.setSelection(0);
+//                            adapterFirst.setData(listFirst);
+//                            adapterSecond.setData(listFirst.get(0).getListProvince());
+//                        }
                     }else{
                         ToastCommon.toastShortShow(getApplicationContext(), null, String.valueOf(msg.obj));
                     }
@@ -74,10 +91,9 @@ public class SelectAllCountryAreaActivity extends BaseActivity implements View.O
         actionBar.setCustomView(v, new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT)); //自定义ActionBar布局);
         actionBar.setElevation(0); //删除自带阴影
 
-
         setContentView(R.layout.activity_select_all_country_area);
-        getData();
         setupView();
+        getData();
         addListener();
     }
 
@@ -89,18 +105,20 @@ public class SelectAllCountryAreaActivity extends BaseActivity implements View.O
                 firstSelection = i;
                 adapterFirst.setSelection(i);
                 adapterFirst.notifyDataSetChanged();
-                adapterSecond.setData(listFirst.get(i).getListProvince());
+                listSecond = leftContinent.get(leftContinent.keySet().toArray()[firstSelection]);
+                adapterSecond.setData(listSecond);
             }
         });
 
         listViewSecond.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                listSecond = listFirst.get(firstSelection).getListProvince();
+//                listSecond = listFirst.get(firstSelection).getListProvince();
+                VisaCountryInfo info = listSecond.get(firstSelection);
                 Intent intent = new Intent(getApplicationContext(), VisaListActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("nationId", listSecond.get(i).getAreaId());
-                bundle.putString("nationName", listSecond.get(i).getAreaName());
+                bundle.putString("nationId", info.getCountryCode());
+                bundle.putString("nationName", info.getCountryName());
                 intent.putExtras(bundle);
                 startActivityForResult(intent, REQUEST_VISA_CITY);
             }
@@ -125,6 +143,7 @@ public class SelectAllCountryAreaActivity extends BaseActivity implements View.O
         ivTitleLeft = (ImageView) actionBar.getCustomView().findViewById(R.id.title_main_tv_left_location);
 
         listViewFirst = (ListView) findViewById(R.id.list_father);
+        listFirst = Arrays.asList(leftContinent.keySet().toArray());
         adapterFirst = new VisaConnectionListAdapter(getApplicationContext(), listFirst);
         adapterFirst.setSelection(0);
         listViewFirst.setAdapter(adapterFirst);
@@ -132,11 +151,59 @@ public class SelectAllCountryAreaActivity extends BaseActivity implements View.O
         listViewSecond = (ListView) findViewById(R.id.list_son);
         adapterSecond = new VisaConnection2ListAdapter(getApplicationContext(), listSecond);
         listViewSecond.setAdapter(adapterSecond);
+        biz = new VisaActionBiz(getApplicationContext(), handler);
     }
 
+
+
     private void getData() {
-        VisaBiz biz = new VisaBiz(getApplicationContext(), handler);
-        biz.getAllHotCountry();
+//        VisaBiz biz = new VisaBiz(getApplicationContext(), handler);
+//        biz.getAllHotCountry();
+        VisaCountry visaCountry = new VisaCountry();
+        visaCountry.setIsHot("N");
+        biz.getVisaCountry(visaCountry, new BizGenericCallback<ArrayList<VisaCountryInfo>>() {
+            @Override
+            public void onCompletion(GenericResponseModel<ArrayList<VisaCountryInfo>> model) {
+                if ("0000".equals(model.headModel.res_code)) {
+                    listCountry = model.body;
+                    LogUtil.e(TAG,"visaCountryInfo: " + listCountry.toString());
+                    screenCountry();
+                    refreshView();
+                }else{
+                    ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);
+                }
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                if (error.localReason != null){
+                    ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
+                }else{
+                    ToastCommon.toastShortShow(getApplicationContext(), null, "热门签证国家数据出错");
+                }
+                LogUtil.e(TAG, "visaCountryInfo: " + error.toString());
+            }
+        });
+    }
+
+    private void refreshView() {
+        adapterFirst.setData(Arrays.asList(leftContinent.keySet().toArray()));
+        adapterSecond.setData(leftContinent.get(leftContinent.keySet().toArray()[0]));
+    }
+
+    private void screenCountry() {
+        for (VisaCountryInfo country : listCountry){
+            String continentName = country.getContinentName(); //洲名字
+            if (leftContinent.containsKey(continentName)){ //如果包含，则放入左边大洲对应的右边国家集合里面
+               leftContinent.get(continentName).add(country);
+            }else{ //如果不包含，则新建右边国家集合，再放入左边大洲 集合里面
+                List<VisaCountryInfo> continentCountry = new ArrayList<>();
+                continentCountry.add(country);
+                leftContinent.put(continentName, continentCountry);
+            }
+        }
+        listFirst = Arrays.asList(leftContinent.keySet().toArray());
+        listSecond = leftContinent.get(leftContinent.keySet().toArray()[0]);
     }
 
     @Override

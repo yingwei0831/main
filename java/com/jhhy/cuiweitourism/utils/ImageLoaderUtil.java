@@ -144,7 +144,7 @@ public class  ImageLoaderUtil {
 	 * 将网络下载来的图片存入SD卡
 	 */
 	protected void saveBMP2SD(String imagePath, Bitmap loadedImage) {
-		LogUtil.e(TAG, "loadedImage = "+loadedImage +", imagePath = " + imagePath);
+//		LogUtil.e(TAG, "loadedImage = "+loadedImage +", imagePath = " + imagePath);
 		if(!imagePath.contains("http"))return;
 		File file =new File(imagePath);
 		String fileName = file.getName();

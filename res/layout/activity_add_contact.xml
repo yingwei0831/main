@@ -28,8 +28,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="16dp"
-            android:paddingTop="16dp">
+            >
 
             <TextView
                 android:textSize="16sp"
@@ -55,6 +54,8 @@
                 android:maxLines="1"
                 android:hint="必填"
                 android:textSize="14sp"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
                 />
         </LinearLayout>
         <View
@@ -65,8 +66,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="16dp"
-            android:paddingTop="16dp">
+            >
 
             <TextView
                 android:textSize="16sp"
@@ -93,6 +93,8 @@
                 android:maxLength="18"
                 android:hint="必填"
                 android:textSize="14sp"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
                 />
         </LinearLayout>
         <View
@@ -103,8 +105,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="16dp"
-            android:paddingTop="16dp">
+            >
 
             <TextView
                 android:textSize="16sp"
@@ -132,6 +133,8 @@
                 android:textSize="14sp"
                 android:maxLength="11"
                 android:inputType="number"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
                 />
         </LinearLayout>
         <View
@@ -142,8 +145,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="16dp"
-            android:paddingTop="16dp">
+            >
 
             <TextView
                 android:textSize="16sp"
@@ -163,6 +165,8 @@
                 android:maxLines="1"
                 android:hint="选填"
                 android:textSize="14sp"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
                 />
         </LinearLayout>
         <View

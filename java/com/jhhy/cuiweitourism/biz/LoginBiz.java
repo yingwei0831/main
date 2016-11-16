@@ -148,11 +148,11 @@ public class LoginBiz {
                 } else if ("0000".equals(resCode)) {
                     msg.arg1 = 1;
 // "mid":"1","nickname":"15210***","sex":"保密","avatar":"http:\/\/cwly.taskbees.cn:8083\/res\/images\/member_nopic.png","mobile":"15210656912",
-// "truename":"孙婷芳","cardid":"211383198508292654","jifen":"25010"}}
+// "truename":"孙婷芳","cardid":"211383198508292654","jifen":"25010","status":0}}
 
 //{"res_code":"0000","res_msg":"success","res_arg":"登录成功"},"body":{
 // "mid":"11","nickname":"15210***","sex":"保密","avatar":"","mobile":"15210656919",
-// "truename":"","cardid":"","jifen":"0","hxname":""}}
+// "truename":"","cardid":"","jifen":"0","hxname":"","status":0}}
                     String body = resultObj.getString(Consts.KEY_BODY);
                     JSONObject bodyObj = new JSONObject(body);
                     User user = new User();
@@ -165,6 +165,7 @@ public class LoginBiz {
                     user.setUserCardId(bodyObj.getString(Consts.KEY_USER_CARD_ID));
                     user.setUserScore(bodyObj.getString(Consts.KEY_USER_SCORE));
                     user.setHxname(bodyObj.getString("hxname"));
+                    user.setStatus("0".equals(bodyObj.getString("status")) ? "未认证" : "已认证");
                     msg.obj = user;
 
                     //登录环信聊天服务器

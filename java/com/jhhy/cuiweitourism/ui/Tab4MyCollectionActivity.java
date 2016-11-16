@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -25,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class Tab4MyCollectionActivity extends BaseActivity implements View.OnClickListener {
+public class Tab4MyCollectionActivity extends BaseActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
 
     private String TAG = Tab4MyCollectionActivity.class.getSimpleName();
 
@@ -58,11 +59,11 @@ public class Tab4MyCollectionActivity extends BaseActivity implements View.OnCli
                     if (msg.arg1 == 1){
                         List<Collection> newlists = (List<Collection>) msg.obj;
                         LogUtil.e(TAG, "newlists.size = " + newlists.size()+", list = " + newlists );
-//                        if (newlists == null || newlists.size() == 0){
-//                            LogUtil.e(TAG, "if ----- newlists = " + newlists );
+                        if (newlists == null || newlists.size() == 0){
 //                            ToastCommon.toastShortShow(getApplicationContext(), null, "获取收藏数据为空");
-//                        } else {
-                            LogUtil.e(TAG, "else ----- newlists = " + newlists );
+                            tvTitleRight.setVisibility(View.INVISIBLE);
+                        }
+//                      else {
                             lists = newlists;
                             adapter.setData(newlists);
 //                        }
@@ -149,6 +150,7 @@ public class Tab4MyCollectionActivity extends BaseActivity implements View.OnCli
                 }
             }
         });
+        pullListView.setOnItemClickListener(this);
     }
 
     private void initData() {
@@ -192,5 +194,24 @@ public class Tab4MyCollectionActivity extends BaseActivity implements View.OnCli
         adapter.setVisible(edit);
         tvTitleRight.setText("编辑");
         layoutDelete.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        if (edit){
+//            adapter.setVisible(edit);
+            LogUtil.e(TAG, "i = " + i + ", l = " + l);
+            Collection coll = lists.get((int) l);
+            boolean sele = coll.isSelection();
+            if (sele){
+                coll.setSelection(false);
+                collIdSet.remove(collIdSet.indexOf(coll.getColId()));
+            }else{
+                coll.setSelection(true);
+                collIdSet.add(coll.getColId());
+            }
+            tvNumber.setText(String.valueOf(collIdSet.size()));
+            adapter.notifyDataSetChanged();
+        }
     }
 }

@@ -5,6 +5,7 @@ import android.accounts.AccountAuthenticatorActivity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -28,6 +29,8 @@ import com.jhhy.cuiweitourism.ui.Tab4MyReleaseActivity;
 import com.jhhy.cuiweitourism.ui.Tab4MyTourismCoinActivity;
 import com.jhhy.cuiweitourism.ui.Tab4UserInfoActivity;
 import com.jhhy.cuiweitourism.ui.UserContactsListActivity;
+import com.jhhy.cuiweitourism.utils.ImageLoaderUtil;
+import com.jhhy.cuiweitourism.view.CircleImageView;
 import com.just.sun.pricecalendar.ToastCommon;
 
 public class Tab4Fragment2 extends Fragment implements View.OnClickListener {
@@ -42,6 +45,7 @@ public class Tab4Fragment2 extends Fragment implements View.OnClickListener {
     private View viewLoggedIn;
     private TextView tvUserName;
     private TextView tvCertificated;
+    private CircleImageView civUserIcon;
 
     public Tab4Fragment2() {
         // Required empty public constructor
@@ -100,6 +104,8 @@ public class Tab4Fragment2 extends Fragment implements View.OnClickListener {
         viewLoggedIn = view.findViewById(R.id.layout_user_logged_in);
         tvUserName = (TextView) view.findViewById(R.id.tab4_user_nickname);
         tvCertificated = (TextView) view.findViewById(R.id.tv_user_certificated);
+
+        civUserIcon = (CircleImageView) view.findViewById(R.id.tab4_user_icon);
         refreshView();
         ivEditInfo.setOnClickListener(this);
 
@@ -124,7 +130,14 @@ public class Tab4Fragment2 extends Fragment implements View.OnClickListener {
             tvLoginOrRegister.setVisibility(View.GONE);
             viewLoggedIn.setVisibility(View.VISIBLE);
             tvUserName.setText(MainActivity.user.getUserNickName());
-            tvCertificated.setText("是否认证");
+            tvCertificated.setText(MainActivity.user.getStatus());
+
+            ImageLoaderUtil.getInstance(getContext()).getImage(civUserIcon, MainActivity.user.getUserIconPath());
+            ImageLoaderUtil.getInstance(getContext()).setCallBack(new ImageLoaderUtil.ImageLoaderCallBack() {
+                @Override
+                public void refreshAdapter(Bitmap loadedImage) {
+                }
+            });
         }else{ //未登录，显示注册登录
             tvLoginOrRegister.setVisibility(View.VISIBLE);
             viewLoggedIn.setVisibility(View.GONE);
@@ -208,6 +221,7 @@ public class Tab4Fragment2 extends Fragment implements View.OnClickListener {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        LogUtil.e(TAG, "----------------------onActivityResult---------------------");
         if (resultCode == Activity.RESULT_OK){
             if (requestCode == LOGIN_OUT){
                 gotoLogin();
@@ -215,6 +229,17 @@ public class Tab4Fragment2 extends Fragment implements View.OnClickListener {
         }
         if (requestCode == VIEW_USER_INFO){
             tvUserName.setText(MainActivity.user.getUserNickName());
+            if (data != null){
+                boolean tag = data.getBooleanExtra("tag", false);
+                if (tag){
+                    ImageLoaderUtil.getInstance(getContext()).getImage(civUserIcon, MainActivity.user.getUserIconPath());
+                    ImageLoaderUtil.getInstance(getContext()).setCallBack(new ImageLoaderUtil.ImageLoaderCallBack() {
+                        @Override
+                        public void refreshAdapter(Bitmap loadedImage) {
+                        }
+                    });
+                }
+            }
         }
     }
 

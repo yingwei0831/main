@@ -125,8 +125,8 @@
 
         <activity
             android:name=".ui.MainActivity"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"
+            android:launchMode="singleTop"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <!-- android:theme="@style/MyCustomWindowTitle" -->
@@ -273,6 +273,7 @@
         <activity
             android:name=".ui.Tab4UserInfoActivity"
             android:screenOrientation="portrait"
+            android:launchMode="singleTop"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.Tab4OrderDetailsActivity"
@@ -282,49 +283,60 @@
         <activity
             android:name=".ui.RequestRefundActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:launchMode="singleTop"/>
         <activity
             android:name=".ui.EditUserInfoActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:launchMode="singleTop"/>
         <activity
             android:name=".ui.Tab4AccountSecurityActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:windowSoftInputMode="adjustPan|stateHidden" />
+            android:windowSoftInputMode="adjustPan|stateHidden"
+            android:launchMode="singleTop"/>
         <activity
             android:name=".ui.ModifyPasswordActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:launchMode="singleTop"/>
         <activity
             android:name=".ui.ModifyTelephoneNumberActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:launchMode="singleTop"/>
         <activity
             android:name=".ui.Tab4AccountCertificationActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:windowSoftInputMode="adjustPan|stateHidden" />
+            android:windowSoftInputMode="adjustPan|stateHidden"
+            android:launchMode="singleTop"/>
         <activity
             android:name=".ui.Tab4MyCollectionActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:launchMode="singleTop"/>
         <activity
             android:name=".ui.Tab4MyTourismCoinActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:launchMode="singleTop"/>
         <activity
             android:name=".ui.Tab4MyReleaseActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:launchMode="singleTop"/>
         <activity
             android:name=".ui.Tab4MyCommentActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/ActionBarTheme" />
+            android:theme="@style/ActionBarTheme"
+            android:launchMode="singleTop"/>
         <activity
             android:name=".ui.Tab4MyMessageActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/ActionBarTheme" />
+            android:theme="@style/ActionBarTheme"
+            android:launchMode="singleTop"/>
         <activity
             android:name=".ui.HotActivityListActivity"
             android:screenOrientation="portrait"
@@ -438,6 +450,11 @@
             android:name=".ui.VisaItemDetailActivity"
             android:screenOrientation="portrait"
             android:theme="@style/ActionBarTheme" />
+         <activity
+            android:name=".ui.VisaItemDetailActivity2"
+            android:screenOrientation="portrait"
+            android:theme="@style/ActionBarTheme" />
+
         <activity
             android:name=".ui.VisaNeedMaterialActivity"
             android:screenOrientation="portrait"

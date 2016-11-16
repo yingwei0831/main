@@ -1,12 +1,15 @@
 package com.jhhy.cuiweitourism.popupwindows;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,6 +66,7 @@ public class PopupWindowImage extends PopupWindow {
         Button bt3 = (Button) view.findViewById(R.id.item_popupwindows_cancel);
         bt1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                checkPermission();
                 photo();
                 dismiss();
             }
@@ -86,9 +90,26 @@ public class PopupWindowImage extends PopupWindow {
                 dismiss();
             }
         });
-
     }
+    // Storage Permissions
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
 
+    public void checkPermission(){
+        // Check whether we have write permission
+        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,//需要请求的所有权限，这是个数组String[]
+                    REQUEST_EXTERNAL_STORAGE//请求码
+            );
+        }
+    }
     private void photo() {
         String status = Environment.getExternalStorageState();
         if(status.equals(Environment.MEDIA_MOUNTED))  {

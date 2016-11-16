@@ -41,12 +41,12 @@ public class PopupWindowVisaType extends PopupWindow implements AdapterView.OnIt
 //    private EditText etMail;
 
     private VisaTypeListAdapter adapter;
-    private List<VisaType> lists;
+    private List<String> lists;
     private int selection;
 
     private String TAG = PopupWindowVisaType.class.getSimpleName();
 
-    public PopupWindowVisaType(final Activity activity, View parent, List<VisaType> visaTypeList) {
+    public PopupWindowVisaType(final Activity activity, View parent, List<String> visaTypeList) {
         this.activity = activity;
         this.lists = visaTypeList;
 
@@ -85,4 +85,11 @@ public class PopupWindowVisaType extends PopupWindow implements AdapterView.OnIt
     public int getSelection(){
         return selection;
     }
+
+    public void refreshView(int selection){
+        this.selection = selection;
+        adapter.setSelection(selection);
+        adapter.notifyDataSetChanged();
+    }
+
 }

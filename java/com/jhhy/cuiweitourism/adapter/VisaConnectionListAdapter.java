@@ -34,8 +34,8 @@ public class VisaConnectionListAdapter extends MyBaseAdapter {
         }else{
             holder = (ViewHolder) view.getTag();
         }
-        ClassifyArea area = (ClassifyArea) list.get(i);
-        holder.tvName.setText(area.getAreaName());
+        String area = (String) list.get(i);
+        holder.tvName.setText(area);
         if (selection == i){
             holder.tvName.setBackgroundColor(Color.WHITE);
         }else{

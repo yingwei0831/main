@@ -31,6 +31,7 @@ public class User implements Serializable{
     private String latitude;//纬度
 
     private String hxname; //环信分配的id
+    private String status; //环信分配的id
 
     @Override
     public String toString() {
@@ -54,6 +55,14 @@ public class User implements Serializable{
                 ", latitude='" + latitude + '\'' +
                 ", hxname='" + hxname + '\'' +
                 '}';
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getHxname() {

@@ -5,6 +5,9 @@
     <!--<color name="colorAccent">#FF4081</color>-->
     <color name="colorAccent">#28CE9D</color>
 
+    <color name="primary">@color/colorActionBar</color>
+    <color name="primary_dark">@color/colorActionBar</color>
+    <color name="status_bar_color">@color/colorActionBar</color>
 
     <!--首页-->
     <color name="colorFlash">#FF9369</color>

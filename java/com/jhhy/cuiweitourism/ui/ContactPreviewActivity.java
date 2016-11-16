@@ -3,6 +3,7 @@ package com.jhhy.cuiweitourism.ui;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -79,11 +80,13 @@ public class ContactPreviewActivity extends BaseActivity implements View.OnClick
     }
 
     private void setupView() {
-        tvTitle = (TextView) findViewById(R.id.tv_title_inner_travel);
+        tvTitle = (TextView) findViewById(R.id.tv_title_simple_title);
         tvLeft = (TextView) findViewById(R.id.tv_title_simple_title_left);
+        tvTitle.setText("常用联系人");
 
         tvRight = (TextView) findViewById(R.id.tv_title_simple_title_right);
         tvRight.setText("编辑");
+        tvRight.setTextColor(getResources().getColor(android.R.color.black));
 
         etName = (EditText) findViewById(R.id.et_contacts_name);
         etID = (EditText) findViewById(R.id.et_contacts_id);
@@ -101,7 +104,7 @@ public class ContactPreviewActivity extends BaseActivity implements View.OnClick
         if (contacts.getContactsPassport() != null && !"null".equals(contacts.getContactsPassport())) {
             etPassport.setText(contacts.getContactsPassport());
         }else{
-            etPassport.setText("");
+            etPassport.setText(" ");
         }
     }
 
@@ -137,13 +140,12 @@ public class ContactPreviewActivity extends BaseActivity implements View.OnClick
                         ToastCommon.toastShortShow(getApplicationContext(), null, "必输项不能为空");
                         return;
                     }
-                    contacts.setContactsName(name);
-                    contacts.setContactsIdCard(ID);
-                    contacts.setContactsMobile(mobile);
-                    contacts.setContactsPassport(passport);
+                    contacts.setContactsName(name.trim());
+                    contacts.setContactsIdCard(ID.trim());
+                    contacts.setContactsMobile(mobile.trim());
+                    contacts.setContactsPassport(passport.trim());
                     ContactsBiz biz = new ContactsBiz(getApplicationContext(), handler);
                     biz.modifyContacts(contacts);
-
                 }
                 break;
         }

@@ -34,8 +34,8 @@ public class VisaTypeListAdapter extends MyBaseAdapter {
         }else{
             holder = (ViewHolder) view.getTag();
         }
-        VisaType visaType = (VisaType) list.get(i);
-        holder.tvType.setText(visaType.getTypeName());
+        String visaType = (String) list.get(i);
+        holder.tvType.setText(visaType);
         if (i == selection){
             holder.tvType.setTextColor(context.getResources().getColor(R.color.colorActionBar));
         }else{
@@ -49,11 +49,6 @@ public class VisaTypeListAdapter extends MyBaseAdapter {
         super.setData(list);
         notifyDataSetChanged();
     }
-
-//    public void setData(List<VisaType> lists){
-//        this.list = lists;
-//        notifyDataSetChanged();
-//    }
 
     public void setSelection(int position){
         this.selection = position;

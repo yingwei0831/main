@@ -4,7 +4,7 @@ package com.jhhy.cuiweitourism.net.models.ResponseModel;
  * Created by jiahe008 on 2016/11/15.
  * 签证国家
  */
-public class VisaHotInfo {
+public class VisaHotInfo implements Comparable<VisaHotInfo>{
 
 //    "996",                                             "签证销售产品ID",
 //    "澳大利亚旅游签证加急",                "签证销售产品名称",
@@ -251,5 +251,15 @@ public class VisaHotInfo {
         this.visaCName = visaCName;
         this.visaNationCode = visaNationCode;
         this.visaNationName = visaNationName;
+    }
+
+    @Override
+    public int compareTo(VisaHotInfo visaHotInfo) {
+        if (Integer.parseInt(this.visaPrice) > Integer.parseInt(visaHotInfo.visaPrice)){
+            return 1;
+        }else if (Integer.parseInt(this.visaPrice) < Integer.parseInt(visaHotInfo.visaPrice)){
+            return -1;
+        }
+        return 0;
     }
 }

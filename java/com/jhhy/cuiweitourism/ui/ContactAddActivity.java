@@ -91,6 +91,7 @@ public class ContactAddActivity extends BaseActionBarActivity {
     @Override
     protected void setupView() {
         super.setupView();
+
         tvTitle.setText(getString(R.string.contact_add_title));
         btnAdd = (Button) findViewById(R.id.btn_add_save_contacts);
 

@@ -1,10 +1,12 @@
 package com.jhhy.cuiweitourism.net.models.ResponseModel;
 
+import java.io.Serializable;
+
 /**
  * Created by jiahe008 on 2016/11/15.
  * 所需材料
  */
-public class VisaMaterial {
+public class VisaMaterial implements Serializable{
 
 //                                [
 //                                    "资料名称",

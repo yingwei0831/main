@@ -338,7 +338,7 @@ public class VisaMainActivity extends BaseActivity implements XScrollView.IXScro
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 LogUtil.e(TAG, "position = " + i +", l = " + l); //进入详情
                 String id = listHotAny.get(i).getVisaId();
-                Intent intent = new Intent(getApplicationContext(), VisaItemDetailActivity.class);
+                Intent intent = new Intent(getApplicationContext(), VisaItemDetailActivity2.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("id", id);
                 intent.putExtras(bundle);

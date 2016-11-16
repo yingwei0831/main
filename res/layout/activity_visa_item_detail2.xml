@@ -190,12 +190,12 @@
 
                 <!--页面中的indicator-->
                 <HorizontalScrollView
+                    android:id="@+id/layout_visa_item_main_indicator_bottom"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:scrollbars="none">
                     <LinearLayout
-                        android:id="@+id/layout_visa_item_main_indicator_bottom"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@android:color/white"
                         android:orientation="horizontal"
@@ -355,7 +355,9 @@
                 <com.jhhy.cuiweitourism.view.MyListView
                     android:id="@+id/list_material"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:divider="@color/colorLineGray2"
+                    android:dividerHeight="4dp">
 
                 </com.jhhy.cuiweitourism.view.MyListView>
                 <!--<TextView-->
@@ -403,24 +405,26 @@
                 <!--</LinearLayout>-->
             </LinearLayout>
         </com.jhhy.cuiweitourism.view.MyScrollViewIS>
+
         <!--顶部导航-->
         <HorizontalScrollView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scrollbars="none"
+            android:id="@+id/layout_visa_item_main_indicator_top"
+            android:visibility="gone"
             >
             <LinearLayout
-                android:id="@+id/layout_visa_item_main_indicator_top"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@android:color/white"
                 android:orientation="horizontal"
                 android:visibility="visible">
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:background="@android:color/white">
 
                     <Button
                         android:id="@+id/btn_visa_item_detail_indicator_top_product"
@@ -562,7 +566,6 @@
                 </RelativeLayout>
             </LinearLayout>
         </HorizontalScrollView>
-
 
     </FrameLayout>
 

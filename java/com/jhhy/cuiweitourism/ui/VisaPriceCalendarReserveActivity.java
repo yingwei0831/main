@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.moudle.VisaDetail;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.VisaDetailInfo;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.utils.Utils;
@@ -28,7 +29,7 @@ public class VisaPriceCalendarReserveActivity extends BaseActivity implements Vi
 
     private String TAG = VisaPriceCalendarReserveActivity.class.getSimpleName();
 
-    private VisaDetail detail; //签证详情
+    private VisaDetailInfo detail; //签证详情
 
     private List<GroupDeadline> calendarPricesNew = new ArrayList<>(); //价格日历集合
     private String date = null;// 设置默认选中的日期  格式为 “2015-09-18” 标准DATE格式
@@ -75,17 +76,17 @@ public class VisaPriceCalendarReserveActivity extends BaseActivity implements Vi
 
     private void getData() {
         Bundle bundle = getIntent().getExtras();
-        detail = (VisaDetail) bundle.getSerializable("visaDetail");
+        detail = (VisaDetailInfo) bundle.getSerializable("visaDetail");
 
         LoadingIndicator.show(VisaPriceCalendarReserveActivity.this, "正在加载数据，请稍后...");
-        final String price = detail.getPrice();
+        final String price = detail.getVisaPrice();
         final long addTime = 24 * 60 * 60 * 1000;
         new Thread(){
             @Override
             public void run() {
                 super.run();
                 long startTime = System.currentTimeMillis();
-                for (long i = 0; i < 150; i++){
+                for (long i = 0; i < 150; i++){ //构造了5个月的数据
                     GroupDeadline deadline = new GroupDeadline();
                     deadline.setDate(Utils.getTimeStrYMD(startTime));
                     deadline.setSell_price_adult(price);

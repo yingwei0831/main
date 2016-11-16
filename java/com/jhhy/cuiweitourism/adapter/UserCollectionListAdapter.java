@@ -73,7 +73,6 @@ public abstract class UserCollectionListAdapter extends MyBaseAdapter implements
             coll.setSelection(false);
             holder.radioButton.setVisibility(View.GONE);
         }
-
         return view;
     }
 

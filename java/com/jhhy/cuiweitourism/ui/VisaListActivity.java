@@ -23,6 +23,7 @@ import com.jhhy.cuiweitourism.net.biz.VisaActionBiz;
 import com.jhhy.cuiweitourism.net.models.FetchModel.VisaHot;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.VisaCountryInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.VisaHotInfo;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
@@ -32,6 +33,8 @@ import com.jhhy.cuiweitourism.utils.Utils;
 import com.just.sun.pricecalendar.ToastCommon;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class VisaListActivity extends BaseActivity implements AdapterView.OnItemClickListener, View.OnClickListener {
@@ -47,20 +50,17 @@ public class VisaListActivity extends BaseActivity implements AdapterView.OnItem
 
     private ListView listVisa;
     private VisaListAdapter adapter;
-
-    private List<VisaHotInfo> lists = new ArrayList<>();
+    private List<VisaHotInfo> lists = new ArrayList<>(); //签证列表
+    private List<VisaHotInfo> listsScreenByType = new ArrayList<>(); //签证类型筛选列表
 
     private TextView tvOrder;
     private TextView tvType;
     private TextView tvFromCity;
 
-    private List<VisaType> visaTypeList; //签证类型
-    private ArrayList<PhoneBean> visaCityList; //受理城市
+    private List<String> visaTypeList;
 
     private LinearLayout layoutParent;
 
-    private String order = "";
-    private String type = "";
     private PhoneBean fromCity = new PhoneBean();
 
     private Handler handler = new Handler(){
@@ -80,22 +80,22 @@ public class VisaListActivity extends BaseActivity implements AdapterView.OnItem
                         ToastCommon.toastShortShow(getApplicationContext(), null, String.valueOf(msg.obj));
                     }
                     break;
-                case Consts.MESSAGE_VISA_TYPE: //签证类型
-                    if (msg.arg1 == 1){
-                        visaTypeList = (List<VisaType>) msg.obj;
-                        visaTypeList.add(0, new VisaType("0", "全部签证"));
-                        if (visaTypeList == null || visaTypeList.size() == 0){
-//                            ToastCommon.toastShortShow(getApplicationContext(), null, "获取签证类型为空");
-                        }else{
-
-                        }
-                    }else{
-//                        ToastCommon.toastShortShow(getApplicationContext(), null, String.valueOf(msg.obj));
-                    }
-                    break;
+//                case Consts.MESSAGE_VISA_TYPE: //签证类型
+//                    if (msg.arg1 == 1){
+//                        visaTypeList = (List<VisaType>) msg.obj;
+//                        visaTypeList.add(0, new VisaType("0", "全部签证"));
+//                        if (visaTypeList == null || visaTypeList.size() == 0){
+////                            ToastCommon.toastShortShow(getApplicationContext(), null, "获取签证类型为空");
+//                        }else{
+//
+//                        }
+//                    }else{
+////                        ToastCommon.toastShortShow(getApplicationContext(), null, String.valueOf(msg.obj));
+//                    }
+//                    break;
                 case Consts.MESSAGE_VISA_CITY:
                     if (msg.arg1 == 1){
-                        visaCityList = (ArrayList<PhoneBean>) msg.obj;
+//                        visaCityList = (ArrayList<PhoneBean>) msg.obj;
                         return;
                     }
                     break;
@@ -148,12 +148,9 @@ public class VisaListActivity extends BaseActivity implements AdapterView.OnItem
         tvType = (TextView) findViewById(   R.id.tv_visa_list_trip_days);
         tvFromCity = (TextView) findViewById(R.id.tv_visa_list_start_time);
 
-        VisaType orderDefault = new VisaType("0", "默认排序");
-        VisaType orderIncrese = new VisaType("2", "价格从低到高"); //2，按价格降序
-        VisaType orderDecrese = new VisaType("1", "价格从高到低"); //1，按价格升序
-        visaOrderList.add(orderDefault);
-        visaOrderList.add(orderIncrese);
-        visaOrderList.add(orderDecrese);
+        visaOrderList.add("默认排序");
+        visaOrderList.add("价格从低到高");
+        visaOrderList.add("价格从高到低");
 
         biz = new VisaActionBiz(getApplicationContext(), handler);
     }
@@ -162,14 +159,21 @@ public class VisaListActivity extends BaseActivity implements AdapterView.OnItem
         Bundle bundle = getIntent().getExtras();
         nationId = bundle.getString("nationId");
         nationName = bundle.getString("nationName");
+
+        visaTypeList = new ArrayList<>();
+        visaTypeList.add("全部签证");
+        visaTypeList.add("访友签证");
+        visaTypeList.add("移民签证");
+        visaTypeList.add("非移民签证");
+        visaTypeList.add("留学签证");
+        visaTypeList.add("旅游签证");
+        visaTypeList.add("工作签证");
+        visaTypeList.add("商务签证");
+        visaTypeList.add("探亲签证");
     }
     private VisaActionBiz biz; //热门签证国家，查看全部国家和地区
 
     private void getInternetData() {
-//        VisaBiz biz = new VisaBiz(getApplicationContext(), handler);
-//        biz.getCountryList(nationId, order, type, fromCity.getName());
-//        biz.getVisaType();
-//        biz.getVisaCity();
         VisaHot visaHot = new VisaHot();
         visaHot.setCountryCode(nationId);
         visaHot.setDistributionArea(""); //送签地（三字码）
@@ -201,7 +205,7 @@ public class VisaListActivity extends BaseActivity implements AdapterView.OnItem
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) { //进入签证详情
         String id = lists.get(i).getVisaId();
-        Intent intent = new Intent(getApplicationContext(), VisaItemDetailActivity.class);
+        Intent intent = new Intent(getApplicationContext(), VisaItemDetailActivity2.class);
         Bundle bundle = new Bundle();
         bundle.putString("id", id);
         intent.putExtras(bundle);
@@ -231,11 +235,8 @@ public class VisaListActivity extends BaseActivity implements AdapterView.OnItem
                         }
                         fromCity = (PhoneBean) bundle.getSerializable("city");
                         tvFromCity.setText(fromCity.getName());
-
                         lists.clear();
                         adapter.notifyDataSetChanged();
-                        VisaBiz biz = new VisaBiz(getApplicationContext(), handler);
-                        biz.getCountryList(nationId, order, type, fromCity.getCity_id());
                     }
                 }
             }
@@ -245,14 +246,14 @@ public class VisaListActivity extends BaseActivity implements AdapterView.OnItem
     private PopupWindowVisaType popupWindowVisaType;
     private int visaTypePosition = 0;
 
-    private List<VisaType> visaOrderList = new ArrayList<>();
+    private List<String> visaOrderList = new ArrayList<>();
     private PopupWindowVisaType popupWindowOrder;
     private int visaOrderPosition = 0;
 
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            case R.id.tv_visa_list_sort_default:
+            case R.id.tv_visa_list_sort_default: //默认排序
                 if (popupWindowOrder == null) {
                     popupWindowOrder = new PopupWindowVisaType(VisaListActivity.this, layoutParent, visaOrderList);
                     popupWindowOrder.setOnDismissListener(new PopupWindow.OnDismissListener() {
@@ -262,25 +263,25 @@ public class VisaListActivity extends BaseActivity implements AdapterView.OnItem
                                 return;
                             }
                             visaOrderPosition = popupWindowOrder.getSelection();
-                            if("0".equals(visaOrderList.get(visaOrderPosition).getId())) {
-                                order = "";
+                            String orderType = visaOrderList.get(visaOrderPosition);
+                            if(visaOrderPosition == 0) {
+                                Collections.sort(lists);
+                            }else if (visaOrderPosition == 1){
+                                Collections.sort(lists);
                             }else{
-                                order = visaOrderList.get(visaOrderPosition).getId();
+                                Collections.sort(lists);
+                                Collections.reverse(lists);
                             }
-
-                            lists.clear();
-                            adapter.notifyDataSetChanged();
-                            VisaBiz biz = new VisaBiz(getApplicationContext(), handler);
-                            biz.getCountryList(nationId, order, type, fromCity.getName());
-                            tvOrder.setText(visaOrderList.get(visaOrderPosition).getTypeName());
+                            adapter.setData(lists);
+                            tvOrder.setText(orderType);
                         }
                     });
                 }else{
                     popupWindowOrder.showAsDropDown(layoutParent, 0, -Utils.getScreenHeight(getApplicationContext()));
+                    popupWindowOrder.refreshView(visaOrderPosition);
                 }
-
                 break;
-            case R.id.tv_visa_list_trip_days:
+            case R.id.tv_visa_list_trip_days: //签证类型
                 if (popupWindowVisaType == null) {
                     popupWindowVisaType = new PopupWindowVisaType(VisaListActivity.this, layoutParent, visaTypeList);
                     popupWindowVisaType.setOnDismissListener(new PopupWindow.OnDismissListener() {
@@ -290,34 +291,38 @@ public class VisaListActivity extends BaseActivity implements AdapterView.OnItem
                                 return;
                             }
                             visaTypePosition = popupWindowVisaType.getSelection();
-                            if("0".equals(visaTypeList.get(visaTypePosition).getId())) {
-                                type = "";
-                            }else{
-                                type = visaTypeList.get(visaTypePosition).getId();
+                            String type = visaTypeList.get(visaTypePosition);
+                            if (visaTypePosition == 0){
+                                adapter.setData(lists);
+                            } else {
+                                screenByType(type); //根据签证类型筛选
+                                adapter.setData(listsScreenByType);
                             }
-
-                            lists.clear();
-                            adapter.notifyDataSetChanged();
-                            VisaBiz biz = new VisaBiz(getApplicationContext(), handler);
-                            biz.getCountryList(nationId, order, type, fromCity.getName());
-                            tvType.setText(visaTypeList.get(visaTypePosition).getTypeName());
+                            tvType.setText(type);
                         }
                     });
                 }else{
                     popupWindowVisaType.showAsDropDown(layoutParent, 0, -Utils.getScreenHeight(getApplicationContext()));
+                    popupWindowVisaType.refreshView(visaTypePosition);
                 }
-
                 break;
-            case R.id.tv_visa_list_start_time:
+//            case R.id.tv_visa_list_start_time: //领区（会删除）
+//                Intent intent = new Intent(getApplicationContext(), VisaCitySelectionActivity.class);
+//                Bundle bundle = new Bundle();
+//                bundle.putParcelableArrayList("cityList", visaCityList);
+////                bundle.putString("currentCity", "北京");
+//                intent.putExtras(bundle);
+//                startActivityForResult(intent, SELECT_VISA_CITY);
+//                break;
+        }
+    }
 
-                Intent intent = new Intent(getApplicationContext(), VisaCitySelectionActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putParcelableArrayList("cityList", visaCityList);
-//                bundle.putString("currentCity", "北京");
-                intent.putExtras(bundle);
-                startActivityForResult(intent, SELECT_VISA_CITY);
-                break;
-
+    private void screenByType(String type) {
+        listsScreenByType.clear();
+        for (VisaHotInfo info : lists){
+            if (type.equals(info.getVisaType())){
+                listsScreenByType.add(info);
+            }
         }
     }
 
