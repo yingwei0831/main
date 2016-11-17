@@ -86,12 +86,12 @@ public class CalendarLineBiz {
                             groupDeadline.setSell_price_elder(cpObj.getString("oldprice"));
                             groupDeadline.setSell_price_adult(cpObj.getString("adultprice"));
                             listCalendar.add(groupDeadline);
-                            if (Utils.getNowDateShort().equals(dateStr)){
-                                position = i;
-                            }
-                            if (i >= position && position != -1) {
+//                            if (Utils.getNowDateShort().equals(dateStr)){
+//                                position = i;
+//                            }
+//                            if (i >= position && position != -1) {
                                 listCalendarNew.add(groupDeadline);
-                            }
+//                            }
                         }
                     }
                     ary[0] = listCalendar;

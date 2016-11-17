@@ -143,7 +143,6 @@ public class PersonalizedCustomDetailActivity extends BaseActivity implements Ge
         Bundle bundle = getIntent().getExtras();
         id = bundle.getString("id");
 
-
         LoadingIndicator.show(PersonalizedCustomDetailActivity.this, getString(R.string.http_notice));
         //个性定制详情
         final HomePageCustonDetail detail = new HomePageCustonDetail(id);
@@ -316,20 +315,18 @@ public class PersonalizedCustomDetailActivity extends BaseActivity implements Ge
         }
         updateBinner(newADInfos);
         //Title
-
-        String title = detailInfo.getTitle();
-        tvTitle.setText(title);
+        tvTitle.setText(detailInfo.getTitle());
         //Price
-        String price = detailInfo.getPrice();
-        tvPrice.setText(price);
+        tvPrice.setText(detailInfo.getPrice());
         tvDestination.setText(detailInfo.getArea());
+        //行程天数
         tvTripDays.setText(detailInfo.getXcts());
         //商品详情
-        String tripDetail = detailInfo.getContent();
+        String tripDetail = detailInfo.getSellpoint();
         mWebViewProduct.loadDataWithBaseURL(null, start + tripDetail + end, "text/html", "utf-8", null);
 
         //行程描述
-        String tripDescribe = detailInfo.getXcms();
+        String tripDescribe = detailInfo.getContent();
         mWebViewDescribe.loadDataWithBaseURL(null, start + tripDescribe + end, "text/html", "utf-8", null);
     }
 

@@ -143,7 +143,7 @@ public class SelectAllCountryAreaActivity extends BaseActivity implements View.O
         ivTitleLeft = (ImageView) actionBar.getCustomView().findViewById(R.id.title_main_tv_left_location);
 
         listViewFirst = (ListView) findViewById(R.id.list_father);
-        listFirst = Arrays.asList(leftContinent.keySet().toArray());
+        listFirst = new ArrayList(Arrays.asList(leftContinent.keySet().toArray()));
         adapterFirst = new VisaConnectionListAdapter(getApplicationContext(), listFirst);
         adapterFirst.setSelection(0);
         listViewFirst.setAdapter(adapterFirst);
@@ -187,7 +187,7 @@ public class SelectAllCountryAreaActivity extends BaseActivity implements View.O
     }
 
     private void refreshView() {
-        adapterFirst.setData(Arrays.asList(leftContinent.keySet().toArray()));
+        adapterFirst.setData(listFirst);
         adapterSecond.setData(leftContinent.get(leftContinent.keySet().toArray()[0]));
     }
 
@@ -202,7 +202,7 @@ public class SelectAllCountryAreaActivity extends BaseActivity implements View.O
                 leftContinent.put(continentName, continentCountry);
             }
         }
-        listFirst = Arrays.asList(leftContinent.keySet().toArray());
+        listFirst = new ArrayList(Arrays.asList(leftContinent.keySet().toArray()));
         listSecond = leftContinent.get(leftContinent.keySet().toArray()[0]);
     }
 

@@ -1,6 +1,9 @@
 package com.jhhy.cuiweitourism.ui;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -206,7 +209,19 @@ public class VisaItemDetailActivity2 extends BaseActivity implements View.OnClic
         tvShare.setVisibility(View.INVISIBLE);
 
         listMaterial = (MyListView) findViewById(R.id.list_material);
-        adapterMaterial = new VisaDetailMaterialAdapter(getApplicationContext(), listMaterialData);
+        adapterMaterial = new VisaDetailMaterialAdapter(this, listMaterialData){
+            @Override
+            public void goToArgument(View view, View viewGroup, int position, int which) {
+                // TODO 这里指明是使用Intent.ACTION_VIEW,这将调用系统里面的浏览器来打开指定网页
+                String model = listMaterialData.get(position).getMaterialModel();
+                if (model != null) {
+                    Uri uri = Uri.parse(model);
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
+            }
+        };
         listMaterial.setAdapter(adapterMaterial);
 
         btnReserve = (Button) findViewById(R.id.btn_visa_detail_reserve);

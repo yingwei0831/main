@@ -15,6 +15,9 @@ public class HomePageCustomDetailInfo {
     // "price":"70000","content":"<p>夏威夷海岛蜜月游<br\/><\/p>","finaldestid":"46",
     // "typeid":"203","area":"夏威夷","xcts":"10","xcms":"<p>xingcheng pai <br\/><\/p>"}
 
+    //擦，接口又改了，都特么要上线了，还改呢，改完了也不说一声
+    public String sellpoint;
+
     public String aid;
     public String title;
     public ArrayList<String> piclist;
@@ -26,7 +29,16 @@ public class HomePageCustomDetailInfo {
     public String xcts;
     public String xcms;
 
-    public HomePageCustomDetailInfo(String aid, String title, ArrayList<String> piclist, String price, String content, String finaldestid, String typeid, String area, String xcts, String xcms) {
+    public String getSellpoint() {
+        return sellpoint;
+    }
+
+    public void setSellpoint(String sellpoint) {
+        this.sellpoint = sellpoint;
+    }
+
+    public HomePageCustomDetailInfo(String sellpoint, String aid, String title, ArrayList<String> piclist, String price, String content, String finaldestid, String typeid, String area, String xcts, String xcms) {
+        this.sellpoint = sellpoint;
         this.aid = aid;
         this.title = title;
         this.piclist = piclist;

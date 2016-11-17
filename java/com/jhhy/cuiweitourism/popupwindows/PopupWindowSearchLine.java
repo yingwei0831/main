@@ -118,6 +118,7 @@ public class PopupWindowSearchLine extends PopupWindow implements OnClickListene
      * @param pricePosition 价格的位置
      */
     public void refreshView(int tag, String sortPosition, String dayPosition, String earlyTime, String laterTime, int pricePosition) {
+        commit = false;
         initFirstListView(tag);
         if (sortPosition != null && sortPosition.length() != 0) {
             sort = sortPosition;
@@ -160,6 +161,8 @@ public class PopupWindowSearchLine extends PopupWindow implements OnClickListene
             secondAdapter1.setSelectPosition(selectionPrice);
         }
         secondAdapter1.notifyDataSetChanged();
+        setEarlyTime(earlyTime);
+        setLaterTime(laterTime);
     }
 
 

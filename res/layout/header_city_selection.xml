@@ -75,6 +75,7 @@
 
     <!--热门城市-->
     <LinearLayout
+        android:id="@+id/layout_hot_city"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">

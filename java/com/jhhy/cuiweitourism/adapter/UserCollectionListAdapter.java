@@ -38,7 +38,6 @@ public abstract class UserCollectionListAdapter extends MyBaseAdapter implements
 
     @Override
     public View getView(final int i, View view, final ViewGroup viewGroup) {
-        LogUtil.e(TAG, "--------getView------- position = " + i);
         CollectionViewHolder holder = null;
         if (view == null){
             holder = new CollectionViewHolder();

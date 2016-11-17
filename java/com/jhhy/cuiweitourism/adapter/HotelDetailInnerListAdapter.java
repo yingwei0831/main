@@ -21,10 +21,15 @@ import java.util.List;
  */
 public abstract class HotelDetailInnerListAdapter extends MyBaseAdapter implements ArgumentOnClick {
 
+    private int type;
+
     public HotelDetailInnerListAdapter(Context ct, List list) {
         super(ct, list);
     }
 
+    public void setType(int type){
+        this.type = type;
+    }
     @Override
     public View getView(final int i, View view, final ViewGroup viewGroup) {
         ViewHolder holder = null;
@@ -41,14 +46,17 @@ public abstract class HotelDetailInnerListAdapter extends MyBaseAdapter implemen
             holder = (ViewHolder) view.getTag();
         }
 
-        final int id = holder.btnReserve.getId();
-        holder.btnReserve.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                goToArgument(view, viewGroup, i, id);
-            }
-        });
-
+        if(type == 2){
+            holder.btnReserve.setVisibility(View.GONE);
+        }else {
+            final int id = holder.btnReserve.getId();
+            holder.btnReserve.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    goToArgument(view, viewGroup, i, id);
+                }
+            });
+        }
         HotelDetailInfo.Room room = (HotelDetailInfo.Room) getItem(i);
         if (room != null){
 //            ImageLoaderUtil.getInstance(context).displayImage(room.getImgs().get(0), holder.imageView);

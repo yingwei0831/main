@@ -9,8 +9,7 @@
     <com.jhhy.cuiweitourism.view.MyScrollView
         android:id="@+id/viewflipper_myScrollview"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        >
+        android:layout_height="200dp">
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -23,7 +22,8 @@
 
             </ViewFlipper>
 
-            <include layout="@layout/search_bar"/>
+            <include layout="@layout/search_bar" />
+
             <LinearLayout
                 android:id="@+id/layout_indicator_point"
                 android:layout_width="match_parent"
@@ -31,16 +31,13 @@
                 android:layout_gravity="bottom"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:paddingBottom="2dp"/>
-
+                android:paddingBottom="2dp" />
 
         </FrameLayout>
 
     </com.jhhy.cuiweitourism.view.MyScrollView>
 
-
     <TableLayout
-        android:visibility="visible"
         android:id="@+id/tablelayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -49,7 +46,8 @@
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:paddingTop="20dp"
-        android:stretchColumns="0,1,2,3">
+        android:stretchColumns="0,1,2,3"
+        android:visibility="visible">
 
         <TableRow
             android:layout_width="match_parent"
@@ -117,7 +115,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1.2px"
-        android:background="@color/colorLineGray2"/>
+        android:background="@color/colorLineGray2" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -181,15 +179,13 @@
             android:textSize="16sp" />
     </LinearLayout>
 
-
     <com.jhhy.cuiweitourism.view.MyScrollView
-        android:visibility="visible"
         android:id="@+id/viewflipper_myScrollview2"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_marginBottom="12dp"
         android:layout_marginTop="12dp"
-        >
+        android:visibility="visible">
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -221,16 +217,16 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:orientation="horizontal">
-<!--个性定制-->
+        <!--个性定制-->
         <RelativeLayout
+            android:id="@+id/layout_personalized_custom"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@android:color/white"
             android:gravity="center_vertical"
             android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:id="@+id/layout_personalized_custom">
+            android:paddingRight="20dp">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -266,16 +262,16 @@
             android:layout_width="1dp"
             android:layout_height="match_parent"
             android:background="@color/colorLineGray" />
-<!--热门活动-->
+        <!--热门活动-->
         <RelativeLayout
+            android:id="@+id/layout_hot_activity"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@android:color/white"
             android:gravity="center_vertical"
             android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:id="@+id/layout_hot_activity">
+            android:paddingRight="20dp">
 
             <LinearLayout
 
@@ -355,55 +351,51 @@
                 android:background="@color/colorLineGray" />
         </RelativeLayout>
     </LinearLayout>
-
-
+    <!--页面中的indicator-->
     <LinearLayout
         android:id="@+id/layout_tab_recommend_for_you"
-        android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@android:color/white"
         android:orientation="horizontal"
-        android:paddingTop="6dp"
         android:paddingBottom="7dp"
         android:paddingLeft="6dp"
-        android:paddingRight="6dp">
+        android:paddingRight="6dp"
+        android:paddingTop="6dp"
+        android:visibility="visible">
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            >
+            android:layout_weight="1">
 
             <TextView
-                android:background="@drawable/bg_tab1_radiobutton_recommend_for_you"
                 android:id="@+id/tv_tab1_recommend_all_bottom"
                 style="@style/Tab1SelectionAreaStyle"
+                android:background="@drawable/bg_tab1_radiobutton_recommend_for_you"
                 android:text="@string/tab1_recommend_for_you_all"
-                android:textColor="@android:color/white"
-                />
+                android:textColor="@android:color/white" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            >
+            android:layout_weight="1">
 
             <TextView
                 android:id="@+id/tv_tab1_recommend_inner_bottom"
                 style="@style/Tab1SelectionAreaStyle"
                 android:text="@string/tab1_recommend_for_you_gny"
-                android:textColor="@android:color/black"/>
+                android:textColor="@android:color/black" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            >
+            android:layout_weight="1">
+
             <TextView
                 android:id="@+id/tv_tab1_recommend_outside_bottom"
                 style="@style/Tab1SelectionAreaStyle"
@@ -412,19 +404,18 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            >
+        <!--<LinearLayout-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_weight="1">-->
 
-            <TextView
-                android:id="@+id/tv_tab1_recommend_nearby_bottom"
-                style="@style/Tab1SelectionAreaStyle"
-                android:text="@string/tab1_recommend_for_you_zby"
-                android:textColor="@android:color/black" />
+            <!--<TextView-->
+                <!--android:id="@+id/tv_tab1_recommend_nearby_bottom"-->
+                <!--style="@style/Tab1SelectionAreaStyle"-->
+                <!--android:text="@string/tab1_recommend_for_you_zby"-->
+                <!--android:textColor="@android:color/black" />-->
 
-        </LinearLayout>
+        <!--</LinearLayout>-->
         <!--<RadioButton-->
         <!--android:checked="true"-->
         <!--style="@style/Tab1RadioButtonStyle"-->
@@ -453,18 +444,16 @@
         android:layout_height="1dp"
         android:background="@color/colorLineGray" />
 
-
     <com.jhhy.cuiweitourism.view.MyGridView
         android:id="@+id/fragment_home_lv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/white"
         android:cacheColorHint="#00000000"
+        android:horizontalSpacing="8dp"
         android:numColumns="2"
         android:padding="8dp"
-        android:horizontalSpacing="8dp"
-        android:verticalSpacing="8dp"
-        >
+        android:verticalSpacing="8dp">
 
     </com.jhhy.cuiweitourism.view.MyGridView>
 

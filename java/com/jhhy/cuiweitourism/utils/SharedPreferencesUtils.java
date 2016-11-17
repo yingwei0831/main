@@ -130,6 +130,16 @@ public class SharedPreferencesUtils {
         editor.putString(Consts.KEY_LONGITUDE, longitude);
         return editor.commit();
     }
+    public boolean saveLocationCity(String city){
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString("city", city);
+        return editor.commit();
+    }
+     public String getLocationCity(){
+        return sp.getString("city", null);
+    }
+
+
     /**
      * 保存登录手机号和密码
      * @param telephoneNumber 手机号
@@ -184,12 +194,21 @@ public class SharedPreferencesUtils {
         sp.getString(Consts.KEY_ID, null);
     }
 
+    /**
+     * 保存最后一次选择的城市
+     * @param city
+     */
     public void saveCity(PhoneBean city){
         SharedPreferences.Editor editor = sp.edit();
         editor.putString("select_city_name", city.getName());
         editor.putString("select_city_id", city.getCity_id());
         editor.commit();
     }
+
+    /**
+     * 获取最后一次选择的城市
+     * @return
+     */
     public PhoneBean getCity(){
         PhoneBean city = new PhoneBean();
         city.setName(sp.getString("select_city_name", "北京"));

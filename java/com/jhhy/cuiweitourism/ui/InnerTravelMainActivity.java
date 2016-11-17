@@ -56,7 +56,7 @@ import com.markmao.pulltorefresh.widght.XScrollView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InnerTravelMainActivity extends BaseActionBarActivity implements XScrollView.IXScrollViewListener, GestureDetector.OnGestureListener, View.OnClickListener, ArgumentOnClick, View.OnTouchListener {
+public class InnerTravelMainActivity extends BaseActionBarActivity implements XScrollView.IXScrollViewListener, GestureDetector.OnGestureListener, ArgumentOnClick, View.OnTouchListener {
 
     private String TAG = InnerTravelMainActivity.class.getSimpleName();
 
@@ -469,6 +469,7 @@ public class InnerTravelMainActivity extends BaseActionBarActivity implements XS
 
     @Override
     public void onClick(View view) {
+        super.onClick(view);
         switch (view.getId()){
             case R.id.tv_inner_travel_main_follow: //跟团游
             case R.id.tv_travel_main_indicator_top_follow: //跟团游
@@ -578,6 +579,12 @@ public class InnerTravelMainActivity extends BaseActionBarActivity implements XS
 //                Bundle bundle = new Bundle();
 //                bundle.putString("id", item.getCityId());
 //                InnerTravelDetailActivity.actionStart(getApplicationContext(), bundle);
+
+                CityRecommend item = listHotRecommend.get(i);
+                Bundle bundle = new Bundle();
+                bundle.putString("cityId", item.getCityId());
+                bundle.putString("cityName", item.getCityName());
+                InnerTravelCityActivity.actionStart(getApplicationContext(), bundle);
             }
         });
 

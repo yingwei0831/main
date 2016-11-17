@@ -1,5 +1,6 @@
 package com.jhhy.cuiweitourism.ui;
 
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
@@ -198,9 +199,9 @@ public class Tab4MyCollectionActivity extends BaseActivity implements View.OnCli
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        LogUtil.e(TAG, "i = " + i + ", l = " + l);
         if (edit){
 //            adapter.setVisible(edit);
-            LogUtil.e(TAG, "i = " + i + ", l = " + l);
             Collection coll = lists.get((int) l);
             boolean sele = coll.isSelection();
             if (sele){
@@ -212,6 +213,32 @@ public class Tab4MyCollectionActivity extends BaseActivity implements View.OnCli
             }
             tvNumber.setText(String.valueOf(collIdSet.size()));
             adapter.notifyDataSetChanged();
+        }else{ //进入xxx详情
+            Collection coll = lists.get((int) l);
+            String typeId = coll.getColTypeId(); //1.线路、2.酒店、3租车、8签证、14私人定制、202活动(个人发布)
+            LogUtil.e(TAG, "typeId = " + typeId);
+            switch (typeId){
+                case "1":
+                    Bundle bundle = new Bundle();
+                    bundle.putString("id", coll.getColProductId());
+                    InnerTravelDetailActivity.actionStart(getApplicationContext(), bundle);
+                    break;
+                case "2":
+                    Bundle bundleHotel = new Bundle();
+//                    bundleHotel.putString("checkInDate", checkInDate);
+//                    bundleHotel.putString("checkOutDate", checkOutDate);
+//                    bundleHotel.putInt("stayDays", stayDays);
+//                    bundleHotel.putSerializable("selectCity", selectCity);
+                    bundleHotel.putString("id", coll.getColProductId());
+                    bundleHotel.putInt("type", 2);
+                    Intent intent = new Intent(getApplicationContext(), HotelDetailActivity.class);
+                    intent.putExtras(bundleHotel);
+                    startActivity(intent);
+                    break;
+                case "8":
+
+                    break;
+            }
         }
     }
 }

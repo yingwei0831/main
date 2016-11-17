@@ -7,17 +7,14 @@
 
     <ImageView
         android:id="@+id/title_main_tv_left_location"
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="match_parent"
         android:src="@mipmap/tab1_title_left"
         android:scaleType="centerInside"
-        android:textSize="18sp"
         android:gravity="center_vertical"
-        android:paddingLeft="16dp"
+        android:paddingLeft="10dp"
         android:contentDescription="@null"
         />
-
-
 
     <TextView
         android:id="@+id/title_main_iv_right_telephone"
@@ -30,8 +27,8 @@
         android:textColor="@android:color/white"
         android:gravity="center_vertical"
         android:drawablePadding="6dp"
-        android:textSize="18sp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"/>
+        android:textSize="16sp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"/>
 
 </RelativeLayout>

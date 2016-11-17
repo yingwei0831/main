@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
+import com.jhhy.cuiweitourism.moudle.PhoneBean;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainStationInfo;
 
 import java.util.List;
@@ -22,7 +23,6 @@ public class CitySelectionGridViewAdapter extends MyBaseAdapter {
         super(ct, list);
     }
 
-
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
@@ -35,9 +35,9 @@ public class CitySelectionGridViewAdapter extends MyBaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
         if (type == 1){
-            String name = (String) getItem(position);
-            holder.tvCityName.setText(name);
-        }else {
+            PhoneBean name = (PhoneBean) getItem(position);
+            holder.tvCityName.setText(name.getName());
+        } else {
             TrainStationInfo info = (TrainStationInfo) getItem(position);
             holder.tvCityName.setText(info.getName());
         }

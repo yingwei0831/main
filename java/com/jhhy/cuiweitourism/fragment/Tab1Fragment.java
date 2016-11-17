@@ -146,7 +146,6 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
     private TextView tvIndicatorAllBottom;
     private TextView tvIndicatorInnerBottom;
     private TextView tvIndicatorOutsideBottom;
-    private TextView tvIndicatorNearbyBottom;
 //    private int indicator = -1;
 
     private Handler handler = new Handler() {
@@ -436,19 +435,16 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
     private TextView tvIndicatorAllTop; //全部
     private TextView tvIndicatorInnerTop; //国内游
     private TextView tvIndicatorOutsideTop; //国外游
-    private TextView tvIndicatorNearbyTop; //周边游
 
     private TextView tvSearchrShop; //找商铺
 
     private void setupView(View view) {
-
         layoutTitle = (RelativeLayout) view.findViewById(R.id.layout_title_tab1);
         tvMobile = (TextView) view.findViewById(R.id.title_main_iv_right_telephone);
         layoutTabRecommendForYou2 = (LinearLayout) view.findViewById(R.id.layout_tab_recommend_for_you_2);
         tvIndicatorAllTop = (TextView) view.findViewById(R.id.tv_tab1_indicator_all_top);
         tvIndicatorInnerTop = (TextView) view.findViewById(R.id.tv_tab1_indicator_inner_top);
         tvIndicatorOutsideTop = (TextView) view.findViewById(R.id.tv_tab1_indicator_outside_top);
-        tvIndicatorNearbyTop = (TextView) view.findViewById(R.id.tv_tab1_indicator_nearby_top);
 
         mScrollView = (XScrollView) view.findViewById(R.id.scroll_view);
         mScrollView.setPullRefreshEnable(true);
@@ -483,7 +479,6 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
             tvIndicatorAllBottom = (TextView) content.findViewById(R.id.tv_tab1_recommend_all_bottom); //全部
             tvIndicatorInnerBottom = (TextView) content.findViewById(R.id.tv_tab1_recommend_inner_bottom); //国内游
             tvIndicatorOutsideBottom = (TextView) content.findViewById(R.id.tv_tab1_recommend_outside_bottom); //国外游
-            tvIndicatorNearbyBottom = (TextView) content.findViewById(R.id.tv_tab1_recommend_nearby_bottom); //周边游
 
             gridViewRecommend = (MyGridView) content.findViewById(R.id.fragment_home_lv);
             gridViewRecommend.setFocusable(false);
@@ -566,11 +561,9 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
         tvIndicatorAllBottom.setOnClickListener(this);
         tvIndicatorInnerBottom.setOnClickListener(this);
         tvIndicatorOutsideBottom.setOnClickListener(this);
-        tvIndicatorNearbyBottom.setOnClickListener(this);
         tvIndicatorAllTop.setOnClickListener(this);
         tvIndicatorInnerTop.setOnClickListener(this);
         tvIndicatorOutsideTop.setOnClickListener(this);
-        tvIndicatorNearbyTop.setOnClickListener(this);
 
         gridViewRecommend.setOnItemClickListener(this);
     }
@@ -700,24 +693,6 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
                     LogUtil.e(TAG, "indicator = 国外游");
                     getData(2, page);
                     break;
-                case R.id.tv_tab1_recommend_nearby_bottom: //Indicator 周边游
-                case R.id.tv_tab1_indicator_nearby_top:
-//                if(3 == indicator)  return;
-                    indicator = 4;
-                    page = 1;
-                    refresh = true;
-                    changeIndicator(3);
-                    if (listsNearby != null && listsNearby.size() != 0) {
-                        if (listsNearby.size() > 10) {
-                            listsNearby = listsNearby.subList(0, 10);
-                        }
-                        adapter.setData(listsNearby);
-                        LogUtil.e(TAG, "indicator = 周边游, size = " + listsNearby.size());
-                        return;
-                    }
-                    LogUtil.e(TAG, "indicator = 周边游");
-                    getData(3, page);
-                    break;
                 case R.id.tv_search_bar_main_left_location: //顶部搜索栏 选择地址
 //                CitySelectionActivity.actionStart(getContext(), null);
                     Intent intentCity = new Intent(getContext(), CitySelectionActivity.class);
@@ -765,8 +740,6 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
         tvIndicatorInnerBottom.setBackground(null);
         tvIndicatorOutsideBottom.setTextColor(getResources().getColor(android.R.color.black));
         tvIndicatorOutsideBottom.setBackground(null);
-        tvIndicatorNearbyBottom.setTextColor(getResources().getColor(android.R.color.black));
-        tvIndicatorNearbyBottom.setBackground(null);
 
         tvIndicatorAllTop.setTextColor(getResources().getColor(android.R.color.black));
         tvIndicatorAllTop.setBackground(null);
@@ -774,8 +747,6 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
         tvIndicatorInnerTop.setBackground(null);
         tvIndicatorOutsideTop.setTextColor(getResources().getColor(android.R.color.black));
         tvIndicatorOutsideTop.setBackground(null);
-        tvIndicatorNearbyTop.setTextColor(getResources().getColor(android.R.color.black));
-        tvIndicatorNearbyTop.setBackground(null);
 
         if (type == 0) {
             tvIndicatorAllBottom.setTextColor(getResources().getColor(android.R.color.white));
@@ -792,11 +763,6 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
             tvIndicatorOutsideBottom.setBackground(getResources().getDrawable(R.drawable.bg_tab1_radiobutton_recommend_for_you));
             tvIndicatorOutsideTop.setTextColor(getResources().getColor(android.R.color.white));
             tvIndicatorOutsideTop.setBackground(getResources().getDrawable(R.drawable.bg_tab1_radiobutton_recommend_for_you));
-        } else if (3 == type) {
-            tvIndicatorNearbyBottom.setTextColor(getResources().getColor(android.R.color.white));
-            tvIndicatorNearbyBottom.setBackground(getResources().getDrawable(R.drawable.bg_tab1_radiobutton_recommend_for_you));
-            tvIndicatorNearbyTop.setTextColor(getResources().getColor(android.R.color.white));
-            tvIndicatorNearbyTop.setBackground(getResources().getDrawable(R.drawable.bg_tab1_radiobutton_recommend_for_you));
         }
     }
 
@@ -1035,11 +1001,11 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
     public boolean onTouch(View view, MotionEvent motionEvent) {
         switch (view.getId()) {
             case R.id.viewflipper:
-                LogUtil.e(TAG, "第一个 Flipper 滑动");
+//                LogUtil.e(TAG, "第一个 Flipper 滑动");
                 typeFlipper = 1;
                 break;
             case R.id.viewflipper2:
-                LogUtil.e(TAG, "第二个 Flipper 滑动");
+//                LogUtil.e(TAG, "第二个 Flipper 滑动");
                 typeFlipper = 2;
                 break;
         }

@@ -35,7 +35,6 @@
         android:orientation="vertical">
 
         <TextView
-            android:textSize="16sp"
             android:id="@+id/tv_my_collection_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -43,10 +42,10 @@
             android:ellipsize="end"
             android:lineSpacingMultiplier="1.2"
             android:maxLines="2"
-            android:text="@string/tab1_recommend_for_you_title" />
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
 
         <TextView
-
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"

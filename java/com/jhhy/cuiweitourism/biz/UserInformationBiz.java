@@ -329,9 +329,8 @@ public class UserInformationBiz {
 //                    "lvb": "24010"
                     JSONObject bodyObj = resultObj.getJSONObject(Consts.KEY_BODY);
                     JSONArray recordAry = bodyObj.getJSONArray("0");
-                    List<UserIcon> listIcon = null;
+                    List<UserIcon> listIcon = new ArrayList<>();
                     if (recordAry.length() > 0){
-                        listIcon = new ArrayList<>();
                         for(int i = 0; i < recordAry.length(); i++){
                             JSONObject iconObj = recordAry.getJSONObject(i);
                             UserIcon icon = new UserIcon();

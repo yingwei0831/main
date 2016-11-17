@@ -5,10 +5,10 @@ package com.jhhy.cuiweitourism.moudle;
  */
 public class Collection {
 //{
-//    "id": "7",
-//        "memberid": "6",
-//        "typeid": "1",
-//        "productaid": "13",
+//    "id": "7",  //收藏id
+//        "memberid": "6", //会员id
+//        "typeid": "1",   //类型id
+//        "productaid": "13", //产品id
 //        "addtime": "1473318267",
 //        "title": "这是测试的线路这是测试的线路这是测试的线路",
 //        "litpic": "http://cwly.taskbees.cn:8083/uploads/2016/0607/f1a7e360b659d4dbf6f40e133ffe5d20.jpg",

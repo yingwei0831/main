@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.jhhy.cuiweitourism.moudle.CityRecordTrain;
+import com.jhhy.cuiweitourism.moudle.PhoneBean;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainStationInfo;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 
@@ -50,8 +51,8 @@ public class CityRecordDao {
                     list.add(record);
                 }
             }
+            c.close();
         }
-        c.close();
         db.close();
         helper.close();
         return list;
@@ -75,4 +76,42 @@ public class CityRecordDao {
         db.close();
         helper.close();
     }
+
+    public List<PhoneBean> getSelectionCityRecord(){
+        List<PhoneBean> list = null;
+        List<String> listName;
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Cursor c = db.query(Consts.TABLE_CITY_RECORD,
+                new String[]{CityRecord.CITY_ID, CityRecord.CITY_NAME, CityRecord.CITY_FULL_PINYIN, CityRecord.CITY_JIAN_PINYIN, CityRecord.CITY_HOT},
+                CityRecord.CITY_RECORD_TYPE +"=? ", new String[]{"2"}, null, null, null);
+        if (c != null){
+            list = new ArrayList<>();
+            listName = new ArrayList<>();
+            while (c.moveToNext()){
+                if (!listName.contains(c.getString(c.getColumnIndex(CityRecord.CITY_NAME)))){
+                    PhoneBean record = new PhoneBean();
+                    record.setCity_id(c.getString(c.getColumnIndex(CityRecord.CITY_ID)));
+                    String name = c.getString(c.getColumnIndex(CityRecord.CITY_NAME));
+                    record.setName(name);
+                    listName.add(name);
+                    list.add(record);
+                }
+            }
+            c.close();
+        }
+        db.close();
+        helper.close();
+        return list;
+    }
+    public void addSelectionCityRecord(PhoneBean record){
+        SQLiteDatabase db = helper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(CityRecord.CITY_ID, record.getCity_id());
+        values.put(CityRecord.CITY_NAME, record.getName());
+        values.put(CityRecord.CITY_RECORD_TYPE, "2");
+        long result = db.insert(Consts.TABLE_CITY_RECORD, null, values);
+        db.close();
+        helper.close();
+    }
+
 }

@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -111,6 +112,9 @@ public class VisaListActivity extends BaseActivity implements AdapterView.OnItem
         //自定义一个布局，并居中
         actionBar.setDisplayShowCustomEnabled(true);
         actionBar.setCustomView(R.layout.title_tab1_inner_travel); //自定义ActionBar布局);
+        View v = LayoutInflater.from(getApplicationContext()).inflate(R.layout.title_tab1_inner_travel, null);
+        actionBar.setCustomView(v, new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT)); //自定义ActionBar布局);
+        actionBar.setElevation(0); //删除自带阴影
 
         setContentView(R.layout.activity_visa_list);
         getData();
@@ -143,6 +147,8 @@ public class VisaListActivity extends BaseActivity implements AdapterView.OnItem
         listVisa = (ListView) findViewById(R.id.list_view_visa);
         adapter = new VisaListAdapter(getApplicationContext(), lists);
         listVisa.setAdapter(adapter);
+        View ivEmptyView = findViewById(R.id.empty_view);
+        listVisa.setEmptyView(ivEmptyView);
 
         tvOrder = (TextView) findViewById(  R.id.tv_visa_list_sort_default);
         tvType = (TextView) findViewById(   R.id.tv_visa_list_trip_days);
@@ -182,8 +188,8 @@ public class VisaListActivity extends BaseActivity implements AdapterView.OnItem
             public void onCompletion(GenericResponseModel<ArrayList<VisaHotInfo>> model) {
                 if ("0000".equals(model.headModel.res_code)) {
                     lists = model.body;
-                    LogUtil.e(TAG,"visaHotInfo: " + lists.toString());
                     adapter.setData(lists);
+                    LogUtil.e(TAG,"visaHotInfo: " + lists.toString());
                 }else{
                     ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);
                 }

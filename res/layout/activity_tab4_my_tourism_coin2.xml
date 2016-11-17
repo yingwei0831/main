@@ -16,5 +16,29 @@
         android:layout_weight="1"
         />
 
+    <RelativeLayout
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:visibility="gone"
+        >
+        <ImageView
+            android:id="@+id/iv_empty_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/empty_list"
+            android:layout_centerInParent="true"
+            />
+        <TextView
+            android:id="@+id/tv_empty_view"
+            android:layout_below="@+id/iv_empty_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="抱歉，没有找到符合条件的产品"
+            android:gravity="center_horizontal"
+            android:textColor="@android:color/darker_gray"
+            />
+    </RelativeLayout>
 
 </LinearLayout>

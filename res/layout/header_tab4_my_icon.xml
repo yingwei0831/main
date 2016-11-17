@@ -3,44 +3,45 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:background="@color/colorBgTitleMain"
-        android:paddingTop="40dp"
+        android:orientation="vertical"
         android:paddingBottom="40dp"
         android:paddingLeft="16dp"
-        >
+        android:paddingTop="40dp">
+
         <TextView
-            android:text="30000"
-            android:textStyle="bold"
-            android:textSize="28sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/tv_tab4_my_tourism_coin_number"
-            android:textColor="@android:color/white"
-            />
-        <TextView
-            android:layout_toRightOf="@+id/tv_tab4_my_tourism_coin_number"
-            android:layout_alignBaseline="@+id/tv_tab4_my_tourism_coin_number"
-            android:text="@string/my_tourism_coin_unit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="0"
             android:textColor="@android:color/white"
-            />
+            android:textSize="28sp"
+            android:textStyle="bold" />
+
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/tv_tab4_my_tourism_coin_number"
+            android:layout_toRightOf="@+id/tv_tab4_my_tourism_coin_number"
+            android:text="@string/my_tourism_coin_unit"
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/tv_tab4_my_tourism_coin_number"
             android:text="@string/my_tourism_coin_notice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/white"
-            />
+            android:textColor="@android:color/white" />
     </RelativeLayout>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"
         android:text="@string/my_tourism_coin_details"
-        />
+        android:textColor="@android:color/black"/>
 </LinearLayout>

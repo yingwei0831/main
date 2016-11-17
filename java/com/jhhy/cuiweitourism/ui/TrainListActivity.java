@@ -58,7 +58,6 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
     private String trainType; //列车类型
     private String seatType; //座位类型
 
-
     private TextView tvPreDay; //前一天
     private TextView tvNextDay; //后一天
     private TextView tvCurrentDay; //今天 2016-10-24 星期一
@@ -201,7 +200,6 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
         startTimeDrawable.setBounds(0, 0, startTimeDrawable.getMinimumWidth(), startTimeDrawable.getMinimumHeight());
         consumingTimeDrawable.setBounds(0, 0, consumingTimeDrawable.getMinimumWidth(), consumingTimeDrawable.getMinimumHeight());
         arrivalTimeDrawable.setBounds(0, 0, arrivalTimeDrawable.getMinimumWidth(), arrivalTimeDrawable.getMinimumHeight());
-
     }
 
 
@@ -349,6 +347,7 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
                         typeSeatPosition = popupWindow.getSelectionTypeSeat();
                         //TODO 重新请求数据
 
+//                        getInternetData();
                     }
                 }
             });

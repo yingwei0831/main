@@ -131,10 +131,40 @@ public class PersonalizedCustomActivity extends BaseActivity implements XScrollV
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_personalized_custom);
         getData();
+        getBanner();
         getInternetData();
         setupView();
         addListener();
         handler.postDelayed(runnable, Consts.TIME_PERIOD);
+    }
+
+    //广告位
+    private void getBanner() {
+        ForeEndActionBiz fbiz = new ForeEndActionBiz();
+//        mark:index（首页）、line_index(国内游、出境游)、header（分类上方）、visa_index（签证）、customize_index(个性定制)
+        ForeEndAdvertise ad = new ForeEndAdvertise("customize_index");
+        fbiz.foreEndGetAdvertisingPosition(ad, new BizGenericCallback<ArrayList<ForeEndAdvertisingPositionInfo>>() {
+            @Override
+            public void onCompletion(GenericResponseModel<ArrayList<ForeEndAdvertisingPositionInfo>> model) {
+                if ("0000".equals(model.headModel.res_code)) {
+                    ArrayList<ForeEndAdvertisingPositionInfo> array = model.body;
+                    LogUtil.e(TAG,"foreEndGetAdvertisingPosition =" + array.toString());
+                    refreshViewBanner(array);
+                }else{
+                    ToastCommon.toastShortShow(getApplicationContext(), null, "获取广告位数据失败");
+                }
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                if (error.localReason != null){
+                    ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
+                }else{
+                    ToastCommon.toastShortShow(getApplicationContext(), null, "获取广告位数据出错");
+                }
+                LogUtil.e(TAG, "foreEndGetAdvertisingPosition: " + error.toString());
+            }
+        });
     }
 
     @Override
@@ -188,33 +218,6 @@ public class PersonalizedCustomActivity extends BaseActivity implements XScrollV
                 }
                 LogUtil.e(TAG, " houmePageCustomList :" + error.toString());
                 LoadingIndicator.cancel();
-            }
-        });
-
-        //广告位
-        ForeEndActionBiz fbiz = new ForeEndActionBiz();
-//        mark:index（首页）、line_index(国内游、出境游)、header（分类上方）、visa_index（签证）、customize_index(个性定制)
-        ForeEndAdvertise ad = new ForeEndAdvertise("customize_index");
-        fbiz.foreEndGetAdvertisingPosition(ad, new BizGenericCallback<ArrayList<ForeEndAdvertisingPositionInfo>>() {
-            @Override
-            public void onCompletion(GenericResponseModel<ArrayList<ForeEndAdvertisingPositionInfo>> model) {
-                if ("0000".equals(model.headModel.res_code)) {
-                    ArrayList<ForeEndAdvertisingPositionInfo> array = model.body;
-                    LogUtil.e(TAG,"foreEndGetAdvertisingPosition =" + array.toString());
-                    refreshViewBanner(array);
-                }else{
-                    ToastCommon.toastShortShow(getApplicationContext(), null, "获取广告位数据失败");
-                }
-            }
-
-            @Override
-            public void onError(FetchError error) {
-                if (error.localReason != null){
-                    ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
-                }else{
-                    ToastCommon.toastShortShow(getApplicationContext(), null, "获取广告位数据出错");
-                }
-                LogUtil.e(TAG, "foreEndGetAdvertisingPosition: " + error.toString());
             }
         });
     }

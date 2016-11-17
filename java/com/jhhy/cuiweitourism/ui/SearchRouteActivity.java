@@ -27,6 +27,7 @@ import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.popupwindows.PopupWindowSearchLine;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.ui.easemob.EasemobLoginActivity;
+import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.jhhy.cuiweitourism.utils.Utils;
 
@@ -78,8 +79,8 @@ public class SearchRouteActivity extends BaseActivity implements View.OnClickLis
                 case Consts.MESSAGE_FIND_LINES:
                     if(msg.arg1 == 1){
                         List<Travel> listNew = (List<Travel>) msg.obj;
-                        if(listNew != null && listNew.size() != 0){
-                            LogUtil.e(TAG, "refresh = " + refresh +", loadMore = " + loadMore);
+//                        if(listNew != null && listNew.size() != 0){
+//                            LogUtil.e(TAG, "refresh = " + refresh +", loadMore = " + loadMore);
                             if (refresh){
                                 refresh = false;
                                 mLists = listNew;
@@ -90,19 +91,24 @@ public class SearchRouteActivity extends BaseActivity implements View.OnClickLis
                                 mLists.addAll(listNew);
                                 adapter.addData(listNew);
                             }
-                        }else{
+//                        }else{
+//                            if (loadMore){
+//                                loadMore = false;
+//                                page --;
+//                            }
+//                            if (refresh){
+//                                refresh = false;
+//                            }
+                        if (listNew.size() == 0){
+                            ToastUtil.show(getApplicationContext(), "暂无数据");
                             if (loadMore){
-                                loadMore = false;
                                 page --;
                             }
-                            if (refresh){
-                                refresh = false;
-                            }
-                            ToastUtil.show(getApplicationContext(), "加载数据失败");
                         }
                     }else{
                         ToastUtil.show(getApplicationContext(), String.valueOf(msg.obj));
                     }
+                    LoadingIndicator.cancel();
                     pullToRefreshListView.onRefreshComplete();
                     break;
                 case Consts.MESSAGE_TRIP_DAYS:
@@ -143,6 +149,7 @@ public class SearchRouteActivity extends BaseActivity implements View.OnClickLis
         getData();
         setupView();
         addListener();
+        LoadingIndicator.show(SearchRouteActivity.this, getString(R.string.http_notice));
         getInternetData();
     }
 
@@ -254,11 +261,24 @@ public class SearchRouteActivity extends BaseActivity implements View.OnClickLis
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        LogUtil.e(TAG, "------------onActivityResult------------- " + requestCode);
         if (requestCode == VIEW_LINE_DETAIL){
             if (resultCode == RESULT_OK){
                 //TODO 可能预定线路
 
             }
+        }else if (requestCode == Consts.REQUEST_CODE_DATE_PICKER_EARLY){
+            Bundle bundle = data.getExtras();
+            if (bundle != null){
+                earlyTime = bundle.getString("selectDate");
+            }
+            popupWindowSearchLine.setEarlyTime(earlyTime);
+        }else if (requestCode == Consts.REQUEST_CODE_DATE_PICKER_LATER){
+            Bundle bundle = data.getExtras();
+            if (bundle != null){
+                laterTime = bundle.getString("selectDate");
+            }
+            popupWindowSearchLine.setLaterTime(laterTime);
         }
     }
 
@@ -343,9 +363,11 @@ public class SearchRouteActivity extends BaseActivity implements View.OnClickLis
                     if (newLaterTime != null) {
                         laterTime = newLaterTime;
                     }
-                    LogUtil.e(TAG, "sort = " + sort + ", day = " + day + ", price = " + price + ", earlyTime = " + earlyTime + ", laterTime = " + laterTime);
-                    LogUtil.e(TAG, "dayPosition = " + dayPosition +", pricePosition = " + pricePosition);
+//                    LogUtil.e(TAG, "sort = " + sort + ", day = " + day + ", price = " + price + ", earlyTime = " + earlyTime + ", laterTime = " + laterTime);
+//                    LogUtil.e(TAG, "dayPosition = " + dayPosition +", pricePosition = " + pricePosition);
                     //重新请求数据
+                    page = 1;
+                    refresh = true;
                     FindLinesBiz biz = new FindLinesBiz(getApplicationContext(), handler);
                     biz.getLines(page, selectCity.getCity_id(), sort, day, price, earlyTime, laterTime);
                 }
@@ -356,7 +378,7 @@ public class SearchRouteActivity extends BaseActivity implements View.OnClickLis
     public static void actionStart(Context context, Bundle data){
         Intent intent = new Intent(context, SearchRouteActivity.class);
         if(data != null){
-            intent.putExtra("data", data);
+            intent.putExtras(data);
         }
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
@@ -378,6 +400,8 @@ public class SearchRouteActivity extends BaseActivity implements View.OnClickLis
                     startActivity(intent);
                 }else{
                     ToastUtil.show(getApplicationContext(), "请登录后再试");
+                    //TODO 进入登录页面
+
                 }
                 break;
         }

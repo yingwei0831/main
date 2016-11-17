@@ -11,4 +11,5 @@ public class GenericResponseModel<T> {
         this.headModel = headModel;
         this.body = body;
     }
+
 }

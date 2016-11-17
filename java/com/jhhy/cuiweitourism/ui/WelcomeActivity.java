@@ -153,7 +153,11 @@ public class WelcomeActivity extends BaseActivity {
     private void updateLocation(Message msg) {
         AMapLocation aml = (AMapLocation)msg.obj;
         this.aMapLocation = aml;
-        sp.saveLocation(Double.toString(aMapLocation.getLatitude()), Double.toString(aMapLocation.getLongitude()));
+        String latitude = Double.toString(aMapLocation.getLatitude());
+        String longitude = Double.toString(aMapLocation.getLongitude());
+        String city = aMapLocation.getCity();
+        sp.saveLocation(latitude, longitude);
+        sp.saveLocationCity(city);
     }
 
     /**

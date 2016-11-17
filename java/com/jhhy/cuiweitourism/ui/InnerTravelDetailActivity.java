@@ -145,6 +145,9 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
                             refreshView();
                         }
                         break;
+                    case Consts.MESSAGE_DO_COLLECTION: //收藏
+                        ToastUtil.show(getApplicationContext(), String.valueOf(msg.obj));
+                        break;
                     case Consts.NET_ERROR:
                         ToastUtil.show(getApplicationContext(), "请检查网络后重试");
                         break;

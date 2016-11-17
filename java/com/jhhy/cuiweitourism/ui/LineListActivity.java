@@ -15,6 +15,7 @@ import com.jhhy.cuiweitourism.adapter.SearchShopListAdapter;
 import com.jhhy.cuiweitourism.biz.FindShopBiz;
 import com.jhhy.cuiweitourism.moudle.Line;
 import com.jhhy.cuiweitourism.net.utils.Consts;
+import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.jhhy.cuiweitourism.utils.Utils;
 import com.just.sun.pricecalendar.ToastCommon;
@@ -68,6 +69,7 @@ public class LineListActivity extends BaseActionBarActivity {
                             page --;
                         }
                     }
+                    LoadingIndicator.cancel();
                     pullToRefreshListView.onRefreshComplete();
                     break;
                 case Consts.NET_ERROR:
@@ -97,6 +99,7 @@ public class LineListActivity extends BaseActionBarActivity {
     }
 
     private void getInternetData(){
+        LoadingIndicator.show(LineListActivity.this, getString(R.string.http_notice));
         FindShopBiz biz = new FindShopBiz(getApplicationContext(), handler);
         biz.getLineList(shopId, String.valueOf(page));
     }

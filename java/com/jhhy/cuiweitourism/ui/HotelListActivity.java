@@ -63,7 +63,11 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
     private TextView tvSortDefault; //默认排序
 
 
+    private int pageTemp = 1;
     private int page = 1;
+    private boolean loadMore;
+    private boolean refresh = true;
+
     private String areaId = "北京"; //城市名字，与主页一样
     private String order = "price desc";
     private String price = ""; //价格
@@ -116,7 +120,7 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
         HotelActionBiz hotelBiz = new HotelActionBiz();
         //"areaid":"8","starttime":"2016-09-16","endtime":"","keyword":"","page":"1","offset":"10","order":"price desc","price":"","level":""
         //获取酒店列表
-        HotelListFetchRequest request = new HotelListFetchRequest(selectCity.getName(), checkInDate, checkOutDate, keyWords, String.valueOf(page), "10", String.valueOf(orderPosition), price, String.valueOf(levelPosition));
+        HotelListFetchRequest request = new HotelListFetchRequest(selectCity.getName(), checkInDate, checkOutDate, keyWords, String.valueOf(pageTemp), "10", String.valueOf(orderPosition), price, String.valueOf(levelPosition));
 //        HotelListFetchRequest request = new HotelListFetchRequest(areaId, startTime, endTime, keyWords, String.valueOf(page), "10", order, price, "");
         hotelBiz.hotelGetInfoList(request, new BizGenericCallback<ArrayList<HotelListInfo>>() {
             @Override
@@ -126,10 +130,19 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
                 }else if ("0000".equals(model.headModel.res_code)){
                     ArrayList<HotelListInfo> array = model.body;
                     LogUtil.e(TAG,"houtelGetInfoList =" + array.toString());
-
                     listHotel = array;
                     refreshView();
+                    if (loadMore){
+                        page = pageTemp;
+                    }
                 }
+                if (loadMore){
+                    loadMore = false;
+                }
+                if (refresh){
+                    refresh = false;
+                }
+                pullToRefreshListView.onRefreshComplete();
                 LoadingIndicator.cancel();
             }
 
@@ -140,6 +153,13 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
                 }else {
                     LogUtil.e(TAG, "houtelGetInfoList: " + error.toString());
                 }
+                if (loadMore){
+                    loadMore = false;
+                }
+                if (refresh){
+                    refresh = false;
+                }
+                pullToRefreshListView.onRefreshComplete();
                 LoadingIndicator.cancel();
             }
         });
@@ -165,12 +185,12 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
         pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-
+                refresh();
             }
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-
+                loadMore();
             }
         });
 
@@ -181,6 +201,18 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
 
         adapter = new HotelListAdapter(getApplicationContext(), listHotel);
         pullToRefreshListView.setAdapter(adapter);
+    }
+
+    private void loadMore() {
+        pageTemp ++;
+        loadMore = true;
+        getHotelListData();
+    }
+
+    private void refresh() {
+        page = 1;
+        refresh = true;
+        getHotelListData();
     }
 
     private void addListener() {
@@ -298,8 +330,6 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
         adapter.setData(listHotel);
     }
 
-
-
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
         //TODO 进入酒店详情页
@@ -315,9 +345,6 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
         intent.putExtras(bundle);
         startActivityForResult(intent, VIEW_HOTEL_DETAIL);
     }
-
-
-
 
     public static void actionStart(Context context, Bundle data){
         Intent intent = new Intent(context, HotelListActivity.class);

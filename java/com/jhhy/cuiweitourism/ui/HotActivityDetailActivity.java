@@ -79,10 +79,12 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
     private View viewNotice;
 
     private WebView mWebViewProduct; //商品详情
+    private View layoutPrice;
     private TextView tvPriceInclude; //费用说明——>费用包含
     private TextView tvPriceNotInclude; //费用说明——>费用不包含
     private LinearLayout layoutTravelDescribe; //行程描述
     private TextView tvTravelDescribe; //行程描述
+    private View layoutNotice;
     private TextView tvReserveNotice; //预订须知
 
     private View layoutTitle;
@@ -117,24 +119,24 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
     private static final int FLING_MIN_VELOCITY = 0;
     private GestureDetector mGestureDetector; // MyScrollView的手势
 
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            LogUtil.e(TAG, "-------handleMessage------ arg1 = " + msg.arg1 +", msg.what = " + msg.what);
-            switch (msg.what){
+            LogUtil.e(TAG, "-------handleMessage------ arg1 = " + msg.arg1 + ", msg.what = " + msg.what);
+            switch (msg.what) {
                 case Consts.MESSAGE_HOT_ACTIVITY_DETAIL:
-                    if (msg.arg1 == 0){
+                    if (msg.arg1 == 0) {
                         ToastCommon.toastShortShow(getApplicationContext(), null, String.valueOf(msg.obj));
-                    } else if (msg.arg1 == 1){
+                    } else if (msg.arg1 == 1) {
                         ActivityHotDetailInfo detailHot = (ActivityHotDetailInfo) msg.obj;
                         if (detailHot == null) {
                             ToastCommon.toastShortShow(getApplicationContext(), null, "获取热门详情数据失败，请重试");
-                        }else {
+                        } else {
                             detail = detailHot;
                             refreshView();
                         }
-                    } else if (msg.arg1 ==-1){
+                    } else if (msg.arg1 == -1) {
 
                     }
                     break;
@@ -170,13 +172,12 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
         activityBiz.activitiesHotGetDetailInfo(detailC, new BizGenericCallback<ActivityHotDetailInfo>() {
             @Override
             public void onCompletion(GenericResponseModel<ActivityHotDetailInfo> model) {
-                LogUtil.e(TAG,"--------------- onCompletion ---------------");
-                LogUtil.e(TAG,"activitiesHotGetDetailInfo " + model.toString());
-                if ("0001".equals(model.headModel.res_code)){
+                LogUtil.e(TAG, "--------------- onCompletion ---------------");
+                if ("0001".equals(model.headModel.res_code)) {
                     ToastUtil.show(getApplicationContext(), "获取热门线路详情失败，请返回重试");
-                }else if ("0000".equals(model.headModel.res_code)){
+                } else if ("0000".equals(model.headModel.res_code)) {
                     ActivityHotDetailInfo info = model.body;
-                    LogUtil.e(TAG,"activitiesHotGetDetailInfo " + info.toString());
+                    LogUtil.e(TAG, "activitiesHotGetDetailInfo " + info.toString());
                     detail = info;
                     refreshView();
                 }
@@ -185,9 +186,9 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
 
             @Override
             public void onError(FetchError error) {
-                if (error.localReason != null){
+                if (error.localReason != null) {
                     ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
-                }else{
+                } else {
                     ToastCommon.toastShortShow(getApplicationContext(), null, "获取热门线路详情失败，请重试");
                 }
                 LogUtil.e(TAG, "activitiesHotGetDetailInfo: " + error.toString());
@@ -210,7 +211,7 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
         tvTitleTop.setText("热门活动详情");
         ivTitleLeft = (ImageView) findViewById(R.id.title_main_tv_left_location);
 
-        mScrollView = (XScrollView)findViewById(R.id.scroll_view_detail);
+        mScrollView = (XScrollView) findViewById(R.id.scroll_view_detail);
         mScrollView.setPullRefreshEnable(false);
         mScrollView.setPullLoadEnable(false);
         mScrollView.setAutoLoadEnable(false);
@@ -224,6 +225,12 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
         btnPriceTop = (Button) findViewById(R.id.btn_inner_travel_detail_indicator_top_price);
         btnDescribeTop = (Button) findViewById(R.id.btn_inner_travel_detail_indicator_top_describe);
         btnNoticeTop = (Button) findViewById(R.id.btn_inner_travel_detail_indicator_top_notice);
+
+        btnProductTop.setText(titles[0]);
+        btnPriceTop.setText(titles[1]);
+        btnDescribeTop.setText(titles[2]);
+        btnNoticeTop.setText(titles[3]);
+
         viewProductTop = findViewById(R.id.view_inner_travel_detail_indicator_top_product);
         viewPriceTop = findViewById(R.id.view_inner_travel_detail_indicator_top_price);
         viewDescribeTop = findViewById(R.id.view_inner_travel_detail_indicator_top_describe);
@@ -240,12 +247,18 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
             tvDescribe = (Button) content.findViewById(R.id.tv_inner_travel_detail_content_describe_bottom);
             tvNotice = (Button) content.findViewById(R.id.tv_inner_travel_detail_content_notice_bottom);
 
+            tvProduct.setText(titles[0]);
+            btnPrice.setText(titles[1]);
+            tvDescribe.setText(titles[2]);
+            tvNotice.setText(titles[3]);
+
             viewProduct = content.findViewById(R.id.view_product_bottom);
             viewPrice = content.findViewById(R.id.view_price_bottom);
             viewDescribe = content.findViewById(R.id.view_describe_bottom);
             viewNotice = content.findViewById(R.id.view_notice_bottom);
 
             tvTitle = (TextView) content.findViewById(R.id.tv_travel_detail_title);
+            layoutPrice = content.findViewById(R.id.layout_price_hot_activity);
             tvPrice = (TextView) content.findViewById(R.id.tv_travel_price);
             layoutComment = content.findViewById(R.id.layout_comment);
             tvCommentCount = (TextView) content.findViewById(R.id.tv_travel_comment_count);
@@ -260,12 +273,13 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
             tvPriceNotInclude = (TextView) content.findViewById(R.id.tv_travel_price_not_include);
             layoutTravelDescribe = (LinearLayout) content.findViewById(R.id.layout_travel_describe);
             tvTravelDescribe = (TextView) content.findViewById(R.id.tv_hot_activity_trip_describe);
+            layoutNotice = content.findViewById(R.id.layout_reserve_notice_hot_activity);
             tvReserveNotice = (TextView) content.findViewById(R.id.tv_travel_notice);
 
             mGestureDetector = new GestureDetector(getApplicationContext(), this);
 
-            flipper = (ViewFlipper)content.findViewById(R.id.viewflipper);
-            layoutPoint =(LinearLayout)content.findViewById(R.id.layout_indicator_point);
+            flipper = (ViewFlipper) content.findViewById(R.id.viewflipper);
+            layoutPoint = (LinearLayout) content.findViewById(R.id.layout_indicator_point);
 
             addImageView(imageUrls.size());
             addIndicator(imageUrls.size());
@@ -275,7 +289,7 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
             flipper.setOnTouchListener(this);
 
             dianSelect(currentPosition);
-            MyScrollView myScrollView = (MyScrollView)content.findViewById(R.id.viewflipper_myScrollview);
+            MyScrollView myScrollView = (MyScrollView) content.findViewById(R.id.viewflipper_myScrollview);
             myScrollView.setGestureDetector(mGestureDetector);
         }
         mScrollView.setView(content);
@@ -290,18 +304,47 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
                 layoutIndicatorBottom.getLocationOnScreen(s);
                 int statusHeight = Utils.getStatusBarHeight(getApplicationContext());
                 int titleHeight = layoutTitle.getHeight();
+                int indicatorHeightTop = layoutIndicatorTop.getHeight();
 //                LogUtil.e(TAG, "statusHeight = " + statusHeight + ", titleHeight = " + titleHeight + ", s[1] = " + s[1]);
-                if(statusHeight + titleHeight >= s[1]){ // + titleHeight
+                if (statusHeight + titleHeight >= s[1]) { // + titleHeight
                     layoutIndicatorTop.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     layoutIndicatorTop.setVisibility(View.GONE);
+                }
+                //商品详情——>线路特写
+                int[] detailAry = new int[2];
+                mWebViewProduct.getLocationOnScreen(detailAry);
+                if (detailAry[1] <= statusHeight + titleHeight) {
+                    changeIndicator(1);
+                }
+
+                //费用说明——>行程安排
+                int[] priceAry = new int[2];
+                layoutPrice.getLocationOnScreen(priceAry);
+                if (priceAry[1] <= statusHeight + indicatorHeightTop + titleHeight) {
+                    changeIndicator(2);
+                }
+
+                //行程描述——>标准
+                int[] describe = new int[2];
+                layoutTravelDescribe.getLocationOnScreen(describe);
+                if (describe[1] <= statusHeight + indicatorHeightTop + titleHeight) {
+                    changeIndicator(3);
+                }
+
+                //预订须知
+                int[] reserve = new int[2];
+                layoutNotice.getLocationOnScreen(reserve);
+                if (reserve[1] <= statusHeight + indicatorHeightTop + titleHeight) {
+                    changeIndicator(4);
                 }
             }
         });
 
     }
+
     private void addImageView(int length) {
-        for(int i=0; i < length; i++){
+        for (int i = 0; i < length; i++) {
             ADInfo info = new ADInfo();
             info.setUrl(imageUrls.get(i));
             info.setContent("图片-->" + i);
@@ -309,7 +352,8 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
             flipper.addView(ViewFactory.getImageView(getApplicationContext(), infos.get(i).getUrl()));
         }
     }
-    private void addIndicator(int size){
+
+    private void addIndicator(int size) {
 //        if(indicators == null) {
         indicators = new ImageView[size];
 //        }
@@ -322,27 +366,31 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
 
     }
 
-    private void setIndicator(int current){
-        for(int i = 0; i < indicators.length; i++) {
-            if(i == current) {
+    private void setIndicator(int current) {
+        for (int i = 0; i < indicators.length; i++) {
+            if (i == current) {
                 indicators[current].setImageResource(R.drawable.icon_point_pre);
-            }else{
+            } else {
                 indicators[i].setImageResource(R.drawable.icon_point);
             }
         }
     }
+
     /**
      * 对应被选中的点的图片
+     *
      * @param id
      */
     private void dianSelect(int id) {
         indicators[id].setImageResource(R.drawable.icon_point_pre);
     }
+
     /**
      * 对应未被选中的点的图片
+     *
      * @param id
      */
-    private void dianUnselect(int id){
+    private void dianUnselect(int id) {
         indicators[id].setImageResource(R.drawable.icon_point);
     }
 
@@ -391,11 +439,11 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
                 tvAddTime.setText(Utils.getTimeStrYMD(Long.parseLong(time) * 1000));
             }
             tvCommentContent.setText(comment.getContent());
-        }else{
+        } else {
             layoutComment.setVisibility(View.GONE);
         }
         //商品详情
-        String tripDetail = detail.getFeatures();
+        String tripDetail = detail.getXlxq();
         mWebViewProduct.loadDataWithBaseURL(null, start + tripDetail + end, "text/html", "utf-8", null);
         //费用说明
         String priceContain = detail.getFeeinclude();
@@ -407,107 +455,30 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
         String tripDescribe = detail.getXcinfo();
         tvTravelDescribe.setText(tripDescribe);
         //预订须知
-//        String remark = detail.get();
-//        tvReserveNotice.setText(remark);
+        tvReserveNotice.setText(detail.getYdxz());
     }
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.title_main_tv_left_location:
                 finish();
                 break;
             case R.id.tv_inner_travel_detail_content_product_bottom:
             case R.id.btn_inner_travel_detail_indicator_top_product:
-                tvProduct.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-                viewProduct.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-                btnProductTop.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-                viewProductTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-
-                btnPrice.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewPrice.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-                btnPriceTop.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewPriceTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-
-                tvDescribe.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewDescribe.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-                btnDescribeTop.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewDescribeTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-
-                tvNotice.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewNotice.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-                btnNoticeTop.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewNoticeTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-
+                changeIndicator(1);
                 break;
             case R.id.tv_inner_travel_detail_content_price_bottom:
             case R.id.btn_inner_travel_detail_indicator_top_price:
-                tvProduct.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewProduct.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-                btnProductTop.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewProductTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-
-                btnPrice.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-                viewPrice.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-                btnPriceTop.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-                viewPriceTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-
-                tvDescribe.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewDescribe.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-                btnDescribeTop.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewDescribeTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-
-                tvNotice.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewNotice.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-                btnNoticeTop.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewNoticeTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-
+                changeIndicator(2);
                 break;
             case R.id.tv_inner_travel_detail_content_describe_bottom:
             case R.id.btn_inner_travel_detail_indicator_top_describe:
-                tvProduct.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewProduct.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-                btnProductTop.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewProductTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-
-
-                btnPrice.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewPrice.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-                btnPriceTop.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewPriceTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-
-                tvDescribe.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-                viewDescribe.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-                btnDescribeTop.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-                viewDescribeTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-
-                tvNotice.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewNotice.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-                btnNoticeTop.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewNoticeTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-
-                break;
+                changeIndicator(3);
+                  break;
             case R.id.tv_inner_travel_detail_content_notice_bottom:
             case R.id.btn_inner_travel_detail_indicator_top_notice:
-                tvProduct.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewProduct.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-                btnProductTop.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewProductTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-
-                btnPrice.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewPrice.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-                btnPriceTop.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewPriceTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-
-                tvDescribe.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewDescribe.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-                btnDescribeTop.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
-                viewDescribeTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
-
-                tvNotice.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-                viewNotice.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-                btnNoticeTop.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
-                viewNoticeTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
+                changeIndicator(4);
                 break;
             case R.id.tv_travel_comment_count: //累计评价
                 //TODO 进入评价详情页面
@@ -527,13 +498,61 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
         }
     }
 
+    private void changeIndicator(int indicator) {
+        tvProduct.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
+        viewProduct.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
+        btnProductTop.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
+        viewProductTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
+
+        btnPrice.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
+        viewPrice.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
+        btnPriceTop.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
+        viewPriceTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
+
+        tvDescribe.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
+        viewDescribe.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
+        btnDescribeTop.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
+        viewDescribeTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
+
+        tvNotice.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
+        viewNotice.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
+        btnNoticeTop.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));
+        viewNoticeTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBgIndicator));
+        switch (indicator) {
+            case 1:
+                tvProduct.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
+                viewProduct.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
+                btnProductTop.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
+                viewProductTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
+                break;
+            case 2:
+                btnPrice.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
+                viewPrice.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
+                btnPriceTop.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
+                viewPriceTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
+                break;
+            case 3:
+                tvDescribe.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
+                viewDescribe.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
+                btnDescribeTop.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
+                viewDescribeTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
+                break;
+            case 4:
+                tvNotice.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
+                viewNotice.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
+                btnNoticeTop.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
+                viewNoticeTop.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorTab1RecommendForYouArgument));
+                break;
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_CANCELED){
+        if (resultCode == RESULT_CANCELED) {
 
-        }else{
-            if (requestCode == Consts.REQUEST_CODE_RESERVE_SELECT_DATE){ //选择日期
+        } else {
+            if (requestCode == Consts.REQUEST_CODE_RESERVE_SELECT_DATE) { //选择日期
                 //TODO 日期选择返回
             }
         }
@@ -582,6 +601,7 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
 
     /**
      * GestureDetector.OnGestureListener 回调
+     *
      * @param motionEvent
      * @return
      */
@@ -592,6 +612,7 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
 
     /**
      * GestureDetector.OnGestureListener 回调
+     *
      * @param motionEvent
      */
     @Override
@@ -601,6 +622,7 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
 
     /**
      * GestureDetector.OnGestureListener 回调
+     *
      * @param motionEvent
      * @return
      */
@@ -611,6 +633,7 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
 
     /**
      * GestureDetector.OnGestureListener 回调
+     *
      * @param motionEvent
      * @param motionEvent1
      * @param v
@@ -624,6 +647,7 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
 
     /**
      * GestureDetector.OnGestureListener 回调
+     *
      * @param motionEvent
      */
     @Override
@@ -633,6 +657,7 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
 
     /**
      * GestureDetector.OnGestureListener 回调
+     *
      * @param e1
      * @param e2
      * @param velocityX
@@ -641,17 +666,17 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
      */
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-        if(e1.getX() - e2.getX() > FLING_MIN_DISTANCE &&
-                Math.abs(velocityX) > FLING_MIN_VELOCITY){
+        if (e1.getX() - e2.getX() > FLING_MIN_DISTANCE &&
+                Math.abs(velocityX) > FLING_MIN_VELOCITY) {
 //            Log.i(TAG, "==============开始向左滑动了================");
             showNextView();
             return true;
-        }else if(e2.getX() - e1.getX() > FLING_MIN_DISTANCE &&
-                Math.abs(velocityX) > FLING_MIN_VELOCITY){
+        } else if (e2.getX() - e1.getX() > FLING_MIN_DISTANCE &&
+                Math.abs(velocityX) > FLING_MIN_VELOCITY) {
 //            Log.i(TAG, "==============开始向右滑动了================");
             showPreviousView();
             return true;
-        }else{
+        } else {
             return false;
         }
     }
@@ -662,11 +687,11 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
         flipper.setOutAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.push_left_out));
         flipper.showNext();
         currentPosition++;
-        if(currentPosition == flipper.getChildCount()){
+        if (currentPosition == flipper.getChildCount()) {
             dianUnselect(currentPosition - 1);
             currentPosition = 0;
             dianSelect(currentPosition);
-        }else{
+        } else {
             dianUnselect(currentPosition - 1);
             dianSelect(currentPosition);
         }
@@ -680,11 +705,11 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
         flipper.setOutAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.push_right_out));
         flipper.showPrevious();
         currentPosition--;
-        if(currentPosition == -1){
+        if (currentPosition == -1) {
             dianUnselect(currentPosition + 1);
             currentPosition = flipper.getChildCount() - 1;
             dianSelect(currentPosition);
-        }else{
+        } else {
             dianUnselect(currentPosition + 1);
             dianSelect(currentPosition);
         }
@@ -693,18 +718,18 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
 
     private void setIconData(String url) {
         final String subString = url.substring(url.lastIndexOf("/") + 1);
-        if(MyFileUtils.fileIsExists(Consts.IMG_PATH + subString)){
+        if (MyFileUtils.fileIsExists(Consts.IMG_PATH + subString)) {
             Bitmap iconBmp = BitmapFactory.decodeFile(Consts.IMG_PATH + subString);
-            if(iconBmp != null){
+            if (iconBmp != null) {
                 civIcon.setImageBitmap(iconBmp);
             }
-        }else{
+        } else {
             ImageLoaderUtil imageLoader = ImageLoaderUtil.getInstance(getApplicationContext());
             imageLoader.getImage(civIcon, url);
             imageLoader.setCallBack(new ImageLoaderUtil.ImageLoaderCallBack() {
                 @Override
                 public void refreshAdapter(Bitmap loadedImage) {
-                    if(loadedImage != null){
+                    if (loadedImage != null) {
                         civIcon.setImageBitmap(loadedImage);
                     }
                 }
@@ -713,9 +738,9 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
 
     }
 
-    public static void actionStart(Context context, Bundle bundle){
+    public static void actionStart(Context context, Bundle bundle) {
         Intent intent = new Intent(context, HotActivityDetailActivity.class);
-        if(bundle != null){
+        if (bundle != null) {
             intent.putExtras(bundle);
         }
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

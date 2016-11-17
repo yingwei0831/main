@@ -344,6 +344,7 @@ public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.I
         Intent intent = new Intent(getContext(), InnerTravelCityActivity.class); //选择的城市旅游列表
         Bundle bundle = new Bundle();
         bundle.putString("cityId", listHotRecommend.get(i).getCityId());
+        bundle.putString("cityName", listHotRecommend.get(i).getCityName());
         intent.putExtras(bundle);
         startActivityForResult(intent, REQUEST_CODE_VIEW_LIST);
     }

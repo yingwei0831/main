@@ -48,13 +48,8 @@ public class Tab4MyTourismCoinActivity extends BaseActivity implements View.OnCl
                 case Consts.REQUEST_CODE_GET_ICONS:
                     if (msg.arg1 == 1){
                         lists = (List<UserIcon>) msg.obj;
-                        if (lists == null || lists.size() == 0) {
-                            ToastCommon.toastShortShow(getApplicationContext(), null, "获取数据为空");
-                        }else{
-                            //TODO
-                            adapter.setData(lists);
-                            tvIcons.setText(String.valueOf(msg.arg2));
-                        }
+                        adapter.setData(lists);
+                        tvIcons.setText(String.valueOf(msg.arg2));
                     } else {
                         ToastCommon.toastShortShow(getApplicationContext(), null, String.valueOf(msg.obj));
                     }
@@ -111,10 +106,15 @@ public class Tab4MyTourismCoinActivity extends BaseActivity implements View.OnCl
         listView = pullListview.getRefreshableView();
         LinearLayout header = (LinearLayout) LayoutInflater.from(getApplicationContext()).inflate(R.layout.header_tab4_my_icon, null);
         tvIcons = (TextView) header.findViewById(R.id.tv_tab4_my_tourism_coin_number);
-//        tvIcons.setText(MainActivity.user.getUserScore());
+        tvIcons.setText(MainActivity.user.getUserScore());
         listView.addHeaderView(header);
         adapter = new UserIconListAdapter(getApplicationContext(), lists);
         listView.setAdapter(adapter);
+
+//        View view = findViewById(R.id.empty_view);
+//        TextView tvText = (TextView) findViewById(R.id.tv_empty_view);
+//        tvText.setText("您还没有旅游币收支明细哦~");
+//        pullListview.setEmptyView(view);
 //        lvTourismCoinRecord = (MyListView) findViewById(R.id.mylistview_tab4_tourism_coin);
     }
 

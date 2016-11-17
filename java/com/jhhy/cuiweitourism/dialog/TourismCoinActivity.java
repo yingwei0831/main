@@ -48,7 +48,12 @@ public class TourismCoinActivity extends BaseActivity implements View.OnClickLis
 
     private void getData() {
         Bundle bundle = getIntent().getExtras();
-        needScore = Integer.parseInt(bundle.getString("needScore"));
+        String scroe = bundle.getString("needScore");
+        if (scroe == null || scroe.length() == 0){
+            needScore = 0;
+        }else {
+            needScore = Integer.parseInt(scroe);
+        }
     }
 
     @Override

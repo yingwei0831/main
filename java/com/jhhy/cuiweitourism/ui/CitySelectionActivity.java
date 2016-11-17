@@ -14,16 +14,19 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.CitySelectionGridViewAdapter;
 import com.jhhy.cuiweitourism.adapter.PhoneAdapter;
 import com.jhhy.cuiweitourism.biz.CityBiz;
+import com.jhhy.cuiweitourism.dao.CityRecordDao;
 import com.jhhy.cuiweitourism.moudle.PhoneBean;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
+import com.jhhy.cuiweitourism.utils.SharedPreferencesUtils;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.jhhy.cuiweitourism.view.LetterIndexView;
 import com.jhhy.cuiweitourism.view.PinnedSectionListView;
@@ -88,18 +91,18 @@ public class CitySelectionActivity extends BaseActivity implements View.OnClickL
 
 
     private View headerView;
-    private List<String> citiesHot;
-    private GridView mGridView; //热门城市
-    private CitySelectionGridViewAdapter gvAdapter;
+    private TextView tvTitleTop;
+    private ImageView ivTitleLeft;
+//    private List<String> citiesHot;
+//    private GridView mGridView; //热门城市
+//    private CitySelectionGridViewAdapter gvAdapter;
 
     private TextView tvCurrentCity; //当前定位城市
-    private String currentCity; //当前城市
+    private PhoneBean locationCity; //当前城市
 
     private GridView gvHistoryRecord; //历史记录
-    private List<String> listHistory = new ArrayList<>();
+    private List<PhoneBean> listHistory = new ArrayList<>();
     private CitySelectionGridViewAdapter gvHistoryAdapter;
-
-//    private List<PhoneBean> listCity = null;
 
     private Handler handler = new Handler(){
         @Override
@@ -135,6 +138,10 @@ public class CitySelectionActivity extends BaseActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_city_selection);
         getData();
+        tvTitleTop = (TextView) findViewById(R.id.tv_title_inner_travel);
+        tvTitleTop.setText("选择城市");
+        ivTitleLeft = (ImageView) findViewById(R.id.title_main_tv_left_location);
+
         edit_search = (EditText) findViewById(R.id.edit_search);
         edit_search.setHint("北京/beijing");
 
@@ -144,24 +151,28 @@ public class CitySelectionActivity extends BaseActivity implements View.OnClickL
 
         //头部
         headerView = View.inflate(this, R.layout.header_city_selection, null);
-        mGridView = (GridView) headerView.findViewById(R.id.gv_header_city_selection_hot);
+//        mGridView = (GridView) headerView.findViewById(R.id.gv_header_city_selection_hot);
         tvCurrentCity = (TextView) headerView.findViewById(R.id.tv_current_city);
 
         gvHistoryRecord = (GridView) headerView.findViewById(R.id.gv_header_city_selection_record);
-        listHistory.add(currentCity);
+
         gvHistoryAdapter = new CitySelectionGridViewAdapter(getApplicationContext(), listHistory);
         gvHistoryAdapter.setType(1);
         gvHistoryRecord.setAdapter(gvHistoryAdapter);
         gvHistoryRecord.setSelector(new ColorDrawable(Color.TRANSPARENT));
+        View layoutHotCity = headerView.findViewById(R.id.layout_hot_city);
+        layoutHotCity.setVisibility(View.GONE);
+
         //头部数据
-        citiesHot = new ArrayList<>();
-        for (int i = 0; i < 13; i++) {
-            citiesHot.add("海南" + i);
-        }
-        gvAdapter = new CitySelectionGridViewAdapter(this, citiesHot);
-        gvAdapter.setType(1);
-        mGridView.setAdapter(gvAdapter);
-        mGridView.setSelector(new ColorDrawable(Color.TRANSPARENT));
+        tvCurrentCity.setText(locationCity.getName());
+//        citiesHot = new ArrayList<>();
+//        for (int i = 0; i < 13; i++) {
+//            citiesHot.add("海南" + i);
+//        }
+//        gvAdapter = new CitySelectionGridViewAdapter(this, citiesHot);
+//        gvAdapter.setType(1);
+//        mGridView.setAdapter(gvAdapter);
+//        mGridView.setSelector(new ColorDrawable(Color.TRANSPARENT));
         listView.addHeaderView(headerView);
 
         initView();
@@ -170,78 +181,79 @@ public class CitySelectionActivity extends BaseActivity implements View.OnClickL
     }
 
     private void addListener() {
+        ivTitleLeft.setOnClickListener(this);
         tvCurrentCity.setOnClickListener(this);
         gvHistoryRecord.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String selectCity = null;
-                selectCity = (String) gvHistoryAdapter.getItem(i);
-                if (selectCity == null){
-                    setResult(RESULT_CANCELED);
-                }else {
-                    Intent intent = new Intent();
-                    Bundle bundle = new Bundle();
-                    bundle.putString("selectCity", selectCity);
-                    intent.putExtras(bundle);
-                    setResult(RESULT_OK, intent);
-                }
-                LogUtil.i(TAG, "selectCity = " + selectCity);
+                PhoneBean selectCity = (PhoneBean) gvHistoryAdapter.getItem(i);
+                Intent intent = new Intent();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("selectCity", selectCity);
+                intent.putExtras(bundle);
+                setResult(RESULT_OK, intent);
+                LogUtil.e(TAG, "selectCity = " + selectCity);
                 finish();
             }
         });
-        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String selectCity = null;
-                selectCity = (String) gvAdapter.getItem(i);
-                if (selectCity == null){
-                    setResult(RESULT_CANCELED);
-                }else {
-                    Intent intent = new Intent();
-                    Bundle bundle = new Bundle();
-                    bundle.putString("selectCity", selectCity);
-                    intent.putExtras(bundle);
-                    setResult(RESULT_OK, intent);
-                }
-                LogUtil.i(TAG, "selectCity = " + selectCity);
-                finish();
-            }
-        });
+//        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                String selectCity = null;
+//                selectCity = (String) gvAdapter.getItem(i);
+//                if (selectCity == null){
+//                    setResult(RESULT_CANCELED);
+//                }else {
+//                    Intent intent = new Intent();
+//                    Bundle bundle = new Bundle();
+//                    bundle.putString("selectCity", selectCity);
+//                    intent.putExtras(bundle);
+//                    setResult(RESULT_OK, intent);
+//                }
+//                LogUtil.i(TAG, "selectCity = " + selectCity);
+//                finish();
+//            }
+//        });
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.tv_current_city:
-                String selectCity = null;
                 Intent intent = new Intent();
-                selectCity = tvCurrentCity.getText().toString();
-                if (selectCity == null || selectCity.length() == 0){
-                    setResult(RESULT_CANCELED);
-                }else {
-                    Bundle bundle = new Bundle();
-//                    PhoneBean city = new PhoneBean();
-//                    city.setName(selectCity);
-//                    city.setCity_id("20");
-                    bundle.putString("selectCity", currentCity);
-                    intent.putExtras(bundle);
-                    setResult(RESULT_OK, intent);
-                }
-                LogUtil.i(TAG, "select currentCity = " + selectCity);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("selectCity", locationCity);
+                intent.putExtras(bundle);
+                setResult(RESULT_OK, intent);
+                LogUtil.e(TAG, "select currentCity = " + locationCity);
                 finish();
                 break;
-
+            case R.id.title_main_tv_left_location:
+                finish();
+                break;
         }
     }
 
     private void getData() {
-        Bundle bundle = getIntent().getExtras();
-        if (bundle != null){
-            currentCity = bundle.getString("currentCity");
+//        Bundle bundle = getIntent().getExtras();
+//        if (bundle != null){
+//            currentCity = bundle.getString("currentCity");
+//        }
+//        if(currentCity == null){
+//            currentCity = "北京";
+//        }
+        SharedPreferencesUtils sp = SharedPreferencesUtils.getInstance(getApplicationContext());
+        locationCity = sp.getCity();
+        if (locationCity == null) {
+            locationCity = new PhoneBean();
+            locationCity.setName("北京");
+            locationCity.setCity_id("20");
         }
-
-        if(currentCity == null){
-            currentCity = "北京";
+        CityRecordDao dao = new CityRecordDao(getApplicationContext());
+        dao.getTrainCityRecord();
+        listHistory = dao.getSelectionCityRecord();
+        if (listHistory.size() == 0) {
+            listHistory.add(locationCity);
         }
         getInternetData();
     }
@@ -312,13 +324,9 @@ public class CitySelectionActivity extends BaseActivity implements View.OnClickL
                         }
                     }
                 }
-
                 adapter.notifyDataSetChanged();
-
             }
         });
-
-
 
         /** listview点击事件 */
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -326,6 +334,8 @@ public class CitySelectionActivity extends BaseActivity implements View.OnClickL
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 if (list_show.get(i-1).getType() == CitySelectionActivity.ITEM) { // 标题点击不给操作
                     PhoneBean city = list_show.get(i-1);
+                    CityRecordDao dao = new CityRecordDao(getApplicationContext());
+                    dao.addSelectionCityRecord(city);
                     ToastCommon.toastShortShow(getApplicationContext(), null, city.getName());
                     Intent intent = new Intent();
                     Bundle bundle = new Bundle();

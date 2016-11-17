@@ -19,7 +19,8 @@
         android:layout_weight="1"
         android:text="visa_title"
         android:maxLines="1"
-        android:ellipsize="end"/>
+        android:ellipsize="end"
+        android:textColor="@android:color/black"/>
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -40,6 +40,7 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
 
     private String TAG = HotelDetailActivity.class.getSimpleName();
     private String id;
+    private int type;
     private HotelActionBiz hotelBiz;
     private HotelDetailInfo hotelDetail = new HotelDetailInfo();
 
@@ -101,6 +102,7 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
             Bundle bundle = intent.getExtras();
             if (bundle != null){
                 id = bundle.getString("id");
+                type = bundle.getInt("type"); //2:从收藏进来的酒店详情
 
                 checkInDate = bundle.getString("checkInDate");
                 checkOutDate = bundle.getString("checkOutDate");

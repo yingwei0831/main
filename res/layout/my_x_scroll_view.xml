@@ -74,19 +74,17 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                >
-
-                <TextView
-                    android:id="@+id/tv_tab1_indicator_nearby_top"
-                    style="@style/Tab1SelectionAreaStyle"
-                    android:text="@string/tab1_recommend_for_you_zby"
-                    android:textColor="@android:color/black"/>
-
-            </LinearLayout>
+            <!--<LinearLayout-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_weight="1"-->
+                <!--&gt;-->
+                <!--<TextView-->
+                    <!--android:id="@+id/tv_tab1_indicator_nearby_top"-->
+                    <!--style="@style/Tab1SelectionAreaStyle"-->
+                    <!--android:text="@string/tab1_recommend_for_you_zby"-->
+                    <!--android:textColor="@android:color/black"/>-->
+            <!--</LinearLayout>-->
 
         </LinearLayout>
 

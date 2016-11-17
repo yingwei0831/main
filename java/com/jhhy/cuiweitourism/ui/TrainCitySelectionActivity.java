@@ -30,6 +30,7 @@ import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainStationInfo;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
+import com.jhhy.cuiweitourism.utils.SharedPreferencesUtils;
 import com.jhhy.cuiweitourism.view.LetterIndexView;
 import com.jhhy.cuiweitourism.view.PinnedSectionListView;
 import com.just.sun.pricecalendar.ToastCommon;
@@ -90,7 +91,8 @@ public class TrainCitySelectionActivity extends BaseActivity implements View.OnC
      * item标题标识为1
      */
     public static final int TITLE = 1;
-
+    private TextView tvTitleTop;
+    private ImageView ivTitleLeft;
     private ImageView ivSearchLeft; //搜索栏左边的返回图标
 
     private View headerView;
@@ -113,15 +115,19 @@ public class TrainCitySelectionActivity extends BaseActivity implements View.OnC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_city_selection);
+        getData();
         setupView();
         getRecordData();
         initView();
         addListener();
-        getData();
         setupData();
     }
 
     private void setupView() {
+        tvTitleTop = (TextView) findViewById(R.id.tv_title_inner_travel);
+        tvTitleTop.setText("选择车站");
+        ivTitleLeft = (ImageView) findViewById(R.id.title_main_tv_left_location);
+
         edit_search = (EditText) findViewById(R.id.edit_search);
         edit_search.setHint("北京/beijing/bj");
         ivSearchLeft = (ImageView) findViewById(R.id.iv_title_search_left);
@@ -134,6 +140,7 @@ public class TrainCitySelectionActivity extends BaseActivity implements View.OnC
         headerView = View.inflate(this, R.layout.header_city_selection, null);
         //当前城市
         tvCurrentCity = (TextView) headerView.findViewById(R.id.tv_current_city);
+        tvCurrentCity.setText(currentCity.getName());
         //历史记录
         layoutHistory = headerView.findViewById(R.id.layout_history);
         gvHistoryRecord = (GridView) headerView.findViewById(R.id.gv_header_city_selection_record);
@@ -148,11 +155,6 @@ public class TrainCitySelectionActivity extends BaseActivity implements View.OnC
         mHotGridView.setSelector(new ColorDrawable(Color.TRANSPARENT));
         listView.addHeaderView(headerView);
 
-        //列表    用到的数据
-        list_all = new ArrayList<TrainStationInfo>();
-        list_show = new ArrayList<TrainStationInfo>();
-        map_IsHead = new HashMap<String, Integer>();
-
         adapter = new TrainStationAdapter(TrainCitySelectionActivity.this, list_show, map_IsHead);
         listView.setAdapter(adapter);
 
@@ -162,6 +164,7 @@ public class TrainCitySelectionActivity extends BaseActivity implements View.OnC
     }
 
     private void addListener() {
+        ivTitleLeft.setOnClickListener(this);
         tvCurrentCity.setOnClickListener(this);
         gvHistoryRecord.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -204,31 +207,40 @@ public class TrainCitySelectionActivity extends BaseActivity implements View.OnC
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.tv_current_city:
-                String selectCity = null;
                 Intent intent = new Intent();
-                selectCity = tvCurrentCity.getText().toString();
-                if (selectCity == null || selectCity.length() == 0){
-                    setResult(RESULT_CANCELED);
-                } else {
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("selectCity", currentCity);
-                    intent.putExtras(bundle);
-                    setResult(RESULT_OK, intent);
-                }
+                String selectCity = tvCurrentCity.getText().toString();
+                currentCity.setName(selectCity);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("selectCity", currentCity);
+                intent.putExtras(bundle);
+                setResult(RESULT_OK, intent);
                 LogUtil.i(TAG, "select currentCity = " + selectCity);
                 finish();
                 break;
-
+            case R.id.title_main_tv_left_location:
+                finish();
+                break;
         }
     }
 
     private void getData() {
+        //列表    用到的数据
+        list_all = new ArrayList<TrainStationInfo>();
+        list_show = new ArrayList<TrainStationInfo>();
+        map_IsHead = new HashMap<String, Integer>();
+
         Bundle bundle = getIntent().getExtras();
         if (bundle != null){
             currentCity = bundle.getParcelable("currentCity");
-//            list_all = bundle.getParcelableArrayList("stations");
         }
-        //ArrayList<TrainStationInfo> array = getIntent().getParcelableArrayListExtra("text");
+        if (currentCity == null) {
+            currentCity = new TrainStationInfo();
+            String city = SharedPreferencesUtils.getInstance(getApplicationContext()).getLocationCity();
+            if (city == null) {
+                city = "北京市";
+            }
+            currentCity.setName(city.substring(0, city.indexOf("市")-1));
+        }
         list_all = TrainMainActivity.stations;
     }
 
@@ -246,6 +258,12 @@ public class TrainCitySelectionActivity extends BaseActivity implements View.OnC
             gvHistoryAdapter.setData(listHistory);
             gvHistoryAdapter.notifyDataSetChanged();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        list_all = null;
     }
 
     private void initView() {
