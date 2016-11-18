@@ -55,8 +55,7 @@ public class HttpThread extends Thread {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        String entityString = json.toString();
-        param.setBodyContent(entityString);
+        param.setBodyContent(json.toString());
         LogUtil.i(TAG, "发送数据：" + param.getBodyContent());
         x.http().post(param, callback);
     }

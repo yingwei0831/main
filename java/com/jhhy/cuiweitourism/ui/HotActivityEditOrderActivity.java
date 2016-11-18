@@ -1,9 +1,9 @@
 package com.jhhy.cuiweitourism.ui;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,28 +33,29 @@ import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
+import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.just.sun.pricecalendar.GroupDeadline;
 import com.just.sun.pricecalendar.ToastCommon;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class InnerTravelEditOrderActivity extends BaseActivity implements View.OnClickListener, OnItemTextViewClick {
+public class HotActivityEditOrderActivity extends BaseActivity implements View.OnClickListener, OnItemTextViewClick {
 
-    private String TAG = InnerTravelEditOrderActivity.class.getSimpleName();
+    private String TAG = HotActivityEditOrderActivity.class.getSimpleName();
     private TextView tvTitleTop;
     private ImageView ivTitleLeft;
 
-    private int priceAdult;
-    private int priceChild;
+    private float priceAdult;
+    private float priceChild;
     private int countAdult; //成人
     private int countChild; //儿童
     private int count; //人数总数
-    private TravelDetail detail; //旅游详情
-//    private int type; //11:热门活动；国内游/出境游；
-//    private ActivityHotDetailInfo hotActivityDetail; //热门活动详情
+//    private TravelDetail detail; //旅游详情
+    private int type; //11:热门活动；国内游/出境游；
+    private ActivityHotDetailInfo hotActivityDetail; //热门活动详情
 
-    private GroupDeadline selectGroupDeadline; //选择某天的价格日历
+//    private GroupDeadline selectGroupDeadline; //选择某天的价格日历
     private int priceIcon = 0; //将要抵扣的旅游币
     private int priceInvoice = 15;
 
@@ -94,7 +95,7 @@ public class InnerTravelEditOrderActivity extends BaseActivity implements View.O
     private List<UserContacts> listCommitCon = new ArrayList<>(); //提交的联系人列表数据
     private ArrayList<ActivityOrder.Contact> listHotContact = new ArrayList<>(); //热门活动提交的联系人列表数据
     private Invoice  invoiceCommit = null; //提交的发票信息
-    private int priceTotal; //订单总金额
+    private float priceTotal; //订单总金额
 
     private Handler handler = new Handler(){
         @Override
@@ -124,7 +125,7 @@ public class InnerTravelEditOrderActivity extends BaseActivity implements View.O
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_inner_travel_edit_order);
+        setContentView(R.layout.activity_hot_edit_order);
 
         getData();
         setupView();
@@ -133,17 +134,17 @@ public class InnerTravelEditOrderActivity extends BaseActivity implements View.O
 
     private void getData() {
         Bundle bundle = getIntent().getExtras();
-        selectGroupDeadline = (GroupDeadline) bundle.getSerializable("priceCalendar");
+//        selectGroupDeadline = (GroupDeadline) bundle.getSerializable("priceCalendar");
         countAdult = bundle.getInt("countAdult");
         countChild = bundle.getInt("countChild");
-        priceAdult = Integer.parseInt(selectGroupDeadline.getSell_price_adult());
-        priceChild = Integer.parseInt(selectGroupDeadline.getSell_price_children());
-//        type = bundle.getInt("type");
+//        priceAdult = Integer.parseInt(selectGroupDeadline.getSell_price_adult());
+//        priceChild = Integer.parseInt(selectGroupDeadline.getSell_price_children());
+        type = bundle.getInt("type");
 //        if (type == 11 ) {
-//            hotActivityDetail = (ActivityHotDetailInfo) bundle.getSerializable("hotActivityDetail");
-//        } else {
-            detail = (TravelDetail) bundle.getSerializable("detail");
+            hotActivityDetail = (ActivityHotDetailInfo) bundle.getSerializable("hotActivityDetail");
 //        }
+        priceAdult = Float.parseFloat(hotActivityDetail.getPrice());
+        priceChild = Float.parseFloat(hotActivityDetail.getPrice());
         priceTotal = countAdult * priceAdult + countChild * priceChild;
     }
 
@@ -171,10 +172,10 @@ public class InnerTravelEditOrderActivity extends BaseActivity implements View.O
         layoutTourismIcon = (LinearLayout) findViewById(R.id.layout_tourism_icon);
         tvTravelIcon = (TextView) findViewById(R.id.tv_travel_edit_order_icon);
         viewLineTourism = findViewById(R.id.line_tourism_icon);
-//        if (type == 11){
-//            layoutTourismIcon.setVisibility(View.GONE);
-//            viewLineTourism.setVisibility(View.GONE);
-//        }
+        if (type == 11){
+            layoutTourismIcon.setVisibility(View.GONE);
+            viewLineTourism.setVisibility(View.GONE);
+        }
         tvInvoice = (TextView) findViewById(R.id.tv_travel_edit_order_invoice);
         tvReserveNotice = (TextView) findViewById(R.id.tv_travel_edit_order_notice);
 
@@ -200,11 +201,11 @@ public class InnerTravelEditOrderActivity extends BaseActivity implements View.O
             layoutTravelers.addView(viewCustom);
         }
 //        if (type == 11){
-//            tvTitle.setText(hotActivityDetail.getTitle());
-//            tvTravelId.setText("A00" + hotActivityDetail.getId());
+            tvTitle.setText(hotActivityDetail.getTitle());
+            tvTravelId.setText("A00" + hotActivityDetail.getId());
 //        } else {
-            tvTitle.setText(detail.getTitle());
-            tvTravelId.setText("A00" + detail.getId());
+//            tvTitle.setText(detail.getTitle());
+//            tvTravelId.setText("A00" + detail.getId());
 //        }
         //TODO 这个为什么是不能动的？
         tvFromCity.setText("北京");
@@ -222,16 +223,17 @@ public class InnerTravelEditOrderActivity extends BaseActivity implements View.O
         tvPriceTravel.setText(String.valueOf(priceTotal));
         tvPriceIcon = (TextView) findViewById(R.id.tv_inner_travel_total_price_icon); //旅游币
         layoutIconPrice = (RelativeLayout) findViewById(R.id.layout_tourism_icon_num); //抵扣旅游币数量布局
-//        if (type == 11) {
-//            layoutIconPrice.setVisibility(View.GONE);
-//        } else {
+        if (type == 11) {
+            layoutIconPrice.setVisibility(View.GONE);
+        } else {
             tvPriceIcon.setText(String.valueOf(priceIcon));
-//        }
+        }
 
         layoutPriceExpress = (RelativeLayout) findViewById(R.id.layout_price_express);
         layoutPriceExpress.setVisibility(View.GONE);
         tvPriceInvoice = (TextView) findViewById(R.id.tv_inner_travel_express_price); //发票
 
+        tvSelectFromCity.setText(hotActivityDetail.getCfcity());
     }
 
     int position = -1; //点击的联系人布局中的位置
@@ -280,11 +282,12 @@ public class InnerTravelEditOrderActivity extends BaseActivity implements View.O
                 goToPay();
                 break;
             case R.id.tv_travel_edit_order_icon: //选择旅游币(热门活动没有旅游币)
-                Intent intent1 = new Intent(getApplicationContext(), TourismCoinActivity.class);
-                Bundle bundle1 = new Bundle();
-                bundle1.putString("needScore", detail.getNeedScore()); //本次订单可以用的最多旅游币
-                intent1.putExtras(bundle1);
-                startActivityForResult(intent1, Consts.REQUEST_CODE_RESERVE_SELECT_COIN);
+                ToastUtil.show(getApplicationContext(), "选择旅游币");
+//                Intent intent1 = new Intent(getApplicationContext(), TourismCoinActivity.class);
+//                Bundle bundle1 = new Bundle();
+//                bundle1.putString("needScore", detail.getNeedScore()); //本次订单可以用的最多旅游币
+//                intent1.putExtras(bundle1);
+//                startActivityForResult(intent1, Consts.REQUEST_CODE_RESERVE_SELECT_COIN);
                 break;
             case R.id.tv_travel_edit_order_invoice: //是否需要发票
                 Intent invoice = new Intent(getApplicationContext(), SettingInvoiceActivity.class);
@@ -314,30 +317,30 @@ public class InnerTravelEditOrderActivity extends BaseActivity implements View.O
                 Bundle bundle = data.getExtras();
                 ArrayList<UserContacts> listSelection = bundle.getParcelableArrayList("selection");
                 if (childClick){ //如果是单个的联系人，则只能选择一个
-//                    if (type == 11) {
-//                        if (listHotContact.size() != 0){
-//                            if (position >= listHotContact.size()){
-//                                for (int i = 0; i < listSelection.size(); i++){
-//                                    UserContacts cont = listSelection.get(i);
-//                                    ActivityOrder.Contact contact = new ActivityOrder.Contact(cont.getContactsName(), cont.getContactsIdCard(), cont.getContactsMobile());
-//                                    listHotContact.add(contact);
-//                                }
-//                            } else {
-//                                listHotContact.remove(position);
-//                            }
-//                        }
-//                        for (int i = 0; i < listSelection.size(); i++){
-//                            UserContacts cont = listSelection.get(i);
-//                            ActivityOrder.Contact contact = new ActivityOrder.Contact(cont.getContactsName(), cont.getContactsIdCard(), cont.getContactsMobile());
-//                            listHotContact.add(contact);
-//                        }
-////                        listHotContact.addAll(listSelection);
-//                    }else{
+                    if (type == 11) {
+                        if (listHotContact.size() != 0){
+                            if (position >= listHotContact.size()){
+                                for (int i = 0; i < listSelection.size(); i++){
+                                    UserContacts cont = listSelection.get(i);
+                                    ActivityOrder.Contact contact = new ActivityOrder.Contact(cont.getContactsName(), cont.getContactsIdCard(), cont.getContactsMobile());
+                                    listHotContact.add(contact);
+                                }
+                            } else {
+                                listHotContact.remove(position);
+                            }
+                        }
+                        for (int i = 0; i < listSelection.size(); i++){
+                            UserContacts cont = listSelection.get(i);
+                            ActivityOrder.Contact contact = new ActivityOrder.Contact(cont.getContactsName(), cont.getContactsIdCard(), cont.getContactsMobile());
+                            listHotContact.add(contact);
+                        }
+//                        listHotContact.addAll(listSelection);
+                    }else{
                         if (listCommitCon.size() != 0) {
                             listCommitCon.remove(position);
                         }
                         listCommitCon.addAll(listSelection);
-//                    }
+                    }
                     RelativeLayout traveler = (RelativeLayout) layoutTravelers.getChildAt(position);
                     TextView tvName = (TextView) traveler.getChildAt(traveler.getChildCount() - 1);
                     tvName.setText(listSelection.get(0).getContactsName());
@@ -345,18 +348,18 @@ public class InnerTravelEditOrderActivity extends BaseActivity implements View.O
                     childClick = false;
                     position = -1;
                 }else{ //如果是选择联系人，则可以选择多个
-//                    if (type == 11){
-//                        listHotContact.clear();
-//                        for (int i = 0; i < listSelection.size(); i++){
-//                            UserContacts cont = listSelection.get(i);
-//                            ActivityOrder.Contact contact = new ActivityOrder.Contact(cont.getContactsName(), cont.getContactsIdCard(), cont.getContactsMobile());
-//                            listHotContact.add(contact);
-//                        }
-////                        listHotContact.addAll(listSelection);
-//                    }else {
+                    if (type == 11){
+                        listHotContact.clear();
+                        for (int i = 0; i < listSelection.size(); i++){
+                            UserContacts cont = listSelection.get(i);
+                            ActivityOrder.Contact contact = new ActivityOrder.Contact(cont.getContactsName(), cont.getContactsIdCard(), cont.getContactsMobile());
+                            listHotContact.add(contact);
+                        }
+//                        listHotContact.addAll(listSelection);
+                    }else {
                         listCommitCon.clear();
                         listCommitCon.addAll(listSelection);
-//                    }
+                    }
                     for (int i = 0; i < listSelection.size(); i++){
                         UserContacts cont = listSelection.get(i);
                         RelativeLayout traveler = (RelativeLayout) layoutTravelers.getChildAt(i);
@@ -404,7 +407,7 @@ public class InnerTravelEditOrderActivity extends BaseActivity implements View.O
      * 去支付页面
      */
     private void goToPay() {
-        LoadingIndicator.show(InnerTravelEditOrderActivity.this, getString(R.string.http_notice));
+        LoadingIndicator.show(HotActivityEditOrderActivity.this, getString(R.string.http_notice));
         String name = etContactName.getText().toString();
         String mobile = etContactTel.getText().toString();
         String mail = etContactMail.getText().toString();
@@ -430,62 +433,62 @@ public class InnerTravelEditOrderActivity extends BaseActivity implements View.O
 
 
 //        if (type == 11){
-//            if (listHotContact.size() == 0){
-//                ToastCommon.toastShortShow(getApplicationContext(), null, "游客信息不能为空");
-//                LoadingIndicator.cancel();
-//                return;
-//            }
-//            //提交活动订单
-//            ActivityOrder order = new ActivityOrder(MainActivity.user.getUserId(), hotActivityDetail.getId(), selectGroupDeadline.getDate(),
-//                    selectGroupDeadline.getSell_price_adult(), String.valueOf(countAdult+countChild), name, mobile, hotActivityDetail.getTitle(), listHotContact);
-//
-//            ActivityActionBiz activityBiz = new ActivityActionBiz();
-//            activityBiz.activitiesOrderSubmit(order, new BizGenericCallback<ActivityOrderInfo>() {
-//                @Override
-//                public void onCompletion(GenericResponseModel<ActivityOrderInfo> model) {
-//                    ActivityOrderInfo info = model.body;
-//                    LogUtil.e(TAG,"activitiesOrderSubmit =" + info.toString());
-//                    LoadingIndicator.cancel();
-//
-//                    Intent intent = new Intent(getApplicationContext(), SelectPaymentActivity.class);
-//                    Bundle bundle = new Bundle();
-//                    bundle.putSerializable("order", info);
-//                    bundle.putInt("type", 11);
-//                    intent.putExtras(bundle);
-//                    startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_PAY); //订单生成成功，去支付
-//                }
-//
-//                @Override
-//                public void onError(FetchError error) {
-//                    if (error.localReason != null){
-//                        ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
-//                    }else{
-//                        ToastCommon.toastShortShow(getApplicationContext(), null, "请求出错，请重试");
-//                    }
-//                    LogUtil.e(TAG, "activitiesOrderSubmit: " + error.toString());
-//                    LoadingIndicator.cancel();
-//                }
-//            });
-//
-//        } else {
-            if (listCommitCon.size() == 0){
+            if (listHotContact.size() == 0){
                 ToastCommon.toastShortShow(getApplicationContext(), null, "游客信息不能为空");
                 LoadingIndicator.cancel();
                 return;
             }
+            //提交活动订单
+            ActivityOrder order = new ActivityOrder(MainActivity.user.getUserId(), hotActivityDetail.getId(), hotActivityDetail.getCftime(),
+                    hotActivityDetail.getPrice(), String.valueOf(countAdult+countChild), name, mobile, hotActivityDetail.getTitle(), listHotContact);
 
-            String needInvoice = invoiceTag == 1 ? "0" : "1";
-            String useIcon;
-            if (priceIcon == 0) {
-                useIcon = "0";
-            } else {
-                useIcon = "1";
-            }
-            //提交线路订单，并进入支付页面
-            OrdersAllBiz biz = new OrdersAllBiz(getApplicationContext(), handler);
-            biz.commitOrder(detail, selectGroupDeadline, countAdult, countChild,
-                    name, mobile, mail, needInvoice, invoiceCommit,
-                    useIcon, String.valueOf(priceIcon), listCommitCon, remark);
+            ActivityActionBiz activityBiz = new ActivityActionBiz();
+            activityBiz.activitiesOrderSubmit(order, new BizGenericCallback<ActivityOrderInfo>() {
+                @Override
+                public void onCompletion(GenericResponseModel<ActivityOrderInfo> model) {
+                    ActivityOrderInfo info = model.body;
+                    LogUtil.e(TAG,"activitiesOrderSubmit =" + info.toString());
+                    LoadingIndicator.cancel();
+
+                    Intent intent = new Intent(getApplicationContext(), SelectPaymentActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("order", info);
+                    bundle.putInt("type", 11);
+                    intent.putExtras(bundle);
+                    startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_PAY); //订单生成成功，去支付
+                }
+
+                @Override
+                public void onError(FetchError error) {
+                    if (error.localReason != null){
+                        ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
+                    }else{
+                        ToastCommon.toastShortShow(getApplicationContext(), null, "请求出错，请重试");
+                    }
+                    LogUtil.e(TAG, "activitiesOrderSubmit: " + error.toString());
+                    LoadingIndicator.cancel();
+                }
+            });
+
+//        } else {
+//            if (listCommitCon.size() == 0){
+//                ToastCommon.toastShortShow(getApplicationContext(), null, "游客信息不能为空");
+//                LoadingIndicator.cancel();
+//                return;
+//            }
+//
+//            String needInvoice = invoiceTag == 1 ? "0" : "1";
+//            String useIcon;
+//            if (priceIcon == 0) {
+//                useIcon = "0";
+//            } else {
+//                useIcon = "1";
+//            }
+//            //提交线路订单，并进入支付页面
+//            OrdersAllBiz biz = new OrdersAllBiz(getApplicationContext(), handler);
+//            biz.commitOrder(detail, selectGroupDeadline, countAdult, countChild,
+//                    name, mobile, mail, needInvoice, invoiceCommit,
+//                    useIcon, String.valueOf(priceIcon), listCommitCon, remark);
 //        }
     }
 

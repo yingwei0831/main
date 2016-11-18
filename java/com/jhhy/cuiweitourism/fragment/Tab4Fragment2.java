@@ -123,6 +123,14 @@ public class Tab4Fragment2 extends Fragment implements View.OnClickListener {
         tvSecurity.setOnClickListener(this);
         tvAuthentication.setOnClickListener(this);
         tvContacts.setOnClickListener(this);
+
+        tvLoginOrRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //去登录/注册
+                ((MainActivity)getActivity()).gotoLogin();
+            }
+        });
     }
 
     public void refreshView() {
@@ -142,13 +150,6 @@ public class Tab4Fragment2 extends Fragment implements View.OnClickListener {
             tvLoginOrRegister.setVisibility(View.VISIBLE);
             viewLoggedIn.setVisibility(View.GONE);
         }
-        tvLoginOrRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //去登录/注册
-                gotoLogin();
-            }
-        });
     }
 
     @Override
@@ -224,7 +225,10 @@ public class Tab4Fragment2 extends Fragment implements View.OnClickListener {
         LogUtil.e(TAG, "----------------------onActivityResult---------------------");
         if (resultCode == Activity.RESULT_OK){
             if (requestCode == LOGIN_OUT){
-                gotoLogin();
+//                gotoLogin();
+                MainActivity.logged = false;
+                MainActivity.user = null;
+                refreshView();
             }
         }
         if (requestCode == VIEW_USER_INFO){
@@ -243,8 +247,9 @@ public class Tab4Fragment2 extends Fragment implements View.OnClickListener {
         }
     }
 
-    private void gotoLogin() {
-        LoginActivity.actionStart(getContext(), null);
-        getActivity().finish();
-    }
+//    private void gotoLogin() {
+//
+//        LoginActivity.actionStart(getContext(), null);
+//        getActivity().finish();
+//    }
 }

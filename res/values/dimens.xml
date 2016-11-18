@@ -23,4 +23,6 @@
     <dimen name="view_small_padding">1dp</dimen>
     <dimen name="view_padding">6dp</dimen>
 
+    <!--状态栏-->
+    <dimen name="padding_top">0dp</dimen>
 </resources>

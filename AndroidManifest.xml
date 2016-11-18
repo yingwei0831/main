@@ -211,6 +211,13 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
+            android:name=".ui.HotActivityEditOrderActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:windowSoftInputMode="adjustPan|stateHidden"
+            />
+
+        <activity
             android:name=".ui.PriceCalendarReserveActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
@@ -412,9 +419,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/EMyDialogStyle" />
-        <activity
-            android:name=".ui.LineFindActivity"
-            android:screenOrientation="portrait" />
+
         <activity
             android:name=".picture.TestPicActivity"
             android:screenOrientation="portrait" />
@@ -670,7 +675,6 @@
         <!-- 定位需要的服务 使用2.0的定位需要加上这个 -->
         <service android:name="com.amap.api.location.APSService" />
 
-        <activity android:name=".test.ActivityTest"></activity>
     </application>
 
 </manifest>

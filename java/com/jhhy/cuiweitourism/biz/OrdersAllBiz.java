@@ -126,8 +126,8 @@ public class OrdersAllBiz {
                         fieldObj.put("linktel", linkMobile);
                         fieldObj.put("linkemail", linkMail);
                         fieldObj.put("isneedpiao", needInvoice);
-                        fieldObj.put("usejifen", useScore);
-                        fieldObj.put("jifentprice", priceScore);
+                        fieldObj.put("usejifen", useScore); //0,1是否使用积分
+                        fieldObj.put("jifentprice", priceScore); //用了多少积分
                         fieldObj.put("needjifen", detail.getNeedScore());
 
                         fieldObj.put("lxr", contactArray);

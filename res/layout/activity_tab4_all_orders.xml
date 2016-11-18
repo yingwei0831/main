@@ -6,9 +6,13 @@
     android:layout_height="match_parent"
     tools:context="com.jhhy.cuiweitourism.ui.Tab4AllOrdersActivity"
     android:orientation="vertical"
+    android:paddingTop="@dimen/padding_top"
+    android:background="@android:color/white"
     >
 
-    <include layout="@layout/title_tab1_inner_travel"/>
+    <include
+        layout="@layout/title_tab1_inner_travel"
+        />
 
     <android.support.design.widget.TabLayout
         android:layout_width="match_parent"

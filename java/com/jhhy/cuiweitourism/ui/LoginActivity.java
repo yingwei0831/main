@@ -31,8 +31,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     private Button btnLogin;
 
-    private User registerUser;
-
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -47,7 +45,13 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         sp.saveNamePassword(etUserName.getText().toString().trim(), etPassword.getText().toString().trim());
                         Bundle bundle = new Bundle();
                         bundle.putSerializable(Consts.KEY_REQUEST, (User)msg.obj);
-                        MainActivity.actionStart(getApplicationContext(), bundle);
+                        if (type == 2){
+                            Intent intent = new Intent();
+                            intent.putExtras(bundle);
+                            setResult(RESULT_OK, intent);
+                        }else {
+                            MainActivity.actionStart(getApplicationContext(), bundle);
+                        }
                         finish();
                     }
                     break;
@@ -69,13 +73,23 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        getData();
         setupView();
         addListener();
     }
 
+    int type;
+    private void getData() {
+        Intent intent = getIntent();
+        if (intent != null){
+            Bundle bundle = intent.getExtras();
+            if (bundle != null){
+                type = bundle.getInt("type");
+            }
+        }
+    }
+
     private void setupView() {
-
-
         etUserName = (EditText) findViewById(R.id.et_login_user_name);
         etPassword = (EditText) findViewById(R.id.et_login_user_pwd);
 
@@ -114,7 +128,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         super.onActivityResult(requestCode, resultCode, data);
         if(RESULT_OK == resultCode){
             if(Consts.REQUEST_CODE_REGISTER == requestCode){
-                registerUser = (User) data.getSerializableExtra(Consts.KEY_RESULT_DATA);
+                User registerUser = (User) data.getSerializableExtra(Consts.KEY_RESULT_DATA);
                 etUserName.setText(registerUser.getUserPhoneNumber());
             }
         }

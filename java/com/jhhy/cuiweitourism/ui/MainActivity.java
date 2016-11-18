@@ -4,6 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -12,6 +14,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
@@ -43,12 +46,12 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
 
     private Fragment mContent;
     private Tab1Fragment tab1Fragment;
-    //    private Tab1Fragment_3 tab1Fragment_3;
+//    private Tab1Fragment_3 tab1Fragment_3;
 //    private Tab1Fragment_2 tab1Fragment_2;
 //    private Tab2Fragment tab2Fragment;
     private Tab2Fragment_2 tab2Fragment_2;
     private Tab3Fragment tab3Fragment;
-    //    private Tab4Fragment tab4Fragment;
+//    private Tab4Fragment tab4Fragment;
     private Tab4Fragment2 tab4Fragment2;
 
     public static boolean netOk = false;
@@ -85,9 +88,20 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
-        Log.i("MainActivity", "onCreate");
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {//5.0及以上
+            View decorView = getWindow().getDecorView();
+            int option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+            decorView.setSystemUiVisibility(option);
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {//4.4到5.0
+            WindowManager.LayoutParams localLayoutParams = getWindow().getAttributes();
+            localLayoutParams.flags = (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | localLayoutParams.flags);
+        }
+
+        Log.e("MainActivity", "onCreate");
         getData(savedInstanceState);
         setupView();
         addListener();
@@ -196,7 +210,6 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
 //        if (logged) {
             Fragment to = null;
             Fragment from = mContent;
-
             switch (checkedId) {
                 case R.id.tab1:
                     index = 1;
@@ -249,14 +262,15 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
                 break;
             case R.id.tab2:
                 index = 2;
-                if (tab2Fragment_2 == null) {
+//                if (tab2Fragment_2 == null) {
                     tab2Fragment_2 = Tab2Fragment_2.newInstance(null, null);
-                }
+//                }
                 to = tab2Fragment_2;
                 break;
             case R.id.tab3:
                 if (!logged) {
-                    ToastUtil.show(getApplicationContext(), "请登录后查看订单信息");
+//                    ToastUtil.show(getApplicationContext(), "请登录后查看订单信息");
+                    gotoLogin();
                     changeIndicator();
                     return;
                 }
@@ -282,6 +296,29 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
             } else { //被添加过
                 transaction.hide(from).show(to).commit(); //transaction.hide(from).show(to).commit(); // 隐藏当前的fragment，显示下一个
 //                transaction.hide(from).replace(R.id.main_content, to, index + ""); //此处是替换？待研究
+            }
+        }
+    }
+
+    private int REQUEST_LOGIN = 5462;
+
+    public void gotoLogin() {
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("type", 2);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, REQUEST_LOGIN);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == REQUEST_LOGIN){
+            if (RESULT_OK == resultCode){
+                getData(null);
+                if (tab4Fragment2 != null) {
+                    tab4Fragment2.refreshView();
+                }
             }
         }
     }

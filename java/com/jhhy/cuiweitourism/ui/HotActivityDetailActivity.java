@@ -443,7 +443,7 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
             layoutComment.setVisibility(View.GONE);
         }
         //商品详情
-        String tripDetail = detail.getXlxq();
+        String tripDetail = detail.getFeatures();
         mWebViewProduct.loadDataWithBaseURL(null, start + tripDetail + end, "text/html", "utf-8", null);
         //费用说明
         String priceContain = detail.getFeeinclude();
@@ -485,15 +485,15 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
 
                 break;
             case R.id.btn_inner_travel_reserve: //立即预定
-                ToastUtil.show(getApplicationContext(), "木有操作流程图");
-//                Bundle bundle = new Bundle();
-//                bundle.putString("id", id);
-//                bundle.putSerializable("hotActivityDetail", detail);
-//                bundle.putInt("type", 11);
-//                Intent intent = new Intent(getApplicationContext(), PriceCalendarReserveActivity.class);
-//                intent.putExtras(bundle);
-//                startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_SELECT_DATE); //选择日期
-//                PriceCalendarReserveActivity.actionStart(getApplicationContext(), bundle);
+//                ToastUtil.show(getApplicationContext(), "木有操作流程图");
+                Bundle bundle = new Bundle();
+                bundle.putString("id", id);
+                bundle.putSerializable("hotActivityDetail", detail);
+                bundle.putInt("type", 11);
+                Intent intent = new Intent(getApplicationContext(), HotActivityEditOrderActivity.class);
+                intent.putExtras(bundle);
+                startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_SELECT_DATE); //选择日期
+
                 break;
         }
     }
