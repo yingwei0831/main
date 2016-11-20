@@ -20,14 +20,19 @@ import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.SearchListAdapter;
 import com.jhhy.cuiweitourism.adapter.Tab1InnerTravelListViewAdapter;
 import com.jhhy.cuiweitourism.moudle.PhoneBean;
+import com.jhhy.cuiweitourism.moudle.User;
 import com.jhhy.cuiweitourism.net.biz.ForeEndActionBiz;
 import com.jhhy.cuiweitourism.net.models.FetchModel.ForeEndSearch;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.ForceEndSearchInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
+import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
+import com.jhhy.cuiweitourism.ui.easemob.EasemobLoginActivity;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
+import com.jhhy.cuiweitourism.utils.SharedPreferencesUtils;
+import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.jhhy.cuiweitourism.utils.Utils;
 import com.just.sun.pricecalendar.ToastCommon;
 
@@ -165,13 +170,25 @@ public class SearchActivity extends BaseActionBarActivity implements ArgumentOnC
     }
 
     private int VIEW_LINE_DETAIL = 7591; //查看详情
+    private int REQUEST_LOGIN = 2913; //请求登录
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK){
-            if (requestCode == VIEW_LINE_DETAIL){ //订线路，不需要响应
+            if (requestCode == REQUEST_LOGIN) { //登录成功
+                User user = (User) data.getExtras().getSerializable(Consts.KEY_REQUEST);
+                if (user != null) {
+                    MainActivity.logged = true;
+                    MainActivity.user = user;
+                    SharedPreferencesUtils sp = SharedPreferencesUtils.getInstance(getApplicationContext());
+                    sp.saveUserId(user.getUserId());
+                }
             }
+            else if (requestCode == VIEW_LINE_DETAIL){ //订线路，不需要响应
+            }
+        }else{
+
         }
     }
 
@@ -253,5 +270,17 @@ public class SearchActivity extends BaseActionBarActivity implements ArgumentOnC
     @Override
     public void goToArgument(View view, View viewGroup, int position, int which) {
         //讨价还价
+        if (MainActivity.logged) { //|| (number != null && !"null".equals(number) && pwd != null && !"null".equals(pwd))
+            Intent intent = new Intent(getApplicationContext(), EasemobLoginActivity.class);
+            startActivity(intent);
+        }else{
+//            ToastUtil.show(getApplicationContext(), "请登录后再试");
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putInt("type", 2);
+            intent.putExtras(bundle);
+            startActivityForResult(intent, REQUEST_LOGIN);
+        }
     }
+
 }

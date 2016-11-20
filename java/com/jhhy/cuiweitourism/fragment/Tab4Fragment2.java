@@ -228,7 +228,10 @@ public class Tab4Fragment2 extends Fragment implements View.OnClickListener {
 //                gotoLogin();
                 MainActivity.logged = false;
                 MainActivity.user = null;
-                refreshView();
+//                refreshView();
+                tvLoginOrRegister.setVisibility(View.VISIBLE);
+                viewLoggedIn.setVisibility(View.GONE);
+                civUserIcon.setImageResource(R.mipmap.default_user_icon);
             }
         }
         if (requestCode == VIEW_USER_INFO){

@@ -1,5 +1,7 @@
 package com.jhhy.cuiweitourism.net.models.ResponseModel;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by zhangguang on 16/10/10.
  */
@@ -19,21 +21,47 @@ public class ForceEndSearchInfo {
 //    "tid": "12",
 //    "ishidden": "0"
 
+//    {
+//        "txt": "跟团游",
+//        "id": "193",
+//        "title": "椰风醉心游 (海口往返4晚5天)",
+//        "litpic": "http://www.cwly1118.com/uploads/2016/1112/6c315cfa8a70dfcbdb4641f21e6875ab.jpg",
+//        "price": "3320",
+//        "gysid": "14",
+//        "group": "30146",
+//        "im": ""
+//    }
+
     public String channelname;
     public String webid;
+
+    @SerializedName("gysid")
     public String aid;
+
     public String typeid;
     public String title;
+
+    @SerializedName("txt")
     public String description;
+
     public String litpic;
     public String shownum;
+
+    @SerializedName("group")
     public String kindlist;
+    @SerializedName("im")
     public String attrid;
+
     public String headimgid;
+
+    @SerializedName("id")
     public String tid;
+
     public String ishidden;
 
-    public ForceEndSearchInfo(String channelname, String webid, String aid, String typeid, String title, String description, String litpic, String shownum, String kindlist, String attrid, String headimgid, String tid, String ishidden) {
+    public String price;
+
+    public ForceEndSearchInfo(String channelname, String webid, String aid, String typeid, String title, String description, String litpic, String shownum, String kindlist, String attrid, String headimgid, String tid, String ishidden, String price) {
         this.channelname = channelname;
         this.webid = webid;
         this.aid = aid;
@@ -47,9 +75,18 @@ public class ForceEndSearchInfo {
         this.headimgid = headimgid;
         this.tid = tid;
         this.ishidden = ishidden;
+        this.price = price;
     }
 
     public ForceEndSearchInfo() {
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
     }
 
     public String getChannelname() {

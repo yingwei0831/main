@@ -35,8 +35,6 @@ public class ForeEndActionBiz extends  BasicActionBiz {
     /**
      *  搜索  前台接口
      */
-
-
     public void forceEndSearch(ForeEndSearch search, BizGenericCallback<ArrayList<ForceEndSearchInfo>> callback){
         search.code = "Publics_search";
 

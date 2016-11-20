@@ -2,6 +2,7 @@ package com.jhhy.cuiweitourism.fragment;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -24,6 +25,8 @@ import com.jhhy.cuiweitourism.moudle.Travel;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.ui.InnerTravelDetailActivity;
+import com.jhhy.cuiweitourism.ui.MainActivity;
+import com.jhhy.cuiweitourism.ui.easemob.EasemobLoginActivity;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
 
 import java.util.ArrayList;
@@ -170,8 +173,13 @@ public class InnerTravelFollowFragment extends Fragment implements ArgumentOnCli
      */
     @Override
     public void goToArgument(View view, View viewGroup, int position, int which) {
-        ToastUtil.showShortToast(getContext(), "讨价还价");
-
+//        ToastUtil.showShortToast(getContext(), "讨价还价");
+        if (MainActivity.logged) { //|| (number != null && !"null".equals(number) && pwd != null && !"null".equals(pwd))
+            Intent intent = new Intent(getContext(), EasemobLoginActivity.class);
+            startActivity(intent);
+        }else{
+            ToastUtil.show(getContext(), "请登录后再试");
+        }
     }
 
     @Override

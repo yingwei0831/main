@@ -282,7 +282,7 @@ public class InnerTravelEditOrderActivity extends BaseActivity implements View.O
             case R.id.tv_travel_edit_order_icon: //选择旅游币(热门活动没有旅游币)
                 Intent intent1 = new Intent(getApplicationContext(), TourismCoinActivity.class);
                 Bundle bundle1 = new Bundle();
-                bundle1.putString("needScore", detail.getNeedScore()); //本次订单可以用的最多旅游币
+                bundle1.putString("needScore", detail.getPrice()); //本次订单可以用的最多旅游币
                 intent1.putExtras(bundle1);
                 startActivityForResult(intent1, Consts.REQUEST_CODE_RESERVE_SELECT_COIN);
                 break;

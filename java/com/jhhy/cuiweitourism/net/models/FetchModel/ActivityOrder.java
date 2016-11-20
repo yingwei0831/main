@@ -9,7 +9,10 @@ public class ActivityOrder  extends  BasicFetchModel{
 
     //{"memberid":"6","hid":"7","usetime":"2016-08-30","price":"2500","dingnum":"1","linkman":"张三","linktel":"15210656332",
     // "productname":"****",
-    // "lxr":[{"tourername":"王二麻子","cardnumber":"233695898745896597","mobile":"13895878954"},{"tourername":"王三麻子","cardnumber":"233699685748896597","mobile":"13869578954"}]}
+    // "lxr":[
+    // {"tourername":"王二麻子","cardnumber":"233695898745896597","mobile":"13895878954"},
+    // {"tourername":"王三麻子","cardnumber":"233699685748896597","mobile":"13869578954"}
+    // ]}
 
    static public class Contact extends BasicFetchModel{
         public String tourername;
