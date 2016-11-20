@@ -99,8 +99,6 @@ public class SettingInvoiceActivity extends BaseActivity implements RadioGroup.O
 
     @Override
     public void onCheckedChanged(RadioGroup radioGroup, int position) {
-        LogUtil.e(TAG, "position = " + position);
-
         switch (position){
             case R.id.rb_invoice_none:
                 etTitle.setVisibility(View.GONE);

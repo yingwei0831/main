@@ -40,38 +40,37 @@ public class SearchListAdapter extends MyBaseAdapter {
             holder.tvArgument = (TextView) view.findViewById(R.id.tv_inner_travel_item_argument);
 //            holder.tvPrice.setVisibility(View.GONE);
             holder.tvType.setVisibility(View.GONE);
-            holder.tvArgument.setVisibility(View.GONE);
+//            holder.tvArgument.setVisibility(View.GONE);
             view.setTag(holder);
         }else{
             holder = (ViewHolder) view.getTag();
         }
 
+        final int id = holder.tvArgument.getId();
+        holder.tvArgument.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(argument != null){
+                    argument.goToArgument(view, viewGroup, position, id);
+                }
+            }
+        });
+
         ForceEndSearchInfo searchInfo = (ForceEndSearchInfo) getItem(position);
-
-//        final int id = holder.tvArgument.getId();
-//        holder.tvArgument.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if(argument != null){
-//                    argument.goToArgument(view, viewGroup, position, id);
-//                }
-//            }
-//        });
-
         if(searchInfo != null){
-//            if (travel.getType() != null && !"null".equals(travel.getType())) {
-//                holder.tvType.setVisibility(View.VISIBLE);
-//                if (travel.getType().contains("跟团游")) {
-//                    holder.tvType.setBackgroundColor(context.getResources().getColor(R.color.colorTab1RecommendForYouArgument));
-//                    holder.tvType.setText("跟团游");
-//                } else if (travel.getType().contains("自由游")) {
-//                    holder.tvType.setBackgroundColor(context.getResources().getColor(R.color.colorFreedom));
-//                    holder.tvType.setText("自由游");
-//                }else {
-//                    holder.tvType.setVisibility(View.GONE);
-//                }
-//            }
-            holder.tvPrice.setText("0");
+            if (searchInfo.getDescription() != null && !"null".equals(searchInfo.getDescription())) {
+                holder.tvType.setVisibility(View.VISIBLE);
+                if (searchInfo.getDescription().contains("跟团游")) {
+                    holder.tvType.setBackgroundColor(context.getResources().getColor(R.color.colorTab1RecommendForYouArgument));
+                    holder.tvType.setText("跟团游");
+                } else if (searchInfo.getDescription().contains("自由游")) {
+                    holder.tvType.setBackgroundColor(context.getResources().getColor(R.color.colorFreedom));
+                    holder.tvType.setText("自由游");
+                }else {
+                    holder.tvType.setVisibility(View.GONE);
+                }
+            }
+            holder.tvPrice.setText(searchInfo.getPrice());
             holder.tvTitle.setText(searchInfo.getTitle());
             ImageLoaderUtil.getInstance(context).displayImage(searchInfo.getLitpic(), holder.imageView);
         }

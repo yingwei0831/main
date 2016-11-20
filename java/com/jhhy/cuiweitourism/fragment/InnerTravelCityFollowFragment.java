@@ -1,6 +1,7 @@
 package com.jhhy.cuiweitourism.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -22,6 +23,8 @@ import com.jhhy.cuiweitourism.ui.InnerTravelCityActivity;
 import com.jhhy.cuiweitourism.ui.InnerTravelDetailActivity;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
+import com.jhhy.cuiweitourism.ui.MainActivity;
+import com.jhhy.cuiweitourism.ui.easemob.EasemobLoginActivity;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.jhhy.cuiweitourism.utils.Utils;
 
@@ -184,6 +187,12 @@ public class InnerTravelCityFollowFragment extends Fragment implements AdapterVi
      */
     @Override
     public void goToArgument(View view, View viewGroup, int position, int which) {
-        ToastUtil.show(getContext(), "进入讨价还价");
+//        ToastUtil.show(getContext(), "进入讨价还价");
+        if (MainActivity.logged) { //|| (number != null && !"null".equals(number) && pwd != null && !"null".equals(pwd))
+            Intent intent = new Intent(getContext(), EasemobLoginActivity.class);
+            startActivity(intent);
+        }else{
+            ToastUtil.show(getContext(), "请登录后再试");
+        }
     }
 }

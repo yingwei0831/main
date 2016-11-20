@@ -38,7 +38,7 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    private RadioGroup radioGroup;
+//    private RadioGroup radioGroup;
     private RadioButton rb1;
     private RadioButton rb2;
     private RadioButton rb3;
@@ -140,7 +140,7 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
     }
 
     private void setupView() {
-        radioGroup = (RadioGroup) findViewById(R.id.tab_menu);
+//        radioGroup = (RadioGroup) findViewById(R.id.tab_menu);
         rb1 = (RadioButton) findViewById(R.id.tab1);
         rb2 = (RadioButton) findViewById(R.id.tab2);
         rb3 = (RadioButton) findViewById(R.id.tab3);
@@ -315,7 +315,14 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == REQUEST_LOGIN){
             if (RESULT_OK == resultCode){
-                getData(null);
+//                getData(data.getExtras());
+                user = (User) data.getExtras().getSerializable(Consts.KEY_REQUEST);
+                if (user != null) {
+                    logged = true;
+                    LogUtil.e(TAG, "========= user = " + user.toString() + " ==============");
+                    SharedPreferencesUtils sp = SharedPreferencesUtils.getInstance(getApplicationContext());
+                    sp.saveUserId(user.getUserId());
+                }
                 if (tab4Fragment2 != null) {
                     tab4Fragment2.refreshView();
                 }

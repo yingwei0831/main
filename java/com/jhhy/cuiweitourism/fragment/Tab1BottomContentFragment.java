@@ -1,6 +1,7 @@
 package com.jhhy.cuiweitourism.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -15,6 +16,9 @@ import com.jhhy.cuiweitourism.ArgumentOnClick;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.Tab1GridViewAdapter;
 import com.jhhy.cuiweitourism.moudle.Travel;
+import com.jhhy.cuiweitourism.ui.MainActivity;
+import com.jhhy.cuiweitourism.ui.easemob.EasemobLoginActivity;
+import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.ns.fhvp.IPagerScroll;
 
 import java.util.ArrayList;
@@ -139,5 +143,11 @@ public class Tab1BottomContentFragment extends Fragment implements IPagerScroll,
     @Override
     public void goToArgument(View view, View viewGroup, int position, int which) {
         //讨价还价
+        if (MainActivity.logged) { //|| (number != null && !"null".equals(number) && pwd != null && !"null".equals(pwd))
+            Intent intent = new Intent(getContext(), EasemobLoginActivity.class);
+            startActivity(intent);
+        }else{
+            ToastUtil.show(getContext(), "请登录后再试");
+        }
     }
 }

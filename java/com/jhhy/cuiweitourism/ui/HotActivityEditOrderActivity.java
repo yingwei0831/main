@@ -22,6 +22,7 @@ import com.jhhy.cuiweitourism.dialog.TourismCoinActivity;
 import com.jhhy.cuiweitourism.moudle.Invoice;
 import com.jhhy.cuiweitourism.moudle.Order;
 import com.jhhy.cuiweitourism.moudle.TravelDetail;
+import com.jhhy.cuiweitourism.moudle.User;
 import com.jhhy.cuiweitourism.moudle.UserContacts;
 import com.jhhy.cuiweitourism.net.biz.ActivityActionBiz;
 import com.jhhy.cuiweitourism.net.models.FetchModel.ActivityOrder;
@@ -33,12 +34,14 @@ import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
+import com.jhhy.cuiweitourism.utils.SharedPreferencesUtils;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.just.sun.pricecalendar.GroupDeadline;
 import com.just.sun.pricecalendar.ToastCommon;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class HotActivityEditOrderActivity extends BaseActivity implements View.OnClickListener, OnItemTextViewClick {
 
@@ -48,7 +51,7 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
 
     private float priceAdult;
     private float priceChild;
-    private int countAdult; //成人
+    private int countAdult = 1; //成人
     private int countChild; //儿童
     private int count; //人数总数
 //    private TravelDetail detail; //旅游详情
@@ -56,7 +59,7 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
     private ActivityHotDetailInfo hotActivityDetail; //热门活动详情
 
 //    private GroupDeadline selectGroupDeadline; //选择某天的价格日历
-    private int priceIcon = 0; //将要抵扣的旅游币
+//    private int priceIcon = 0; //将要抵扣的旅游币
     private int priceInvoice = 15;
 
     private TextView tvTitle;
@@ -70,6 +73,7 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
     private EditText etContactMail;
     private EditText etContactRemark;
 
+    private LinearLayout layoutTravelersInfo;
     private TextView tvTravelers;
     private TextView tvSelectTraveler; //常用联系人
     private LinearLayout layoutTravelers; //动态添加游客
@@ -81,13 +85,23 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
     private TextView tvReserveNotice; //预订须知
 
     private TextView tvPriceTravel; //商品金额
-    private TextView tvPriceIcon; //可抵扣的旅游币
+//    private TextView tvPriceIcon; //可抵扣的旅游币
     private RelativeLayout layoutIconPrice; //抵扣旅游币数量布局
     private RelativeLayout layoutPriceExpress;
     private TextView tvPriceInvoice; //快递费
 
     private CheckBox cbDeal;
     private TextView tvDeal;
+
+    private ImageView ivReduceAdult; //成人减少
+    private ImageView ivPlusAdult;   //成人增加
+    private ImageView ivReduceChild; //儿童减少
+    private ImageView ivPlusChild;   //儿童增加
+
+    private TextView tvCountAdult; //成人数量
+    private TextView tvCountChild; //儿童数量
+    private TextView tvPriceAdult; //成人价格
+    private TextView tvPriceChild; //儿童价格
 
     private TextView tvPriceTotal; //订单金额
     private Button btnPay; //立即支付
@@ -118,9 +132,8 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
             LoadingIndicator.cancel();
         }
     };
+
     private int invoiceTag = 1; //需要发票: 2（个人）,3（单位）；1：不需要发票
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,18 +147,13 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
 
     private void getData() {
         Bundle bundle = getIntent().getExtras();
-//        selectGroupDeadline = (GroupDeadline) bundle.getSerializable("priceCalendar");
-        countAdult = bundle.getInt("countAdult");
-        countChild = bundle.getInt("countChild");
-//        priceAdult = Integer.parseInt(selectGroupDeadline.getSell_price_adult());
-//        priceChild = Integer.parseInt(selectGroupDeadline.getSell_price_children());
         type = bundle.getInt("type");
 //        if (type == 11 ) {
-            hotActivityDetail = (ActivityHotDetailInfo) bundle.getSerializable("hotActivityDetail");
-//        }
+        hotActivityDetail = (ActivityHotDetailInfo) bundle.getSerializable("hotActivityDetail");
         priceAdult = Float.parseFloat(hotActivityDetail.getPrice());
-        priceChild = Float.parseFloat(hotActivityDetail.getPrice());
+        priceChild = priceAdult;
         priceTotal = countAdult * priceAdult + countChild * priceChild;
+        count = countAdult + countChild;
     }
 
     private void setupView() {
@@ -160,11 +168,27 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
 
         tvTravelId = (TextView) findViewById(R.id.tv_inner_travel_edit_order_travel_number);
 
+        ivReduceChild = (ImageView) findViewById(R.id.tv_price_calendar_number_reduce);
+        ivPlusChild = (ImageView) findViewById(R.id.tv_price_calendar_number_add);
+        ivReduceAdult = (ImageView) findViewById(R.id.tv_price_calendar_number_reduce_child);
+        ivPlusAdult = (ImageView) findViewById(R.id.tv_price_calendar_number_add_child);
+
+        tvCountAdult = (TextView) findViewById(R.id.tv_price_calendar_number);
+        tvCountChild = (TextView) findViewById(R.id.tv_price_calendar_number_child);
+        tvCountAdult.setText(String.valueOf(countAdult));
+        tvCountChild.setText(String.valueOf(countChild));
+        tvPriceAdult = (TextView) findViewById(R.id.tv_price_adult);
+        tvPriceChild = (TextView) findViewById(R.id.tv_price_child);
+        tvPriceAdult.setText(String.format(Locale.getDefault(), "￥%s/人", hotActivityDetail.getPrice()));
+        tvPriceChild.setText(String.format(Locale.getDefault(), "￥%s/人", hotActivityDetail.getPrice()));
+
         etContactName = (EditText) findViewById(R.id.et_travel_edit_order_contact_name);
         etContactTel = (EditText) findViewById(R.id.et_travel_edit_order_contact_tel);
         etContactMail = (EditText) findViewById(R.id.et_travel_edit_order_contact_mail);
         etContactRemark = (EditText) findViewById(R.id.et_travel_edit_order_contact_remark);
 
+        layoutTravelersInfo = (LinearLayout) findViewById(R.id.layout_travelers);
+//        layoutTravelersInfo.setVisibility(View.GONE);
         tvTravelers = (TextView) findViewById(R.id.tv_travel_edit_order_travelers);
         tvSelectTraveler = (TextView) findViewById(R.id.tv_travel_edit_order_select_traveler);
         layoutTravelers = (LinearLayout) findViewById(R.id.layout_traveler);
@@ -186,20 +210,7 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
         tvPriceTotal.setText(String.valueOf(priceTotal));
         btnPay = (Button) findViewById(R.id.btn_edit_order_pay); //去往立即支付
 
-        int totalCustom = countAdult + countChild;
-
-        for (int i = 0; i < totalCustom; i++) {
-            View viewCustom = LayoutInflater.from(getApplicationContext()).inflate(R.layout.layout_traveler, null);
-            final TextView tvName = (TextView) viewCustom.findViewById(R.id.tv_travel_edit_order_name);
-            final int j = i;
-            viewCustom.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                   onItemTextViewClick(j, tvName, tvName.getId());
-                }
-            });
-            layoutTravelers.addView(viewCustom);
-        }
+        calculateContacts(); //计算游客
 //        if (type == 11){
             tvTitle.setText(hotActivityDetail.getTitle());
             tvTravelId.setText("A00" + hotActivityDetail.getId());
@@ -210,24 +221,21 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
         //TODO 这个为什么是不能动的？
         tvFromCity.setText("北京");
 
-        String str = null;
-        if (countChild > 0){
-            str = "," + countChild + "儿童";
-            count = countAdult + countChild;
-        }else{
-            str = "";
-            count = countAdult;
-        }
-        tvTravelers.setText(countAdult + "成人"+ str);
+//        String str = null;
+//        if (countChild > 0){
+//            str = "," + countChild + "儿童";
+
+//        }else{
+//            str = "";
+//            count = countAdult;
+//        }
+//        tvTravelers.setText(countAdult + "成人"+ str);
         tvPriceTravel = (TextView) findViewById(R.id.tv_inner_travel_currency_price); //商品总金额
         tvPriceTravel.setText(String.valueOf(priceTotal));
-        tvPriceIcon = (TextView) findViewById(R.id.tv_inner_travel_total_price_icon); //旅游币
+//        tvPriceIcon = (TextView) findViewById(R.id.tv_inner_travel_total_price_icon); //旅游币
         layoutIconPrice = (RelativeLayout) findViewById(R.id.layout_tourism_icon_num); //抵扣旅游币数量布局
-        if (type == 11) {
-            layoutIconPrice.setVisibility(View.GONE);
-        } else {
-            tvPriceIcon.setText(String.valueOf(priceIcon));
-        }
+        layoutIconPrice.setVisibility(View.GONE); //热门活动，不可用旅游币支付
+
 
         layoutPriceExpress = (RelativeLayout) findViewById(R.id.layout_price_express);
         layoutPriceExpress.setVisibility(View.GONE);
@@ -235,6 +243,30 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
 
         tvSelectFromCity.setText(hotActivityDetail.getCfcity());
     }
+
+    private void calculateContacts() {
+        addContacts(count);
+    }
+
+    private void addContacts(int addNumber) {
+        for (int i = 0; i < addNumber; i++) {
+            View viewCustom = LayoutInflater.from(getApplicationContext()).inflate(R.layout.layout_traveler, null);
+            final TextView tvName = (TextView) viewCustom.findViewById(R.id.tv_travel_edit_order_name);
+            final int j = i;
+            viewCustom.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onItemTextViewClick(j, tvName, tvName.getId());
+                }
+            });
+            layoutTravelers.addView(viewCustom);
+        }
+    }
+
+    private void reduceContacts(){
+        layoutTravelers.removeViewAt(count - 1);
+    }
+
 
     int position = -1; //点击的联系人布局中的位置
     boolean childClick = false; //是否点击了联系人列表
@@ -259,6 +291,11 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
         tvTravelIcon.setOnClickListener(this);
         tvInvoice.setOnClickListener(this);
         tvReserveNotice.setOnClickListener(this);
+
+        ivReduceChild.setOnClickListener(this);
+        ivPlusChild.setOnClickListener(this);
+        ivReduceAdult.setOnClickListener(this);
+        ivPlusAdult.setOnClickListener(this);
     }
 
     @Override
@@ -271,13 +308,22 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
 
                 break;
             case R.id.tv_travel_edit_order_select_traveler: //选择常用联系人,可选择多个联系人
-                childClick = false;
-                Intent intent = new Intent(getApplicationContext(), SelectCustomActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putInt("number", count);
-                intent.putExtras(bundle);
-                startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_SELECT_CONTACT);
+                if (MainActivity.logged) {
+                    childClick = false;
+                    Intent intent = new Intent(getApplicationContext(), SelectCustomActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("number", count);
+                    intent.putExtras(bundle);
+                    startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_SELECT_CONTACT);
+                }else{
+                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("type", 2);
+                    intent.putExtras(bundle);
+                    startActivityForResult(intent, REQUEST_LOGIN);
+                }
                 break;
+
             case R.id.btn_edit_order_pay: //去付款
                 goToPay();
                 break;
@@ -302,8 +348,49 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
             case R.id.tv_travel_edit_order_notice: //去往预订须知
                 startActivity(new Intent(getApplicationContext(), ReserveNoticeActivity.class));
                 break;
+            case R.id.tv_price_calendar_number_reduce:
+                if (countAdult > 1) {
+                    countAdult -= 1;
+                    tvCountAdult.setText(Integer.toString(countAdult));
+                }
+                calculateTotal();
+                reduceContacts();
+                break;
+            case R.id.tv_price_calendar_number_add:
+                countAdult += 1;
+                tvCountAdult.setText(Integer.toString(countAdult));
+                calculateTotal();
+                addContacts(1);
+                break;
+            case R.id.tv_price_calendar_number_reduce_child:
+                if (countChild > 0) {
+                    countChild -= 1;
+                    tvCountChild.setText(Integer.toString(countChild));
+                }
+                calculateTotal();
+                reduceContacts();
+                break;
+            case R.id.tv_price_calendar_number_add_child:
+                countChild += 1;
+                tvCountChild.setText(Integer.toString(countChild));
+                calculateTotal();
+                addContacts(1);
+                break;
         }
     }
+
+    private void calculateTotal() {
+        count = countAdult + countChild;
+        calculatePrice();
+    }
+
+    private void calculatePrice() {
+        calcate();
+        tvPriceTravel.setText(String.valueOf(priceTotal));
+        tvPriceTotal.setText(String.valueOf(priceTotal));
+    }
+
+    private int REQUEST_LOGIN = 2913; //请求登录
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -313,6 +400,15 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
 
             }
         } else {
+            if (requestCode == REQUEST_LOGIN){ //登录成功
+                User user = (User) data.getExtras().getSerializable(Consts.KEY_REQUEST);
+                if (user != null) {
+                    MainActivity.logged = true;
+                    MainActivity.user = user;
+                    SharedPreferencesUtils sp = SharedPreferencesUtils.getInstance(getApplicationContext());
+                    sp.saveUserId(user.getUserId());
+                }
+            }else
             if (requestCode == Consts.REQUEST_CODE_RESERVE_SELECT_CONTACT){ //选择常用联系人
                 Bundle bundle = data.getExtras();
                 ArrayList<UserContacts> listSelection = bundle.getParcelableArrayList("selection");
@@ -368,32 +464,35 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
                     }
                 }
 
-            } else if (requestCode == Consts.REQUEST_CODE_RESERVE_SELECT_COIN){ //选择旅游币
+            }
+//            else if (requestCode == Consts.REQUEST_CODE_RESERVE_SELECT_COIN){ //选择旅游币
+//                Bundle bundle = data.getExtras();
+//                priceIcon = bundle.getInt("score");
+//                tvTravelIcon.setText(String.valueOf(priceIcon));
+////                tvPriceIcon.setText(String.valueOf(priceIcon));
+//                tvPriceTotal.setText(String.valueOf(priceTotal - priceIcon));
+//            }
+            else if (requestCode == Consts.REQUEST_CODE_RESERVE_SELECT_INVOICE){ //选择是否开发票
                 Bundle bundle = data.getExtras();
-                priceIcon = bundle.getInt("score");
-                tvTravelIcon.setText(String.valueOf(priceIcon));
-                tvPriceIcon.setText(String.valueOf(priceIcon));
-                tvPriceTotal.setText(String.valueOf(priceTotal - priceIcon));
-            } else if (requestCode == Consts.REQUEST_CODE_RESERVE_SELECT_INVOICE){ //选择是否开发票
-                Bundle bundle = data.getExtras();
-
                 invoiceTag = bundle.getInt("tag");
+                LogUtil.e(TAG, "invoiceTag = " + invoiceTag);
                 if (invoiceTag == 1){
                     invoiceCommit = null;
                     tvInvoice.setText("不需要发票");
                     layoutPriceExpress.setVisibility(View.GONE);
-                    tvPriceTotal.setText(String.valueOf(priceTotal - priceIcon));
+                    calcate();
+                    tvPriceTotal.setText(String.valueOf(priceTotal));
                 } else {
                     invoiceCommit = (Invoice) data.getSerializableExtra("invoice");
                     layoutPriceExpress.setVisibility(View.VISIBLE);
                     tvPriceInvoice.setText(String.valueOf(priceInvoice));
-                    tvPriceTotal.setText(String.valueOf(priceTotal - priceIcon + priceInvoice));
+                    calcate();
+                    tvPriceTotal.setText(String.valueOf(priceTotal));
                     if (invoiceTag == 3){
                         tvInvoice.setText("单位" + invoiceCommit.getTitle());
                     }else{
                         tvInvoice.setText("个人");
                     }
-
                 }
             } else if (requestCode == Consts.REQUEST_CODE_RESERVE_PAY){ //订单生成成功，去支付
                 setResult(RESULT_OK);
@@ -403,10 +502,21 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
         }
     }
 
+    private void calcate() {
+        priceTotal = countAdult * priceAdult + countChild * priceChild;
+        if (invoiceTag != 1){
+            priceTotal += priceInvoice;
+        }
+    }
+
     /**
      * 去支付页面
      */
     private void goToPay() {
+        if (!cbDeal.isChecked()){
+            ToastUtil.show(getApplicationContext(), "请阅读并同意翠微旅游相关合同条款");
+            return;
+        }
         LoadingIndicator.show(HotActivityEditOrderActivity.this, getString(R.string.http_notice));
         String name = etContactName.getText().toString();
         String mobile = etContactTel.getText().toString();
@@ -431,8 +541,6 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
             return;
         }
 
-
-//        if (type == 11){
             if (listHotContact.size() == 0){
                 ToastCommon.toastShortShow(getApplicationContext(), null, "游客信息不能为空");
                 LoadingIndicator.cancel();
@@ -440,7 +548,7 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
             }
             //提交活动订单
             ActivityOrder order = new ActivityOrder(MainActivity.user.getUserId(), hotActivityDetail.getId(), hotActivityDetail.getCftime(),
-                    hotActivityDetail.getPrice(), String.valueOf(countAdult+countChild), name, mobile, hotActivityDetail.getTitle(), listHotContact);
+                    String.valueOf(priceTotal), String.valueOf(countAdult+countChild), name, mobile, hotActivityDetail.getTitle(), listHotContact);
 
             ActivityActionBiz activityBiz = new ActivityActionBiz();
             activityBiz.activitiesOrderSubmit(order, new BizGenericCallback<ActivityOrderInfo>() {
@@ -469,27 +577,6 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
                     LoadingIndicator.cancel();
                 }
             });
-
-//        } else {
-//            if (listCommitCon.size() == 0){
-//                ToastCommon.toastShortShow(getApplicationContext(), null, "游客信息不能为空");
-//                LoadingIndicator.cancel();
-//                return;
-//            }
-//
-//            String needInvoice = invoiceTag == 1 ? "0" : "1";
-//            String useIcon;
-//            if (priceIcon == 0) {
-//                useIcon = "0";
-//            } else {
-//                useIcon = "1";
-//            }
-//            //提交线路订单，并进入支付页面
-//            OrdersAllBiz biz = new OrdersAllBiz(getApplicationContext(), handler);
-//            biz.commitOrder(detail, selectGroupDeadline, countAdult, countChild,
-//                    name, mobile, mail, needInvoice, invoiceCommit,
-//                    useIcon, String.valueOf(priceIcon), listCommitCon, remark);
-//        }
     }
 
 }
