@@ -276,7 +276,7 @@ public class VisaItemDetailActivity2 extends BaseActivity implements View.OnClic
         LoadingIndicator.show(VisaItemDetailActivity2.this, getString(R.string.http_notice));
         com.jhhy.cuiweitourism.net.models.FetchModel.VisaDetail visaDetail = new com.jhhy.cuiweitourism.net.models.FetchModel.VisaDetail();
         visaDetail.setProductID(id);
-        VisaActionBiz biz = new VisaActionBiz(getApplicationContext(), handler);
+        VisaActionBiz biz = new VisaActionBiz();
         biz.getVisaDetail(visaDetail, new BizGenericCallback<VisaDetailInfo>() {
             @Override
             public void onCompletion(GenericResponseModel<VisaDetailInfo> model) {

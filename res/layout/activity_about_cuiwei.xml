@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.jhhy.cuiweitourism.ui.AboutCuiweiActivity">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="40dp"
+        android:src="@mipmap/app_logo" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:paddingBottom="40dp"
+        android:paddingTop="12dp"
+        android:text="翠微 V1.0" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <TextView
+            android:id="@+id/tv_about_us"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableRight="@mipmap/arrow_right_dark"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
+            android:text="@string/fragment_mine_about_us"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1.2px"
+            android:background="@color/colorLineGray2" />
+
+        <TextView
+            android:id="@+id/tv_contact_us"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableRight="@mipmap/arrow_right_dark"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
+            android:text="@string/fragment_mine_contact_us"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1.2px"
+            android:background="@color/colorLineGray2" />
+
+        <TextView
+            android:id="@+id/tv_join_us_rule"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableRight="@mipmap/arrow_right_dark"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
+            android:text="@string/fragment_mine_join_us_rule"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1.2px"
+            android:background="@color/colorLineGray2" />
+
+        <TextView
+            android:id="@+id/tv_about_travel_icon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableRight="@mipmap/arrow_right_dark"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
+            android:text="@string/fragment_mine_about_travel_icon"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1.2px"
+            android:background="@color/colorLineGray2" />
+
+        <TextView
+            android:id="@+id/tv_about_law_statement"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableRight="@mipmap/arrow_right_dark"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
+            android:text="@string/fragment_mine_law_statement"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center_horizontal|bottom"
+        android:paddingBottom="20dp"
+        android:text="@string/fragment_mine_copyright" />
+</LinearLayout>

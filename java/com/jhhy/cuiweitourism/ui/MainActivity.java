@@ -30,6 +30,7 @@ import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.utils.SharedPreferencesUtils;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
+import com.jhhy.cuiweitourism.utils.Utils;
 import com.just.sun.pricecalendar.ToastCommon;
 
 public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedChangeListener
@@ -284,6 +285,10 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
                 index = 4;
                 if (tab4Fragment2 == null) {
                     tab4Fragment2 = Tab4Fragment2.newInstance(null);
+                }else{
+                    if(logged){
+                        tab4Fragment2.refreshView();
+                    }
                 }
                 to = tab4Fragment2;
                 break;
@@ -338,6 +343,12 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
         }else if (index == 4){
             rb4.toggle();
         }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+//        Utils.setKeyboardInvisible();
     }
 
     // 保存当前Fragment的下标,内存重启时调用

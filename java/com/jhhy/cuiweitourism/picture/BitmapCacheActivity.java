@@ -82,7 +82,7 @@ public class BitmapCacheActivity extends Activity {
 				if (thumb == null) {
 					thumb = TestPicActivity.bimap;
 				}
-				LogUtil.e(TAG, "-------thumb------"+thumb);
+//				LogUtil.e(TAG, "-------thumb------"+thumb);
 				put(path, thumb);
 
 				if (callback != null) {

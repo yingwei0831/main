@@ -59,16 +59,16 @@ public class Tab4AllOrdersActivity extends BaseActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         getData();
         setContentView(R.layout.activity_tab4_all_orders);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {//5.0及以上
-            View decorView = getWindow().getDecorView();
-            int option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
-            decorView.setSystemUiVisibility(option);
-            getWindow().setStatusBarColor(Color.TRANSPARENT);
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {//4.4到5.0
-            WindowManager.LayoutParams localLayoutParams = getWindow().getAttributes();
-            localLayoutParams.flags = (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | localLayoutParams.flags);
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {//5.0及以上
+//            View decorView = getWindow().getDecorView();
+//            int option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+//                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+//            decorView.setSystemUiVisibility(option);
+//            getWindow().setStatusBarColor(Color.TRANSPARENT);
+//        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {//4.4到5.0
+//            WindowManager.LayoutParams localLayoutParams = getWindow().getAttributes();
+//            localLayoutParams.flags = (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | localLayoutParams.flags);
+//        }
         setupView();
         addListener();
         initData();
@@ -85,6 +85,9 @@ public class Tab4AllOrdersActivity extends BaseActivity implements View.OnClickL
         tvTitle = (TextView) findViewById(R.id.tv_title_inner_travel);
         tvTitle.setText(typeTitles[selection]);
         ivTitleLeft = (ImageView) findViewById(R.id.title_main_tv_left_location);
+
+        View view = findViewById(R.id.layout_parent);
+        view.setPadding(0, 0, 0, 0);
 
         drawableRightDown = ContextCompat.getDrawable(Tab4AllOrdersActivity.this, R.mipmap.arrow_tran_down);
         drawableRightDown.setBounds(0, 0, drawableRightDown.getMinimumWidth(), drawableRightDown.getMinimumHeight());

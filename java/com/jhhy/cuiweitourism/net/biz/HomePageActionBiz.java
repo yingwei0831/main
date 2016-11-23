@@ -24,9 +24,9 @@ import java.util.Objects;
  * Created by birney1 on 16/10/9.
  */
 public class HomePageActionBiz extends BasicActionBiz {
-    public HomePageActionBiz(Context context, Handler handler) {
-        super(context, handler);
-    }
+//    public HomePageActionBiz(Context context, Handler handler) {
+//        super(context, handler);
+//    }
 
     public HomePageActionBiz() {
     }

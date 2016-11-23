@@ -29,9 +29,9 @@ public class ActivityActionBiz extends BasicActionBiz {
     public ActivityActionBiz() {
     }
 
-    public ActivityActionBiz(Context context, Handler handler) {
-        super(context, handler);
-    }
+//    public ActivityActionBiz(Context context, Handler handler) {
+//        super(context, handler);
+//    }
 
     /**
      * 热门活动

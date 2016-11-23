@@ -1,6 +1,8 @@
 package com.jhhy.cuiweitourism.fragment;
 
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -18,11 +20,17 @@ import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.Tab1InnerTravelListViewAdapter;
 import com.jhhy.cuiweitourism.biz.InnerTravelCityListBiz;
 import com.jhhy.cuiweitourism.moudle.Travel;
+import com.jhhy.cuiweitourism.moudle.User;
 import com.jhhy.cuiweitourism.ui.InnerTravelCityActivity;
 import com.jhhy.cuiweitourism.ui.InnerTravelDetailActivity;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
+import com.jhhy.cuiweitourism.ui.LoginActivity;
+import com.jhhy.cuiweitourism.ui.MainActivity;
+import com.jhhy.cuiweitourism.ui.easemob.EasemobLoginActivity;
+import com.jhhy.cuiweitourism.utils.SharedPreferencesUtils;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
+import com.jhhy.cuiweitourism.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +58,7 @@ public class InnerTravelCityFreedomFragment extends Fragment implements AdapterV
     private int page = 1;
     private boolean refresh; //刷新标志
 
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -65,7 +73,7 @@ public class InnerTravelCityFreedomFragment extends Fragment implements AdapterV
                             }
                             list = listFollow;
                             adapter.setData(listFollow);
-                        }else{ //加载更多
+                        } else { //加载更多
 
                         }
                         break;
@@ -76,7 +84,7 @@ public class InnerTravelCityFreedomFragment extends Fragment implements AdapterV
                         ToastUtil.show(getContext(), "与服务器链接超时，请重试");
                         break;
                 }
-            }else{
+            } else {
                 ToastUtil.show(getContext(), (String) msg.obj);
                 return;
             }
@@ -87,7 +95,7 @@ public class InnerTravelCityFreedomFragment extends Fragment implements AdapterV
         // Required empty public constructor
     }
 
-    public static InnerTravelCityFreedomFragment newInstance(String title, String cityId){
+    public static InnerTravelCityFreedomFragment newInstance(String title, String cityId) {
         Bundle bundle = new Bundle();
         bundle.putString(BUNDLE_TITLE, title);
         bundle.putString(BUNDLE_CITY_ID, cityId);
@@ -117,7 +125,7 @@ public class InnerTravelCityFreedomFragment extends Fragment implements AdapterV
     public void getData(boolean refresh) {
         this.refresh = refresh;
         InnerTravelCityListBiz biz = new InnerTravelCityListBiz(getContext(), handler, Consts.MESSAGE_INNER_CITY_LIST_FREEDOM);
-        biz.getCityList(cityId, InnerTravelCityActivity.sort,InnerTravelCityActivity.day, InnerTravelCityActivity.price,
+        biz.getCityList(cityId, InnerTravelCityActivity.sort, InnerTravelCityActivity.day, InnerTravelCityActivity.price,
                 InnerTravelCityActivity.earlyTime, InnerTravelCityActivity.laterTime, String.valueOf(page), String.valueOf(attr));
     }
 
@@ -127,10 +135,10 @@ public class InnerTravelCityFreedomFragment extends Fragment implements AdapterV
 
     private void addListener() {
         listView.setOnItemClickListener(this);
-        listView.getLoadingLayoutProxy().setLastUpdatedLabel("lastUpdateLabel");
-        listView.getLoadingLayoutProxy().setPullLabel("PULLLABLE");
-        listView.getLoadingLayoutProxy().setRefreshingLabel("refreshingLabel");
-        listView.getLoadingLayoutProxy().setReleaseLabel("releaseLabel");
+        listView.getLoadingLayoutProxy().setLastUpdatedLabel(Utils.getCurrentTime());
+        listView.getLoadingLayoutProxy().setPullLabel("下拉刷新");
+        listView.getLoadingLayoutProxy().setRefreshingLabel("正在刷新");
+        listView.getLoadingLayoutProxy().setReleaseLabel("松开加载更多");
         listView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
@@ -157,17 +165,39 @@ public class InnerTravelCityFreedomFragment extends Fragment implements AdapterV
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-        LogUtil.i(TAG, "position = " + position + ", id = " + id +", " + list.get((int) id).getId());
-        if(id < 0)  return; //此处点击的是Header或Footer
+        LogUtil.i(TAG, "position = " + position + ", id = " + id + ", " + list.get((int) id).getId());
+        if (id < 0) return; //此处点击的是Header或Footer
 
         Bundle bundle = new Bundle();
         bundle.putString("id", list.get((int) id).getId());
         InnerTravelDetailActivity.actionStart(getContext(), bundle);
     }
 
+    private int REQUEST_LOGIN = 2913; //请求登录
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == REQUEST_LOGIN) { //登录成功
+                User user = (User) data.getExtras().getSerializable(Consts.KEY_REQUEST);
+                if (user != null) {
+                    MainActivity.logged = true;
+                    MainActivity.user = user;
+                    SharedPreferencesUtils sp = SharedPreferencesUtils.getInstance(getContext());
+                    sp.saveUserId(user.getUserId());
+                }
+            }
+        } else {
+            if (requestCode == REQUEST_LOGIN) { //登录
+                ToastUtil.show(getContext(), "登录失败");
+            }
+        }
+    }
 
     /**
      * 讨价还价
+     *
      * @param view
      * @param viewGroup
      * @param position
@@ -175,6 +205,23 @@ public class InnerTravelCityFreedomFragment extends Fragment implements AdapterV
      */
     @Override
     public void goToArgument(View view, View viewGroup, int position, int which) {
-        ToastUtil.show(getContext(), "进入讨价还价");
+//        ToastUtil.show(getContext(), "进入讨价还价");
+        if (MainActivity.logged) { //|| (number != null && !"null".equals(number) && pwd != null && !"null".equals(pwd))
+            Intent intent = new Intent(getContext(), EasemobLoginActivity.class);
+            String im = list.get(position).getIm();
+            if (im == null || im.length() == 0) {
+                ToastUtil.show(getContext(), "当前商户暂未提供客服功能");
+                return;
+            }
+            intent.putExtra("im", im);
+            startActivity(intent);
+        } else {
+//            ToastUtil.show(getContext(), "请登录后再试");
+            Intent intent = new Intent(getContext(), LoginActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putInt("type", 2);
+            intent.putExtras(bundle);
+            startActivityForResult(intent, REQUEST_LOGIN);
+        }
     }
 }

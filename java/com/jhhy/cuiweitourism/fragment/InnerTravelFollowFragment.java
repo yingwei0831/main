@@ -173,13 +173,13 @@ public class InnerTravelFollowFragment extends Fragment implements ArgumentOnCli
      */
     @Override
     public void goToArgument(View view, View viewGroup, int position, int which) {
-//        ToastUtil.showShortToast(getContext(), "讨价还价");
-        if (MainActivity.logged) { //|| (number != null && !"null".equals(number) && pwd != null && !"null".equals(pwd))
-            Intent intent = new Intent(getContext(), EasemobLoginActivity.class);
-            startActivity(intent);
-        }else{
-            ToastUtil.show(getContext(), "请登录后再试");
-        }
+//        ToastUtil.showShortToast(getContext(), "讨价还价"); //本类貌似没用
+//        if (MainActivity.logged) { //|| (number != null && !"null".equals(number) && pwd != null && !"null".equals(pwd))
+//            Intent intent = new Intent(getContext(), EasemobLoginActivity.class);
+//            startActivity(intent);
+//        }else{
+//            ToastUtil.show(getContext(), "请登录后再试");
+//        }
     }
 
     @Override

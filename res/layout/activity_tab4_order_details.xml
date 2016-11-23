@@ -35,7 +35,6 @@
                 android:lineSpacingMultiplier="1.2"
                 android:maxLines="2"
                 android:padding="16dp"
-                android:text="@string/tab1_recommend_for_you_title"
                 android:textSize="16sp" />
             <!--android:drawableRight="@mipmap/arrow_right_dark"-->
 
@@ -46,7 +45,7 @@
                 android:background="@android:color/white"
                 android:orientation="vertical"
                 android:padding="16dp"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -178,7 +177,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="啦啦啦" />
+                        />
 
                 </LinearLayout>
 
@@ -198,13 +197,14 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="13366669999" />
+                        />
 
                 </LinearLayout>
 
             </LinearLayout>
             <!--游客信息-->
             <LinearLayout
+                android:id="@+id/layout_travelers"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -270,7 +270,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="2016-08-18-990331" />
+                        />
 
                 </LinearLayout>
 
@@ -290,7 +290,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="2016-08-18" />
+                        />
 
                 </LinearLayout>
 
@@ -310,7 +310,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="2成人1儿童" />
+                        />
 
                 </LinearLayout>
 
@@ -330,7 +330,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="待付款" />
+                        />
 
                 </LinearLayout>
             </LinearLayout>

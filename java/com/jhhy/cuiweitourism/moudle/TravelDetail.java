@@ -27,9 +27,27 @@ public class TravelDetail implements Serializable{
     private String typeId;
     private String commentCount; //评论总数
 
+    private String im; //商户环信账号
+    private String iscollect; //1：已收藏；0：未收藏
 
 
     public TravelDetail() {
+    }
+
+    public String getIscollect() {
+        return iscollect;
+    }
+
+    public void setIscollect(String iscollect) {
+        this.iscollect = iscollect;
+    }
+
+    public String getIm() {
+        return im;
+    }
+
+    public void setIm(String im) {
+        this.im = im;
     }
 
     public String getId() {
@@ -184,6 +202,9 @@ public class TravelDetail implements Serializable{
                 ", comment=" + comment +
                 ", typeId='" + typeId + '\'' +
                 ", commentCount='" + commentCount + '\'' +
+                ", im='" + im + '\'' +
+                ", iscollect='" + iscollect + '\'' +
                 '}';
     }
+
 }

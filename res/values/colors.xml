@@ -7,12 +7,10 @@
 
     <color name="primary">@color/colorActionBar</color>
     <color name="primary_dark">@color/colorActionBar</color>
-    <color name="status_bar_color">@color/colorActionBar</color>
 
     <!--首页-->
     <color name="colorFlash">#FF9369</color>
     <color name="colorFlashBorder">#FEFD02</color>
-    <color name="colorTab1TitleText">#0BC106</color>
     <color name="colorTab1BgSearchBar">#4AC76C</color>
 
     <color name="colorTab1Personalized">#53CA00</color>
@@ -87,8 +85,6 @@
     <color name="colorMoneySolid">#3BB591</color>
     <color name="colorMoneySolidDark">#329879</color>
 
-    <color name="colorTransBlack">#66000000</color>
-
     <!--全部订单-->
     <color name="colorBgRefundDetails">#F0F2F5</color>
     <color name="colorTextBorder">#297FD6</color>
@@ -101,7 +97,6 @@
     <color name="title_color">#333333</color>
 
     <!--选择城市-->
-    <color name="ff7c7c7c">#ff7c7c7c</color>
     <color name="colorBlackLight">#33000000</color>
     <color name="colorBorderCitySelection">#DBDBDB</color>
     <color name="colorBgTab2LeftNormal">#F0F0F0</color>

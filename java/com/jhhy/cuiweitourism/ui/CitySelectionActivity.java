@@ -45,7 +45,7 @@ import java.util.Set;
 
 public class CitySelectionActivity extends BaseActivity implements View.OnClickListener {
 
-    private static final String TAG = CitySelectionActivity.class.getSimpleName();
+    private String TAG = CitySelectionActivity.class.getSimpleName();
 
     /**
      * 搜索栏
@@ -464,5 +464,34 @@ public class CitySelectionActivity extends BaseActivity implements View.OnClickL
         }
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        TAG = null;
+        edit_search = null;
+        listView = null;
+        letterIndexView = null;
+        txt_center = null;
+        list_all.clear();
+        list_all = null;
+        list_show.clear();
+        list_show = null;
+        adapter = null;
+        map_IsHead.clear();
+        map_IsHead = null;
+        listHistory.clear();
+        listHistory = null;
+
+        headerView = null;
+         tvTitleTop= null;
+         ivTitleLeft= null;
+         tvCurrentCity = null;
+          locationCity = null;
+        gvHistoryRecord = null;
+        gvHistoryAdapter = null;
+        handler = null;
+        headAry = null;
     }
 }

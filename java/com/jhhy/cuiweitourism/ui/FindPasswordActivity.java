@@ -17,6 +17,7 @@ import com.jhhy.cuiweitourism.biz.CheckCodeBiz;
 import com.jhhy.cuiweitourism.biz.LoginBiz;
 import com.jhhy.cuiweitourism.biz.RegisterBiz;
 import com.jhhy.cuiweitourism.net.utils.Consts;
+import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
 
@@ -24,6 +25,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class FindPasswordActivity extends BaseActivity implements View.OnClickListener {
+
+    private String TAG = "FindPasswordActivity";
 
     private TextView tvTitle;
     private TextView tvGetCheckCode;
@@ -45,6 +48,7 @@ public class FindPasswordActivity extends BaseActivity implements View.OnClickLi
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+
             switch (msg.what){
                 case 1: //验证码倒计时
                     if( msg.arg1 < 1){
@@ -75,7 +79,7 @@ public class FindPasswordActivity extends BaseActivity implements View.OnClickLi
                     }
                     break;
             }
-
+            LoadingIndicator.cancel();
         }
     };
 
@@ -179,7 +183,7 @@ public class FindPasswordActivity extends BaseActivity implements View.OnClickLi
     private void findPassword() {
         String mobile = etMobile.getText().toString().trim();
         String checkCode = etCheckCode.getText().toString().trim();
-
+        LogUtil.e(TAG, "mobile = " + mobile +", checkCode = " + checkCode);
         String password = etPassword.getText().toString().trim();
 
         if(TextUtils.isEmpty(mobile) || TextUtils.isEmpty(checkCode) || TextUtils.isEmpty(password)){
@@ -189,7 +193,7 @@ public class FindPasswordActivity extends BaseActivity implements View.OnClickLi
 //        {"head":{"code":"User_register"},"field":{"mobile":"15210656911","password":"admin123","verify":"cwly","codes":"CWuhvle"}}
         LoadingIndicator.show(FindPasswordActivity.this, getString(R.string.http_notice));
         LoginBiz biz = new LoginBiz(getApplicationContext(), handler);
-        biz.findPassword(mobile, password, checkCode);
+        biz.findPassword(mobile, checkCode, password);
     }
 
 }

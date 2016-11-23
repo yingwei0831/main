@@ -241,6 +241,8 @@ public class OrdersAllBiz {
                         order.setProductautoid(orderObj.getString("productautoid"));
                         order.setOrderSN(orderObj.getString("ordersn"));
                         order.setPicPath(orderObj.getString(Consts.PIC_PATH_LITPIC));
+                        order.setStartaddress(orderObj.getString("startaddress"));
+                        order.setEndaddress(orderObj.getString("endaddress"));
                         lists.add(order);
                     }
                     msg.obj = lists;

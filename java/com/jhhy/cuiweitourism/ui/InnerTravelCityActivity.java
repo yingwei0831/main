@@ -46,14 +46,14 @@ public class InnerTravelCityActivity extends BaseActivity implements View.OnClic
     private TextView tvTitleTop;
     private ImageView ivTitleLeft;
 
-    private final List<String> titles = Arrays.asList("跟团游", "自由游");
+    private List<String> titles = new ArrayList(Arrays.asList("跟团游", "自由游"));
     private TabLayout indicatorInnerTravel;
     private ViewPager viewPager;
     private InnerTravelPagerAdapter mAdapter;
 
     private List<Fragment> mContent = new ArrayList<>();
-    private InnerTravelCityFollowFragment   followFragment;
-    private InnerTravelCityFreedomFragment  freedomFragment;
+    private InnerTravelCityFollowFragment followFragment;
+    private InnerTravelCityFreedomFragment freedomFragment;
 
     private View layout;
     private TextView tvSortDefault;
@@ -75,29 +75,29 @@ public class InnerTravelCityActivity extends BaseActivity implements View.OnClic
     private List<String> listDays = new ArrayList<>();
     private List<PriceArea> listPrices = new ArrayList<>();
 
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
 
-            switch (msg.what){
+            switch (msg.what) {
                 case Consts.MESSAGE_TRIP_DAYS:
-                    if (msg.arg1 == 0){
+                    if (msg.arg1 == 0) {
                         ToastUtil.show(getApplicationContext(), (String) msg.obj);
                         return;
                     }
                     listDays = (List<String>) msg.obj;
-                    if (listDays == null || listDays.size() == 0){
+                    if (listDays == null || listDays.size() == 0) {
                         ToastUtil.show(getApplicationContext(), "未获取到筛选天数");
                     }
                     break;
                 case Consts.MESSAGE_TRIP_PRICE:
-                    if (msg.arg1 == 0){
+                    if (msg.arg1 == 0) {
                         ToastUtil.show(getApplicationContext(), (String) msg.obj);
                         return;
                     }
                     listPrices = (List<PriceArea>) msg.obj;
-                    if (listPrices == null || listPrices.size() == 0){
+                    if (listPrices == null || listPrices.size() == 0) {
                         ToastUtil.show(getApplicationContext(), "未获取到筛选价格区间");
                     }
                     break;
@@ -162,7 +162,7 @@ public class InnerTravelCityActivity extends BaseActivity implements View.OnClic
         followFragment = InnerTravelCityFollowFragment.newInstance(titles.get(0), cityId);
         freedomFragment = InnerTravelCityFreedomFragment.newInstance(titles.get(1), cityId);
 
-        mContent.add(followFragment );
+        mContent.add(followFragment);
         mContent.add(freedomFragment);
 
         viewPager.setAdapter(mAdapter);
@@ -224,7 +224,7 @@ public class InnerTravelCityActivity extends BaseActivity implements View.OnClic
 //            }
 //        }
 
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.title_main_tv_left_location:
                 finish();
                 break;
@@ -247,11 +247,12 @@ public class InnerTravelCityActivity extends BaseActivity implements View.OnClic
         }
 //        initFirstListView();
     }
+
     private void showPopupWindow() {
         if (popupWindow == null) {
             popupWindow = new PopupWindowSearchLine(InnerTravelCityActivity.this, layout, tag, listDays, listPrices);
             addPopListener();
-        } else{
+        } else {
             popupWindow.showAtLocation(layout, Gravity.BOTTOM, 0, 0);
             LogUtil.e(TAG, tag + ", " + sort + ", " + String.valueOf(dayPosition) + ", " + earlyTime + ", " + laterTime + ", " + pricePosition); //2, , -1, , , -1
             popupWindow.refreshView(tag, sort, String.valueOf(dayPosition), earlyTime, laterTime, pricePosition);
@@ -266,16 +267,16 @@ public class InnerTravelCityActivity extends BaseActivity implements View.OnClic
                 boolean commit = popupWindow.getCommit();
                 if (commit) {
                     String newSort = popupWindow.getSort();
-                    if ("0".equals(newSort)){
+                    if ("0".equals(newSort)) {
                         sort = "";
-                    }else{
+                    } else {
                         sort = String.valueOf(newSort);
                     }
                     String newDay = popupWindow.getDay();
                     if (newDay != null && newDay.length() != 0) {
                         day = newDay;
                         dayPosition = Integer.parseInt(newDay) - 1;
-                    }else{
+                    } else {
                         day = "";
                         dayPosition = -1;
                     }
@@ -284,7 +285,7 @@ public class InnerTravelCityActivity extends BaseActivity implements View.OnClic
                     if (newPricePosition != -1) {
                         price = popupWindow.getPrice();
 //                        price = listPrices.get(newPricePosition).getPriceLower() +"," + listPrices.get(newPricePosition).getPriceHigh();
-                    }else{
+                    } else {
                         price = "";
                     }
                     String newEarylTime = popupWindow.getEarlyTime();
@@ -295,13 +296,13 @@ public class InnerTravelCityActivity extends BaseActivity implements View.OnClic
                     if (newLaterTime != null) {
                         laterTime = newLaterTime;
                     }
-                    LogUtil.e(TAG, "dayPosition = " + dayPosition +", pricePosition = " + pricePosition);
-                    LogUtil.e(TAG, "sort = " + sort + ", day = " + day+", price = "+ price+", earlyTime = " + earlyTime + ", laterTime = " + laterTime);
+                    LogUtil.e(TAG, "dayPosition = " + dayPosition + ", pricePosition = " + pricePosition);
+                    LogUtil.e(TAG, "sort = " + sort + ", day = " + day + ", price = " + price + ", earlyTime = " + earlyTime + ", laterTime = " + laterTime);
 //                    {"head":{"code":"Publics_lines"},"field":{"type":"1","attr":"1","page":"1","offset":"10"}}
                     int currentItem = viewPager.getCurrentItem();
-                    if (currentItem == 0){
+                    if (currentItem == 0) {
                         followFragment.getData(true);
-                    }else if (currentItem == 1){
+                    } else if (currentItem == 1) {
                         freedomFragment.getData(true);
                     }
                 }
@@ -312,8 +313,8 @@ public class InnerTravelCityActivity extends BaseActivity implements View.OnClic
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        LogUtil.e(TAG, "requestCode = " + requestCode +", resultCode = " + resultCode);
-        if (resultCode == RESULT_CANCELED){
+        LogUtil.e(TAG, "requestCode = " + requestCode + ", resultCode = " + resultCode);
+        if (resultCode == RESULT_CANCELED) {
 
         } else {
             if (data != null) {
@@ -562,15 +563,49 @@ public class InnerTravelCityActivity extends BaseActivity implements View.OnClic
 //        layoutStartTime1 = (RelativeLayout) view.findViewById(R.id.layout_start_time_1);
 //        layoutStartTime2 = (RelativeLayout) view.findViewById(R.id.layout_start_time_2);
 //    }
-
-
-    public static void actionStart(Context context, Bundle data){
+    public static void actionStart(Context context, Bundle data) {
         Intent intent = new Intent(context, InnerTravelCityActivity.class);
-        if(data != null){
+        if (data != null) {
             intent.putExtras(data);
         }
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        TAG = null;
+        tvTitleTop = null;
+        ivTitleLeft = null;
+        titles.clear();
+        titles = null;
+        indicatorInnerTravel = null;
+        viewPager = null;
+        mAdapter = null;
+        mContent.clear();
+        mContent = null;
+        followFragment = null;
+        freedomFragment = null;
+        layout = null;
+        tvSortDefault = null;
+        tvSortDays = null;
+        tvStartTime = null;
+        tvScreenPrice = null;
+        tag = 0;
+        cityId = null;
+        cityName = null;
+        sort = null;
+        day = null;
+        price = null;
+        earlyTime = null;
+        laterTime = null;
+        listDays.clear();
+        listDays= null;
+        listPrices.clear();
+        listPrices= null;
+        popupWindow = null;
+        pricePosition = 0;
+        dayPosition = 0;
+    }
 }

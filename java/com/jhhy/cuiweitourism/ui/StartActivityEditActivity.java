@@ -35,6 +35,7 @@ import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.biz.StartActivityBiz;
 import com.jhhy.cuiweitourism.dialog.DatePickerActivity;
 import com.jhhy.cuiweitourism.moudle.CustomActivity;
+import com.jhhy.cuiweitourism.moudle.PhoneBean;
 import com.jhhy.cuiweitourism.picture.Bimp;
 import com.jhhy.cuiweitourism.picture.PhotoActivity;
 import com.jhhy.cuiweitourism.picture.TestPicActivity;
@@ -55,10 +56,9 @@ import java.util.List;
 
 public class StartActivityEditActivity extends BaseActivity implements AdapterView.OnItemClickListener, View.OnClickListener {
 
-
-    private MyGridView  gvImages;
+    private MyGridView gvImages;
     private GridAdapter adapter;
-    private ImageView   ivAddImage;
+    private ImageView ivAddImage;
     private ArrayList<String> listImagePath = new ArrayList<>(); //存放图片列表中 图片的地址
 
     private ImageView ivLeft;
@@ -77,16 +77,17 @@ public class StartActivityEditActivity extends BaseActivity implements AdapterVi
     private EditText etReserveNotice; //预订须知
 
     private Button btnCommit;
+    private boolean iscommitting;
 
-    private Handler handlerResult = new Handler(){
+    private Handler handlerResult = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             LoadingIndicator.cancel();
 
-            switch (msg.what){
+            switch (msg.what) {
                 case Consts.MESSAGE_START_ACTIVITY:
-                    if (msg.arg1 == 0){
+                    if (msg.arg1 == 0) {
                         ToastUtil.show(getApplicationContext(), (String) msg.obj);
                     } else {
                         ToastUtil.show(getApplicationContext(), (String) msg.obj);
@@ -111,8 +112,8 @@ public class StartActivityEditActivity extends BaseActivity implements AdapterVi
         tvTitle = (TextView) findViewById(R.id.tv_title_inner_travel);
         tvTitle.setText(getString(R.string.tab1_tablelayout_item4));
 
-        gvImages    = (MyGridView) findViewById(R.id.gv_start_activity_edit_imgs);
-        ivAddImage  = (ImageView) findViewById(R.id.iv_start_activity_edit_add_images);
+        gvImages = (MyGridView) findViewById(R.id.gv_start_activity_edit_imgs);
+        ivAddImage = (ImageView) findViewById(R.id.iv_start_activity_edit_add_images);
 
         etTitle = (EditText) findViewById(R.id.et_start_activity_title);
         etPrice = (EditText) findViewById(R.id.et_start_activity_price);
@@ -154,19 +155,14 @@ public class StartActivityEditActivity extends BaseActivity implements AdapterVi
         startActivityForResult(intent, VIEW_IMAGE_LARGE);
     }
 
-//    protected void onRestart() {
-//        super.onRestart();
-//        adapter.update();
-//    }
-
-private String TAG = getClass().getSimpleName();
-private int SELECT_CITY = 111;
-private int SELECT_TIME = 112;
-private int VIEW_IMAGE_LARGE = 113; //查看大图
+    private String TAG = getClass().getSimpleName();
+    private int SELECT_CITY = 111;
+    private int SELECT_TIME = 112;
+    private int VIEW_IMAGE_LARGE = 113; //查看大图
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.iv_start_activity_edit_add_images:
                 Utils.setKeyboardInvisible(StartActivityEditActivity.this);
                 selectPicture();
@@ -202,18 +198,18 @@ private int VIEW_IMAGE_LARGE = 113; //查看大图
                 }
                 LogUtil.e(TAG, "path = " + path);
                 // 设置文件保存路径
-                File picture = new File(Consts.IMG_TEMP_PATH + mPicName); LogUtil.e(TAG, picture.getPath());
+                File picture = new File(Consts.IMG_TEMP_PATH + mPicName);
+                LogUtil.e(TAG, picture.getPath());
                 startPhotoZoom(Uri.fromFile(picture), Consts.IMG_TEMP_PATH + mPicName, Utils.getScreenWidth(getApplicationContext()), Utils.getScreenHeight(getApplicationContext()));//没保存么？
-            }
-            else if (OTHER_PICTURE == requestCode) { //图库：上传头像
+            } else if (OTHER_PICTURE == requestCode) { //图库：上传头像
 //                String imagePath = data.getStringExtra("imagePath"); // /storage/emulated/0/MIUI/wallpaper/宝马_&_457f9e19-e66c-4ec7-9c64-a26fc3f03612.jpg
 //            if (imagePath == null) {
 //               ToastUtil.show(getApplicationContext(), "加载图片失败");
 //                return;
 //            }
                 LogUtil.e(TAG, "bimp.size = " + Bimp.drr.size());
-                LogUtil.e(TAG, "imagePath = "+ Bimp.drr.get(Bimp.drr.size()-1) );
-                upLoadBitmap.add(BitmapUtil.loadBitmap(Bimp.drr.get(Bimp.drr.size()-1), Utils.getScreenWidth(getApplicationContext()), Utils.getScreenHeight(getApplicationContext())));
+                LogUtil.e(TAG, "imagePath = " + Bimp.drr.get(Bimp.drr.size() - 1));
+                upLoadBitmap.add(BitmapUtil.loadBitmap(Bimp.drr.get(Bimp.drr.size() - 1), Utils.getScreenWidth(getApplicationContext()), Utils.getScreenHeight(getApplicationContext())));
                 adapter.update();
 //            if (userIcon != null) {
 //                BitmapUtils.photo2Sd(userIcon, mResultPicPath, mPicName);
@@ -226,7 +222,7 @@ private int VIEW_IMAGE_LARGE = 113; //查看大图
 //            ivIconRelease.setImageBitmap(userIcon); //把图片显示在ImageView控件上
             } else if (PHOTO_RESOULT == requestCode) { //保存拍照的图片
                 try {
-                upLoadBitmap.add(BitmapFactory.decodeStream(getContentResolver().openInputStream(uritempFile)));
+                    upLoadBitmap.add(BitmapFactory.decodeStream(getContentResolver().openInputStream(uritempFile)));
                     adapter.update();
 //                if (userIcon != null) {
 //                    userInfo.setUserIconPath(mPicName);
@@ -238,23 +234,23 @@ private int VIEW_IMAGE_LARGE = 113; //查看大图
                 }
             } else if (SELECT_CITY == requestCode) { //选择出发城市
                 Bundle bundle = data.getExtras();
-                String selectCity = bundle.getString("selectCity");
-                tvSelectFromCity.setText(selectCity);
-            } else if (SELECT_TIME == requestCode){ //选择出发时间
+                PhoneBean selectCity = (PhoneBean) bundle.getSerializable("selectCity");
+                tvSelectFromCity.setText(selectCity.getName());
+            } else if (SELECT_TIME == requestCode) { //选择出发时间
                 Bundle bundle = data.getExtras();
                 String selectDate = bundle.getString("selectDate");
                 tvSelectFromTime.setText(selectDate);
             }
-        }else{
+        } else {
 
         }
-        if (requestCode == VIEW_IMAGE_LARGE){ //有可能删除图片
+        if (requestCode == VIEW_IMAGE_LARGE) { //有可能删除图片
             adapter.update();
-            LogUtil.e(TAG, "Bimp.drr.size = " + Bimp.drr.size() +", —> "+Bimp.drr);
-            LogUtil.e(TAG, "Bimp.bmp.size = " + Bimp.bmp.size() +", —> "+Bimp.bmp);
+            LogUtil.e(TAG, "Bimp.drr.size = " + Bimp.drr.size() + ", —> " + Bimp.drr);
+            LogUtil.e(TAG, "Bimp.bmp.size = " + Bimp.bmp.size() + ", —> " + Bimp.bmp);
             upLoadBitmap = Bimp.bmp;
-            LogUtil.e(TAG, "Bimp.bmp.size = " + upLoadBitmap.size() +", —> "+upLoadBitmap);
-            if (Bimp.drr.size() < 4){
+            LogUtil.e(TAG, "Bimp.bmp.size = " + upLoadBitmap.size() + ", —> " + upLoadBitmap);
+            if (Bimp.drr.size() < 4) {
                 ivAddImage.setVisibility(View.VISIBLE);
             }
         }
@@ -277,6 +273,7 @@ private int VIEW_IMAGE_LARGE = 113; //查看大图
 
     /**
      * 收缩图片
+     *
      * @param uri
      * @param path
      * @param width
@@ -300,10 +297,13 @@ private int VIEW_IMAGE_LARGE = 113; //查看大图
      * 发布活动
      */
     private void commitActivity() {
+        if(iscommitting)    return;
+        iscommitting = true;
         CustomActivity activity = new CustomActivity();
         //图片
-        if (Bimp.drr.size() < 0){
+        if (Bimp.drr.size() < 0) {
             ToastUtil.show(getApplicationContext(), "请至少上传一张活动封面图片");
+            iscommitting = false;
             return;
         }
         String[] array = new String[upLoadBitmap.size()];
@@ -320,78 +320,89 @@ private int VIEW_IMAGE_LARGE = 113; //查看大图
         activity.setLipPicAry(array);
 
         String title = etTitle.getText().toString().trim();
-        if (TextUtils.isEmpty(title)){
+        if (TextUtils.isEmpty(title)) {
             ToastUtil.show(getApplicationContext(), "标题不能为空");
+            iscommitting = false;
             return;
         }
         activity.setActivityTitle(title);
 
         String price = etPrice.getText().toString().trim();
-        if (TextUtils.isEmpty(price)){
+        if (TextUtils.isEmpty(price)) {
             ToastUtil.show(getApplicationContext(), "价格不能为空");
+            iscommitting = false;
             return;
         }
         activity.setActivityPrice(price);
 
         String fromCity = tvSelectFromCity.getText().toString().trim();
-        if (TextUtils.isEmpty(fromCity)){
+        if (TextUtils.isEmpty(fromCity)) {
             ToastUtil.show(getApplicationContext(), "请选择出发城市");
+            iscommitting = false;
             return;
         }
         activity.setActivityFromCity(fromCity);
 
         String fromTime = tvSelectFromTime.getText().toString().trim();
-        if (TextUtils.isEmpty(fromTime)){
+        if (TextUtils.isEmpty(fromTime)) {
             ToastUtil.show(getApplicationContext(), "请选择出发时间");
+            iscommitting = false;
             return;
         }
         activity.setActivityFromTime(fromTime);
 
         String tripDays = etInputDays.getText().toString().trim();
-        if (TextUtils.isEmpty(tripDays)){
+        if (TextUtils.isEmpty(tripDays)) {
             ToastUtil.show(getApplicationContext(), "行程天数不能为空");
+            iscommitting = false;
             return;
         }
         activity.setActivityTripDays(tripDays);
 
         String groupCount = etInputCount.getText().toString().trim();
-        if (TextUtils.isEmpty(groupCount)){
+        if (TextUtils.isEmpty(groupCount)) {
             ToastUtil.show(getApplicationContext(), "活动最多人数不能为空");
+            iscommitting = false;
             return;
         }
         activity.setActivityGroupAccount(groupCount);
 
         String lineDetails = etLineDetails.getText().toString().trim();
-        if (TextUtils.isEmpty(lineDetails)){
+        if (TextUtils.isEmpty(lineDetails)) {
             ToastUtil.show(getApplicationContext(), "线路概况不能为空");
+            iscommitting = false;
             return;
         }
         activity.setActivityLineDetails(lineDetails);
 
         String detailDescribe = etDetailDescribe.getText().toString().trim();
-        if (TextUtils.isEmpty(detailDescribe)){
+        if (TextUtils.isEmpty(detailDescribe)) {
             ToastUtil.show(getApplicationContext(), "详情描述不能为空");
+            iscommitting = false;
             return;
         }
         activity.setActivityDetailDescribe(detailDescribe);
 
         String priceDescribe = etPriceDescribe.getText().toString().trim();
-        if (TextUtils.isEmpty(priceDescribe)){
+        if (TextUtils.isEmpty(priceDescribe)) {
             ToastUtil.show(getApplicationContext(), "费用描述不能为空");
+            iscommitting = false;
             return;
         }
         activity.setActivityPriceDescribe(priceDescribe);
 
         String tripDescribe = etTripDescribe.getText().toString().trim();
-        if (TextUtils.isEmpty(tripDescribe)){
+        if (TextUtils.isEmpty(tripDescribe)) {
             ToastUtil.show(getApplicationContext(), "行程描述不能为空");
+            iscommitting = false;
             return;
         }
         activity.setActivityTripDescribe(tripDescribe);
 
         String reserveNotice = etReserveNotice.getText().toString().trim();
-        if (TextUtils.isEmpty(reserveNotice)){
+        if (TextUtils.isEmpty(reserveNotice)) {
             ToastUtil.show(getApplicationContext(), "预订须知不能为空");
+            iscommitting = false;
             return;
         }
         activity.setActivityReserveNotice(reserveNotice);
@@ -402,7 +413,7 @@ private int VIEW_IMAGE_LARGE = 113; //查看大图
 
     public static void actionStart(Context context, Bundle data) {
         Intent intent = new Intent(context, StartActivityEditActivity.class);
-        if(data != null){
+        if (data != null) {
             intent.putExtra("data", data);
         }
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -453,9 +464,9 @@ private int VIEW_IMAGE_LARGE = 113; //查看大图
 
     public void photo() {
         String status = Environment.getExternalStorageState();
-        if(status.equals(Environment.MEDIA_MOUNTED)) {
+        if (status.equals(Environment.MEDIA_MOUNTED)) {
             File dir = new File(Consts.IMG_TEMP_PATH);
-            if(!dir.exists()) {
+            if (!dir.exists()) {
                 dir.mkdirs();
             }
 
@@ -473,7 +484,7 @@ private int VIEW_IMAGE_LARGE = 113; //查看大图
 
     private class GridAdapter extends BaseAdapter {
         private LayoutInflater inflater; // 视图容器
-//        private int selectedPosition = -1;// 选中的位置
+        //        private int selectedPosition = -1;// 选中的位置
         private boolean shape;
 
         public boolean isShape() {
@@ -537,45 +548,46 @@ private int VIEW_IMAGE_LARGE = 113; //查看大图
 //                    holder.image.setVisibility(View.GONE);
 //                }
 //            } else {
-                holder.image.setImageBitmap(Bimp.bmp.get(position));
+            holder.image.setImageBitmap(Bimp.bmp.get(position));
 //            }
 
             return convertView;
         }
 
-        public void update1() {
-            loading1();
-        }
-        public void loading1() {
-            new Thread(new Runnable() {
-                public void run() {
-                    while (true) {
-                        if (Bimp.max == Bimp.drr.size()) {
-                            Message message = new Message();
-                            message.what = 1;
-                            handler.sendMessage(message);
-                            break;
-                        } else {
-                            try {
-                                String path = Bimp.drr.get(Bimp.max);
-                                Bitmap bm = Bimp.revisionImageSize(path);
-                                Bimp.bmp.add(bm);
-                                String newStr = path.substring(
-                                        path.lastIndexOf("/") + 1,
-                                        path.lastIndexOf("."));
-                                MyFileUtils.saveBitmap(bm, "" + newStr);
-                                Bimp.max += 1;
-                                Message message = new Message();
-                                message.what = 1;
-                                handler.sendMessage(message);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                }
-            }).start();
-        }
+//        public void update1() {
+//            loading1();
+//        }
+
+//        public void loading1() {
+//            new Thread(new Runnable() {
+//                public void run() {
+//                    while (true) {
+//                        if (Bimp.max == Bimp.drr.size()) {
+//                            Message message = new Message();
+//                            message.what = 1;
+//                            handler.sendMessage(message);
+//                            break;
+//                        } else {
+//                            try {
+//                                String path = Bimp.drr.get(Bimp.max);
+//                                Bitmap bm = Bimp.revisionImageSize(path);
+//                                Bimp.bmp.add(bm);
+//                                String newStr = path.substring(
+//                                        path.lastIndexOf("/") + 1,
+//                                        path.lastIndexOf("."));
+//                                MyFileUtils.saveBitmap(bm, "" + newStr);
+//                                Bimp.max += 1;
+//                                Message message = new Message();
+//                                message.what = 1;
+//                                handler.sendMessage(message);
+//                            } catch (IOException e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//                    }
+//                }
+//            }).start();
+//        }
 
         public class ViewHolder {
             public ImageView image;
@@ -586,7 +598,7 @@ private int VIEW_IMAGE_LARGE = 113; //查看大图
                 switch (msg.what) {
                     case 1:
                         adapter.notifyDataSetChanged();
-                        if (adapter.getCount() == Consts.IMAGE_COUNT){
+                        if (adapter.getCount() == Consts.IMAGE_COUNT) {
                             ivAddImage.setVisibility(View.INVISIBLE);
                         }
                         break;
@@ -626,5 +638,41 @@ private int VIEW_IMAGE_LARGE = 113; //查看大图
                 }
             }).start();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        btnCommit = null;
+        gvImages = null;
+        adapter = null;
+        ivAddImage = null;
+        listImagePath.clear();
+        listImagePath = null;
+        ivLeft = null;
+        tvTitle = null;
+        etTitle = null;
+        etPrice = null;
+        tvSelectFromCity = null;
+        tvSelectFromTime = null;
+        etInputDays = null;
+        etInputCount = null;
+        etLineDetails = null;
+        etDetailDescribe = null;
+        etPriceDescribe = null;
+        etTripDescribe = null;
+        etReserveNotice = null;
+        handlerResult = null;
+
+        TAG = null;
+        SELECT_CITY = 0;
+        SELECT_TIME = 0;
+        VIEW_IMAGE_LARGE = 0;
+
+        path = null;
+        mPicName = null;
+        upLoadBitmap.clear();
+        upLoadBitmap = null;
+        uritempFile = null;
     }
 }

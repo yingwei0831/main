@@ -158,7 +158,7 @@ public class VisaListActivity extends BaseActivity implements AdapterView.OnItem
         visaOrderList.add("价格从低到高");
         visaOrderList.add("价格从高到低");
 
-        biz = new VisaActionBiz(getApplicationContext(), handler);
+        biz = new VisaActionBiz();
     }
 
     private void getData() {

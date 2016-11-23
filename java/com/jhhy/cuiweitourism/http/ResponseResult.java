@@ -8,6 +8,7 @@ import com.jhhy.cuiweitourism.net.utils.LogUtil;
 
 import org.xutils.common.Callback;
 
+import java.io.EOFException;
 import java.net.SocketTimeoutException;
 
 /**
@@ -36,6 +37,8 @@ public abstract class ResponseResult implements Callback.CommonCallback<String>,
         LogUtil.e(TAG, "onError: " + ex + ", " + isOnCallback);
         if (ex instanceof SocketTimeoutException){
             handler.sendEmptyMessage(Consts.NET_ERROR_SOCKET_TIMEOUT);
+        }else if (ex instanceof EOFException){
+
         }
         LoadingIndicator.cancel();
     }

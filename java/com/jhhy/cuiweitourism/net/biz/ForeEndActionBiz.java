@@ -24,9 +24,9 @@ import java.util.ArrayList;
  */
 public class ForeEndActionBiz extends  BasicActionBiz {
 
-    public ForeEndActionBiz(Context context, Handler handler) {
-        super(context, handler);
-    }
+//    public ForeEndActionBiz(Context context, Handler handler) {
+//        super(context, handler);
+//    }
 
     public ForeEndActionBiz() {
     }

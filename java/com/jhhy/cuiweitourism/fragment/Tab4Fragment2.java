@@ -6,9 +6,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +48,8 @@ public class Tab4Fragment2 extends Fragment implements View.OnClickListener {
     private TextView tvUserName;
     private TextView tvCertificated;
     private CircleImageView civUserIcon;
+
+    private Drawable certificted, unCertificted;
 
     public Tab4Fragment2() {
         // Required empty public constructor
@@ -99,6 +103,7 @@ public class Tab4Fragment2 extends Fragment implements View.OnClickListener {
         TextView tvSecurity = (TextView) view.findViewById(R.id.tv_user_security);
         TextView tvAuthentication = (TextView) view.findViewById(R.id.tv_user_authentication);
         TextView tvContacts = (TextView) view.findViewById(R.id.tv_user_contacts);
+        TextView tvAboutCuiwei = (TextView) view.findViewById(R.id.tv_about_cuiwei);
 
         tvLoginOrRegister = (TextView) view.findViewById(R.id.tv_go_register_login); //去登录/注册
         viewLoggedIn = view.findViewById(R.id.layout_user_logged_in);
@@ -106,7 +111,13 @@ public class Tab4Fragment2 extends Fragment implements View.OnClickListener {
         tvCertificated = (TextView) view.findViewById(R.id.tv_user_certificated);
 
         civUserIcon = (CircleImageView) view.findViewById(R.id.tab4_user_icon);
+        certificted = ContextCompat.getDrawable(getContext(), R.mipmap.tab4_certified);
+        certificted.setBounds(0, 0, certificted.getMinimumWidth(), certificted.getMinimumHeight());
+        unCertificted = ContextCompat.getDrawable(getContext(), R.mipmap.tab4_uncertified);
+        unCertificted.setBounds(0, 0, unCertificted.getMinimumWidth(), unCertificted.getMinimumHeight());
+
         refreshView();
+
         ivEditInfo.setOnClickListener(this);
 
         tvMyTourismCoin.setOnClickListener(this);
@@ -123,6 +134,7 @@ public class Tab4Fragment2 extends Fragment implements View.OnClickListener {
         tvSecurity.setOnClickListener(this);
         tvAuthentication.setOnClickListener(this);
         tvContacts.setOnClickListener(this);
+        tvAboutCuiwei.setOnClickListener(this);
 
         tvLoginOrRegister.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,6 +143,7 @@ public class Tab4Fragment2 extends Fragment implements View.OnClickListener {
                 ((MainActivity)getActivity()).gotoLogin();
             }
         });
+
     }
 
     public void refreshView() {
@@ -139,7 +152,11 @@ public class Tab4Fragment2 extends Fragment implements View.OnClickListener {
             viewLoggedIn.setVisibility(View.VISIBLE);
             tvUserName.setText(MainActivity.user.getUserNickName());
             tvCertificated.setText(MainActivity.user.getStatus());
-
+            if ("已认证".equals(MainActivity.user.getStatus())){
+                tvCertificated.setCompoundDrawables(certificted, null, null, null);
+            }else {
+                tvCertificated.setCompoundDrawables(unCertificted, null, null, null);
+            }
             ImageLoaderUtil.getInstance(getContext()).getImage(civUserIcon, MainActivity.user.getUserIconPath());
             ImageLoaderUtil.getInstance(getContext()).setCallBack(new ImageLoaderUtil.ImageLoaderCallBack() {
                 @Override
@@ -213,6 +230,12 @@ public class Tab4Fragment2 extends Fragment implements View.OnClickListener {
             }
         }else{
             ToastCommon.toastShortShow(getContext(), null, "请登录后重试");
+            ((MainActivity)getActivity()).gotoLogin();
+        }
+        switch (view.getId()){
+            case R.id.tv_about_cuiwei: //关于翠微
+
+                break;
         }
     }
 
@@ -250,9 +273,4 @@ public class Tab4Fragment2 extends Fragment implements View.OnClickListener {
         }
     }
 
-//    private void gotoLogin() {
-//
-//        LoginActivity.actionStart(getContext(), null);
-//        getActivity().finish();
-//    }
 }

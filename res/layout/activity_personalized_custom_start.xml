@@ -41,8 +41,8 @@
                     android:text="出发城市"
                     android:textSize="16sp" />
 
-                <TextView
-                    android:id="@+id/tv_select_from_city"
+                <EditText
+                    android:id="@+id/et_select_from_city"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -51,7 +51,9 @@
                     android:gravity="right"
                     android:paddingBottom="16dp"
                     android:paddingTop="16dp"
-                    android:text="北京" />
+                    android:hint="请输入出发城市"
+                    android:textSize="14sp"
+                    android:background="@android:color/transparent"/>
             </LinearLayout>
 
             <View
@@ -76,8 +78,8 @@
                     android:text="旅游目的地"
                     android:textSize="16sp" />
 
-                <TextView
-                    android:id="@+id/tv_select_to_city"
+                <EditText
+                    android:id="@+id/et_select_to_city"
                     android:paddingBottom="16dp"
                     android:paddingTop="16dp"
                     android:layout_width="0dp"
@@ -86,7 +88,9 @@
                     android:drawablePadding="16dp"
                     android:drawableRight="@mipmap/arrow_right_dark"
                     android:gravity="right"
-                    android:text="请选择目的地" />
+                    android:hint="请输入目的地"
+                    android:textSize="14sp"
+                    android:background="@android:color/transparent"/>
             </LinearLayout>
 
             <View

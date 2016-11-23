@@ -22,10 +22,10 @@ public class ChatActivity extends BaseActivity {
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
         setContentView(R.layout.em_activity_chat);
-//        Bundle extra = getIntent().getExtras();
+        toChatUsername = getIntent().getStringExtra("im");
         activityInstance = this;
         // 聊天人或群id
-        toChatUsername = MainActivity.user.getUserPhoneNumber();//15210656919/MainActivity.user.getUserPhoneNumber(); //HelpDeskPreferenceUtils.getInstance(this).getSettingCustomerAccount();
+//        toChatUsername = MainActivity.user.getHxname();//15210656919/MainActivity.user.getUserPhoneNumber(); //HelpDeskPreferenceUtils.getInstance(this).getSettingCustomerAccount();
         // 可以直接new EaseChatFratFragment使用
         chatFragment = new ChatFragment();
         Intent intent = getIntent();

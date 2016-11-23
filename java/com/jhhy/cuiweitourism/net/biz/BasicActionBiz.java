@@ -18,13 +18,13 @@ import java.util.Iterator;
  */
 public class BasicActionBiz {
 
-    protected Context context;
-    protected Handler handler;
+//    protected Context context;
+//    protected Handler handler;
 
-    public BasicActionBiz(Context context, Handler handler) {
-        this.context = context;
-        this.handler = handler;
-    }
+//    public BasicActionBiz(Context context, Handler handler) {
+//        this.context = context;
+//        this.handler = handler;
+//    }
 
     public BasicActionBiz() {
     }

@@ -42,9 +42,9 @@ import java.util.Set;
  */
 public class VisaActionBiz extends BasicActionBiz {
 
-    public VisaActionBiz(Context context, Handler handler) {
-        super(context, handler);
-    }
+//    public VisaActionBiz(Context context, Handler handler) {
+//        super(context, handler);
+//    }
 
     public VisaActionBiz() {
         super();

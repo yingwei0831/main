@@ -24,6 +24,7 @@ import com.jhhy.cuiweitourism.adapter.OrderXListViewAdapter;
 import com.jhhy.cuiweitourism.biz.OrderActionBiz;
 import com.jhhy.cuiweitourism.biz.OrdersAllBiz;
 import com.jhhy.cuiweitourism.moudle.Order;
+import com.jhhy.cuiweitourism.ui.LoginActivity;
 import com.jhhy.cuiweitourism.ui.MainActivity;
 import com.jhhy.cuiweitourism.ui.RequestRefundActivity;
 import com.jhhy.cuiweitourism.ui.SelectPaymentActivity;
@@ -135,6 +136,11 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
             OrdersAllBiz biz = new OrdersAllBiz(getContext(), handler);
             biz.getAllOrders(MainActivity.user.getUserId(), type); //MainActivity.user.getUserId() "1"
         }else{
+//            Intent intent = new Intent(getContext(), LoginActivity.class);
+//            Bundle bundle = new Bundle();
+//            bundle.putInt("type", 2);
+//            intent.putExtras(bundle);
+//            getActivity().startActivityForResult(intent, REQUEST_LOGIN);
             ToastUtil.show(getContext(), "请回到个人中心页登录后重试");
         }
     }
@@ -194,13 +200,15 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
         adapter = new OrderXListViewAdapter(getContext(), lists, this) {
             @Override
             public void onOrderItemClick(int position) {
-                Order order = lists.get(position);
-                Intent intent = new Intent(getContext(), Tab4OrderDetailsActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("orderSN", order.getOrderSN());
-                bundle.putInt("type", Integer.parseInt(order.getStatus()));
-                intent.putExtras(bundle);
-                startActivityForResult(intent, REQUEST_CODE_DETAIL);
+//                if ("1".equals(type)) {
+                    Order order = lists.get(position);
+                    Intent intent = new Intent(getContext(), Tab4OrderDetailsActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("orderSN", order.getOrderSN());
+                    bundle.putInt("type", Integer.parseInt(order.getStatus()));
+                    intent.putExtras(bundle);
+                    startActivityForResult(intent, REQUEST_CODE_DETAIL);
+//                }
             }
         };
         pullListView.setAdapter(adapter);

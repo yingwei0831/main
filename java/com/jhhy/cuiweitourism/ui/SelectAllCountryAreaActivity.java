@@ -151,7 +151,7 @@ public class SelectAllCountryAreaActivity extends BaseActivity implements View.O
         listViewSecond = (ListView) findViewById(R.id.list_son);
         adapterSecond = new VisaConnection2ListAdapter(getApplicationContext(), listSecond);
         listViewSecond.setAdapter(adapterSecond);
-        biz = new VisaActionBiz(getApplicationContext(), handler);
+        biz = new VisaActionBiz();
     }
 
 

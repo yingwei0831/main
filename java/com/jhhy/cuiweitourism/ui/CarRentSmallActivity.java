@@ -147,7 +147,7 @@ public class CarRentSmallActivity extends BaseActivity implements View.OnClickLi
             rbLuxury.setChecked(true);
         }
 
-        carBiz = new CarRentActionBiz(getApplicationContext(), handler);
+        carBiz = new CarRentActionBiz();
     }
 
     private void addListener() {

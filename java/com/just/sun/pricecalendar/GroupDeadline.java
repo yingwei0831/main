@@ -23,26 +23,36 @@ public class GroupDeadline implements Serializable {
     @Override
     public String toString() {
         return "GroupDeadline{" +
-                "id='" + id + '\'' +
-                ", tour_id='" + tour_id + '\'' +
-                ", date='" + date + '\'' +
-//                ", stock='" + stock + '\'' +
+                "date='" + date + '\'' +
                 ", sell_price_adult='" + sell_price_adult + '\'' +
-                ", trade_price_adult='" + trade_price_adult + '\'' +
-                ", sell_price_elder='" + sell_price_elder + '\'' +
-                ", trade_price_elder='" + trade_price_elder + '\'' +
                 ", sell_price_children='" + sell_price_children + '\'' +
-                ", trade_price_children='" + trade_price_children + '\'' +
-                ", sell_price_children_bed='" + sell_price_children_bed + '\'' +
-                ", trade_price_children_bed='" + trade_price_children_bed + '\'' +
-                ", room_diff='" + room_diff + '\'' +
-                ", is_discount='" + is_discount + '\'' +
-                ", adult_profit=" + adult_profit +
-                ", elder_profit=" + elder_profit +
-                ", children_profit=" + children_profit +
-                ", children_bed_profit=" + children_bed_profit +
+                ", sell_price_elder='" + sell_price_elder + '\'' +
                 '}';
     }
+
+    //    @Override
+//    public String toString() {
+//        return "GroupDeadline{" +
+//                "id='" + id + '\'' +
+//                ", tour_id='" + tour_id + '\'' +
+//                ", date='" + date + '\'' +
+////                ", stock='" + stock + '\'' +
+//                ", sell_price_adult='" + sell_price_adult + '\'' +
+//                ", trade_price_adult='" + trade_price_adult + '\'' +
+//                ", sell_price_elder='" + sell_price_elder + '\'' +
+//                ", trade_price_elder='" + trade_price_elder + '\'' +
+//                ", sell_price_children='" + sell_price_children + '\'' +
+//                ", trade_price_children='" + trade_price_children + '\'' +
+//                ", sell_price_children_bed='" + sell_price_children_bed + '\'' +
+//                ", trade_price_children_bed='" + trade_price_children_bed + '\'' +
+//                ", room_diff='" + room_diff + '\'' +
+//                ", is_discount='" + is_discount + '\'' +
+//                ", adult_profit=" + adult_profit +
+//                ", elder_profit=" + elder_profit +
+//                ", children_profit=" + children_profit +
+//                ", children_bed_profit=" + children_bed_profit +
+//                '}';
+//    }
 
     /**
      * id : 4

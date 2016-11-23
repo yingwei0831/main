@@ -12,6 +12,9 @@ public class Travel implements Serializable
     private String travelTitle; //
     private String travelPrice;
 
+    private String gysid; //供应商id
+    private String im; //环信客服号
+
     private String travelFromCity;
     private String travelFromTime;
     private String travelPeriod;
@@ -25,18 +28,38 @@ public class Travel implements Serializable
 
     public Travel(){}
 
-    public Travel(String id, String travelIconPath, String travelTitle, String travelPrice, String travelFromCity, String travelFromTime, String travelPeriod, String travelName, String type) {
+    public String getGysid() {
+        return gysid;
+    }
+
+    public void setGysid(String gysid) {
+        this.gysid = gysid;
+    }
+
+    public String getIm() {
+        return im;
+    }
+
+    public void setIm(String im) {
+        this.im = im;
+    }
+
+    public Travel(String id, String travelIconPath, String travelTitle, String travelPrice, String gysid, String im, String travelFromCity, String travelFromTime, String travelPeriod, String travelName, String type, int account, String group, String orderSN) {
         this.id = id;
         this.travelIconPath = travelIconPath;
         this.travelTitle = travelTitle;
         this.travelPrice = travelPrice;
+        this.gysid = gysid;
+        this.im = im;
         this.travelFromCity = travelFromCity;
         this.travelFromTime = travelFromTime;
         this.travelPeriod = travelPeriod;
         this.travelName = travelName;
         this.type = type;
+        this.account = account;
+        this.group = group;
+        this.orderSN = orderSN;
     }
-
 
     public String getOrderSN() {
         return orderSN;

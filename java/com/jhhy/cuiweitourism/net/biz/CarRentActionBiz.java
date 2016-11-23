@@ -41,9 +41,9 @@ import java.util.List;
  * Created by zhangguang on 16/9/29.
  */
 public class CarRentActionBiz extends BasicActionBiz {
-    public CarRentActionBiz(Context context, Handler handler) {
-        super(context, handler);
-    }
+//    public CarRentActionBiz(Context context, Handler handler) {
+//        super(context, handler);
+//    }
 
     private static final String BIZTAG = "CarRentActionBiz";
 

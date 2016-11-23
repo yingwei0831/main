@@ -135,7 +135,7 @@ public class PersonalizedCustomActivity extends BaseActivity implements XScrollV
         getInternetData();
         setupView();
         addListener();
-        handler.postDelayed(runnable, Consts.TIME_PERIOD);
+//        handler.postDelayed(runnable, Consts.TIME_PERIOD);
     }
 
     //广告位
@@ -150,6 +150,7 @@ public class PersonalizedCustomActivity extends BaseActivity implements XScrollV
                     ArrayList<ForeEndAdvertisingPositionInfo> array = model.body;
                     LogUtil.e(TAG,"foreEndGetAdvertisingPosition =" + array.toString());
                     refreshViewBanner(array);
+                    handler.postDelayed(runnable, Consts.TIME_PERIOD);
                 }else{
                     ToastCommon.toastShortShow(getApplicationContext(), null, "获取广告位数据失败");
                 }

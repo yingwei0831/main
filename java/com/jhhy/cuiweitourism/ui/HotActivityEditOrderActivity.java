@@ -148,7 +148,6 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
     private void getData() {
         Bundle bundle = getIntent().getExtras();
         type = bundle.getInt("type");
-//        if (type == 11 ) {
         hotActivityDetail = (ActivityHotDetailInfo) bundle.getSerializable("hotActivityDetail");
         priceAdult = Float.parseFloat(hotActivityDetail.getPrice());
         priceChild = priceAdult;
@@ -250,17 +249,21 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
 
     private void addContacts(int addNumber) {
         for (int i = 0; i < addNumber; i++) {
-            View viewCustom = LayoutInflater.from(getApplicationContext()).inflate(R.layout.layout_traveler, null);
-            final TextView tvName = (TextView) viewCustom.findViewById(R.id.tv_travel_edit_order_name);
-            final int j = i;
-            viewCustom.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    onItemTextViewClick(j, tvName, tvName.getId());
-                }
-            });
-            layoutTravelers.addView(viewCustom);
+            addContact(i);
         }
+    }
+
+    private void addContact(int addNumber) {
+        View viewCustom = LayoutInflater.from(getApplicationContext()).inflate(R.layout.layout_traveler, null);
+        final TextView tvName = (TextView) viewCustom.findViewById(R.id.tv_travel_edit_order_name);
+        final int j = addNumber - 1;
+        viewCustom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onItemTextViewClick(j, tvName, tvName.getId());
+            }
+        });
+        layoutTravelers.addView(viewCustom);
     }
 
     private void reduceContacts(){
@@ -360,7 +363,7 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
                 countAdult += 1;
                 tvCountAdult.setText(Integer.toString(countAdult));
                 calculateTotal();
-                addContacts(1);
+                addContact(count);
                 break;
             case R.id.tv_price_calendar_number_reduce_child:
                 if (countChild > 0) {
@@ -374,7 +377,7 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
                 countChild += 1;
                 tvCountChild.setText(Integer.toString(countChild));
                 calculateTotal();
-                addContacts(1);
+                addContact(count);
                 break;
         }
     }
@@ -413,57 +416,33 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
                 Bundle bundle = data.getExtras();
                 ArrayList<UserContacts> listSelection = bundle.getParcelableArrayList("selection");
                 if (childClick){ //如果是单个的联系人，则只能选择一个
-                    if (type == 11) {
-                        if (listHotContact.size() != 0){
-                            if (position >= listHotContact.size()){
-                                for (int i = 0; i < listSelection.size(); i++){
-                                    UserContacts cont = listSelection.get(i);
-                                    ActivityOrder.Contact contact = new ActivityOrder.Contact(cont.getContactsName(), cont.getContactsIdCard(), cont.getContactsMobile());
-                                    listHotContact.add(contact);
-                                }
-                            } else {
-                                listHotContact.remove(position);
-                            }
+                    if (listHotContact.size() != 0){
+                        if (listHotContact.size() < position){
+                            listHotContact.remove(position);
                         }
-                        for (int i = 0; i < listSelection.size(); i++){
-                            UserContacts cont = listSelection.get(i);
-                            ActivityOrder.Contact contact = new ActivityOrder.Contact(cont.getContactsName(), cont.getContactsIdCard(), cont.getContactsMobile());
-                            listHotContact.add(contact);
-                        }
-//                        listHotContact.addAll(listSelection);
-                    }else{
-                        if (listCommitCon.size() != 0) {
-                            listCommitCon.remove(position);
-                        }
-                        listCommitCon.addAll(listSelection);
+                        //添加联系人
+                        UserContacts cont = listSelection.get(0);
+                        ActivityOrder.Contact contact = new ActivityOrder.Contact(cont.getContactsName(), cont.getContactsIdCard(), cont.getContactsMobile());
+                        listHotContact.add(contact);
+                        //显示name
+                        RelativeLayout traveler = (RelativeLayout) layoutTravelers.getChildAt(position);
+                        TextView tvName = (TextView) traveler.getChildAt(traveler.getChildCount() - 1);
+                        tvName.setText(listSelection.get(0).getContactsName());
                     }
-                    RelativeLayout traveler = (RelativeLayout) layoutTravelers.getChildAt(position);
-                    TextView tvName = (TextView) traveler.getChildAt(traveler.getChildCount() - 1);
-                    tvName.setText(listSelection.get(0).getContactsName());
-
                     childClick = false;
                     position = -1;
                 }else{ //如果是选择联系人，则可以选择多个
-                    if (type == 11){
-                        listHotContact.clear();
-                        for (int i = 0; i < listSelection.size(); i++){
-                            UserContacts cont = listSelection.get(i);
-                            ActivityOrder.Contact contact = new ActivityOrder.Contact(cont.getContactsName(), cont.getContactsIdCard(), cont.getContactsMobile());
-                            listHotContact.add(contact);
-                        }
-//                        listHotContact.addAll(listSelection);
-                    }else {
-                        listCommitCon.clear();
-                        listCommitCon.addAll(listSelection);
-                    }
+                    listHotContact.clear();
                     for (int i = 0; i < listSelection.size(); i++){
                         UserContacts cont = listSelection.get(i);
+                        ActivityOrder.Contact contact = new ActivityOrder.Contact(cont.getContactsName(), cont.getContactsIdCard(), cont.getContactsMobile());
+                        listHotContact.add(contact);
+
                         RelativeLayout traveler = (RelativeLayout) layoutTravelers.getChildAt(i);
                         TextView tvName = (TextView) traveler.getChildAt(traveler.getChildCount() - 1 );
                         tvName.setText(cont.getContactsName());
                     }
                 }
-
             }
 //            else if (requestCode == Consts.REQUEST_CODE_RESERVE_SELECT_COIN){ //选择旅游币
 //                Bundle bundle = data.getExtras();
@@ -546,6 +525,11 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
                 LoadingIndicator.cancel();
                 return;
             }
+        if (listHotContact.size() != count){
+            ToastUtil.show(getApplicationContext(), "请完善联系人信息");
+            LoadingIndicator.cancel();
+            return;
+        }
             //提交活动订单
             ActivityOrder order = new ActivityOrder(MainActivity.user.getUserId(), hotActivityDetail.getId(), hotActivityDetail.getCftime(),
                     String.valueOf(priceTotal), String.valueOf(countAdult+countChild), name, mobile, hotActivityDetail.getTitle(), listHotContact);

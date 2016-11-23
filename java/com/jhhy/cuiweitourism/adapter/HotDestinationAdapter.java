@@ -31,7 +31,7 @@ public class HotDestinationAdapter extends MyBaseAdapter {
         notifyDataSetChanged();
     }
 
-    //    public void setData(List<HotDestination> newDest){
+//    public void setData(List<HotDestination> newDest){
 //        this.list = newDest;
 //        notifyDataSetChanged();
 //    }

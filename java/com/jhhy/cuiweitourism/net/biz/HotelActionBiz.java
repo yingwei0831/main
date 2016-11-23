@@ -26,9 +26,9 @@ import java.util.ArrayList;
  */
 public class HotelActionBiz extends  BasicActionBiz {
 
-    public HotelActionBiz(Context context, Handler handler) {
-        super(context, handler);
-    }
+//    public HotelActionBiz(Context context, Handler handler) {
+//        super(context, handler);
+//    }
 
     public HotelActionBiz() {
     }

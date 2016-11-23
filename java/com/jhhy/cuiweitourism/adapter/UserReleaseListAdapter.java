@@ -19,7 +19,9 @@ import java.util.List;
  * Created by birney1 on 16/9/25.
  * 我的收藏
  */
-public abstract class UserReleaseListAdapter extends MyBaseAdapter implements ArgumentOnClick{
+public abstract class UserReleaseListAdapter extends MyBaseAdapter
+        implements ArgumentOnClick
+{
 
     private String TAG = UserReleaseListAdapter.class.getSimpleName();
 

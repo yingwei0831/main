@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
+import com.jhhy.cuiweitourism.net.utils.LogUtil;
+import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.jhhy.cuiweitourism.utils.Utils;
 
 import net.simonvt.numberpicker.NumberPicker;
@@ -16,6 +18,8 @@ import net.simonvt.numberpicker.NumberPicker;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
+import java.util.TimeZone;
 
 
 public class DatePickerActivity extends Activity implements View.OnClickListener {
@@ -33,6 +37,7 @@ public class DatePickerActivity extends Activity implements View.OnClickListener
 //    private int currentYear;
 //    private int currentMonth;
 //    private int currentDate;
+    private long longdate; //日期的整数,毫秒值
 
     private int year;
     private int month;
@@ -86,15 +91,19 @@ public class DatePickerActivity extends Activity implements View.OnClickListener
 
     private void initData() {
         Calendar calendar = Calendar.getInstance();
+        TimeZone tz = TimeZone.getTimeZone("GMT+8");
+        calendar.setTimeZone(tz);
         year = calendar.get(Calendar.YEAR);
         month = (calendar.get(Calendar.MONTH) + 1);
         date = calendar.get(Calendar.DAY_OF_MONTH);
-
+//        LogUtil.e(TAG, "year = " + year +", month = " + month +", date = " + date);
 //        currentYear = year;
 //        currentMonth = month;
 //        currentDate = date;
         week = Utils.getDayOfStrE(calendar.get(Calendar.DAY_OF_WEEK));
         newString = String.format("%d年%02d月%02d日 %s", year, month, date, Utils.getDayOfStr(calendar.get(Calendar.DAY_OF_WEEK))); //calendar.get(Calendar.DAY_OF_WEEK);
+        longdate = Utils.getTime(String.format(Locale.getDefault(), "%d-%02d-%02d", year, month, date));
+        LogUtil.e(TAG, "longdate = " + longdate +", currentTimeMillis = " + System.currentTimeMillis());
         npYear.setMaxValue(calendar.get(Calendar.YEAR) + 2);
         npYear.setMinValue(calendar.get(Calendar.YEAR));
 
@@ -162,6 +171,8 @@ public class DatePickerActivity extends Activity implements View.OnClickListener
 
     private void setPreviewDate() {
         Calendar c = Calendar.getInstance();
+        TimeZone tz = TimeZone.getTimeZone("GMT+8");
+        c.setTimeZone(tz);
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         try {
             c.setTime(format.parse( String.format("%d-%d-%d 00:00:00", year, month, date)));
@@ -170,6 +181,8 @@ public class DatePickerActivity extends Activity implements View.OnClickListener
         }
         week = Utils.getDayOfStrE(c.get(Calendar.DAY_OF_WEEK));
         newString = String.format("%d年%02d月%02d日 %s", year, month, date, Utils.getDayOfStr(c.get(Calendar.DAY_OF_WEEK)));
+        longdate = Utils.getTime(String.format(Locale.getDefault(), "%d-%02d-%02d", year, month, date));
+        LogUtil.e(TAG, "longdate = " + longdate +", currentTimeMillis = " + System.currentTimeMillis());
         tvDate.setText(newString);
     }
 
@@ -186,6 +199,10 @@ public class DatePickerActivity extends Activity implements View.OnClickListener
     }
 
     private void confirm() {
+        if (longdate <= System.currentTimeMillis()){
+            ToastUtil.show(getApplicationContext(), "请选择今天以后的日期");
+            return;
+        }
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
         if (type == 2) {
@@ -193,6 +210,7 @@ public class DatePickerActivity extends Activity implements View.OnClickListener
         }else{
             bundle.putString("selectDate", String.format("%d-%02d-%02d", year, month, date));
         }
+        bundle.putLong("longdate", longdate);
         intent.putExtras(bundle);
         setResult(RESULT_OK, intent);
         finish();

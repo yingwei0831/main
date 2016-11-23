@@ -164,11 +164,11 @@ public class UserInformationBiz {
 
                 if ("0001".equals(resCode)) {
                     msg.arg1 = 0;
-                    msg.obj = resArg;
                 } else if ("0000".equals(resCode)) {
                     msg.arg1 = 1;
-
+//                    {"head":{"res_code":"0000","res_msg":"success","res_arg":"成功"},"body":"[]"}
                 }
+                msg.obj = resArg;
             } catch (JSONException e) {
                 e.printStackTrace();
             } finally {

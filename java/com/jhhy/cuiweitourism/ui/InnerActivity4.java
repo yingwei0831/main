@@ -282,7 +282,7 @@ public class InnerActivity4 extends AppCompatActivity  implements ISlideCallback
         biz.getHotDestination(String.valueOf(type));
 
         ExchangeBiz bizE = new ExchangeBiz(getApplicationContext(), handler);
-        bizE.getHotRecommend();
+        bizE.getHotRecommend(String.valueOf(type));
     }
 
     private void setupView() {

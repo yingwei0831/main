@@ -98,6 +98,7 @@ public class InnerTravelMainBiz {
                             travel.setTravelIconPath(travelObj.getString(Consts.PIC_PATH_LITPIC));
                             travel.setTravelPrice(travelObj.getString(Consts.KEY_PRICE));
                             travel.setGroup(travelObj.getString(Consts.KEY_GROUP));
+                            travel.setIm(travelObj.getString("im"));
                             listTravel.add(travel);
                         }
                     }

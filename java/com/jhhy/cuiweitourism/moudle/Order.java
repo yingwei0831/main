@@ -32,7 +32,28 @@ public class Order implements Serializable{
     private String typeId; //类型： 1.线路、2.酒店、3租车、8签证、14私人定制
     private String productautoid; //线路id
 
+    private String startaddress; //订单：租车订单
+    private String endaddress; //订单：租车订单
+
+    //isneedpiao,dingnum,childnum,oldnum,ispay,needjifen,status,jifentprice,youke,lvyoubi,
+
     public Order() {
+    }
+
+    public String getStartaddress() {
+        return startaddress;
+    }
+
+    public void setStartaddress(String startaddress) {
+        this.startaddress = startaddress;
+    }
+
+    public String getEndaddress() {
+        return endaddress;
+    }
+
+    public void setEndaddress(String endaddress) {
+        this.endaddress = endaddress;
     }
 
     public String getTypeId() {

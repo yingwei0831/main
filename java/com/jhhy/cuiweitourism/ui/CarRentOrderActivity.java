@@ -20,13 +20,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jhhy.cuiweitourism.R;
+import com.jhhy.cuiweitourism.moudle.User;
 import com.jhhy.cuiweitourism.net.biz.CarRentActionBiz;
 import com.jhhy.cuiweitourism.net.models.FetchModel.CarRentOrder;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.BasicResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.CarRentOrderResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.netcallback.BizCallback;
+import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
+import com.jhhy.cuiweitourism.utils.SharedPreferencesUtils;
+import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.just.sun.pricecalendar.ToastCommon;
 
 /**
@@ -148,15 +152,26 @@ public class CarRentOrderActivity extends BaseActivity implements View.OnClickLi
                 finish();
                 break;
             case R.id.btn_car_rent_order_next:
+                if (!MainActivity.logged){ //未登录
+                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("type", 2);
+                    intent.putExtras(bundle);
+                    startActivityForResult(intent, REQUEST_LOGIN);
+                    return;
+                }
                 String linkName = etLinkName.getText().toString();
                 String linkMobile = etLinkMobile.getText().toString();
                 if (TextUtils.isEmpty(linkName) || TextUtils.isEmpty(linkMobile)){
-                    ToastCommon.toastShortShow(getApplicationContext(), null, getString(R.string.empty_input));
+                    ToastCommon.toastShortShow(getApplicationContext(), null, "联系人姓名或手机号输入不能为空");
                     return;
                 }
-
+                if (linkMobile.length() != 11){
+                    ToastUtil.show(getApplicationContext(), "请检验手机号位数");
+                    return;
+                }
                 //租车，提交订单
-                CarRentActionBiz carBiz = new CarRentActionBiz(getApplicationContext(), handler);
+                CarRentActionBiz carBiz = new CarRentActionBiz();
                 CarRentOrder carOrder = new CarRentOrder(MainActivity.user.getUserId(), rentType, rentDay, rentFromAddr,
                         rentToAddr, rentTime, rentPrice, linkName, linkMobile, rentTypeText);
                 carBiz.carRentSubmitOrder(carOrder, new BizCallback() {
@@ -170,11 +185,12 @@ public class CarRentOrderActivity extends BaseActivity implements View.OnClickLi
 
                     @Override
                     public void onCompletion(BasicResponseModel model) {
+
                         CarRentOrderResponse response = (CarRentOrderResponse) model.body;
                         LogUtil.e(TAG, "CarRentSubmitOrder = " + response.toString());
                         Intent intent = new Intent(getApplicationContext(), CarRentSuccessActivity.class);
                         Bundle bundle = new Bundle();
-                        bundle.putSerializable("carRentOrder", response);
+                        bundle.putSerializable("order", response);
                         intent.putExtras(bundle);
                         startActivityForResult(intent, RENT_CARRIAGE_SUCCESS);
                     }
@@ -185,6 +201,7 @@ public class CarRentOrderActivity extends BaseActivity implements View.OnClickLi
     }
 
     private int RENT_CARRIAGE_SUCCESS = 2908; //租车订单成功，去支付
+    private int REQUEST_LOGIN = 2913; //请求登录
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -193,6 +210,16 @@ public class CarRentOrderActivity extends BaseActivity implements View.OnClickLi
             if (resultCode == RESULT_OK){ //支付成功
                 setResult(RESULT_OK);
                 finish();
+            }
+        }else if (requestCode == REQUEST_LOGIN){
+            if (RESULT_OK == resultCode){
+                User user = (User) data.getExtras().getSerializable(Consts.KEY_REQUEST);
+                if (user != null) {
+                    MainActivity.logged = true;
+                    MainActivity.user = user;
+                    SharedPreferencesUtils sp = SharedPreferencesUtils.getInstance(getApplicationContext());
+                    sp.saveUserId(user.getUserId());
+                }
             }
         }
     }

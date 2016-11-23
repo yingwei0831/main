@@ -103,23 +103,6 @@
         <item name="android:gravity">center</item>
     </style>
 
-    <style name="Tab1RadioButtonStyle">
-        <item name="android:textColor">@drawable/bg_radiobutton_tab1_recommend_selector</item>
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:background">@drawable/tab1_radiobutton_recommend_selector</item>
-        <item name="android:button">@null</item>
-        <item name="android:paddingTop">4dp</item>
-        <item name="android:paddingBottom">4dp</item>
-        <item name="android:gravity">center</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:layout_marginLeft">2dp</item>
-        <item name="android:layout_marginRight">2dp</item>
-        <!--<item name="android:paddingLeft">0dp</item>-->
-        <!--<item name="android:paddingRight">0dp</item>-->
-    </style>
-
     <style name="MainBottomRadioButtonStyle">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">match_parent</item>
@@ -133,19 +116,8 @@
         <item name="android:paddingBottom">2dp</item>
     </style>
 
-    <style name="MyDialogStyleM">
-        <item name="android:background">@android:color/transparent</item>
-        <item name="android:windowFrame">@null</item>
-        <item name="android:windowIsFloating">true</item>
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
-        <item name="android:backgroundDimEnabled">true</item>
-        <item name="android:buttonStyle">@android:style/Widget.Button</item>
-    </style>
 
-
-        <!--<item name="tabMaxWidth">@dimen/tab_max_width</item>-->
+    <!--<item name="tabMaxWidth">@dimen/tab_max_width</item>-->
     <style name="MyCustomTabLayout" parent="Widget.Design.TabLayout">
         <item name="tabIndicatorColor">@android:color/white</item>
         <item name="tabBackground">@drawable/bg_tab_circle_corner</item>

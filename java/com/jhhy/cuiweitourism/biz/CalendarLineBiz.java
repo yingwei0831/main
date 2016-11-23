@@ -8,6 +8,7 @@ import com.jhhy.cuiweitourism.http.NetworkUtil;
 import com.jhhy.cuiweitourism.net.netcallback.HttpUtils;
 import com.jhhy.cuiweitourism.http.ResponseResult;
 import com.jhhy.cuiweitourism.net.utils.Consts;
+import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.utils.Utils;
 import com.just.sun.pricecalendar.GroupDeadline;
 
@@ -26,6 +27,7 @@ import java.util.Map;
  */
 public class CalendarLineBiz {
 
+    private String TAG = "CalendarLineBiz";
     private Context context;
     private Handler handler;
     private String CODE_CALENDAR_PRICE = "Publics_rili";
@@ -72,32 +74,33 @@ public class CalendarLineBiz {
                     msg.arg1 = 1;
                     JSONArray bodyAry = resultObj.getJSONArray(Consts.KEY_BODY);
                     List[] ary = new List[2];
-                    List<GroupDeadline> listCalendar = null;
-                    List<GroupDeadline> listCalendarNew = null;
+                    List<GroupDeadline> listCalendar = new ArrayList<>();
+//                    List<GroupDeadline> listCalendarNew = new ArrayList<>();
+                    List<String> listDate = new ArrayList<>();
                     if (bodyAry != null && bodyAry.length() != 0){
-                        listCalendar = new ArrayList<>();
-                        listCalendarNew = new ArrayList<>();
                         for (int i = 0; i < bodyAry.length(); i ++){
+//                            {
+//                                "day": "1479916800",
+//                                "childprice": "0",
+//                                "oldprice": "0",
+//                                "adultprice": "1480"
+//                            }
                             JSONObject cpObj = bodyAry.getJSONObject(i);
                             GroupDeadline groupDeadline = new GroupDeadline();
                             String dateStr = Utils.getTimeStrYMD(Long.parseLong(cpObj.getString("day")) * 1000);
-                            groupDeadline.setDate(dateStr);//将时间戳改成2016-09-20
-                            groupDeadline.setSell_price_children(cpObj.getString("childprice"));
-                            groupDeadline.setSell_price_elder(cpObj.getString("oldprice"));
-                            groupDeadline.setSell_price_adult(cpObj.getString("adultprice"));
-                            listCalendar.add(groupDeadline);
-//                            if (Utils.getNowDateShort().equals(dateStr)){
-//                                position = i;
-//                            }
-//                            if (i >= position && position != -1) {
-                                listCalendarNew.add(groupDeadline);
-//                            }
+                            if (!listDate.contains(dateStr)) { //如果日期中不包含当前日期，则添加
+                                listDate.add(dateStr);
+                                groupDeadline.setDate(dateStr);//将时间戳改成2016-09-20
+                                groupDeadline.setSell_price_children(cpObj.getString("childprice"));
+                                groupDeadline.setSell_price_elder(cpObj.getString("oldprice"));
+                                groupDeadline.setSell_price_adult(cpObj.getString("adultprice"));
+                                listCalendar.add(groupDeadline);
+                                LogUtil.e(TAG, groupDeadline.toString());
+                            }
                         }
                     }
                     ary[0] = listCalendar;
-                    ary[1] = listCalendarNew;
                     msg.obj = ary;
-
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

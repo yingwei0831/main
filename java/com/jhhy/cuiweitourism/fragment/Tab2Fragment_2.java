@@ -335,7 +335,7 @@ public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.I
 
     private void getRecommend(){
         ExchangeBiz biz = new ExchangeBiz(getContext(), handler);
-        biz.getHotRecommend();
+        biz.getHotRecommend("");
     }
 
     @Override

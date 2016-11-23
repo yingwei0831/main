@@ -252,6 +252,12 @@
                     android:drawableLeft="@mipmap/tab4_top_contacts"
                     android:text="@string/fragment_mine_top_contacts" />
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_about_cuiwei"
+                style="@style/Tab4Settings"
+                android:drawableLeft="@mipmap/tab4_persional_data"
+                android:text="@string/fragment_mine_about_cuiwei" />
         </LinearLayout>
 
     </ScrollView>

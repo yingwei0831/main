@@ -31,6 +31,7 @@ import com.jhhy.cuiweitourism.http.NetworkUtil;
 import com.jhhy.cuiweitourism.moudle.ADInfo;
 import com.jhhy.cuiweitourism.moudle.PhoneBean;
 import com.jhhy.cuiweitourism.moudle.Travel;
+import com.jhhy.cuiweitourism.moudle.User;
 import com.jhhy.cuiweitourism.net.biz.ForeEndActionBiz;
 import com.jhhy.cuiweitourism.net.models.FetchModel.ForeEndAdvertise;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
@@ -45,6 +46,7 @@ import com.jhhy.cuiweitourism.ui.HotelMainActivity;
 import com.jhhy.cuiweitourism.ui.InnerActivity4;
 import com.jhhy.cuiweitourism.ui.InnerTravelDetailActivity;
 import com.jhhy.cuiweitourism.ui.InnerTravelMainActivity;
+import com.jhhy.cuiweitourism.ui.LoginActivity;
 import com.jhhy.cuiweitourism.ui.MainActivity;
 import com.jhhy.cuiweitourism.ui.PersonalizedCustomActivity;
 import com.jhhy.cuiweitourism.ui.PlaneMainActivity;
@@ -403,13 +405,14 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
         }
     }
 
-    public void getData(){
+    public void getData() {
         indicator = 1;
         page = 1;
         //此处获取全部
         Tab1RecommendBiz biz = new Tab1RecommendBiz(getContext(), handler);
         biz.getRecommendForYou("", "", Consts.MESSAGE_TAB1_RECOMMEND, 1);
     }
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -544,7 +547,7 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
         tvMobile.setOnClickListener(this);
         tvLocationCity.setOnClickListener(this);
         tvSearchText.setOnClickListener(this);
-        ivSearchImg .setOnClickListener(this);
+        ivSearchImg.setOnClickListener(this);
 
         tvInnerTravel.setOnClickListener(this);
         tvOutsideTravel.setOnClickListener(this);
@@ -597,7 +600,6 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
                 case R.id.tv_tab1_plane_ticket: //飞机票
                     Bundle bundlePlane = new Bundle();
                     bundlePlane.putInt("type", 2);
-
                     PlaneMainActivity.actionStart(getContext(), bundlePlane);
                     break;
                 case R.id.tv_tab1_start_activity: //发起活动
@@ -701,10 +703,12 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
                     intentCity.putExtras(bundleCity);
                     startActivityForResult(intentCity, Consts.REQUEST_CODE_SELECT_CITY);
             }
-        }else{
+        } else {
             ToastCommon.toastShortShow(getContext(), null, "请检查网络后重试");
         }
     }
+
+    private int REQUEST_LOGIN = 2913; //请求登录
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -720,8 +724,20 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
                     sp.saveCity(selectCity);
                 }
             }
-
+        } else if (requestCode == REQUEST_LOGIN) {
+            if (resultCode == Activity.RESULT_OK) { //登录成功
+                User user = (User) data.getExtras().getSerializable(Consts.KEY_REQUEST);
+                if (user != null) {
+                    MainActivity.logged = true;
+                    MainActivity.user = user;
+                    SharedPreferencesUtils sp = SharedPreferencesUtils.getInstance(getContext());
+                    sp.saveUserId(user.getUserId());
+                }
+            }else{
+                ToastUtil.show(getContext(), "登录失败");
+            }
         }
+
     }
 
     @Override
@@ -780,10 +796,32 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
 //        String number = sp.getTelephoneNumber();
 //        String pwd = sp.getPassword();
         if (MainActivity.logged) { //|| (number != null && !"null".equals(number) && pwd != null && !"null".equals(pwd))
+            String im = null;
+            if (indicator == 1) {
+                im = lists.get(position).getIm();
+            } else if (indicator == 2) {
+                im = listsInner.get(position).getIm();
+            } else if (indicator == 3) {
+                im = listsOutside.get(position).getIm();
+            }
+            if (im == null || im.length() == 0) {
+                ToastUtil.show(getContext(), "当前商户暂未提供客服功能");
+                return;
+            }
             Intent intent = new Intent(getContext(), EasemobLoginActivity.class);
+            if (im == null || im.length() == 0) {
+                ToastUtil.show(getContext(), "当前商户暂未提供客服功能");
+                return;
+            }
+            intent.putExtra("im", im);
             startActivity(intent);
-        }else{
-            ToastUtil.show(getContext(), "请登录后再试");
+        } else {
+//            ToastUtil.show(getContext(), "请登录后再试");
+            Intent intent = new Intent(getContext(), LoginActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putInt("type", 2);
+            intent.putExtras(bundle);
+            startActivityForResult(intent, REQUEST_LOGIN);
         }
     }
 
@@ -1021,7 +1059,7 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
                 infos.add(info);
                 flipper.addView(ViewFactory.getImageView(getContext(), infos.get(i).getUrl()));
             }
-        }else if(type == 2){
+        } else if (type == 2) {
             for (int i = 0; i < length; i++) {
                 ADInfo info = new ADInfo();
                 info.setUrl(imageUrlsBottom.get(i));

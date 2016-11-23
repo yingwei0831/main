@@ -73,7 +73,7 @@ public class CarRentSelectAddressActivity extends BaseActivity implements Adapte
     }
 
     private void getInternetData() {
-        carBiz = new CarRentActionBiz(getApplicationContext(), handler);
+        carBiz = new CarRentActionBiz();
         LoadingIndicator.show(CarRentSelectAddressActivity.this, getString(R.string.http_notice));
             CarRentPickLocation1 location1 = new CarRentPickLocation1(city);
             carBiz.carRentGetPickupLocationForAirport(location1, new BizCallback() {

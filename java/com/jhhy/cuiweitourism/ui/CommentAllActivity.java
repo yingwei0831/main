@@ -39,6 +39,7 @@ public class CommentAllActivity extends BaseActivity implements AdapterView.OnIt
     private ActionBar actionBar;
 
     private String articleId;
+    private String type = "1";
 
     private PullToRefreshListView listView;
     private ListView refreshView; //数据操作列表
@@ -68,15 +69,19 @@ public class CommentAllActivity extends BaseActivity implements AdapterView.OnIt
             Bundle bundle = intent.getExtras();
             if (bundle != null){
                 articleId = bundle.getString("articleId");
-                LogUtil.e(TAG, "articleId = " + articleId);
+                type = bundle.getString("type");
+                LogUtil.e(TAG, "articleId = " + articleId +", type = " + type);
             }
+        }
+        if (type == null){
+            type = "1";
         }
     }
 
     private void getInternetData() {
         LoadingIndicator.show(CommentAllActivity.this, getString(R.string.http_notice));
         //更多评论
-        ForeEndMoreCommentFetch fetch = new ForeEndMoreCommentFetch("1", articleId); //typeid 1.线路、2.酒店、3租车、8签证、14私人定制；articleId(上页传过来的)12
+        ForeEndMoreCommentFetch fetch = new ForeEndMoreCommentFetch(type, articleId); //typeid 1.线路、2.酒店、3租车、8签证、14私人定制；articleId(上页传过来的)12
         ForeEndActionBiz fbiz = new ForeEndActionBiz();
         fbiz.foreEndGetMoreCommentInfo(fetch, new BizGenericCallback<ArrayList<ForeEndMoreCommentInfo>>() {
             @Override

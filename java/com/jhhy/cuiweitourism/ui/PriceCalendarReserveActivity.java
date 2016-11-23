@@ -75,9 +75,9 @@ public class PriceCalendarReserveActivity extends BaseActivity implements View.O
                     if (msg.arg1 == 1) {
                         List[] ary = (List[]) msg.obj;
                         List<GroupDeadline> calendarPrices = ary[0];
-                        calendarPricesNew = ary[1];
-
-                        if (calendarPricesNew != null && calendarPricesNew.size() != 0) {
+//                        List<GroupDeadline> calendarPrices1 = ary[1];
+                        if (calendarPrices != null && calendarPrices.size() != 0) {
+                            calendarPricesNew = calendarPrices;
                             refreshView();
                         } else {
                             ToastUtil.show(getApplicationContext(), "价格日历获取为空");
@@ -94,7 +94,6 @@ public class PriceCalendarReserveActivity extends BaseActivity implements View.O
                     break;
             }
             LoadingIndicator.cancel();
-
         }
     };
     private TextView tvTitleTop;
@@ -120,7 +119,7 @@ public class PriceCalendarReserveActivity extends BaseActivity implements View.O
             detail = (TravelDetail) bundle.getSerializable("detail");
             LoadingIndicator.show(PriceCalendarReserveActivity.this, getString(R.string.http_notice));
             CalendarLineBiz biz = new CalendarLineBiz(getApplicationContext(), handler);
-            biz.getCalendarLine(detail.getId()); //14
+            biz.getCalendarLine(id); //14
         }
     }
 
@@ -171,8 +170,6 @@ public class PriceCalendarReserveActivity extends BaseActivity implements View.O
     private GroupDeadline selectGroupDeadLine; //选择某天的价格日历
 
     private boolean selectDay;
-    private boolean selectHotelInDate; //入住酒店时间
-    private boolean selectHotelOutDate; //离开酒店时间
 
     private void refreshView() {
         //设置团期
@@ -208,7 +205,6 @@ public class PriceCalendarReserveActivity extends BaseActivity implements View.O
                     calendar.nextMonth();
 
                 } else {
-                    selectDay = true;
                     //date = dateFormat; //最后返回给全局 date
                     for (int i = 0; i < calendarPricesNew.size(); i++) {
                         String positionDate = calendarPricesNew.get(i).getDate();
@@ -222,6 +218,7 @@ public class PriceCalendarReserveActivity extends BaseActivity implements View.O
                             calendar.removeAllBgColor();
                             calendar.setCalendarDayBgColor(dateFormat, ContextCompat.getColor(getApplicationContext(), R.color.colorActionBar)); //Color.parseColor("#45BDEF")
                             selectGroupDeadLine = calendarPricesNew.get(i);
+                            selectDay = true;
                             tvPriceAdult.setText(String.format(Locale.getDefault(), "￥%s/人", selectGroupDeadLine.getSell_price_adult()));
                             tvPriceChild.setText(String.format(Locale.getDefault(), "￥%s/人", selectGroupDeadLine.getSell_price_adult()));
                         } else if (date.equals(positionDate)) { //如果是选择今天的日期
@@ -284,17 +281,17 @@ public class PriceCalendarReserveActivity extends BaseActivity implements View.O
                 break;
             case R.id.btn_price_calendar_reserve: //立即预定
 
-                if (selectDay) {
-                    Intent intent = new Intent(getApplicationContext(), InnerTravelEditOrderActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("countAdult", countAdult);
-                    bundle.putInt("countChild", countChild);
-                    bundle.putSerializable("detail", detail);
-                    bundle.putSerializable("hotActivityDetail", hotActivityDetail);
-                    bundle.putInt("type", type);
-                    bundle.putSerializable("priceCalendar", selectGroupDeadLine);
-                    intent.putExtras(bundle);
-                    startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_EDIT_ORDER);
+                if (selectDay && selectGroupDeadLine != null) {
+                        Intent intent = new Intent(getApplicationContext(), InnerTravelEditOrderActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("countAdult", countAdult);
+                        bundle.putInt("countChild", countChild);
+                        bundle.putSerializable("detail", detail);
+                        bundle.putSerializable("hotActivityDetail", hotActivityDetail);
+                        bundle.putInt("type", type);
+                        bundle.putSerializable("priceCalendar", selectGroupDeadLine);
+                        intent.putExtras(bundle);
+                        startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_EDIT_ORDER);
                 } else {
                     ToastCommon.toastShortShow(getApplicationContext(), null, "请选择出发日期");
                 }

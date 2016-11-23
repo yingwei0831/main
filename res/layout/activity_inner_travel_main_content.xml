@@ -47,8 +47,8 @@
             android:layout_marginTop="10dp"
             android:background="@android:color/white"
             android:orientation="vertical"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
             android:paddingTop="10dp">
 
             <TextView
@@ -56,18 +56,19 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:text="热门目的地"
-                android:textColor="@android:color/black"/>
+                android:textColor="@android:color/black"
+                android:textSize="16sp"/>
 
             <com.jhhy.cuiweitourism.view.MyGridView
                 android:id="@+id/gv_inner_travel_main_hot"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="14dp"
                 android:paddingBottom="4dp"
-                android:horizontalSpacing="10dp"
+                android:horizontalSpacing="8dp"
                 android:numColumns="4"
-                android:verticalSpacing="10dp"
-                android:visibility="gone"/>
+                android:verticalSpacing="8dp"
+                android:visibility="visible"/>
             <LinearLayout
                 android:id="@+id/layout_dest_container"
                 android:layout_marginTop="10dp"
@@ -94,7 +95,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:text="热门推荐"
-                android:textColor="@android:color/black"/>
+                android:textColor="@android:color/black"
+                android:textSize="16sp"/>
 
             <TextView
                 android:id="@+id/tv_hot_recommend_exchange"
@@ -103,6 +105,7 @@
                 android:layout_alignParentRight="true"
                 android:padding="6dp"
                 android:text="换一批"
+                android:textSize="16sp"
                 android:textColor="@android:color/black"/>
 
             <com.jhhy.cuiweitourism.view.MyGridView
@@ -126,16 +129,15 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:orientation="vertical">
                 <TextView
                     android:id="@+id/tv_inner_travel_main_follow"
-                    android:paddingTop="16dp"
                     android:gravity="center"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="46dp"
                     android:text="跟团游"
-                    android:paddingBottom="12dp"
+                    android:textSize="16sp"
                     android:textColor="@color/colorTab1RecommendForYouArgument"
                     android:background="@android:color/white"/>
                 <View
@@ -148,16 +150,15 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:orientation="vertical">
                 <TextView
                     android:id="@+id/tv_inner_travel_main_freedom"
-                    android:paddingTop="16dp"
                     android:gravity="center"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="46dp"
                     android:text="自由游"
-                    android:paddingBottom="12dp"
+                    android:textSize="16sp"
                     android:textColor="@android:color/black"
                     android:background="@android:color/white"/>
                 <View

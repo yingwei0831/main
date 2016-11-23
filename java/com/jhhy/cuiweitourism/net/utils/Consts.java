@@ -13,6 +13,8 @@ public class Consts {
 //    public static final String SERVER_URL = "http://www.cwly1118.com";
     public static final String SERVER_URL = "http://www.cwly1118.com/service.php";
 
+    public static final String BASE_SHARE_URL = "http://www.cwly1118.com/service.php?m=test&a=lineshare&id=";
+
 
     public static final int NET_ERROR = 9999; //网络发生故障
     public static final int NET_ERROR_SOCKET_TIMEOUT = 9991; //与服务器链接超时
@@ -194,11 +196,12 @@ public class Consts {
 
 //    环信
     public static final int MESSAGE_TO_DEFAULT = 0;
+    public static final int INTENT_CODE_IMG_SELECTED_DEFAULT = 0;
+
     public static final String MESSAGE_TO_INTENT_EXTRA = "message_to";
     public static final String ACCOUNT_CONFLICT = "conflict";
     public static final String ACCOUNT_REMOVED = "account_removed";
     public static final String INTENT_CODE_IMG_SELECTED_KEY = "img_selected";
-    public static final int INTENT_CODE_IMG_SELECTED_DEFAULT = 0;
     public static final String MESSAGE_ATTR_MSGTYPE = "msgtype";
     public static final String WEICHAT_MSG = "weichat";
     public static final int MESSAGE_TO_PRE_SALES = 1;

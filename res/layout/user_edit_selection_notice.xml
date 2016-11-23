@@ -32,7 +32,7 @@
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/tv_collection_select_notice"
         android:gravity="center_vertical"
-        android:text="10"
+        android:text="0"
         android:textColor="@android:color/holo_red_light" />
 
     <TextView

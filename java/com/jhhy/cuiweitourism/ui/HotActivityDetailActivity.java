@@ -115,8 +115,8 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
     private ImageView[] indicators; // 轮播图片数组
     private int currentPosition = 0; // 轮播当前位置
 
-    private static final int FLING_MIN_DISTANCE = 20;
-    private static final int FLING_MIN_VELOCITY = 0;
+    private final int FLING_MIN_DISTANCE = 20;
+    private final int FLING_MIN_VELOCITY = 0;
     private GestureDetector mGestureDetector; // MyScrollView的手势
 
     private Handler handler = new Handler() {
@@ -443,7 +443,7 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
             layoutComment.setVisibility(View.GONE);
         }
         //商品详情
-        String tripDetail = detail.getFeatures();
+        String tripDetail = detail.getXlxq();
         mWebViewProduct.loadDataWithBaseURL(null, start + tripDetail + end, "text/html", "utf-8", null);
         //费用说明
         String priceContain = detail.getFeeinclude();
@@ -475,14 +475,19 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
             case R.id.tv_inner_travel_detail_content_describe_bottom:
             case R.id.btn_inner_travel_detail_indicator_top_describe:
                 changeIndicator(3);
-                  break;
+                break;
             case R.id.tv_inner_travel_detail_content_notice_bottom:
             case R.id.btn_inner_travel_detail_indicator_top_notice:
                 changeIndicator(4);
                 break;
             case R.id.tv_travel_comment_count: //累计评价
                 //TODO 进入评价详情页面
-
+                Intent intentComment = new Intent(getApplicationContext(), CommentAllActivity.class);
+                Bundle bundleComment = new Bundle();
+                bundleComment.putString("articleId", detail.getId());
+                bundleComment.putString("type", "1");
+                intentComment.putExtras(bundleComment);
+                startActivity(intentComment);
                 break;
             case R.id.btn_inner_travel_reserve: //立即预定
 //                ToastUtil.show(getApplicationContext(), "木有操作流程图");
@@ -547,21 +552,8 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_CANCELED) {
-
-        } else {
-            if (requestCode == Consts.REQUEST_CODE_RESERVE_SELECT_DATE) { //选择日期
-                //TODO 日期选择返回
-            }
-        }
-    }
-
-    @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         //TODO 进入查看大图页面
-
     }
 
     private void addListener() {
@@ -601,7 +593,6 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
 
     /**
      * GestureDetector.OnGestureListener 回调
-     *
      * @param motionEvent
      * @return
      */
@@ -612,17 +603,14 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
 
     /**
      * GestureDetector.OnGestureListener 回调
-     *
      * @param motionEvent
      */
     @Override
     public void onShowPress(MotionEvent motionEvent) {
-
     }
 
     /**
      * GestureDetector.OnGestureListener 回调
-     *
      * @param motionEvent
      * @return
      */
@@ -633,7 +621,6 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
 
     /**
      * GestureDetector.OnGestureListener 回调
-     *
      * @param motionEvent
      * @param motionEvent1
      * @param v
@@ -647,17 +634,14 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
 
     /**
      * GestureDetector.OnGestureListener 回调
-     *
      * @param motionEvent
      */
     @Override
     public void onLongPress(MotionEvent motionEvent) {
-
     }
 
     /**
      * GestureDetector.OnGestureListener 回调
-     *
      * @param e1
      * @param e2
      * @param velocityX
@@ -750,5 +734,63 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
         return mGestureDetector.onTouchEvent(motionEvent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        TAG = null;
+        mScrollView = null;
+        content = null;
+        btnReserve = null;
+        layoutIndicatorTop = null;
+        btnProductTop = null;
+        btnPriceTop = null;
+        btnDescribeTop = null;
+        btnNoticeTop = null;
+        viewProductTop = null;
+        viewPriceTop = null;
+        viewDescribeTop = null;
+        viewNoticeTop = null;
+
+        layoutIndicatorBottom = null;
+        tvProduct = null;
+        btnPrice = null;
+        tvDescribe = null;
+        tvNotice = null;
+        viewProduct = null;
+        viewPrice = null;
+        viewDescribe = null;
+        viewNotice = null;
+        mWebViewProduct = null;
+        layoutPrice = null;
+        tvPriceInclude = null;
+        tvPriceNotInclude = null;
+        layoutTravelDescribe = null;
+        tvTravelDescribe = null;
+        layoutNotice = null;
+        tvReserveNotice = null;
+        layoutTitle = null;
+        tvTitle = null;
+        tvPrice = null;
+        layoutComment = null;
+        tvCommentCount = null;
+        civIcon = null;
+        tvNickName = null;
+        tvAddTime = null;
+        tvCommentContent = null;
+        gvImages = null;
+        titles = null;
+        id = null;
+        detail = null;
+        infos.clear();
+        infos = null;
+        flipper = null;
+        layoutPoint = null;
+        imageUrls.clear();
+        imageUrls = null;
+        indicators = null;
+        currentPosition = 0;
+        mGestureDetector = null;
     }
 }

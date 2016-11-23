@@ -121,7 +121,7 @@ public class InnerTravelMainActivity2 extends BaseActivity implements XScrollVie
         biz.getHotDestination("1");
 
         ExchangeBiz bizE = new ExchangeBiz(getApplicationContext(), handler);
-        bizE.getHotRecommend();
+        bizE.getHotRecommend("");
     }
 
     private void setupView() {

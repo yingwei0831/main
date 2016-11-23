@@ -100,6 +100,7 @@ public class FindLinesBiz {
                             travel.setTravelIconPath(lineObj.getString(Consts.PIC_PATH_LITPIC));
                             travel.setType(lineObj.getString("txt"));
                             travel.setGroup(lineObj.getString(Consts.KEY_GROUP));
+                            travel.setIm(lineObj.getString("im"));
                             listLines.add(travel);
                         }
                     }

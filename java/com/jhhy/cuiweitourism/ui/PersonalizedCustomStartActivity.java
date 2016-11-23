@@ -33,8 +33,8 @@ public class PersonalizedCustomStartActivity extends BaseActivity implements Vie
     private TextView tvTitleTop;
     private ImageView ivTitleLeft;
 
-    private TextView tvSelectFromCity;  //选择出发城市
-    private TextView tvSelectToCity;    //选择目的城市
+    private EditText etSelectFromCity;  //选择出发城市
+    private EditText etSelectToCity;    //选择目的城市
     private TextView tvSelectFromDate;  //选择出发日期
 
     private TextView tvDays;            //行程天数
@@ -100,8 +100,8 @@ public class PersonalizedCustomStartActivity extends BaseActivity implements Vie
         tvTitleTop.setText("开始定制");
         ivTitleLeft = (ImageView) findViewById(R.id.title_main_tv_left_location);
 
-        tvSelectFromCity    = (TextView) findViewById(R.id.tv_select_from_city);
-        tvSelectToCity      = (TextView) findViewById(R.id.tv_select_to_city);
+        etSelectFromCity    = (EditText) findViewById(R.id.et_select_from_city);
+        etSelectToCity      = (EditText) findViewById(R.id.et_select_to_city);
         tvSelectFromDate    = (TextView) findViewById(R.id.tv_select_from_date);
 
         ivDaySum =      (ImageView) findViewById(R.id.tv_price_calendar_day_number_reduce);
@@ -146,20 +146,20 @@ public class PersonalizedCustomStartActivity extends BaseActivity implements Vie
             case R.id.btn_commit_custom: //提交个性定制
                 commit();
                 break;
-            case R.id.tv_select_from_city: //选择出发城市
-                Intent intentCity = new Intent(getApplicationContext(), CitySelectionActivity.class);
-                Bundle bundleCity = new Bundle();
-                bundleCity.putString("currentCity", selectCity.getName());
-                intentCity.putExtras(bundleCity);
-                startActivityForResult(intentCity, Consts.REQUEST_CODE_SELECT_CITY);
-                break;
-            case R.id.tv_select_to_city: //选择目的城市
-                Intent intentCityTo = new Intent(getApplicationContext(), CitySelectionActivity.class);
-                Bundle bundleCityTo = new Bundle();
-                bundleCityTo.putString("currentCity", selectCity.getName());
-                intentCityTo.putExtras(bundleCityTo);
-                startActivityForResult(intentCityTo, REQUEST_CODE_SELECT_TO_CITY);
-                break;
+//            case R.id.et_select_from_city: //选择出发城市
+//                Intent intentCity = new Intent(getApplicationContext(), CitySelectionActivity.class);
+//                Bundle bundleCity = new Bundle();
+//                bundleCity.putString("currentCity", selectCity.getName());
+//                intentCity.putExtras(bundleCity);
+//                startActivityForResult(intentCity, Consts.REQUEST_CODE_SELECT_CITY);
+//                break;
+//            case R.id.et_select_to_city: //选择目的城市
+//                Intent intentCityTo = new Intent(getApplicationContext(), CitySelectionActivity.class);
+//                Bundle bundleCityTo = new Bundle();
+//                bundleCityTo.putString("currentCity", selectCity.getName());
+//                intentCityTo.putExtras(bundleCityTo);
+//                startActivityForResult(intentCityTo, REQUEST_CODE_SELECT_TO_CITY);
+//                break;
             case R.id.tv_select_from_date: //选择出发日期
                 Intent intentTime = new Intent(getApplicationContext(), DatePickerActivity.class);
                 startActivityForResult(intentTime, SELECT_TIME);
@@ -201,11 +201,13 @@ public class PersonalizedCustomStartActivity extends BaseActivity implements Vie
     }
 
     private void commit() {
+        selectFromCityName = selectCity.getName();
         if (selectFromCityName == null){
-            selectFromCityName = selectCity.getName();
+            ToastCommon.toastShortShow(getApplicationContext(), null, "请输入目的城市");
+            return;
         }
         if (selectToCityName == null){
-            ToastCommon.toastShortShow(getApplicationContext(), null, "请选择目的城市");
+            ToastCommon.toastShortShow(getApplicationContext(), null, "请输入目的城市");
             return;
         }
         if (selectDate == null){
@@ -343,7 +345,7 @@ public class PersonalizedCustomStartActivity extends BaseActivity implements Vie
                 }else{
                     selectFromCityName = selectFromCity.getName();
                 }
-                tvSelectFromCity.setText(selectFromCityName);
+                etSelectFromCity.setText(selectFromCityName);
             }
         }else if (requestCode == REQUEST_CODE_SELECT_TO_CITY){
             if (resultCode == RESULT_OK){
@@ -354,7 +356,7 @@ public class PersonalizedCustomStartActivity extends BaseActivity implements Vie
                 }else{
                     selectToCityName = selectToCity.getName();
                 }
-                tvSelectToCity.setText(selectToCityName);
+                etSelectToCity.setText(selectToCityName);
             }
         }else if (requestCode == SELECT_TIME){
             if (resultCode == RESULT_OK){
@@ -370,8 +372,8 @@ public class PersonalizedCustomStartActivity extends BaseActivity implements Vie
 
     private void addListener() {
         ivTitleLeft.setOnClickListener(this);
-        tvSelectFromCity.setOnClickListener(this);
-        tvSelectToCity  .setOnClickListener(this);
+//        etSelectFromCity.setOnClickListener(this);
+//        etSelectToCity  .setOnClickListener(this);
         tvSelectFromDate.setOnClickListener(this);
 
         ivDaySum.setOnClickListener(this);

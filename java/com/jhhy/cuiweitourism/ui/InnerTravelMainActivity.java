@@ -37,6 +37,7 @@ import com.jhhy.cuiweitourism.moudle.CityRecommend;
 import com.jhhy.cuiweitourism.moudle.HotDestination;
 import com.jhhy.cuiweitourism.moudle.PhoneBean;
 import com.jhhy.cuiweitourism.moudle.Travel;
+import com.jhhy.cuiweitourism.moudle.User;
 import com.jhhy.cuiweitourism.net.biz.ForeEndActionBiz;
 import com.jhhy.cuiweitourism.net.models.FetchModel.ForeEndAdvertise;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
@@ -46,6 +47,7 @@ import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.ui.easemob.EasemobLoginActivity;
+import com.jhhy.cuiweitourism.utils.SharedPreferencesUtils;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.jhhy.cuiweitourism.utils.Utils;
 import com.jhhy.cuiweitourism.view.MyGridView;
@@ -60,11 +62,10 @@ public class InnerTravelMainActivity extends BaseActionBarActivity implements XS
 
     private String TAG = InnerTravelMainActivity.class.getSimpleName();
 
-//    private MyGridView gvHotDestination; //热门目的地
+    private MyGridView gvHotDestination; //热门目的地
     private List<HotDestination> listHotDestination = new ArrayList<>();
-//    private HotDestinationAdapter hotDestAdapter;
-
-    private LinearLayout layoutDestContainer;
+    private HotDestinationAdapter hotDestAdapter;
+//    private LinearLayout layoutDestContainer; //热门目的地
 
     private MyGridView gvHotRecommend; //热门推荐
     private List<CityRecommend> listHotRecommend = new ArrayList<>();
@@ -151,10 +152,14 @@ public class InnerTravelMainActivity extends BaseActionBarActivity implements XS
                         if (listDest == null || listDest.size() == 0){
                             ToastUtil.show(getApplicationContext(), "没有热门目的地");
                         }else{
-                            listHotDestination = listDest;
-                            setContainerData();
-//                            hotDestAdapter.setData(listHotDestination);
-//                            setListViewHeightBasedOnChildren(gvHotDestination);
+                            if (listDest.size() > 12){
+                                listHotDestination = listDest.subList(0, 12);
+                            }else {
+                                listHotDestination = listDest;
+                            }
+                            setListViewHeightBasedOnChildren(gvHotDestination);
+                            hotDestAdapter.setData(listHotDestination);
+//                            setContainerData();
                         }
                     }else{
                         ToastUtil.show(getApplicationContext(), (String) msg.obj);
@@ -201,87 +206,89 @@ public class InnerTravelMainActivity extends BaseActionBarActivity implements XS
         }
     };
 
-    private int COLUMNS = 4; //列
+//    private int COLUMNS = 4; //列
 
-    private void setContainerData() {
-//        listHotDestination
-        layoutDestContainer.removeAllViews();
-        int row = 0;// 计算需要行数
-        if ((listHotDestination.size() % COLUMNS) == 0) {
-            row = listHotDestination.size() / COLUMNS;
-        } else {
-            row = (listHotDestination.size() / COLUMNS) + 1;
-        }
+//    private void setContainerData() {
+//
+//        layoutDestContainer.removeAllViews();
+//        int row = 0;// 计算需要行数
+//        if ((listHotDestination.size() % COLUMNS) == 0) {
+//            row = listHotDestination.size() / COLUMNS;
+//        } else {
+//            row = (listHotDestination.size() / COLUMNS) + 1;
+//        }
+//
+//        for (int i = 0; i < row; i++) {
+//
+//            LinearLayout rowLayout = new LinearLayout(getApplicationContext());
+//
+//            rowLayout.setOrientation(LinearLayout.HORIZONTAL);
+//
+//            rowLayout.setWeightSum(COLUMNS);
+//
+//
+//            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//
+//            addActivityTag(i, rowLayout);
+//
+//            rowLayout.setLayoutParams(params);
+//
+//            layoutDestContainer.addView(rowLayout);
+//        }
+//    }
 
-        for (int i = 0; i < row; i++) {
+//    /**
+//     * 添加每行数据
+//     * @param row 行
+//     * @param layout
+//     */
 
-            LinearLayout rowLayout = new LinearLayout(getApplicationContext());
-
-            rowLayout.setOrientation(LinearLayout.HORIZONTAL);
-
-            rowLayout.setWeightSum(COLUMNS);
-
-
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-
-            addActivityTag(i, rowLayout);
-
-            rowLayout.setLayoutParams(params);
-
-            layoutDestContainer.addView(rowLayout);
-        }
-    }
-    /**
-     * 添加每行数据
-     * @param row 行
-     * @param layout
-     */
-    private void addActivityTag(int row, LinearLayout layout) {
-
-        for (int i = 0; i < COLUMNS; i++) {
-
-            final int position = (row * COLUMNS + i);
-
-            TextView textView = new TextView(this);
-            LinearLayout.LayoutParams tvParams = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
-            tvParams.weight = 1;// 此处weight必须置为1
-            tvParams.bottomMargin = 10;
-            if (i == 1 || i == 2){ //左边，右边 margin
-                tvParams.leftMargin = 5;
-                tvParams.rightMargin = 5;
-            }
-            if (i == 0){ //右边 margin
-                tvParams.rightMargin = 5;
-            }
-            if (i == 3){ //左边 margin
-                tvParams.leftMargin = 5;
-            }
-            textView.setLayoutParams(tvParams);
-            if (position < listHotDestination.size()) {
-                textView.setText(listHotDestination.get(position).getCityName());
-                textView.setBackgroundResource(R.drawable.bg_et_city_unselected_corner_border);
-                textView.setTextSize(16f);
-                textView.setGravity(Gravity.CENTER);
-                textView.setTextColor(getResources().getColor(android.R.color.black));
-                textView.setPadding(0, 6, 0, 6);
-
-                textView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        HotDestination item = listHotDestination.get(position);
-                        String cityId = item.getCityId();
-                        Bundle bundle = new Bundle();
-                        bundle.putString("cityId", cityId);
-                        bundle.putString("cityName", item.getCityName());
-                        InnerTravelCityActivity.actionStart(getApplicationContext(), bundle);
-                    }
-                });
-            }else{
-                textView.setVisibility(View.INVISIBLE);
-            }
-            layout.addView(textView);
-        }
-    }
+//    private void addActivityTag(int row, LinearLayout layout) {
+//
+//        for (int i = 0; i < COLUMNS; i++) {
+//
+//            final int position = (row * COLUMNS + i);
+//
+//            TextView textView = new TextView(this);
+//            LinearLayout.LayoutParams tvParams = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
+//            tvParams.weight = 1;// 此处weight必须置为1
+//            tvParams.bottomMargin = 10;
+//            if (i == 1 || i == 2){ //左边，右边 margin
+//                tvParams.leftMargin = 5;
+//                tvParams.rightMargin = 5;
+//            }
+//            if (i == 0){ //右边 margin
+//                tvParams.rightMargin = 5;
+//            }
+//            if (i == 3){ //左边 margin
+//                tvParams.leftMargin = 5;
+//            }
+//            textView.setLayoutParams(tvParams);
+//            if (position < listHotDestination.size()) {
+//                textView.setText(listHotDestination.get(position).getCityName());
+//                textView.setBackgroundResource(R.drawable.bg_et_city_unselected_corner_border);
+//                textView.setTextSize(16f);
+//                textView.setGravity(Gravity.CENTER);
+//                textView.setTextColor(getResources().getColor(android.R.color.black));
+//                textView.setPadding(0, 6, 0, 6);
+//
+//                textView.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        HotDestination item = listHotDestination.get(position);
+//                        String cityId = item.getCityId();
+//                        Bundle bundle = new Bundle();
+//                        bundle.putString("cityId", cityId);
+//                        bundle.putString("cityName", item.getCityName());
+//                        InnerTravelCityActivity.actionStart(getApplicationContext(), bundle);
+//                    }
+//                });
+//            }else{
+//                textView.setVisibility(View.INVISIBLE);
+//            }
+//            layout.addView(textView);
+//        }
+//    }
 
 
     @Override
@@ -350,9 +357,9 @@ public class InnerTravelMainActivity extends BaseActionBarActivity implements XS
             etSearchText.setHint("输入你想去的地方");
             etSearchText.setOnClickListener(this);
 
-//            gvHotDestination = (MyGridView) content.findViewById(R.id.gv_inner_travel_main_hot); //热门目的地
-            layoutDestContainer = (LinearLayout) content.findViewById(R.id.layout_dest_container);
-            layoutDestContainer.setVisibility(View.VISIBLE);
+//            layoutDestContainer = (LinearLayout) content.findViewById(R.id.layout_dest_container); //热门目的地
+//            layoutDestContainer.setVisibility(View.VISIBLE);
+            gvHotDestination = (MyGridView) content.findViewById(R.id.gv_inner_travel_main_hot); //热门目的地
 
             gvHotRecommend = (MyGridView) content.findViewById(R.id.gv_inner_travel_main_recommend); //热门推荐
             tvHotRecommendExchange = (TextView) content.findViewById(R.id.tv_hot_recommend_exchange); //热门推荐，换一换
@@ -406,7 +413,6 @@ public class InnerTravelMainActivity extends BaseActionBarActivity implements XS
                 }
             }
         });
-
 //        for (int i=0; i < 8; i++) {
 //            Travel travel = new Travel();
 //            travel.setTravelPrice(String.valueOf(121 + i));
@@ -414,10 +420,10 @@ public class InnerTravelMainActivity extends BaseActionBarActivity implements XS
 //            travel.setTravelIconPath("drawable://" + R.mipmap.travel_icon);
 //            listsFollow.add(travel);
 //        }
-
-//        hotDestAdapter = new HotDestinationAdapter(this, listHotDestination);
-//        gvHotDestination.setAdapter(hotDestAdapter);
-
+        //热门目的地
+        hotDestAdapter = new HotDestinationAdapter(this, listHotDestination);
+        gvHotDestination.setAdapter(hotDestAdapter);
+        //热门推荐
         hotRecomAdapter = new HotRecommendGridViewAdapter(getApplicationContext(), listHotRecommend);
         gvHotRecommend.setAdapter(hotRecomAdapter);
     }
@@ -553,7 +559,7 @@ public class InnerTravelMainActivity extends BaseActionBarActivity implements XS
         exchange = true;
         //热门推荐，换一换
         ExchangeBiz bizE = new ExchangeBiz(getApplicationContext(), handler);
-        bizE.getHotRecommend();
+        bizE.getHotRecommend(String.valueOf(type));
     }
 
     @Override
@@ -590,12 +596,14 @@ public class InnerTravelMainActivity extends BaseActionBarActivity implements XS
 
         tvFollow.setOnClickListener(this);
         tvFreedom.setOnClickListener(this);
+        tvIndicatorTopFollow.setOnClickListener(this);
+        tvIndicatorTopFreedom.setOnClickListener(this);
         tvHotRecommendExchange.setOnClickListener(this); //换一换
         gridViewFollow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 //进入旅游详情页
-                LogUtil.e(TAG, "i = " + i + ", l = " + l);
+//                LogUtil.e(TAG, "i = " + i + ", l = " + l);
                 Travel travel = lists.get((int) l);
                 Bundle bundle = new Bundle();
                 bundle.putString("id", travel.getId());
@@ -740,9 +748,47 @@ public class InnerTravelMainActivity extends BaseActionBarActivity implements XS
         //讨价还价
         if (MainActivity.logged) { //|| (number != null && !"null".equals(number) && pwd != null && !"null".equals(pwd))
             Intent intent = new Intent(getApplicationContext(), EasemobLoginActivity.class);
+            String im = null;
+            if (attr == 1){ //跟团游
+                im = listsFollow.get(position).getIm();
+            }else if (attr == 142){ //自由游
+                im = listsFreedom.get(position).getIm();
+            }
+            if (im == null || im.length() == 0){
+                ToastUtil.show(getApplicationContext(), "当前商户暂未提供客服功能");
+                return;
+            }
+            intent.putExtra("im", im);
             startActivity(intent);
         }else{
-            ToastUtil.show(getApplicationContext(), "请登录后再试");
+//            ToastUtil.show(getApplicationContext(), "请登录后再试");
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putInt("type", 2);
+            intent.putExtras(bundle);
+            startActivityForResult(intent, REQUEST_LOGIN);
+        }
+    }
+
+    private int REQUEST_LOGIN = 2913; //请求登录
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK){
+            if (requestCode == REQUEST_LOGIN) { //登录成功
+                User user = (User) data.getExtras().getSerializable(Consts.KEY_REQUEST);
+                if (user != null) {
+                    MainActivity.logged = true;
+                    MainActivity.user = user;
+                    SharedPreferencesUtils sp = SharedPreferencesUtils.getInstance(getApplicationContext());
+                    sp.saveUserId(user.getUserId());
+                }
+            }
+        }else{
+            if (requestCode == REQUEST_LOGIN) { //登录
+                ToastUtil.show(getApplicationContext(), "登录失败");
+            }
         }
     }
 
@@ -897,7 +943,7 @@ public class InnerTravelMainActivity extends BaseActionBarActivity implements XS
         int col = 4;// listView.getNumColumns();
         int totalHeight = 0;
 
-           /*
+
            int totalHeight1 = 0;
             //每4次，进行一次总高度相加
             //求出4个元素的最大高度，才进行一次高度相加操作
@@ -923,7 +969,7 @@ public class InnerTravelMainActivity extends BaseActionBarActivity implements XS
                 }
                 totalHeight1 += tempHeight;
             }
-            LogUtil.e(TAG, "totalHeight1 = " + totalHeight1);*/
+            LogUtil.e(TAG, "totalHeight1 = " + totalHeight1);
 
         // i每次加4，相当于listAdapter.getCount()小于等于4时 循环一次，计算一次item的高度，
         // listAdapter.getCount()小于等于8时计算两次高度相加

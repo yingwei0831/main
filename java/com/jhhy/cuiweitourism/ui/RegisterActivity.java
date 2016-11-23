@@ -34,7 +34,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
     private EditText etMobile;
     private EditText etCheckCode; //验证码
-    private EditText etRegisterCode; //注册码
+//    private EditText etRegisterCode; //注册码
 
     private EditText etPassword;
     private EditText etConfirmPassword;
@@ -114,7 +114,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
         etMobile = (EditText) findViewById(R.id.et_activity_regist_phone_number);
         etCheckCode = (EditText) findViewById(R.id.et_activity_regist_check_code);
-        etRegisterCode = (EditText) findViewById(R.id.et_activity_regist_register_code);
+//        etRegisterCode = (EditText) findViewById(R.id.et_activity_regist_register_code);
 
         etPassword = (EditText) findViewById(R.id.et_activity_regist_set_password);
         etConfirmPassword = (EditText) findViewById(R.id.et_activity_regist_confirm_password);
@@ -189,7 +189,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         }
         String mobile = etMobile.getText().toString().trim();
         String checkCode = etCheckCode.getText().toString().trim();
-        String registerCode = etRegisterCode.getText().toString().trim();
+//        String registerCode = etRegisterCode.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
 
         if(TextUtils.isEmpty(mobile) || TextUtils.isEmpty(checkCode) || TextUtils.isEmpty(password)){
@@ -199,7 +199,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 //        {"head":{"code":"User_register"},"field":{"mobile":"15210656911","password":"admin123","verify":"cwly","codes":"CWuhvle"}}
         LoadingIndicator.show(RegisterActivity.this, getString(R.string.http_notice));
         RegisterBiz biz = new RegisterBiz(getApplicationContext(), handler);
-        biz.register(mobile, password, checkCode, registerCode);
+        biz.register(mobile, password, checkCode, "");
     }
 
     private void startTime() {

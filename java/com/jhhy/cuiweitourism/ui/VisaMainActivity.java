@@ -250,7 +250,7 @@ public class VisaMainActivity extends BaseActivity implements XScrollView.IXScro
             myScrollView.setGestureDetector(mGestureDetector);
         }
         mScrollView.setView(content);
-        biz = new VisaActionBiz(getApplicationContext(), handler);
+        biz = new VisaActionBiz();
     }
 
     private void getHotVisaAny() { //热门签证

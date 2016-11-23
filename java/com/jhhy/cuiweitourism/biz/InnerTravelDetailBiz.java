@@ -46,7 +46,7 @@ public class InnerTravelDetailBiz {
      *
      * @param id 某城市id
      */
-    public void getInnerTravelDetail(final String id) {
+    public void getInnerTravelDetail(final String id, final String mid) {
         if (NetworkUtil.checkNetwork(context)) {
             new Thread() {
                 @Override
@@ -56,6 +56,7 @@ public class InnerTravelDetailBiz {
                     headMap.put(Consts.KEY_CODE, CODE_TRIP_DETAIL);
                     Map<String, Object> fieldMap = new HashMap<>();
                     fieldMap.put(Consts.KEY_ID, id);
+                    fieldMap.put("memberid", mid);
                     HttpUtils.executeXutils(headMap, fieldMap, travelDetailCallback);
                 }
             }.start();
@@ -186,6 +187,8 @@ public class InnerTravelDetailBiz {
                         }
                         detail.setTypeId(bodyObj.getString("typeid").trim());
                         detail.setCommentCount(bodyObj.getString("plcount").trim());
+                        detail.setIm(bodyObj.getString("im"));
+                        detail.setIscollect(bodyObj.getString("iscollect"));
                     }
                     msg.obj = detail;
                 }

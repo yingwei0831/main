@@ -35,14 +35,16 @@ public class ExchangeBiz {
     }
 
     //    {"head":{"code":"Publics_huanyihuan"},"field":[]}
-    public void getHotRecommend() {
+    public void getHotRecommend(final String typeid) {
         if (NetworkUtil.checkNetwork(context)) {
             new Thread() {
                 @Override
                 public void run() {
                     Map<String, Object> headMap = new HashMap<>();
                     headMap.put(Consts.KEY_CODE, CODE_EXCHANGE);
-                    HttpUtils.executeXutils(headMap, null, exchageCallback);
+                    Map<String, Object> fieldMap = new HashMap<>();
+                    fieldMap.put("typeid", typeid);
+                    HttpUtils.executeXutils(headMap, fieldMap, exchageCallback);
                 }
             }.start();
         } else {

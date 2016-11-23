@@ -9,15 +9,12 @@
 
     <dimen name="tab1_top_banner_height">200dp</dimen>
 
-    <dimen name="tab_text_size">16sp</dimen>
-
     <!--XScrollView-->
     <dimen name="header_height">60dp</dimen>
     <dimen name="footer_height">90dp</dimen>
     <dimen name="footer_padding">10dp</dimen>
 
     <!--KCalendar-->
-    <dimen name="fab_margin">16dp</dimen>
     <dimen name="historyscore_tb">10dp</dimen>
     <!--CircleViewPager-->
     <dimen name="view_small_padding">1dp</dimen>

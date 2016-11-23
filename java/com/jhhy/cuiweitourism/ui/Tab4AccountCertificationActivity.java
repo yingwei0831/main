@@ -70,10 +70,12 @@ public class Tab4AccountCertificationActivity extends BaseActivity implements Vi
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+
             switch (msg.what){
                 case Consts.MESSAGE_MODIFY_USER_AUTHENTICATION:
                     if (msg.arg1 == 1){
                         ToastCommon.toastShortShow(getApplicationContext(), null, "上传成功，请等待审核");
+                        LoadingIndicator.cancel();
                         setResult(RESULT_OK);
                         finish();
                     }else {
@@ -111,6 +113,9 @@ public class Tab4AccountCertificationActivity extends BaseActivity implements Vi
         etRemark = (EditText) findViewById(R.id.certivication_remark);
         ivOther = (ImageView) findViewById(R.id.iv_real_other) ;
         btnCommit = (Button) findViewById(R.id.btn_commit);
+
+        int selection = etRealName.getHint().length();
+        etRealName.setSelection(0);
     }
 
     private void addListener() {
@@ -192,7 +197,7 @@ public class Tab4AccountCertificationActivity extends BaseActivity implements Vi
 
     private void modifyGender() {
         AlertDialog.Builder builder = new AlertDialog.Builder(Tab4AccountCertificationActivity.this);
-        builder.setIcon(R.mipmap.ic_launcher);
+        builder.setIcon(R.mipmap.app_logo);
         builder.setTitle("选择性别");
         // 指定下拉列表的显示数据
         final String[] sexs = {"女", "男"};
@@ -368,7 +373,7 @@ public class Tab4AccountCertificationActivity extends BaseActivity implements Vi
             ToastCommon.toastShortShow(getApplicationContext(), null, "请上传身份证反面照");
             return;
         }
-
+        LoadingIndicator.show(this, getString(R.string.http_notice));
         String remark = etRemark.getText().toString();
 
         UserInformationBiz biz = new UserInformationBiz(getApplicationContext(), handler);

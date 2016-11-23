@@ -3,65 +3,66 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
     android:orientation="vertical"
-    tools:context=".ui.CarRentActivity"
-    android:background="@android:color/white">
+    tools:context=".ui.CarRentActivity">
 
-    <include layout="@layout/title_tab1_inner_travel"/>
+    <include layout="@layout/title_tab1_inner_travel" />
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <LinearLayout
-                android:layout_marginTop="30dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:gravity="center_vertical"
+                android:paddingBottom="6dp"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                android:paddingTop="6dp"
-                android:paddingBottom="6dp"
-                android:gravity="center_vertical"
-                >
+                android:paddingTop="6dp">
+
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_weight="0.8"
                     android:layout_height="36dp"
-                    android:text="@string/car_rent_kind"
+                    android:layout_weight="0.8"
                     android:gravity="center_vertical"
-                    android:textSize="16sp"
-                    />
+                    android:text="@string/car_rent_kind"
+                    android:textSize="16sp" />
+
                 <TextView
                     android:id="@+id/tv_rent_type"
                     android:layout_width="wrap_content"
                     android:layout_height="36dp"
-                    android:gravity="center"
-                    android:layout_marginRight="2dp"
                     android:layout_marginLeft="2dp"
-                    />
+                    android:layout_marginRight="2dp"
+                    android:gravity="center" />
 
 
             </LinearLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1.2px"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:background="@color/colorLineGray2" />
+
             <LinearLayout
-                android:visibility="visible"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:paddingBottom="16dp"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                android:paddingTop="16dp">
+                android:paddingTop="16dp"
+                android:visibility="visible">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -76,24 +77,25 @@
                     android:layout_weight="1"
                     android:drawablePadding="16dp"
 
-                    android:gravity="right"
-                    />
+                    android:gravity="right" />
             </LinearLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1.2px"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:background="@color/colorLineGray2" />
+
             <LinearLayout
-                android:visibility="visible"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:paddingBottom="16dp"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                android:paddingTop="16dp">
+                android:paddingTop="16dp"
+                android:visibility="visible">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -108,9 +110,9 @@
                     android:layout_weight="1"
                     android:drawablePadding="16dp"
 
-                    android:gravity="right"
-                     />
+                    android:gravity="right" />
             </LinearLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1.2px"
@@ -119,79 +121,80 @@
                 android:background="@color/colorLineGray2" />
 
             <LinearLayout
-            android:visibility="visible"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingBottom="16dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:paddingTop="16dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/car_rent_to"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/tv_rent_to_addr"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:drawablePadding="16dp"
-
-                android:gravity="right"
-                />
-        </LinearLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1.2px"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:background="@color/colorLineGray2" />
-
-            <LinearLayout
-            android:visibility="visible"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingBottom="16dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:paddingTop="16dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/car_rent_period"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/tv_rent_time"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:drawablePadding="16dp"
-
-                android:gravity="right"
-                />
-        </LinearLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1.2px"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:background="@color/colorLineGray2" />
-            <LinearLayout
-                android:visibility="visible"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:paddingBottom="16dp"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                android:paddingTop="16dp">
+                android:paddingTop="16dp"
+                android:visibility="visible">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/car_rent_to"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_rent_to_addr"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawablePadding="16dp"
+
+                    android:gravity="right" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1.2px"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:background="@color/colorLineGray2" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="16dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="16dp"
+                android:visibility="visible">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/car_rent_period"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_rent_time"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawablePadding="16dp"
+
+                    android:gravity="right" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1.2px"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:background="@color/colorLineGray2" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="16dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="16dp"
+                android:visibility="visible">
 
                 <TextView
                     android:layout_width="0dp"
@@ -204,10 +207,10 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:drawablePadding="16dp"
-                    android:textColor="@color/colorTab1RecommendForYouMoney"
                     android:layout_gravity="bottom"
-                    android:text="￥" />
+                    android:drawablePadding="16dp"
+                    android:text="￥"
+                    android:textColor="@color/colorTab1RecommendForYouMoney" />
 
                 <TextView
                     android:id="@+id/tv_rent_price"
@@ -215,31 +218,29 @@
                     android:layout_height="wrap_content"
                     android:drawablePadding="16dp"
                     android:textColor="@color/colorTab1RecommendForYouMoney"
-                    android:textSize="18sp"
-                     />
+                    android:textSize="18sp" />
 
             </LinearLayout>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/car_rent_order_contact"
+                android:background="@color/colorTab2Space"
+                android:paddingBottom="16dp"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                android:background="@color/colorTab2Space"
                 android:paddingTop="20dp"
-                android:paddingBottom="16dp"
-                />
+                android:text="@string/car_rent_order_contact" />
+
             <LinearLayout
-                android:visibility="visible"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:orientation="horizontal"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                android:focusableInTouchMode="true"
-                android:focusable="true"
-                >
+                android:visibility="visible">
 
                 <TextView
 
@@ -249,16 +250,16 @@
                     android:textSize="16sp" />
 
                 <EditText
-                    android:paddingBottom="16dp"
-                    android:paddingTop="16dp"
                     android:id="@+id/et_rent_link_name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:drawablePadding="16dp"
                     android:background="@android:color/white"
+                    android:inputType="text"
+                    android:drawablePadding="16dp"
+                    android:paddingBottom="16dp"
                     android:paddingLeft="10dp"
-                    />
+                    android:paddingTop="16dp" />
             </LinearLayout>
 
             <View
@@ -267,14 +268,14 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:background="@color/colorLineGray2" />
+
             <LinearLayout
-                android:visibility="visible"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                >
+                android:visibility="visible">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -283,25 +284,24 @@
                     android:textSize="16sp" />
 
                 <EditText
-                    android:paddingBottom="16dp"
-                    android:paddingTop="16dp"
                     android:id="@+id/et_rent_link_mobile"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:drawablePadding="16dp"
                     android:background="@android:color/white"
+                    android:drawablePadding="16dp"
+                    android:inputType="number"
+                    android:paddingBottom="16dp"
                     android:paddingLeft="10dp"
-                    />
+                    android:paddingTop="16dp" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/colorTab2Space"
-                android:paddingTop="30dp"
                 android:paddingBottom="16dp"
-                >
+                android:paddingTop="30dp">
 
                 <Button
                     android:id="@+id/btn_car_rent_order_next"

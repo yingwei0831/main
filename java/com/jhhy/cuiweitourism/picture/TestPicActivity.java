@@ -127,8 +127,8 @@ public class TestPicActivity extends Activity implements View.OnClickListener {
 //				finish();
 //			}
 		}else{
-			setResult(RESULT_CANCELED);
-			finish();
+//			setResult(RESULT_CANCELED);
+//			finish();
 		}
 	}
 

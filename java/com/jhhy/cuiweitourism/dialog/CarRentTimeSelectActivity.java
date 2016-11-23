@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.ui.BaseActivity;
+import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.jhhy.cuiweitourism.utils.Utils;
 
 import net.simonvt.numberpicker.NumberPicker;
@@ -19,10 +20,12 @@ import net.simonvt.numberpicker.NumberPicker;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class CarRentTimeSelectActivity extends Activity implements View.OnClickListener {
 
-
+    private String TAG = "CarRentTimeSelectActivity";
     private NumberPicker npYear;
     private NumberPicker npMonth;
     private NumberPicker npDay;
@@ -37,6 +40,7 @@ public class CarRentTimeSelectActivity extends Activity implements View.OnClickL
     private int date;
     private int hour;
     private String newString = null;
+    private long longdate; //选择时间毫秒值
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,11 +80,16 @@ public class CarRentTimeSelectActivity extends Activity implements View.OnClickL
 
     private void initData() {
         Calendar calendar = Calendar.getInstance();
+        TimeZone tz = TimeZone.getTimeZone("GMT+8");
+        calendar.setTimeZone(tz);
         year = calendar.get(Calendar.YEAR);
         month = (calendar.get(Calendar.MONTH) + 1);
         date = calendar.get(Calendar.DAY_OF_MONTH);
         hour = calendar.get(Calendar.HOUR_OF_DAY);
         newString = String.format("%d年%02d月%02d日 %s", year, month, date, Utils.getDayOfStr(calendar.get(Calendar.DAY_OF_WEEK))); //calendar.get(Calendar.DAY_OF_WEEK);
+        longdate = Utils.getTimeYMDH(String.format(Locale.getDefault(), "%d-%02d-%02d %02d", year, month, date, hour));
+//        LogUtil.e(TAG, "longdate = " + longdate +", currentTimeMillis = " + System.currentTimeMillis());
+        longdate = calendar.getTimeInMillis();
         npYear.setMaxValue(calendar.get(Calendar.YEAR) + 2);
         npYear.setMinValue(calendar.get(Calendar.YEAR));
 
@@ -147,6 +156,8 @@ public class CarRentTimeSelectActivity extends Activity implements View.OnClickL
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
                 hour = npHour.getValue();
+                longdate = Utils.getTimeYMDH(String.format(Locale.getDefault(), "%d-%02d-%02d %02d", year, month, date, hour));
+//                LogUtil.e(TAG, "longdate = " + longdate +", currentTimeMillis = " + System.currentTimeMillis());
             }
         });
         btnCancel.setOnClickListener(this);
@@ -155,6 +166,8 @@ public class CarRentTimeSelectActivity extends Activity implements View.OnClickL
 
     private void setPreviewDate() {
         Calendar c = Calendar.getInstance();
+//        TimeZone tz = TimeZone.getTimeZone("GMT+8");
+//        c.setTimeZone(tz);
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         try {
             c.setTime(format.parse( String.format("%d-%d-%d 00:00:00", year, month, date)));
@@ -162,6 +175,8 @@ public class CarRentTimeSelectActivity extends Activity implements View.OnClickL
             e.printStackTrace();
         }
         newString = String.format("%d年%02d月%02d日 %s", year, month, date, Utils.getDayOfStr(c.get(Calendar.DAY_OF_WEEK)));
+        longdate = Utils.getTimeYMDH(String.format(Locale.getDefault(), "%d-%02d-%02d %02d", year, month, date, hour));
+//        LogUtil.e(TAG, "longdate = " + longdate +", currentTimeMillis = " + System.currentTimeMillis());
         tvDate.setText(newString);
     }
 
@@ -172,6 +187,11 @@ public class CarRentTimeSelectActivity extends Activity implements View.OnClickL
                 finish();
                 break;
             case R.id.btn_date_picker_comfirm:
+//                LogUtil.e(TAG, "longdate = " + longdate +", currentTimeMillis = " + System.currentTimeMillis());
+                if (longdate <= System.currentTimeMillis()){
+                    ToastUtil.show(getApplicationContext(), "请选择当前时间之后的日期");
+                    return;
+                }
                 Intent intent = new Intent();
                 Bundle bundle = new Bundle();
                 bundle.putString("selectDate", String.format("%d-%02d-%02d %02d时", year, month, date, hour));

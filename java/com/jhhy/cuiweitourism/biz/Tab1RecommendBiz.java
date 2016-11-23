@@ -61,7 +61,7 @@ public class Tab1RecommendBiz {
                 String head = resultObj.getString(Consts.KEY_HEAD);
                 JSONObject headObj = new JSONObject(head);
                 String resCode = headObj.getString(Consts.KEY_HTTP_RES_CODE);
-                String resMsg = headObj.getString(Consts.KEY_HTTP_RES_MSG);
+//                String resMsg = headObj.getString(Consts.KEY_HTTP_RES_MSG);
                 String resArg = headObj.getString(Consts.KEY_HTTP_RES_ARG);
                 if ("0001".equals(resCode)) {
                     msg.arg1 = 0;
@@ -80,6 +80,8 @@ public class Tab1RecommendBiz {
                             travel.setTravelIconPath(travelObj.getString(Consts.PIC_PATH_LITPIC));
                             travel.setTravelPrice(travelObj.getString(Consts.KEY_PRICE));
                             travel.setGroup(travelObj.getString(Consts.KEY_GROUP));
+                            travel.setIm(travelObj.getString("im"));
+                            travel.setGysid(travelObj.getString("gysid"));
                             lists.add(travel);
                         }
                     }

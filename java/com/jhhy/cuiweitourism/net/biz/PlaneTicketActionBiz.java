@@ -33,9 +33,9 @@ import java.util.Map;
  */
 public class PlaneTicketActionBiz extends BasicActionBiz {
 
-    public PlaneTicketActionBiz(Context context, Handler handler) {
-        super(context, handler);
-    }
+//    public PlaneTicketActionBiz(Context context, Handler handler) {
+//        super(context, handler);
+//    }
 
     public PlaneTicketActionBiz(){
     }

@@ -113,8 +113,8 @@ public class SearchActivity extends BaseActionBarActivity implements ArgumentOnC
         tvTitle.setText("路线查找");
 
         etSearchCity = (EditText) findViewById(R.id.et_search_key_words);
-        etSearchCity.setHint(selectCity.getName());
-        etSearchCity.setText(selectCity.getName());
+//        etSearchCity.setHint(selectCity.getName());
+//        etSearchCity.setText(selectCity.getName());
         ivSearch = (ImageView) findViewById(R.id.title_search_iv_right_telephone);
 
         pullToRefreshListView = (PullToRefreshListView) findViewById(R.id.activity_search_list_view);
@@ -188,7 +188,9 @@ public class SearchActivity extends BaseActionBarActivity implements ArgumentOnC
             else if (requestCode == VIEW_LINE_DETAIL){ //订线路，不需要响应
             }
         }else{
-
+            if (requestCode == REQUEST_LOGIN) { //登录
+                ToastUtil.show(getApplicationContext(), "登录失败");
+            }
         }
     }
 
@@ -252,15 +254,6 @@ public class SearchActivity extends BaseActionBarActivity implements ArgumentOnC
         });
     }
 
-    public static void actionStart(Context context, Bundle bundle){
-        Intent intent = new Intent(context, SearchActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        if(bundle != null){
-            intent.putExtras(bundle);
-        }
-        context.startActivity(intent);
-    }
-
     /**
      * @param view      layout布局
      * @param viewGroup useless
@@ -272,6 +265,12 @@ public class SearchActivity extends BaseActionBarActivity implements ArgumentOnC
         //讨价还价
         if (MainActivity.logged) { //|| (number != null && !"null".equals(number) && pwd != null && !"null".equals(pwd))
             Intent intent = new Intent(getApplicationContext(), EasemobLoginActivity.class);
+            String im = lists.get(position).getAttrid();
+            if (im == null || im.length() == 0){
+                ToastUtil.show(getApplicationContext(), "当前商户暂未提供客服功能");
+                return;
+            }
+            intent.putExtra("im", im);
             startActivity(intent);
         }else{
 //            ToastUtil.show(getApplicationContext(), "请登录后再试");
@@ -283,4 +282,12 @@ public class SearchActivity extends BaseActionBarActivity implements ArgumentOnC
         }
     }
 
+    public static void actionStart(Context context, Bundle bundle){
+        Intent intent = new Intent(context, SearchActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        if(bundle != null){
+            intent.putExtras(bundle);
+        }
+        context.startActivity(intent);
+    }
 }

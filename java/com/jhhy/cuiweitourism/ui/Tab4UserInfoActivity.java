@@ -66,18 +66,18 @@ public class Tab4UserInfoActivity extends BaseActivity implements View.OnClickLi
     private String gender;
     private boolean changeIcon;
 
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what){
+            switch (msg.what) {
                 case Consts.MESSAGE_MODIFY_USER_ICON: //修改用户头像
-                    if (msg.arg1 == 1){
+                    if (msg.arg1 == 1) {
                         civUserIcon.setImageBitmap(Bimp.bmp.get(0));//把图片显示在ImageView控件上
                         ImageLoaderUtil.getInstance(getApplicationContext()).loadImage(String.valueOf(msg.obj));
                         MainActivity.user.setUserIconPath(String.valueOf(msg.obj));
                         changeIcon = true;
-                    }else{
+                    } else {
                         ToastCommon.toastShortShow(getApplicationContext(), null, String.valueOf(msg.obj));
                     }
                     LoadingIndicator.cancel();
@@ -87,7 +87,7 @@ public class Tab4UserInfoActivity extends BaseActivity implements View.OnClickLi
                     break;
                 case Consts.MESSAGE_MODIFY_USER_INFO: //修改用户性别
                     ToastCommon.toastShortShow(getApplicationContext(), null, String.valueOf(msg.obj));
-                    if (msg.arg1 == 1){
+                    if (msg.arg1 == 1) {
                         tvGender.setText(gender);
                         MainActivity.user.setUserGender(gender);
                     }
@@ -154,8 +154,8 @@ public class Tab4UserInfoActivity extends BaseActivity implements View.OnClickLi
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK){
-            if (changeIcon){
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (changeIcon) {
                 Intent data = new Intent();
                 data.putExtra("tag", changeIcon);
                 setResult(RESULT_OK, data);
@@ -170,14 +170,14 @@ public class Tab4UserInfoActivity extends BaseActivity implements View.OnClickLi
         layoutUserIcon.setOnClickListener(this);
         layoutNickName.setOnClickListener(this);
         layoutGender.setOnClickListener(this);
-        layoutMobile.setOnClickListener(this);
+//        layoutMobile.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.title_main_tv_left_location:
-                if (changeIcon){
+                if (changeIcon) {
                     Intent data = new Intent();
                     data.putExtra("tag", changeIcon);
                     setResult(RESULT_OK, data);
@@ -200,10 +200,10 @@ public class Tab4UserInfoActivity extends BaseActivity implements View.OnClickLi
             case R.id.fragment_userinfo_layout_change_gender: //更改性别
                 modifyGender();
                 break;
-            case R.id.fragment_userinfo_layout_phonenumber:
-                Intent intentTel = new Intent(getApplicationContext(), ModifyTelephoneNumberActivity.class);
-                startActivityForResult(intentTel, REQUEST_CHANGE_MOBILE);
-                break;
+//            case R.id.fragment_userinfo_layout_phonenumber:
+//                Intent intentTel = new Intent(getApplicationContext(), ModifyTelephoneNumberActivity.class);
+//                startActivityForResult(intentTel, REQUEST_CHANGE_MOBILE);
+//                break;
         }
     }
 
@@ -298,6 +298,7 @@ public class Tab4UserInfoActivity extends BaseActivity implements View.OnClickLi
 
     /**
      * 收缩图片
+     *
      * @param uri
      * @param path
      * @param width
@@ -318,10 +319,10 @@ public class Tab4UserInfoActivity extends BaseActivity implements View.OnClickLi
     }
 
     private String picName = "";
-//    private String path = "";
+    //    private String path = "";
     private Uri uritempFile; //图片临时文件
-    private static final String IMAGE_UNSPECIFIED = "image/*"; //保存图片的格式
-    private static final int PHOTO_RESULT = 0x000010; //保存图片？
+    private String IMAGE_UNSPECIFIED = "image/*"; //保存图片的格式
+    private int PHOTO_RESULT = 0x000010; //保存图片？
 
     private final int MESSAGE_REFRESH_IMAGE = 1999; //刷新图片显示
 
@@ -329,7 +330,7 @@ public class Tab4UserInfoActivity extends BaseActivity implements View.OnClickLi
         new Thread(new Runnable() {
             public void run() {
                 while (true) {
-                    LogUtil.e(TAG, "Bimp.max = " + Bimp.max +", Bimp.drr.size() = " + Bimp.drr.size() +"，" + Arrays.toString(Bimp.drr.toArray()));
+                    LogUtil.e(TAG, "Bimp.max = " + Bimp.max + ", Bimp.drr.size() = " + Bimp.drr.size() + "，" + Arrays.toString(Bimp.drr.toArray()));
                     if (Bimp.max == Bimp.drr.size()) {
                         Message message = new Message();
                         message.what = MESSAGE_REFRESH_IMAGE;
@@ -360,5 +361,33 @@ public class Tab4UserInfoActivity extends BaseActivity implements View.OnClickLi
                 }
             }
         }).start();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        TAG = null;
+        tvTitle = null;
+        ivTitleLeft = null;
+        layoutUserIcon = null;
+        civUserIcon = null;
+        layoutNickName = null;
+        tvNickName = null;
+        layoutGender = null;
+        tvGender = null;
+        layoutMobile = null;
+        tvMobile = null;
+        tvNotice = null;
+        layoutRealInfo = null;
+        tvRealName = null;
+        tvID = null;
+        gender = null;
+        changeIcon = false;
+        picName = null;
+        uritempFile = null;
+        IMAGE_UNSPECIFIED = null;
+        PHOTO_RESULT = 0;
+        REQUEST_CHANGE_NICK_NAME = 0;
+        REQUEST_CHANGE_MOBILE = 0;
     }
 }

@@ -35,7 +35,7 @@ public class HotelOfMineListActivity extends BaseActivity implements View.OnClic
     private TextView tvTitleTop;
     private ImageView ivTitleLeft;
 
-    private final List<String> titles = Arrays.asList("跟团游", "自由游");
+    private final List<String> titles = new ArrayList<>(Arrays.asList("跟团游", "自由游"));
     private TabLayout indicatorInnerTravel;
     private ViewPager viewPager;
     private InnerTravelPagerAdapter mAdapter;
@@ -44,9 +44,7 @@ public class HotelOfMineListActivity extends BaseActivity implements View.OnClic
     private InnerTravelCityFollowFragment followFragment;
     private InnerTravelCityFreedomFragment freedomFragment;
 
-    private View layout;
-
-    private int tag;
+    //    private int tag;
 
     private String cityId; //城市id，可以确定国内、出境
     private String cityName;
@@ -90,7 +88,7 @@ public class HotelOfMineListActivity extends BaseActivity implements View.OnClic
         tvTitleTop.setText(cityName);
         ivTitleLeft = (ImageView) findViewById(R.id.title_main_tv_left_location);
 
-        layout = findViewById(R.id.activity_inner_travel);
+        View layout = findViewById(R.id.activity_inner_travel);
         indicatorInnerTravel = (TabLayout) findViewById(R.id.activity_inner_travel_indicator_top);
         viewPager = (ViewPager) findViewById(R.id.activity_inner_travel_viewpager);
 

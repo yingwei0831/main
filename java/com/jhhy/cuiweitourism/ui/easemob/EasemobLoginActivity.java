@@ -36,13 +36,16 @@ public class EasemobLoginActivity extends EaseBaseActivity {
 	private int selectedIndex = Consts.INTENT_CODE_IMG_SELECTED_DEFAULT;
 	private int messageToIndex = Consts.MESSAGE_TO_DEFAULT;
 
+	private String im;
+
 	@Override
 	protected void onCreate(Bundle arg0) {
 		super.onCreate(arg0);
 		Intent intent = getIntent();
-		selectedIndex = intent.getIntExtra(Consts.INTENT_CODE_IMG_SELECTED_KEY,
-				Consts.INTENT_CODE_IMG_SELECTED_DEFAULT);
+		selectedIndex = intent.getIntExtra(Consts.INTENT_CODE_IMG_SELECTED_KEY, Consts.INTENT_CODE_IMG_SELECTED_DEFAULT);
 		messageToIndex = intent.getIntExtra(Consts.MESSAGE_TO_INTENT_EXTRA, Consts.MESSAGE_TO_DEFAULT);
+		im = intent.getStringExtra("im");
+
 		if (EMChat.getInstance().isLoggedIn()) {
 			progressDialog = getProgressDialog();
 			progressDialog.setMessage(getResources().getString(R.string.is_contact_customer));
@@ -72,7 +75,7 @@ public class EasemobLoginActivity extends EaseBaseActivity {
 			final String name = sp.getTelephoneNumber();
 			final String pwd = sp.getPassword();
 			LogUtil.e("EasemobLoginActivity", "name = " + name +", password = " + pwd);
-			EMChatManager.getInstance().login(name, pwd, new EMCallBack() {
+			EMChatManager.getInstance().login(name, "admin123", new EMCallBack() {
 				@Override
 				public void onSuccess() {
 					if (!progressShow) {
@@ -120,7 +123,7 @@ public class EasemobLoginActivity extends EaseBaseActivity {
 				// 进入主页面
 				startActivity(new Intent(EasemobLoginActivity.this, ChatActivity.class).putExtra(
 						Consts.INTENT_CODE_IMG_SELECTED_KEY, selectedIndex).putExtra(
-						Consts.MESSAGE_TO_INTENT_EXTRA, messageToIndex));
+						Consts.MESSAGE_TO_INTENT_EXTRA, messageToIndex).putExtra("im", im));
 				finish();
 			}
 		});

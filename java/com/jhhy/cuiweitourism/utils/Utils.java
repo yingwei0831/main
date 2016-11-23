@@ -333,6 +333,17 @@ public class Utils {
        return 0;
     }
 
+    public static long getTimeYMDH(String date){
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH");
+        try {
+            Date time =  format.parse(date);
+            return time.getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
     /**
      * 获取日期 的星期 2016-10-26 周三
      * @param day 2016-10-26

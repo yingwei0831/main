@@ -151,7 +151,7 @@ public class CarRentActivity extends BaseActivity implements View.OnClickListene
             case R.id.tv_select_to_addr: //选择目的地址
                 Intent intentTo = new Intent(getApplicationContext(), CarRentInputAddressActivity.class);
                 Bundle bundleTo = new Bundle();
-                bundleTo.putInt("type", 2);
+                bundleTo.putInt("type", 1);
                 intentTo.putExtras(bundleTo);
                 startActivityForResult(intentTo, INPUT_TO_ADDRESS);
                 break;
@@ -235,7 +235,7 @@ public class CarRentActivity extends BaseActivity implements View.OnClickListene
 
     private void getInternetData() {
         LoadingIndicator.show(CarRentActivity.this, getString(R.string.http_notice));
-        carBiz = new CarRentActionBiz(getApplicationContext(), handler);
+        carBiz = new CarRentActionBiz();
         //租车，获取大车车型
 
         carBiz.fetchCarRentalServiceDetail(new BizCallback() {
@@ -263,8 +263,8 @@ public class CarRentActivity extends BaseActivity implements View.OnClickListene
     private void refreshView() {
 
         SpannableString ss1 = new SpannableString(mList.get(0).getTitle()+mList.get(0).getSeatnum()+"座");
-        ss1.setSpan(new AbsoluteSizeSpan(18), 0, 3, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        ss1.setSpan(new AbsoluteSizeSpan(12), 3, 6, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ss1.setSpan(new AbsoluteSizeSpan(20), 0, 3, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ss1.setSpan(new AbsoluteSizeSpan(14), 3, 6, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         ss1.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorActionBar)), 3, 6, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         rbCarriageKoste.setText(ss1);
 
@@ -275,7 +275,7 @@ public class CarRentActivity extends BaseActivity implements View.OnClickListene
         rbCarriageKinglong35.setText(ss2);
 
         SpannableString ss3 = new SpannableString(mList.get(2).getTitle()+mList.get(2).getSeatnum()+"座");
-        ss3.setSpan(new AbsoluteSizeSpan(16), 0, 4, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ss3.setSpan(new AbsoluteSizeSpan(18), 0, 4, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         ss3.setSpan(new AbsoluteSizeSpan(12), 4, 7, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         ss3.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorActionBar)), 4, 7, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         rbCarriageKinglong55.setText(ss3);

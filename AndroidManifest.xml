@@ -125,8 +125,8 @@
 
         <activity
             android:name=".ui.MainActivity"
-            android:screenOrientation="portrait"
             android:launchMode="singleTop"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <!-- android:theme="@style/MyCustomWindowTitle" -->
@@ -214,9 +214,7 @@
             android:name=".ui.HotActivityEditOrderActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:windowSoftInputMode="adjustPan|stateHidden"
-            />
-
+            android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".ui.PriceCalendarReserveActivity"
             android:launchMode="singleTop"
@@ -234,6 +232,7 @@
             android:theme="@style/ActionBarTheme" />
         <activity
             android:name=".dialog.TourismCoinActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/EMyDialogStyle" />
         <activity
@@ -279,8 +278,8 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.Tab4UserInfoActivity"
-            android:screenOrientation="portrait"
             android:launchMode="singleTop"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.Tab4OrderDetailsActivity"
@@ -289,61 +288,61 @@
             android:theme="@style/ActionBarTheme" />
         <activity
             android:name=".ui.RequestRefundActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:launchMode="singleTop"/>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.EditUserInfoActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:launchMode="singleTop"/>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.Tab4AccountSecurityActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:windowSoftInputMode="adjustPan|stateHidden"
-            android:launchMode="singleTop"/>
+            android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".ui.ModifyPasswordActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:launchMode="singleTop"/>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.ModifyTelephoneNumberActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:launchMode="singleTop"/>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.Tab4AccountCertificationActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:windowSoftInputMode="adjustPan|stateHidden"
-            android:launchMode="singleTop"/>
+            android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".ui.Tab4MyCollectionActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:launchMode="singleTop"/>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.Tab4MyTourismCoinActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:launchMode="singleTop"/>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.Tab4MyReleaseActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:launchMode="singleTop"/>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.Tab4MyCommentActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/ActionBarTheme"
-            android:launchMode="singleTop"/>
+            android:theme="@style/ActionBarTheme" />
         <activity
             android:name=".ui.Tab4MyMessageActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/ActionBarTheme"
-            android:launchMode="singleTop"/>
+            android:theme="@style/ActionBarTheme" />
         <activity
             android:name=".ui.HotActivityListActivity"
             android:screenOrientation="portrait"
@@ -419,7 +418,6 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/EMyDialogStyle" />
-
         <activity
             android:name=".picture.TestPicActivity"
             android:screenOrientation="portrait" />
@@ -455,11 +453,10 @@
             android:name=".ui.VisaItemDetailActivity"
             android:screenOrientation="portrait"
             android:theme="@style/ActionBarTheme" />
-         <activity
+        <activity
             android:name=".ui.VisaItemDetailActivity2"
             android:screenOrientation="portrait"
             android:theme="@style/ActionBarTheme" />
-
         <activity
             android:name=".ui.VisaNeedMaterialActivity"
             android:screenOrientation="portrait"
@@ -675,6 +672,7 @@
         <!-- 定位需要的服务 使用2.0的定位需要加上这个 -->
         <service android:name="com.amap.api.location.APSService" />
 
+        <activity android:name=".ui.AboutCuiweiActivity"></activity>
     </application>
 
 </manifest>

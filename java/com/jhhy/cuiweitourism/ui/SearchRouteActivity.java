@@ -23,11 +23,13 @@ import com.jhhy.cuiweitourism.biz.ScreenBiz;
 import com.jhhy.cuiweitourism.moudle.PhoneBean;
 import com.jhhy.cuiweitourism.moudle.PriceArea;
 import com.jhhy.cuiweitourism.moudle.Travel;
+import com.jhhy.cuiweitourism.moudle.User;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.popupwindows.PopupWindowSearchLine;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.ui.easemob.EasemobLoginActivity;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
+import com.jhhy.cuiweitourism.utils.SharedPreferencesUtils;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.jhhy.cuiweitourism.utils.Utils;
 
@@ -257,6 +259,7 @@ public class SearchRouteActivity extends BaseActivity implements View.OnClickLis
     }
 
     private final int VIEW_LINE_DETAIL = 2908; //进入线路详情
+    private int REQUEST_LOGIN = 2913; //请求登录
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -279,6 +282,18 @@ public class SearchRouteActivity extends BaseActivity implements View.OnClickLis
                 laterTime = bundle.getString("selectDate");
             }
             popupWindowSearchLine.setLaterTime(laterTime);
+        }else if (requestCode == REQUEST_LOGIN){
+            if (resultCode == RESULT_OK) {
+                User user = (User) data.getExtras().getSerializable(Consts.KEY_REQUEST);
+                if (user != null) {
+                    MainActivity.logged = true;
+                    MainActivity.user = user;
+                    SharedPreferencesUtils sp = SharedPreferencesUtils.getInstance(getApplicationContext());
+                    sp.saveUserId(user.getUserId());
+                }
+            }else{
+                ToastUtil.show(getApplicationContext(), "登录失败");
+            }
         }
     }
 
@@ -375,15 +390,6 @@ public class SearchRouteActivity extends BaseActivity implements View.OnClickLis
         });
     }
 
-    public static void actionStart(Context context, Bundle data){
-        Intent intent = new Intent(context, SearchRouteActivity.class);
-        if(data != null){
-            intent.putExtras(data);
-        }
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
-    }
-
     /**
      * @param view      layout布局
      * @param viewGroup
@@ -397,13 +403,32 @@ public class SearchRouteActivity extends BaseActivity implements View.OnClickLis
             case R.id.tv_inner_travel_item_argument:
                 if (MainActivity.logged) { //|| (number != null && !"null".equals(number) && pwd != null && !"null".equals(pwd))
                     Intent intent = new Intent(getApplicationContext(), EasemobLoginActivity.class);
+                    String im = mLists.get(position).getIm();
+                    if (im == null || im.length() == 0){
+                        ToastUtil.show(getApplicationContext(), "当前商户暂未提供客服功能");
+                        return;
+                    }
+                    intent.putExtra("im", im);
                     startActivity(intent);
                 }else{
-                    ToastUtil.show(getApplicationContext(), "请登录后再试");
+//                    ToastUtil.show(getApplicationContext(), "请登录后再试");
                     //TODO 进入登录页面
-
+                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("type", 2);
+                    intent.putExtras(bundle);
+                    startActivityForResult(intent, REQUEST_LOGIN);
                 }
                 break;
         }
+    }
+
+    public static void actionStart(Context context, Bundle data){
+        Intent intent = new Intent(context, SearchRouteActivity.class);
+        if(data != null){
+            intent.putExtras(data);
+        }
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 }

@@ -30,9 +30,9 @@ import java.util.Objects;
  */
 public class TrainTicketActionBiz extends BasicActionBiz {
 
-    public TrainTicketActionBiz(Context context, Handler handler) {
-        super(context, handler);
-    }
+//    public TrainTicketActionBiz(Context context, Handler handler) {
+//        super(context, handler);
+//    }
 
     public TrainTicketActionBiz(){
 

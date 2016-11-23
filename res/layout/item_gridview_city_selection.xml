@@ -5,9 +5,11 @@
     android:layout_height="wrap_content"
     android:background="@drawable/bg_et_city_unselected_corner_border"
     android:gravity="center"
-    android:paddingBottom="6dp"
-    android:paddingTop="6dp"
-    android:text="沈阳beijing沈阳北京"
+    android:paddingBottom="4dp"
+    android:paddingTop="4dp"
+    android:text="沈阳beijing沈阳北京北京沈阳党领导是奇偶佛山金佛而我家附近的空间是否二十九覅偶尔接飞机的搜房的教师节和佛山"
     android:textColor="@color/tab_text"
-    android:textSize="16sp" />
+    android:maxLines="1"
+    android:ellipsize="middle"
+    android:textSize="14sp" />
 

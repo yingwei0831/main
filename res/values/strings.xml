@@ -2,7 +2,6 @@
     <string name="app_name">翠微旅游</string>
 
     <string name="http_notice">网络请求中，请稍后...</string>
-    <string name="net_error_notice">网络已断开</string>
     <string name="empty_input">输入不能为空</string>
     <string name="start_activity">开启我的旅程</string>
     <!--首页-->
@@ -46,7 +45,6 @@
     <string name="tab1_recommend_argument">讨价还价</string>
 
     <!--签证-->
-    <string name="visa_hot">热门签证国家</string>
     <string name="visa_hot_all_country">查看全部国家和地区</string>
     <string name="visa_hot_all_country_title">全部国家和地区</string>
     <string name="visa_hot_any">热门签证</string>
@@ -59,9 +57,6 @@
     <string name="car_rent_kind">车型</string>
     <string name="car_rent_kind_kaosite">考斯特</string>
     <string name="car_rent_kind_jinlong">金龙客车</string>
-    <string name="car_rent_kind_20">20座</string>
-    <string name="car_rent_kind_35">35座</string>
-    <string name="car_rent_kind_55">55座</string>
     <string name="car_rent_days">天数</string>
     <string name="car_rent_days_1">1天</string>
     <string name="car_rent_days_2">2天</string>
@@ -81,7 +76,6 @@
     <string name="car_rent_order_contact_name">姓名：</string>
     <string name="car_rent_order_contact_tel">手机：</string>
     <string name="car_rent_order_commit_order">提交订单</string>
-    <string name="car_rent_success">租车成功</string>
     <string name="car_rent_order_success">订购成功</string>
     <string name="car_rent_order_detail">您的订单情况如下：</string>
     <string name="car_rent_order_number">订单号</string>
@@ -91,13 +85,9 @@
 
 
     <!--选择城市-->
-    <string name="tab1_city_selection_title">选择城市</string>
     <string name="tab1_city_selection_recommend">根据您的定位推荐</string>
     <string name="tab1_city_selection_record">历史记录</string>
     <string name="tab1_city_selection_hot">热门城市</string>
-    <string name="tab1_city_selection_recommend_city">推荐</string>
-    <string name="tab1_city_selection_record_city">历史</string>
-    <string name="tab1_city_selection_hot_city">热门</string>
 
 
     <!--国内游-->
@@ -126,7 +116,6 @@
 
 
     <!--个性定制-->
-    <string name="personalized_custom_title">个性定制</string>
     <string name="personalized_custom_start">快来定制</string>
     <string name="personalized_custom_excellent">优秀定制方案</string>
     <string name="personalized_custom_budget">预算￥</string>
@@ -138,8 +127,8 @@
     <!--<string name="inner_travel_detail_describe">行程描述</string>-->
     <string name="inner_travel_detail_notice">预订须知</string>
     <string name="inner_travel_detail_product">线路特色</string>
-    <string name="inner_travel_detail_price">行程安排</string>
-    <string name="inner_travel_detail_describe">标准</string>
+    <string name="inner_travel_detail_price">行程介绍</string>
+    <string name="inner_travel_detail_describe">费用说明</string>
     <string name="inner_travel_detail_day_one">第一天</string>
 
     <string name="select_custom_title">选择常用游客</string>
@@ -152,7 +141,6 @@
     <string name="visa_data_confirm_material">1999-09-09 19:00截止收取材料，为保证您的正常出游，为审核材料过程中出现的意外情况预留处理时间，请尽早提交签证材料</string>
 
     <string name="visa_hot_country">热门签证国家</string>
-    <string name="visa_hot_country_all">查看全部国家和地区</string>
 
     <string name="visa_detail_name">资料名称</string>
     <string name="visa_detail_required">是否必须</string>
@@ -178,7 +166,6 @@
 
     <string name="tab3_order_item_cancel_order">取消订单</string>
     <string name="tab3_order_item_sign_contact">签约付款</string>
-    <string name="tab3_order_item_cancel_refund">取消退款</string>
     <string name="tab3_order_item_comment_order">去评价</string>
     <string name="tab3_order_item_refund_order">取消退款</string>
     <string name="tab3_order_item_go_refund_order">退款</string>
@@ -192,7 +179,6 @@
     <string name="pay_type_alipay">支付宝支付</string>
     <string name="pay_type_weichatpay">微信支付</string>
     <string name="pay_type_money_unit">待支付金额（元）</string>
-    <string name="pay_type_title">翠微收银台</string>
 
     <!--个人中心-->
     <string name="fragment_mine_my_travel_money">我的旅游币</string>
@@ -201,7 +187,6 @@
 
     <string name="fragment_mine_all_orders">全部订单</string>
     <string name="fragment_mine_wait_pay">等待付款</string>
-    <string name="fragment_mine_wait_pay_title">待付款</string>
     <string name="fragment_mine_wait_comment">待点评</string>
     <string name="fragment_mine_wait_refund">待退款</string>
 
@@ -213,14 +198,18 @@
     <string name="fragment_mine_account_security">账户安全</string>
     <string name="fragment_mine_account_certification">账户认证</string>
     <string name="fragment_mine_top_contacts">常用联系人</string>
+    <string name="fragment_mine_about_cuiwei">关于翠微</string>
+    <string name="fragment_mine_about_us">关于我们</string>
+    <string name="fragment_mine_contact_us">联系我们</string>
+    <string name="fragment_mine_join_us_rule">入住规则</string>
+    <string name="fragment_mine_about_travel_icon">关于旅游币</string>
+    <string name="fragment_mine_law_statement">法律声明</string>
+    <string name="fragment_mine_copyright">Copyright cuiwei.All Rights Reservice</string>
 
     <!--全部订单-->
-    <string name="order_refund_title">申请退款</string>
     <string name="order_refund_hint">请填写退款理由</string>
     <string name="order_refund_notice">商家说明：下订单两天内全额退款</string>
     <string name="order_refund_commit">提交</string>
-    <string name="order_comment_commit">提交评论</string>
-    <string name="order_comment_share">分享你的购买心得</string>
 
     <!--个人中心-->
     <string name="user_info_nickname">昵称</string>
@@ -230,14 +219,12 @@
     <string name="contact_add_title">添加常用联系人</string>
 
     <!--我的旅游币-->
-    <string name="my_tourism_coin_title">我的旅游币</string>
     <string name="my_tourism_coin_unit">个</string>
     <string name="my_tourism_coin_notice">1旅游币可以兑换一元哦～</string>
     <string name="my_tourism_coin_details">收支明细</string>
 
 
     <!--账户安全-->
-    <string name="tab4_account_security_title">账户安全</string>
     <string name="tab4_account_security_password">登录密码</string>
     <string name="tab4_account_security_telephone_authentication">手机验证</string>
     <string name="tab4_account_security_real_name_authentication">实名认证</string>
@@ -247,7 +234,6 @@
     <string name="tab4_account_security_not_certified"> (未认证) </string>
     <string name="tab4_account_security_go_authentication">去认证</string>
 
-    <string name="tab4_account_security_modify_password_title">修改登录密码</string>
     <string name="tab4_account_security_modify_password_current">当前密码：</string>
     <string name="tab4_account_security_modify_password_current_notice">请输入当前密码</string>
     <string name="tab4_account_security_modify_password_new">新密码：</string>
@@ -255,14 +241,12 @@
     <string name="tab4_account_security_modify_password_confirm">再次确认新密码：</string>
     <string name="tab4_account_security_modify_password_confirm_notice">请再次输入新密码</string>
 
-    <string name="tab4_account_security_modify_telephone_title">修改手机</string>
     <string name="tab4_account_security_modify_telephone_number">手机号码：</string>
     <string name="tab4_account_security_modify_telephone_number_new">请输入新手机号码</string>
     <string name="tab4_account_security_modify_telephone_number_verify">请输入短信验证码</string>
     <string name="tab4_account_security_modify_telephone_verification_code">短信验证码：</string>
     <string name="tab4_account_security_modify_telephone_get_verification_code">获取验证码</string>
 
-    <string name="tab4_account_certification_title">账户认证</string>
     <string name="tab4_account_certification_name">真实姓名</string>
     <string name="tab4_account_certification_name_notice">请输入真实姓名</string>
     <string name="tab4_account_certification_phone">手机号码</string>
@@ -280,9 +264,6 @@
     <string name="tab4_account_certification_commit">提交</string>
 
     <!--我的收藏-->
-    <string name="tab4_my_collection_title">我的收藏</string>
-    <string name="tab4_my_collection_finish">完成</string>
-    <string name="tab4_my_collection_edit">编辑</string>
     <string name="tab4_my_collection_delete">删除</string>
     <string name="tab4_my_collection_selection">已选择</string>
     <string name="tab4_my_collection_goods">件商品</string>
@@ -322,7 +303,6 @@
     <!--签证-->
     <string name="visa_describe">签证介绍</string>
     <string name="visa_material">所需材料</string>
-    <string name="visa_other">签证附件</string>
     <string name="visa_reserve_notice">预订须知</string>
 
     <string name="visa_detail_indicator_worker">在职人员</string>
@@ -362,11 +342,6 @@
     <string name="plane_screen_aircraft_model">机型</string>
     <string name="plane_screen_airline_company">航空公司</string>
 
-    <string name="plane_sort_time_increase">时间从早到晚</string>
-    <string name="plane_sort_time_decrease">时间从晚到早</string>
-    <string name="plane_sort_price_increase">价格从低到高</string>
-    <string name="plane_sort_price_decrease">价格从高到低</string>
-
     <!--XScrollView-->
     <string name="header_hint_refresh_normal">下拉刷新</string>
     <string name="header_hint_refresh_ready">松开刷新</string>
@@ -376,7 +351,6 @@
     <string name="footer_hint_load_ready">松开加载更多</string>
 
     <!--xListView-->
-    <string name="hello">Hello World, XListViewActivity!</string>
     <string name="xlistview_header_hint_normal">下拉刷新</string>
     <string name="xlistview_header_hint_ready">松开刷新数据</string>
     <string name="xlistview_header_hint_loading">正在加载...</string>
@@ -390,7 +364,6 @@
     <!--环信-->
     <string name="is_contact_customer">正在联系客服，请稍等...</string>
     <string name="is_contact_customer_failure_seconed">联系客服失败:</string>
-    <string name="attach_short_cut_message">常用语</string>
 
     <string name="title_satifisfaction_eval">满意度评价</string>
     <string name="nick_service">客服昵称</string>

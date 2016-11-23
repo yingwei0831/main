@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -16,15 +17,22 @@ import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.UserReleaseListAdapter;
 import com.jhhy.cuiweitourism.biz.UserReleaseBiz;
 import com.jhhy.cuiweitourism.moudle.CustomActivity;
+import com.jhhy.cuiweitourism.net.biz.MemberCenterActionBiz;
+import com.jhhy.cuiweitourism.net.models.FetchModel.MemberReleaseDeleteFetch;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
+import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
+import com.jhhy.cuiweitourism.utils.LoadingIndicator;
+import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.jhhy.cuiweitourism.utils.Utils;
 import com.just.sun.pricecalendar.ToastCommon;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Tab4MyReleaseActivity extends BaseActivity implements View.OnClickListener {
+public class Tab4MyReleaseActivity extends BaseActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
 
     private String TAG = Tab4MyReleaseActivity.class.getSimpleName();
 
@@ -46,25 +54,25 @@ public class Tab4MyReleaseActivity extends BaseActivity implements View.OnClickL
 
     private List<String> collIdSet = new ArrayList<>(); //选择的收藏的id数组
 
+//    private String id; //选中item的id
+
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             LogUtil.e(TAG, "-------------handleMessage-------------");
-
             switch (msg.what){
                 case Consts.MESSAGE_GET_MY_RELEASE: //获取我的收藏
+                    LoadingIndicator.cancel();
                     if (msg.arg1 == 1){
                         List<CustomActivity> newlists = (List<CustomActivity>) msg.obj;
                         if (newlists == null || newlists.size() == 0){
-//                            ToastCommon.toastShortShow(getApplicationContext(), null, "获取收藏数据为空");
                             tvTitleRight.setVisibility(View.INVISIBLE);
+                        } else {
+                            tvTitleRight.setVisibility(View.VISIBLE);
                         }
-//                        else {
-                            LogUtil.e(TAG, "else ----- newlists = " + newlists);
-                            lists = newlists;
-                            adapter.setData(newlists);
-//                        }
+                        lists = newlists;
+                        adapter.setData(newlists);
                     }else{
                         ToastCommon.toastShortShow(getApplicationContext(), null, String.valueOf(msg.obj));
                     }
@@ -78,6 +86,7 @@ public class Tab4MyReleaseActivity extends BaseActivity implements View.OnClickL
         setContentView(R.layout.activity_tab4_my_collection);
         setupView();
         addListener();
+        LoadingIndicator.show(this, getString(R.string.http_notice));
         getData();
     }
     private void getData() {
@@ -89,6 +98,7 @@ public class Tab4MyReleaseActivity extends BaseActivity implements View.OnClickL
         tvTitle = (TextView) findViewById(R.id.tv_title_simple_title);
         tvTitle.setText(getString(R.string.fragment_mine_my_release));
         tvTitleRight = (TextView) findViewById(R.id.tv_title_simple_title_right);
+        tvTitleRight.setVisibility(View.INVISIBLE);
         tvTitleRight.setText("编辑");
         tvTitleRight.setTextColor(getResources().getColor(R.color.colorActionBar));
         tvTitleLeft = (TextView) findViewById(R.id.tv_title_simple_title_left);
@@ -103,14 +113,15 @@ public class Tab4MyReleaseActivity extends BaseActivity implements View.OnClickL
         pullListView.getLoadingLayoutProxy().setPullLabel("下拉刷新");
         pullListView.getLoadingLayoutProxy().setRefreshingLabel("正在刷新");
         pullListView.getLoadingLayoutProxy().setReleaseLabel("松开刷新");
-        pullListView.setMode(PullToRefreshBase.Mode.BOTH);
+        pullListView.setMode(PullToRefreshBase.Mode.DISABLED);
 
         listView = pullListView.getRefreshableView();
         ImageView ivEmpty = (ImageView) findViewById(R.id.iv_empty_view);
         ivEmpty.setImageResource(R.mipmap.no_release);
         listView.setEmptyView(ivEmpty);
 
-        adapter = new UserReleaseListAdapter(getApplicationContext(), lists) {
+        adapter = new UserReleaseListAdapter(getApplicationContext(), lists)
+        {
             @Override
             public void goToArgument(View view, View viewGroup, int position, int which) {
 
@@ -127,6 +138,7 @@ public class Tab4MyReleaseActivity extends BaseActivity implements View.OnClickL
                 adapter.notifyDataSetChanged();
             }
         };
+        adapter.setVisible(edit);
         listView.setAdapter(adapter);
     }
 
@@ -139,23 +151,24 @@ public class Tab4MyReleaseActivity extends BaseActivity implements View.OnClickL
             public void onRefresh(PullToRefreshBase<ListView> refreshView) {
                 if (PullToRefreshBase.Mode.PULL_FROM_START.equals( pullListView.getCurrentMode())){ //下拉刷新
                     ToastCommon.toastShortShow(getApplicationContext(), null, "下拉刷新");
-                    initData();
+//                    initData();
                 } else if (PullToRefreshBase.Mode.PULL_FROM_END.equals( pullListView.getCurrentMode())){
                     ToastCommon.toastShortShow(getApplicationContext(), null, "上拉加载");
-                    initData();
+//                    initData();
                 }
             }
         });
+        listView.setOnItemClickListener(this);
     }
 
-    private void initData() {
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                pullListView.onRefreshComplete();
-            }
-        }, 2000);
-    }
+//    private void initData() {
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                pullListView.onRefreshComplete();
+//            }
+//        }, 2000);
+//    }
 
     @Override
     public void onClick(View view) {
@@ -180,8 +193,42 @@ public class Tab4MyReleaseActivity extends BaseActivity implements View.OnClickL
     }
 
     //删除所选
-    private void delete() {
+    private void delete() { //{"head":{"code":"User_delactivity"},"field":{"id":"1"}}
+        if (collIdSet == null || collIdSet.size() == 0){
+            return;
+        }
 
+        LoadingIndicator.show(this, getString(R.string.http_notice));
+        MemberCenterActionBiz biz = new MemberCenterActionBiz();
+        MemberReleaseDeleteFetch fetch = new MemberReleaseDeleteFetch(collIdSet.get(collIdSet.size() - 1));
+        biz.memberReleaseDelete(fetch, new BizGenericCallback<Object>() {
+            @Override
+            public void onCompletion(GenericResponseModel<Object> model) {
+                LogUtil.e(TAG,"memberReleaseDelete: " + model.headModel.toString());
+                if ("0000".equals(model.headModel.res_code)) {
+                    //发布成功，重新请求发布数据
+                    layoutDelete.setVisibility(View.GONE);
+                    edit = false;
+                    adapter.setVisible(edit);
+                    tvTitleRight.setText("编辑");
+                    getData();
+                }else{
+                    ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);
+                    LoadingIndicator.cancel();
+                }
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                if (error.localReason != null){
+                    ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
+                }else{
+                    ToastCommon.toastShortShow(getApplicationContext(), null, "删除发布信息出错");
+                }
+                LogUtil.e(TAG, "memberReleaseDelete: " + error.toString());
+                LoadingIndicator.cancel();
+            }
+        });
     }
 
     private void save() {
@@ -189,5 +236,29 @@ public class Tab4MyReleaseActivity extends BaseActivity implements View.OnClickL
         adapter.setVisible(edit);
         tvTitleRight.setText("编辑");
         layoutDelete.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//        LogUtil.e(TAG, "--onItemClick-- edit = " + edit);
+//        if (edit) { //进入编辑发布的活动，可删除
+//            id = lists.get((int) l).getId(); //当前只取最后一条
+//
+//            CustomActivity comActy = lists.get((int) l);
+//            boolean sele = comActy.isSelection();
+//            if (sele){
+//                comActy.setSelection(false);
+//                collIdSet.remove(collIdSet.indexOf(comActy.getId()));
+//            }else{
+//                comActy.setSelection(true);
+//                collIdSet.add(comActy.getId());
+//            }
+//            tvNumber.setText(String.valueOf(collIdSet.size()));
+//            adapter.notifyDataSetChanged();
+//            tvNumber.setText(String.valueOf(collIdSet.size()));
+//        } else { //进入活动详情
+            //TODO 活动详情
+            LogUtil.e(TAG, "此处可看到发布的详情");
+//        }
     }
 }

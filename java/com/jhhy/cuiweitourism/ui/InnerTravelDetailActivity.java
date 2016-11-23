@@ -20,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
@@ -32,6 +33,7 @@ import com.jhhy.cuiweitourism.circleviewpager.ViewFactory;
 import com.jhhy.cuiweitourism.moudle.ADInfo;
 import com.jhhy.cuiweitourism.moudle.TravelDetail;
 import com.jhhy.cuiweitourism.moudle.TravelDetailDay;
+import com.jhhy.cuiweitourism.moudle.User;
 import com.jhhy.cuiweitourism.moudle.UserComment;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
@@ -40,6 +42,7 @@ import com.jhhy.cuiweitourism.ui.easemob.EasemobLoginActivity;
 import com.jhhy.cuiweitourism.utils.ImageLoaderUtil;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.utils.MyFileUtils;
+import com.jhhy.cuiweitourism.utils.SharedPreferencesUtils;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.jhhy.cuiweitourism.utils.Utils;
 import com.jhhy.cuiweitourism.view.CircleImageView;
@@ -51,8 +54,10 @@ import com.markmao.pulltorefresh.widght.XScrollView;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.onekeyshare.OnekeyShare;
+import cn.sharesdk.onekeyshare.ShareContentCustomizeCallback;
 
 public class InnerTravelDetailActivity extends BaseActivity implements GestureDetector.OnGestureListener, XScrollView.IXScrollViewListener, View.OnClickListener, AdapterView.OnItemClickListener, View.OnTouchListener {
 
@@ -62,7 +67,7 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
     private View content;
 
     private LinearLayout layoutTravelDetailBottom; //底部控件
-    private TextView tvCollection; //收藏
+    private RadioButton rbCollection; //收藏
     private TextView tvShare; //分享
     private Button btnArgument; //讨价还价
     private Button btnReserve; //立即预定
@@ -108,7 +113,6 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
     private InnerTravelCommentImageGridAdapter imageAdapter; //评论中的图片适配器
     private List<String> listImages = new ArrayList<>();
 
-    private int bottom; //底部控件在屏幕的起始高度
     private boolean click; //是否是点击indicator
 
 //    private String[] titles = new String[]{"线路特色", "行程安排", "标准", "预订须知"};
@@ -142,11 +146,19 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
                         TravelDetail detailNew = (TravelDetail) msg.obj;
                         if (detailNew != null) {
                             detail = detailNew;
+                            LogUtil.e(TAG, detail);
                             refreshView();
                         }
                         break;
                     case Consts.MESSAGE_DO_COLLECTION: //收藏
                         ToastUtil.show(getApplicationContext(), String.valueOf(msg.obj));
+                        if ("1".equals(detail.getIscollect())){
+                            rbCollection.setChecked(false);
+                            detail.setIscollect("0");
+                        } else {
+                            rbCollection.setChecked(true);
+                            detail.setIscollect("1");
+                        }
                         break;
                     case Consts.NET_ERROR:
                         ToastUtil.show(getApplicationContext(), "请检查网络后重试");
@@ -178,7 +190,11 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
         id = bundle.getString("id");
 
         InnerTravelDetailBiz biz = new InnerTravelDetailBiz(getApplicationContext(), handler);
-        biz.getInnerTravelDetail(id);
+        String mid = "";
+        if (MainActivity.logged){
+            mid = MainActivity.user.getUserId();
+        }
+        biz.getInnerTravelDetail(id, mid);
         LoadingIndicator.show(InnerTravelDetailActivity.this, getString(R.string.http_notice));
 
         imageUrls.add("drawable://" + R.drawable.ic_empty);
@@ -205,7 +221,7 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
         viewNoticeTop = findViewById(R.id.view_inner_travel_detail_indicator_top_notice);
 
         layoutTravelDetailBottom = (LinearLayout) findViewById(R.id.layout_travel_detail_bottom);
-        tvCollection = (TextView) findViewById(R.id.tv_inner_travel_collection);
+        rbCollection = (RadioButton) findViewById(R.id.rb_inner_travel_collection);
         tvShare = (TextView) findViewById(R.id.tv_inner_travel_share);
         btnArgument = (Button) findViewById(R.id.btn_inner_travel_argument);
         btnReserve = (Button) findViewById(R.id.btn_inner_travel_reserve);
@@ -382,6 +398,7 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
         }
         //预订须知
         tvReserveNotice.setText(Html.fromHtml(start2 + detail.getRemark() + end));
+        rbCollection.setChecked("1".equals(detail.getIscollect()));
     }
 
     @Override
@@ -440,10 +457,11 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
                 Intent intentComment = new Intent(getApplicationContext(), CommentAllActivity.class);
                 Bundle bundleComment = new Bundle();
                 bundleComment.putString("articleId", detail.getId());
+                bundleComment.putString("type", "1");
                 intentComment.putExtras(bundleComment);
                 startActivity(intentComment);
                 break;
-            case R.id.tv_inner_travel_collection: //收藏
+            case R.id.rb_inner_travel_collection: //收藏
                 doCollection();
                 break;
             case R.id.tv_inner_travel_share: //分享
@@ -452,9 +470,20 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
             case R.id.btn_inner_travel_argument: //讨价还价
                 if (MainActivity.logged) {
                     Intent intent = new Intent(getApplicationContext(), EasemobLoginActivity.class);
+                    String im = detail.getIm();
+                    if (im == null || im.length() == 0){
+                        ToastUtil.show(getApplicationContext(), "当前商户暂未提供客服功能");
+                        return;
+                    }
+                    intent.putExtra("im", im);
                     startActivity(intent);
                 } else {
-                    ToastUtil.show(getApplicationContext(), "请登录后再试");
+//                    ToastUtil.show(getApplicationContext(), "请登录后再试");
+                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("type", 2);
+                    intent.putExtras(bundle);
+                    startActivityForResult(intent, REQUEST_LOGIN);
                 }
                 break;
             case R.id.btn_inner_travel_reserve: //立即预定
@@ -467,21 +496,38 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
                     startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_SELECT_DATE); //选择日期
 //                PriceCalendarReserveActivity.actionStart(getApplicationContext(), bundle);
                 } else {
-                    ToastUtil.show(getApplicationContext(), "请登录后再试");
+//                    ToastUtil.show(getApplicationContext(), "请登录后再试");
+                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("type", 2);
+                    intent.putExtras(bundle);
+                    startActivityForResult(intent, REQUEST_LOGIN);
                 }
                 break;
         }
     }
 
+    private int REQUEST_LOGIN = 2913; //请求登录
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_CANCELED) {
-
+            if (requestCode == REQUEST_LOGIN){
+                ToastUtil.show(getApplicationContext(), "登录失败");
+            }
         } else {
             if (requestCode == Consts.REQUEST_CODE_RESERVE_SELECT_DATE) { //选择日期
                 //TODO 日期选择返回
 
+            }else  if (requestCode == REQUEST_LOGIN) { //登录成功
+                User user = (User) data.getExtras().getSerializable(Consts.KEY_REQUEST);
+                if (user != null) {
+                    MainActivity.logged = true;
+                    MainActivity.user = user;
+                    SharedPreferencesUtils sp = SharedPreferencesUtils.getInstance(getApplicationContext());
+                    sp.saveUserId(user.getUserId());
+                }
             }
         }
     }
@@ -493,7 +539,7 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
     }
 
     private void addListener() {
-        tvCollection.setOnClickListener(this);
+        rbCollection.setOnClickListener(this);
         tvShare.setOnClickListener(this);
         btnArgument.setOnClickListener(this);
         btnReserve.setOnClickListener(this);
@@ -530,7 +576,6 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
 
     /**
      * GestureDetector.OnGestureListener 回调
-     *
      * @param motionEvent
      * @return
      */
@@ -541,7 +586,6 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
 
     /**
      * GestureDetector.OnGestureListener 回调
-     *
      * @param motionEvent
      */
     @Override
@@ -551,7 +595,6 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
 
     /**
      * GestureDetector.OnGestureListener 回调
-     *
      * @param motionEvent
      * @return
      */
@@ -791,7 +834,13 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
             UserCollectionBiz biz = new UserCollectionBiz(getApplicationContext(), handler);
             biz.doCollection(MainActivity.user.getUserId(), "1", detail.getId());
         } else {
-            ToastUtil.show(getApplicationContext(), "请登录后再试");
+//            ToastUtil.show(getApplicationContext(), "请登录后再试");
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putInt("type", 2);
+            intent.putExtras(bundle);
+            startActivityForResult(intent, REQUEST_LOGIN);
+            rbCollection.setChecked(false);
         }
     }
 
@@ -805,8 +854,8 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
         //oks.setNotification(R.drawable.ic_launcher, getString(R.string.app_name));
         // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
         oks.setTitle("翠微旅游");
-        // titleUrl是标题的网络链接，仅在人人网和QQ空间使用
-//        oks.setTitleUrl("http://sharesdk.cn");
+        // titleUrl是标题的网络链接，仅在人人网和QQ和QQ空间使用
+        oks.setTitleUrl(Consts.BASE_SHARE_URL + detail.getId());
         // text是分享文本，所有平台都需要这个字段
         oks.setText(context.getString(R.string.share_text));
         //分享网络图片，新浪微博分享网络图片需要通过审核后申请高级写入接口，否则请注释掉测试新浪微博
@@ -814,14 +863,21 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
         // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
         oks.setImagePath(WelcomeActivity.TEST_IMAGE);//确保SDcard下面存在此张图片
         // url仅在微信（包括好友和朋友圈）中使用
-        oks.setUrl("http://cwly1118.com");
+        oks.setUrl(Consts.BASE_SHARE_URL + detail.getId());//http://www.cwly1118.com/service.php?m=test&a=lineshare&id=291
         // comment是我对这条分享的评论，仅在人人网和QQ空间使用
 //        oks.setComment("我是测试评论文本");
         // site是分享此内容的网站名称，仅在QQ空间使用
 //        oks.setSite("ShareSDK");
         // siteUrl是分享此内容的网站地址，仅在QQ空间使用
 //        oks.setSiteUrl("http://sharesdk.cn");
-
+        oks.setShareContentCustomizeCallback(new ShareContentCustomizeCallback() {
+            @Override
+            public void onShare(Platform platform, cn.sharesdk.framework.Platform.ShareParams paramsToShare) {
+                if ("SinaWeibo".equals(platform.getName())) {
+                    paramsToShare.setText(getApplicationContext().getString(R.string.share_text) + "\n" + Consts.BASE_SHARE_URL + detail.getId());
+                }
+            }
+        });
         // 启动分享GUI
         oks.show(context);
     }

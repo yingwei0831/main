@@ -62,10 +62,9 @@ public class CarRentSuccessActivity extends BaseActivity implements View.OnClick
         if (intent != null){
             Bundle bundle = intent.getExtras();
             if (bundle != null){
-                carRentOrderResponse = (CarRentOrderResponse) bundle.getSerializable("carRentOrder");
+                carRentOrderResponse = (CarRentOrderResponse) bundle.getSerializable("order");
             }
         }
-
     }
 
     @Override
@@ -76,7 +75,12 @@ public class CarRentSuccessActivity extends BaseActivity implements View.OnClick
                 break;
             case R.id.btn_car_rent_next:
                 //TODO 去支付
-                startActivityForResult(new Intent(getApplicationContext(), SelectPaymentActivity.class), GO_TO_PAY);
+                Intent intent = new Intent(getApplicationContext(), SelectPaymentActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("order", carRentOrderResponse);
+                bundle.putInt("type", 16);
+                intent.putExtras(bundle);
+                startActivityForResult(intent, GO_TO_PAY);
                 break;
         }
     }
