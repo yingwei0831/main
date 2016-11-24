@@ -4,15 +4,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.jhhy.cuiweitourism.ui.AboutCuiweiActivity">
+    tools:context="com.jhhy.cuiweitourism.ui.AboutCuiweiActivity"
+    android:background="#EFF2F7">
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="40dp"
-        android:src="@mipmap/app_logo" />
+        android:src="@mipmap/icon_level"
+        android:background="#EFF2F7"/>
 
     <TextView
+        android:id="@+id/tv_cuiwei_level"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"

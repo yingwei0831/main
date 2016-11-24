@@ -25,6 +25,7 @@ public class BaseActionBarActivity extends AppCompatActivity implements View.OnC
         actionBar =  getSupportActionBar();
         //自定义一个布局，并居中
         actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setBackgroundDrawable(getResources().getDrawable(android.R.color.white));
         View v = LayoutInflater.from(getApplicationContext()).inflate(R.layout.title_tab1_inner_travel, null);
         actionBar.setCustomView(v, new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT)); //自定义ActionBar布局);
         actionBar.setElevation(0); //删除自带阴影

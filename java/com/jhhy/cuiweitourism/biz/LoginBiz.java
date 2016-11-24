@@ -181,11 +181,12 @@ public class LoginBiz {
 
                         @Override
                         public void onError(final int code, final String message) {
+                            String failed = "环信客服登录失败，失败原因 message = " + message;
                             LogUtil.e(TAG, "code = " + code + ", 环信失败原因 message = " + message);
                             Message msg = new Message();
                             msg.what = Consts.MESSAGE_LOGIN;
                             msg.arg1 = 0;
-                            msg.obj = "登录聊天服务器失败";
+                            msg.obj = failed;
                             handler.sendMessage(msg);
                         }
                     });

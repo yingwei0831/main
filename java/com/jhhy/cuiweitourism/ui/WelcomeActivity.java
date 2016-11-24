@@ -81,6 +81,10 @@ public class WelcomeActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
+        showView();
+    }
+
+    private void showView() {
         sp = SharedPreferencesUtils.getInstance(getApplicationContext());
         if(NetworkUtil.checkNetwork(getApplicationContext())){
             new LocationUtil(getApplicationContext(), handler).start();
@@ -95,7 +99,7 @@ public class WelcomeActivity extends BaseActivity {
                 checkFirstIn();
             }
         };
-        handler.postDelayed(runnable, 2000);
+        handler.postDelayed(runnable, 1000);
         // 2秒钟之后进行登录，如果登录成功，进入主页面，并赋值；如果登录失败，可以进入主页面，登录标志为false;网络重新连接，发送广播，主业请求数据进行填充
     }
 

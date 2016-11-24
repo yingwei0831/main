@@ -26,7 +26,6 @@
         android:src="@mipmap/arrow_left_green"
         />
 
-
     <TextView
         android:id="@+id/tv_title_inner_travel"
         android:layout_centerInParent="true"
@@ -50,7 +49,5 @@
         android:scaleType="centerInside"
         android:visibility="visible"
         />
-
-
 
 </RelativeLayout>

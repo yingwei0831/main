@@ -16,6 +16,8 @@ package com.jhhy.cuiweitourism.ui.easemob;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.jhhy.cuiweitourism.net.utils.Consts;
+
 
 public class HelpDeskPreferenceUtils {
 
@@ -53,9 +55,9 @@ public class HelpDeskPreferenceUtils {
 		editor.commit();
 	}
 
-//	public String getSettingCustomerAppkey() {
-//		return mSharedPreferences.getString(SHARED_KEY_SETTING_CUSTOMER_APPKEY, Consts.DEFAULT_COSTOMER_APPKEY);
-//	}
+	public String getSettingCustomerAppkey() {
+		return mSharedPreferences.getString(SHARED_KEY_SETTING_CUSTOMER_APPKEY, Consts.DEFAULT_COSTOMER_APPKEY);
+	}
 
 	public void setSettingCustomerAccount(String account) {
 		editor.putString(SHARED_KEY_SETTING_CUSTOMER_ACCOUNT, account);

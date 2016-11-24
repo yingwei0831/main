@@ -72,7 +72,7 @@ public class Tab4MyMessageActivity extends BaseActivity implements View.OnClickL
         pullToRefreshListView.getLoadingLayoutProxy().setPullLabel("下拉刷新");
         pullToRefreshListView.getLoadingLayoutProxy().setRefreshingLabel("正在刷新");
         pullToRefreshListView.getLoadingLayoutProxy().setReleaseLabel("松开刷新");
-        pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
+        pullToRefreshListView.setMode(PullToRefreshBase.Mode.DISABLED);
 
         listView = pullToRefreshListView.getRefreshableView();
         ImageView ivEmpty = (ImageView) findViewById(R.id.iv_empty_view);

@@ -26,6 +26,7 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
     private String TAG = getClass().getSimpleName();
     private String orderSN;
     private int type = -1; //0:1:2:3:4:5:
+    private String typeId; //1.线路、2.酒店、3租车、8签证、14私人定制、202活动
     private Order order;
 
     private TextView tvOrderTitle;
@@ -60,15 +61,15 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
 
             switch (msg.what) {
                 case Consts.MESSAGE_ORDER_DETAIL: //订单详情
-                    if (msg.arg1 == 0) {
-                        ToastCommon.toastShortShow(getApplicationContext(), null, (String) msg.obj);
-                    } else {
+                    if (msg.arg1 == 1) {
                         order = (Order) msg.obj;
                         if (order != null) {
                             refreshView();
                         } else {
                             ToastCommon.toastShortShow(getApplicationContext(), null, "订单详情为空");
                         }
+                    } else {
+                        ToastCommon.toastShortShow(getApplicationContext(), null, (String) msg.obj);
                     }
                     break;
                 case Consts.MESSAGE_ORDER_CANCEL_REFUND: //取消退款
@@ -201,7 +202,7 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
             tvTravelIconNotice.setText("账户共" + MainActivity.user.getUserScore() + "个旅游币，本次使用" + order.getUseTravelIcon() + "个旅游币折扣");
             tvTravelIconCount.setText(order.getUseTravelIcon());
         }
-        if ("3".equals(order.getTypeId())){ //游客信息隐藏
+        if ("3".equals(typeId)){ //游客信息隐藏
             layoutTravel.setVisibility(View.GONE);
         }
     }
@@ -219,6 +220,7 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
             if (bundle != null) {
                 orderSN = bundle.getString("orderSN");
                 type = bundle.getInt("type");
+                typeId = bundle.getString("typeId");
                 LoadingIndicator.show(this, getString(R.string.http_notice));
                 OrderActionBiz biz = new OrderActionBiz(getApplicationContext(), handler);
                 biz.getOrderDetail(orderSN);

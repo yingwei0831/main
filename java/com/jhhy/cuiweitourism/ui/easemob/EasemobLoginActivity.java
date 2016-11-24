@@ -27,6 +27,7 @@ import com.easemob.easeui.ui.EaseBaseActivity;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
+import com.jhhy.cuiweitourism.ui.MainActivity;
 import com.jhhy.cuiweitourism.utils.SharedPreferencesUtils;
 
 public class EasemobLoginActivity extends EaseBaseActivity {
@@ -72,10 +73,10 @@ public class EasemobLoginActivity extends EaseBaseActivity {
 				progressDialog.show();
 			}
 			SharedPreferencesUtils sp = SharedPreferencesUtils.getInstance(getApplicationContext());
-			final String name = sp.getTelephoneNumber();
-			final String pwd = sp.getPassword();
-			LogUtil.e("EasemobLoginActivity", "name = " + name +", password = " + pwd);
-			EMChatManager.getInstance().login(name, "admin123", new EMCallBack() {
+//			final String name = sp.getTelephoneNumber();
+//			final String pwd = sp.getPassword();
+//			LogUtil.e("EasemobLoginActivity", "name = " + name +", password = " + pwd);
+			EMChatManager.getInstance().login(MainActivity.user.getHxname(), "admin123", new EMCallBack() {
 				@Override
 				public void onSuccess() {
 					if (!progressShow) {

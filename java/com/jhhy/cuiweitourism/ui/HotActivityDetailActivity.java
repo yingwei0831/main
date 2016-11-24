@@ -119,6 +119,8 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
     private final int FLING_MIN_VELOCITY = 0;
     private GestureDetector mGestureDetector; // MyScrollView的手势
 
+    private int type; //2:我的发布详情
+
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -203,6 +205,7 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
     private void getData() {
         Bundle bundle = getIntent().getExtras();
         id = bundle.getString("id");
+        type = bundle.getInt("type");
     }
 
     private void setupView() {
@@ -340,7 +343,9 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
                 }
             }
         });
-
+        if (type == 2){ //立即预定隐藏
+            btnReserve.setVisibility(View.GONE);
+        }
     }
 
     private void addImageView(int length) {

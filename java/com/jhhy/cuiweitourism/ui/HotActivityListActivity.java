@@ -193,6 +193,9 @@ public class HotActivityListActivity extends BaseActivity implements View.OnClic
     }
 
     private void refresh() {
+//        if (pullToRefreshListView.isRefreshing())   return;
+        LogUtil.e(TAG, "refresh = " + refresh +", loadMore = " + loadMore);
+        if (loadMore)   return;
         if (refresh)    return;
         refresh = true;
         page = 1;
@@ -200,6 +203,9 @@ public class HotActivityListActivity extends BaseActivity implements View.OnClic
     }
 
     private void loadMore() {
+//        if (pullToRefreshListView.isRefreshing())   return;
+        LogUtil.e(TAG, "loadMore = " + loadMore +", refresh = " + refresh);
+        if (refresh)    return;
         if (loadMore)   return;
         loadMore = true;
         page ++;
@@ -239,7 +245,6 @@ public class HotActivityListActivity extends BaseActivity implements View.OnClic
                 tag = 4;
                 showPopupWindow();
                 break;
-
         }
     }
 
@@ -279,6 +284,7 @@ public class HotActivityListActivity extends BaseActivity implements View.OnClic
         adapter = new HotActivityListViewAdapter(getApplicationContext(), listFreedom);
         pullToRefreshListView.setAdapter(adapter);
     }
+
     private void refreshView(){
         adapter.setData(listFreedom);
     }
@@ -351,7 +357,6 @@ public class HotActivityListActivity extends BaseActivity implements View.OnClic
         activityBiz.activitiesHotGetInfo(hot, new BizGenericCallback<ArrayList<ActivityHotInfo>>() {
             @Override
             public void onCompletion(GenericResponseModel<ArrayList<ActivityHotInfo>> model) {
-                pullToRefreshListView.onRefreshComplete();
                 if ("0001".equals(model.headModel.res_code)){
                     ToastUtil.show(getApplicationContext(), model.headModel.res_arg);
                     if (loadMore){
@@ -366,12 +371,12 @@ public class HotActivityListActivity extends BaseActivity implements View.OnClic
                     } else {
                         //重新加载
                         if (refresh) {
-                            refresh = false;
+//                            refresh = false;
                             listFreedom = array;
                             refreshView();
                         }
                         if (loadMore) {
-                            loadMore = false;
+//                            loadMore = false;
                             listFreedom.addAll(array);
                             adapter.addData(array);
                         }
@@ -379,11 +384,12 @@ public class HotActivityListActivity extends BaseActivity implements View.OnClic
                     LogUtil.e(TAG,"activitiesHotGetInfo =" + array.toString());
                 }
                 LoadingIndicator.cancel();
+//                pullToRefreshListView.onRefreshComplete();
+                complete();
             }
 
             @Override
             public void onError(FetchError error) {
-                pullToRefreshListView.onRefreshComplete();
                 if (error.localReason != null){
                     ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
                 }else{
@@ -394,8 +400,25 @@ public class HotActivityListActivity extends BaseActivity implements View.OnClic
                 }
                 LogUtil.e(TAG, " activitiesHotGetInfo :" + error.toString());
                 LoadingIndicator.cancel();
+//                pullToRefreshListView.onRefreshComplete();
+                complete();
             }
         });
+    }
+
+    private void complete(){
+        pullToRefreshListView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                pullToRefreshListView.onRefreshComplete();
+                if (refresh){
+                    refresh = false;
+                }
+                if (loadMore){
+                    loadMore = false;
+                }
+            }
+        }, 1000);
     }
 
     public static void actionStart(Context context, Bundle data){

@@ -216,15 +216,15 @@ public class OrdersAllBiz {
                 } else if ("0000".equals(resCode)) {
                     msg.arg1 = 1;
 //                    {"id": "1",
-//                            "productname": "北京5日游",
-//                            "price": "4800.00",
-//                            "addtime": "1472097452",
-//                            "status": "3",
-//                            "ispinlun": "0",
-//                            "typeid": "1",
-//                            "productautoid": "12",
-//                            "ordersn": "01974528995005",
-//                            "litpic": "http://cwly.taskbees.cn:8083/uploads/2016/0607/9329dff285092f3874aed5e814d437c3.jpg"}
+//                    "productname": "北京5日游",
+//                    "price": "4800.00",
+//                    "addtime": "1472097452",
+//                    "status": "3",
+//                    "ispinlun": "0",
+//                    "typeid": "1",
+//                    "productautoid": "12",
+//                    "ordersn": "01974528995005",
+//                    "litpic": "http://cwly.taskbees.cn:8083/uploads/2016/0607/9329dff285092f3874aed5e814d437c3.jpg"}
                     String body = resultObj.getString(Consts.KEY_BODY);
                     JSONArray bodyArray = new JSONArray(body);
                     List<Order> lists = new ArrayList<>();

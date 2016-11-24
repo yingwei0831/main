@@ -440,6 +440,7 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
     private TextView tvIndicatorOutsideTop; //国外游
 
     private TextView tvSearchrShop; //找商铺
+    private TextView tvTravelInsurance; //旅游保险
 
     private void setupView(View view) {
         layoutTitle = (RelativeLayout) view.findViewById(R.id.layout_title_tab1);
@@ -473,7 +474,8 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
             tvVisa = (TextView) content.findViewById(R.id.tv_tab1_visa); //签证
 
             tvSearchRoute = (TextView) content.findViewById(R.id.tv_tab1_search_route_activity); //找路线
-            tvSearchrShop = (TextView) content.findViewById(R.id.tv_tab1_search_shop); //找路线
+            tvSearchrShop = (TextView) content.findViewById(R.id.tv_tab1_search_shop); //找商铺
+            tvTravelInsurance = (TextView) content.findViewById(R.id.tv_travel_insurance); //旅游保险
 
             layoutPersionalizedCustom = (RelativeLayout) content.findViewById(R.id.layout_personalized_custom); //个性定制
             layoutHotActivity = (RelativeLayout) content.findViewById(R.id.layout_hot_activity); //热门活动
@@ -561,6 +563,7 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
         layoutHotActivity.setOnClickListener(this);
         tvSearchRoute.setOnClickListener(this);
         tvSearchrShop.setOnClickListener(this);
+        tvTravelInsurance.setOnClickListener(this);
         tvIndicatorAllBottom.setOnClickListener(this);
         tvIndicatorInnerBottom.setOnClickListener(this);
         tvIndicatorOutsideBottom.setOnClickListener(this);
@@ -598,9 +601,10 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
                     InnerTravelMainActivity.actionStart(getContext(), bundleOut);
                     break;
                 case R.id.tv_tab1_plane_ticket: //飞机票
-                    Bundle bundlePlane = new Bundle();
-                    bundlePlane.putInt("type", 2);
-                    PlaneMainActivity.actionStart(getContext(), bundlePlane);
+                    ToastCommon.toastShortShow(getContext(), null, getString(R.string.developing_notice));
+//                    Bundle bundlePlane = new Bundle();
+//                    bundlePlane.putInt("type", 2);
+//                    PlaneMainActivity.actionStart(getContext(), bundlePlane);
                     break;
                 case R.id.tv_tab1_start_activity: //发起活动
                     StartActivityEditActivity.actionStart(getContext(), null);
@@ -615,12 +619,14 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
                     VisaMainActivity.actionStart(getContext(), null);
                     break;
                 case R.id.tv_tab1_train: //火车票
-                    TrainMainActivity.actionStart(getContext(), null);
+                    ToastCommon.toastShortShow(getContext(), null, getString(R.string.developing_notice));
+//                    TrainMainActivity.actionStart(getContext(), null);
                     break;
                 case R.id.tv_tab1_hotel: //酒店
-                    Bundle bundleHotel = new Bundle();
-                    bundleHotel.putSerializable("selectCity", selectCity);
-                    HotelMainActivity.actionStart(getContext(), bundleHotel);
+                    ToastCommon.toastShortShow(getContext(), null, getString(R.string.developing_notice));
+//                    Bundle bundleHotel = new Bundle();
+//                    bundleHotel.putSerializable("selectCity", selectCity);
+//                    HotelMainActivity.actionStart(getContext(), bundleHotel);
                     break;
                 case R.id.layout_personalized_custom: //个性定制
                     Bundle bundleCustom = new Bundle();
@@ -639,6 +645,9 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
                     break;
                 case R.id.tv_tab1_search_shop: //找商铺
                     SearchShopActivity.actionStart(getContext(), null);
+                    break;
+                case R.id.tv_travel_insurance: //旅游保险
+                    ToastCommon.toastShortShow(getContext(), null, getString(R.string.developing_notice));
                     break;
                 case R.id.tv_tab1_recommend_all_bottom: //Indicator 全部
                 case R.id.tv_tab1_indicator_all_top:

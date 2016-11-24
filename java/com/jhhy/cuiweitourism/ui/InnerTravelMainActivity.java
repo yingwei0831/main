@@ -113,7 +113,7 @@ public class InnerTravelMainActivity extends BaseActionBarActivity implements XS
                     if (msg.arg1 == 1){
                         List<Travel> follow = (List<Travel>) msg.obj;
                         if (follow == null || follow.size() == 0){
-                            ToastUtil.show(getApplicationContext(), "获取数据为空");
+                            ToastUtil.show(getApplicationContext(), "没有更多数据");
                             resetValue();
                         }else{
                             if (refresh){
@@ -565,7 +565,7 @@ public class InnerTravelMainActivity extends BaseActionBarActivity implements XS
     @Override
     protected void addListener() {
         super.addListener();
-       /* gvHotDestination.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        gvHotDestination.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 //热门目的地详情
@@ -576,7 +576,7 @@ public class InnerTravelMainActivity extends BaseActionBarActivity implements XS
                 bundle.putString("cityName", item.getCityName());
                 InnerTravelCityActivity.actionStart(getApplicationContext(), bundle);
             }
-        });*/
+        });
         gvHotRecommend.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {

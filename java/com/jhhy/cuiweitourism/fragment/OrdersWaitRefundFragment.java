@@ -184,6 +184,7 @@ public class OrdersWaitRefundFragment extends Fragment  implements ArgumentOnCli
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("orderSN", order.getOrderSN());
                 bundle.putInt("type", Integer.parseInt(order.getStatus()));
+                bundle.putString("typeId", order.getTypeId());
                 intent.putExtras(bundle);
                 startActivityForResult(intent, REQUEST_CODE_REFUND);
             }

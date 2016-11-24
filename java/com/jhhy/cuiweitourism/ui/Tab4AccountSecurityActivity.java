@@ -127,6 +127,8 @@ public class Tab4AccountSecurityActivity extends BaseActivity implements View.On
         Intent intent = new Intent();
         intent.putExtras(bundle);
         setResult(RESULT_OK, intent);
+        SharedPreferencesUtils sp = SharedPreferencesUtils.getInstance(getApplicationContext());
+        sp.savePassword(null);
         finish();
     }
 }

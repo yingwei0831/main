@@ -1,24 +1,33 @@
 package com.jhhy.cuiweitourism.ui;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.jhhy.cuiweitourism.R;
+import com.jhhy.cuiweitourism.biz.CheckCodeBiz;
 import com.jhhy.cuiweitourism.biz.LoginBiz;
 import com.jhhy.cuiweitourism.fragment.Tab1Fragment;
 import com.jhhy.cuiweitourism.fragment.Tab2Fragment_2;
@@ -32,6 +41,16 @@ import com.jhhy.cuiweitourism.utils.SharedPreferencesUtils;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.jhhy.cuiweitourism.utils.Utils;
 import com.just.sun.pricecalendar.ToastCommon;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.ArrayList;
 
 public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedChangeListener
         , View.OnClickListener
@@ -82,6 +101,25 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
                 case Consts.NET_ERROR_SOCKET_TIMEOUT:
                     ToastUtil.show(getApplicationContext(), "与服务器链接超时，请回到个人中心重新登录");
                     break;
+                case Consts.MESSAGE_UPDATE_CODE:
+//                    ToastUtil.show(getApplicationContext(), "检查更新");
+                    if (msg.arg1 == 1){
+                        ArrayList<String> list = (ArrayList<String>) msg.obj;
+                        String versionName = list.get(0);
+                        String url = list.get(1);
+                        checkVersionName(versionName, url);
+                    }
+                    break;
+                // 正在下载
+                case DOWNLOAD:
+                    // 设置进度条位置
+                    mProgress.setProgress(progress);
+                    break;
+                case DOWNLOAD_FINISH:
+                    loading = false;
+                    // 安装文件
+                    installApk();
+                    break;
             }
         }
     };
@@ -107,9 +145,10 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
         setupView();
         addListener();
         setDefaultFragment(savedInstanceState);
-
         registerMyReceiver();
+        checkUpdate();
     }
+
 
     private void getData(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
@@ -421,5 +460,198 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
                 }
             }
         }
+    }
+    //版本对比
+//    {"head":{"code":"Publics_versioncompare"},"field":[]}
+    private void checkUpdate() {
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getUpdate();
+            }
+        }, 4000);
+    }
+
+    private void getUpdate() {
+        CheckCodeBiz biz = new CheckCodeBiz(getApplicationContext(), handler);
+        biz.checkUpdate();
+    }
+    //比较版本号
+    private void checkVersionName(String versionName, String url) {
+        try {
+            String myName = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+            if (!myName.equals(versionName)) { //如果不相等，则显示下载
+                apkUrl = url;
+                showNoticeDialog();
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private boolean loading; //正在检查更新？还是正在下载？
+    private String apkUrl;
+
+    private void showNoticeDialog() {
+        // 构造对话框
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("软件更新");
+        builder.setMessage("检测到新版本，立即更新");
+        // 更新
+        builder.setPositiveButton("更新", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                // 显示下载对话框
+                showDownloadDialog();
+            }
+        });
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                loading = false;
+            }
+        });
+        builder.setCancelable(true);
+
+        Dialog noticeDialog = builder.create();
+        noticeDialog.show();
+    }
+    /* 更新进度条 */
+    private ProgressBar mProgress;
+    private Dialog mDownloadDialog;
+    /* 是否取消更新 */
+    private boolean cancelUpdate = false;
+    /**
+     * 显示软件下载对话框
+     */
+    private void showDownloadDialog() {
+        // 构造软件下载对话框
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("正在更新");
+        // 给下载对话框增加进度条
+        final LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
+        View v = inflater.inflate(R.layout.softupdate_progress, null);
+        mProgress = (ProgressBar) v.findViewById(R.id.update_progress);
+        builder.setView(v);
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                cancelUpdate = true;
+            }
+        });
+        builder.setCancelable(false);
+        mDownloadDialog = builder.create();
+        mDownloadDialog.show();
+        // 下载文件
+        downloadApk();
+    }
+    /**
+     * 下载apk文件
+     */
+    private void downloadApk() {
+        // 启动新线程下载软件
+        new downloadApkThread().start();
+    }
+
+    /* 下载保存路径 */
+    private String mSavePath;
+    /* 记录进度条数量 */
+    private int progress;
+    /* 下载中 */
+    private static final int DOWNLOAD = 111;
+    /* 下载结束 */
+    private static final int DOWNLOAD_FINISH = 222;
+    private String fileName = "cuiweitourism";
+    /**
+     * 下载文件线程
+     *
+     * @author dingliping
+     * @date 2016-2-22
+     */
+
+    private class downloadApkThread extends Thread {
+        @Override
+        public void run() {
+            try {
+                // 判断SD卡是否存在，并且是否具有读写权限
+                if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+                    // 获得存储卡的路径
+                    mSavePath = Environment.getExternalStorageDirectory() + "/" + "download";
+//                    URL url = new URL("http://ans.hdvcc.cn:3580/upload/studentApp/" + URLEncoder.encode("明思答题器_2016_11_18", "UTF-8") + ".apk");
+                    apkUrl = "http://" + apkUrl;
+                    URL url = new URL(apkUrl);
+                    // 创建连接
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.connect();
+                    if (conn.getResponseCode() == 200) {
+                        // 获取文件大小
+                        int length = conn.getContentLength();
+                        // 创建输入流
+                        InputStream is = conn.getInputStream();
+
+                        File file = new File(mSavePath);
+                        // 判断文件目录是否存在
+                        if (!file.exists()) {
+                            file.mkdir();
+                        }
+                        File apkFile = new File(mSavePath, fileName + ".apk"); //+ newVersionCode
+                        FileOutputStream fos = new FileOutputStream(apkFile);
+                        int count = 0;
+                        // 缓存
+                        byte buf[] = new byte[8192];
+                        // 写入到文件中
+                        do {
+                            int numread = is.read(buf);
+                            count += numread;
+                            // 计算进度条位置
+                            progress = (int) (((float) count / length) * 100);
+                            // 更新进度
+                            handler.sendEmptyMessage(DOWNLOAD);
+                            if (numread <= 0) {
+                                // 下载完成
+                                handler.sendEmptyMessage(DOWNLOAD_FINISH);
+                                break;
+                            }
+                            // 写入文件
+                            fos.write(buf, 0, numread);
+                        } while (!cancelUpdate);// 点击取消就停止下载.
+                        fos.close();
+                        is.close();
+                    } else {
+                        loading = false;
+                        LogUtil.e(TAG, "responseCode = " + conn.getResponseCode());
+                    }
+                } else {
+
+                }
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+                loading = false;
+            } catch (IOException e) {
+                e.printStackTrace();
+                loading = false;
+            } finally {
+                // 取消下载对话框显示
+                mDownloadDialog.dismiss();
+                LogUtil.e(TAG, "loading = " + loading);
+            }
+        }
+    }
+    /**
+     * 安装APK文件
+     */
+    private void installApk() {
+        File apkfile = new File(mSavePath, fileName + ".apk"); //+ newVersionCode
+        if (!apkfile.exists()) {
+            return;
+        }
+        // 通过Intent安装APK文件
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        i.setDataAndType(Uri.parse("file://" + apkfile.toString()), "application/vnd.android.package-archive");
+        startActivity(i);
     }
 }

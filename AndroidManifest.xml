@@ -100,7 +100,7 @@
         <!-- 设置环信应用的AppKey -->
         <meta-data
             android:name="EASEMOB_APPKEY"
-            android:value="1113161102178500#kefuchannelapp30145" />
+            android:value="1170161103178208#cwly1118" />
         <!-- experience-kefu#sandbox -->
         <!-- 1170161103178208#cwly1118 -->
         <!-- yingwei0831#cuiweitourism -->
@@ -109,6 +109,24 @@
         <service
             android:name="com.easemob.chat.EMChatService"
             android:exported="true" />
+
+        <!--问题添加 start-->
+        <!--<service android:name="com.easemob.chat.EMGCMListenerService"-->
+            <!--android:exported="false" >-->
+        <!--</service>-->
+        <!--&lt;!&ndash; 这里需要android:name="你的包名.receiver.GCMPushBroadCast" &ndash;&gt;-->
+        <!--<receiver-->
+            <!--android:name="com.easemob.chat.receiver.GCMPushBroadCast"-->
+            <!--android:exported="false">-->
+            <!--<intent-filter >-->
+                <!--<action android:name="com.easemob.sdk.push"/>-->
+                <!--&lt;!&ndash; 这里需要修改category 的android:name="你的包名" &ndash;&gt;-->
+                <!--<category android:name="com.easemob.helpdeskdemo"/>-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
+
+        <!--问题添加 end-->
+
         <!-- 声明SDK所需的receiver -->
         <receiver android:name="com.easemob.chat.EMMonitorReceiver">
             <intent-filter>
@@ -499,7 +517,9 @@
         <activity
             android:name=".ui.HotelMainActivity"
             android:launchMode="singleTop"
-            android:theme="@style/ActionBarTheme" />
+            android:theme="@style/ActionBarTheme"
+            android:windowSoftInputMode="stateHidden|adjustPan"
+            />
         <activity
             android:name=".ui.HotelListActivity"
             android:launchMode="singleTop"
@@ -591,6 +611,16 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/ActionBarTheme" />
+        <activity
+            android:name=".ui.AboutCuiweiActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/ActionBarTheme" />
+        <activity android:name=".ui.WebViewActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/ActionBarTheme"
+            />
 
         <!-- ShareSDK 2、注意： tencent后面的appid要保持和您配置的QQ的appid一致 -->
         <activity
@@ -671,8 +701,6 @@
         <!-- 高德定位 -->
         <!-- 定位需要的服务 使用2.0的定位需要加上这个 -->
         <service android:name="com.amap.api.location.APSService" />
-
-        <activity android:name=".ui.AboutCuiweiActivity"></activity>
     </application>
 
 </manifest>

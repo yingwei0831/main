@@ -252,17 +252,23 @@ public class PersonalizedCustomStartActivity extends BaseActivity implements Vie
         homePageBiz.homePageCustomAdd(add, new BizGenericCallback<ArrayList<Object>>() {
             @Override
             public void onCompletion(GenericResponseModel<ArrayList<Object>> model) {
-                ArrayList<Object> array = model.body;
-                LogUtil.e(TAG,"homePageCustomAdd =" + array.toString());
-                ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);
-                finish();
+                if ("0000".equals(model.headModel.res_code)) {
+                    ArrayList<Object> array = model.body;
+                    LogUtil.e(TAG,"homePageCustomAdd =" + array.toString());
+                    ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);
+                    finish();
+                }else if ("0001".equals(model.headModel.res_code)){
+                    ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);
+                }
             }
 
             @Override
             public void onError(FetchError error) {
                 LogUtil.e(TAG, " homePageCustomAdd :" + error.toString());
                 if (error.localReason != null){
-
+                    ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
+                }else{
+                    ToastCommon.toastShortShow(getApplicationContext(), null, "请求失败，请返回重试");
                 }
             }
         });

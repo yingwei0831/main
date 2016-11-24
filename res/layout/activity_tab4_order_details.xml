@@ -138,6 +138,7 @@
                         android:text="待付款" />
 
                 </LinearLayout>
+
             </LinearLayout>
             <!--联系人信息-->
             <LinearLayout

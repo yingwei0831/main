@@ -5,10 +5,13 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
+import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.URLSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -20,6 +23,7 @@ import com.jhhy.cuiweitourism.biz.CheckCodeBiz;
 import com.jhhy.cuiweitourism.biz.RegisterBiz;
 import com.jhhy.cuiweitourism.moudle.User;
 import com.jhhy.cuiweitourism.net.utils.Consts;
+import com.jhhy.cuiweitourism.utils.LinkSpanWrapper;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
 
@@ -125,20 +129,50 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 //        etPassword.setText("admin123");
 //        etConfirmPassword.setText("admin123");
 
-
         btnRegister = (Button) findViewById(R.id.btn_register_register);
         tvToLogin = (TextView) findViewById(R.id.tv_register_to_login);
 
         cbRegisterDeal = (CheckBox) findViewById(R.id.cb_register_deal);
 
-        String dealTitle = tvDeal.getText().toString();
-        SpannableStringBuilder builder = new SpannableStringBuilder(dealTitle);
+//        String dealTitle = tvDeal.getText().toString();
+//        SpannableStringBuilder builder = new SpannableStringBuilder(dealTitle);
         //ForegroundColorSpan 为文字前景色，BackgroundColorSpan为文字背景色
 //        ForegroundColorSpan normalSpan = new ForegroundColorSpan(getResources().getColor(R.color.colorRegistDealText));
 //        builder.setSpan(normalSpan, 0, dealTitle.indexOf("《"), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-        ForegroundColorSpan blueSpan = new ForegroundColorSpan(getResources().getColor(R.color.colorTab1RecommendForYouArgument));
-        builder.setSpan(blueSpan, dealTitle.indexOf("《"), dealTitle.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-        tvDeal.setText(builder);
+//        ForegroundColorSpan blueSpan = new ForegroundColorSpan(getResources().getColor(R.color.colorTab1RecommendForYouArgument));
+//        builder.setSpan(blueSpan, dealTitle.indexOf("《"), dealTitle.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+//        tvDeal.setText(builder);
+
+        StringBuilder actionText = new StringBuilder();
+        actionText.append("我已阅读并同意");
+        actionText.append("<a style=\"text-decoration:none;\" href='name' ><font color='" + "#28CE9D" + "'>" + "《翠微旅游服务条款》" + "</font> </a>");
+
+        tvDeal.setText(Html.fromHtml(actionText.toString()));
+        tvDeal.setMovementMethod(LinkMovementMethod.getInstance());
+        CharSequence text = tvDeal.getText();
+        int ends = text.length();
+        Spannable spannable = (Spannable) tvDeal.getText();
+        URLSpan[] urlspan = spannable.getSpans(0, ends, URLSpan.class);
+        SpannableStringBuilder stylesBuilder = new SpannableStringBuilder(text);
+        stylesBuilder.clearSpans();
+        for (URLSpan url : urlspan) {
+            LinkSpanWrapper myURLSpan = new LinkSpanWrapper(url.getURL(), getApplicationContext(), "《翠微旅游服务条款》", null, null, "#28CE9D"){
+                @Override
+                public void onItemTextViewClick(int position, View textView, int id) {
+                    //TODO 进入翠微旅游服务条款
+                    Intent intent = new Intent(getApplicationContext(), WebViewActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("type", 2);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
+            };
+            stylesBuilder.setSpan(myURLSpan, spannable.getSpanStart(url), spannable.getSpanEnd(url), spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+        tvDeal.setText(stylesBuilder);
+        tvDeal.setFocusable(false);
+        tvDeal.setClickable(false);
+        tvDeal.setLongClickable(false);
     }
 
     private void addListener() {
@@ -159,7 +193,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             case R.id.tv_register_to_login: //回到登录页面
                 finish();
                 break;
-        }
+           }
     }
 
     private void getCheckCode() {
@@ -191,9 +225,16 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         String checkCode = etCheckCode.getText().toString().trim();
 //        String registerCode = etRegisterCode.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
+        String newPwd = etConfirmPassword.getText().toString().trim();
 
-        if(TextUtils.isEmpty(mobile) || TextUtils.isEmpty(checkCode) || TextUtils.isEmpty(password)){
+        if(TextUtils.isEmpty(mobile) || TextUtils.isEmpty(checkCode) || TextUtils.isEmpty(password) || TextUtils.isEmpty(newPwd)){
             ToastUtil.show(getApplicationContext(), getString(R.string.empty_input));
+            return;
+        }
+        if (!newPwd.equals(password)){
+            ToastUtil.show(getApplicationContext(), "设置密码与确认密码不一致，请重新输入");
+            etPassword.setText("");
+            etConfirmPassword.setText("");
             return;
         }
 //        {"head":{"code":"User_register"},"field":{"mobile":"15210656911","password":"admin123","verify":"cwly","codes":"CWuhvle"}}

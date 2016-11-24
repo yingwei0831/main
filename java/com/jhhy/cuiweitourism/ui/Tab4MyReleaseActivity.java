@@ -1,5 +1,6 @@
 package com.jhhy.cuiweitourism.ui;
 
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
@@ -259,6 +260,14 @@ public class Tab4MyReleaseActivity extends BaseActivity implements View.OnClickL
 //        } else { //进入活动详情
             //TODO 活动详情
             LogUtil.e(TAG, "此处可看到发布的详情");
+        Bundle bundle = new Bundle();
+        bundle.putString("id", lists.get((int)l).getId());
+        bundle.putInt("type", 2); //2:我的发布，底下没有预定
+        Intent intent = new Intent(getApplicationContext(), HotActivityDetailActivity.class);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, VIEW_HOT_ACTIVITY_DETAIL);
 //        }
     }
+    private int VIEW_HOT_ACTIVITY_DETAIL = 6317; //查看我的发布详情
+
 }

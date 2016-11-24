@@ -2,6 +2,7 @@
     <string name="app_name">翠微旅游</string>
 
     <string name="http_notice">网络请求中，请稍后...</string>
+    <string name="developing_notice">正在开发中，敬请期待</string>
     <string name="empty_input">输入不能为空</string>
     <string name="start_activity">开启我的旅程</string>
     <!--首页-->
@@ -201,7 +202,7 @@
     <string name="fragment_mine_about_cuiwei">关于翠微</string>
     <string name="fragment_mine_about_us">关于我们</string>
     <string name="fragment_mine_contact_us">联系我们</string>
-    <string name="fragment_mine_join_us_rule">入住规则</string>
+    <string name="fragment_mine_join_us_rule">入驻规则</string>
     <string name="fragment_mine_about_travel_icon">关于旅游币</string>
     <string name="fragment_mine_law_statement">法律声明</string>
     <string name="fragment_mine_copyright">Copyright cuiwei.All Rights Reservice</string>

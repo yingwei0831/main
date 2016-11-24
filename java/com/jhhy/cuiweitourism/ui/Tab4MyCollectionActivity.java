@@ -108,7 +108,7 @@ public class Tab4MyCollectionActivity extends BaseActivity implements View.OnCli
         pullListView.getLoadingLayoutProxy().setPullLabel("下拉刷新");
         pullListView.getLoadingLayoutProxy().setRefreshingLabel("正在刷新");
         pullListView.getLoadingLayoutProxy().setReleaseLabel("松开刷新");
-        pullListView.setMode(PullToRefreshBase.Mode.BOTH);
+        pullListView.setMode(PullToRefreshBase.Mode.DISABLED);
 
         listView = pullListView.getRefreshableView();
         ImageView ivEmpty = (ImageView) findViewById(R.id.iv_empty_view);

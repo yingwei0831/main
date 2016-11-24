@@ -166,6 +166,7 @@
             android:background="@color/colorLineGray" />
 
         <TextView
+            android:id="@+id/tv_travel_insurance"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"

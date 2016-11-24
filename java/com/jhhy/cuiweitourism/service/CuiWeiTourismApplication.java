@@ -3,7 +3,9 @@ package com.jhhy.cuiweitourism.service;
 import android.app.Application;
 import android.support.multidex.MultiDexApplication;
 
+import com.easemob.chat.EMChat;
 import com.jhhy.cuiweitourism.ui.easemob.DemoHelper;
+import com.jhhy.cuiweitourism.ui.easemob.HelpDeskPreferenceUtils;
 
 import org.xutils.x;
 
@@ -35,6 +37,9 @@ public class CuiWeiTourismApplication extends MultiDexApplication {
 //        ImageLoader.getInstance().init(config);
 
         // init demo helper
+        //代码中设置环信IM的Appkey
+        String appkey = HelpDeskPreferenceUtils.getInstance(this).getSettingCustomerAppkey();
+        EMChat.getInstance().setAppkey(appkey);
         DemoHelper.getInstance().init(this);
 
         //环信

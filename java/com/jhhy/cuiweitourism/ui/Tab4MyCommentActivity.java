@@ -72,7 +72,7 @@ public class Tab4MyCommentActivity extends BaseActivity implements View.OnClickL
         pullToRefreshListView.getLoadingLayoutProxy().setPullLabel("PULLLABLE");
         pullToRefreshListView.getLoadingLayoutProxy().setRefreshingLabel("refreshingLabel");
         pullToRefreshListView.getLoadingLayoutProxy().setReleaseLabel("releaseLabel");
-        pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
+        pullToRefreshListView.setMode(PullToRefreshBase.Mode.DISABLED);
 
         listView = pullToRefreshListView.getRefreshableView();
         ImageView ivEmpty = (ImageView) findViewById(R.id.iv_empty_view);

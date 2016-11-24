@@ -78,6 +78,7 @@ public class Consts {
 
 //    获取验证码
     public static final int MESSAGE_CHECK_CODE = 112;
+    public static final int MESSAGE_UPDATE_CODE = 172;
     public static final String KEY_TEL = "tel";//获取验证码
 
     public static final String KEY_CHECK_CODE = "verify";//验证码
@@ -206,7 +207,8 @@ public class Consts {
     public static final String WEICHAT_MSG = "weichat";
     public static final int MESSAGE_TO_PRE_SALES = 1;
     public static final int MESSAGE_TO_AFTER_SALES = 2;
-//    public static final String DEFAULT_COSTOMER_APPKEY = "yingwei0831#cuiweitourism";
+
+    public static final String DEFAULT_COSTOMER_APPKEY = "1170161103178208#cwly1118";
 //    public static final String DEFAULT_COSTOMER_ACCOUNT = "15210656918";
 //    public static final String DEFAULT_ACCOUNT_PWD = "admin123";
 //    public static final long DEFAULT_PROJECT_ID = 48022l;

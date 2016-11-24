@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
+import com.jhhy.cuiweitourism.ui.AboutCuiweiActivity;
 import com.jhhy.cuiweitourism.ui.LoginActivity;
 import com.jhhy.cuiweitourism.ui.MainActivity;
 import com.jhhy.cuiweitourism.ui.Tab4AccountCertificationActivity;
@@ -234,7 +235,7 @@ public class Tab4Fragment2 extends Fragment implements View.OnClickListener {
         }
         switch (view.getId()){
             case R.id.tv_about_cuiwei: //关于翠微
-
+                startActivity(new Intent(getContext(), AboutCuiweiActivity.class));
                 break;
         }
     }
