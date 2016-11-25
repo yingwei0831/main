@@ -145,8 +145,8 @@
             android:name=".ui.MainActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:windowSoftInputMode="adjustPan|stateHidden" />
+            <!--android:theme="@style/Theme.AppCompat.Light.NoActionBar"-->
         <!-- android:theme="@style/MyCustomWindowTitle" -->
 
         <activity
