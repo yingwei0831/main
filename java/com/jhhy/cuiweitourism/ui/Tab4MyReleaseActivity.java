@@ -17,6 +17,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.UserReleaseListAdapter;
 import com.jhhy.cuiweitourism.biz.UserReleaseBiz;
+import com.jhhy.cuiweitourism.moudle.Collection;
 import com.jhhy.cuiweitourism.moudle.CustomActivity;
 import com.jhhy.cuiweitourism.net.biz.MemberCenterActionBiz;
 import com.jhhy.cuiweitourism.net.models.FetchModel.MemberReleaseDeleteFetch;
@@ -53,7 +54,8 @@ public class Tab4MyReleaseActivity extends BaseActivity implements View.OnClickL
     private UserReleaseListAdapter adapter;
     private List<CustomActivity> lists = new ArrayList<>();
 
-    private List<String> collIdSet = new ArrayList<>(); //选择的收藏的id数组
+//    private List<String> collIdSet = new ArrayList<>(); //选择的收藏的id数组
+    private String id;
 
 //    private String id; //选中item的id
 
@@ -125,18 +127,28 @@ public class Tab4MyReleaseActivity extends BaseActivity implements View.OnClickL
         {
             @Override
             public void goToArgument(View view, View viewGroup, int position, int which) {
-
-                CustomActivity comActy = lists.get(position);
-                boolean sele = comActy.isSelection();
-                if (sele){
-                    comActy.setSelection(false);
-                    collIdSet.remove(collIdSet.indexOf(comActy.getId()));
+                CustomActivity coll = lists.get(position);
+                if (coll.isSelection()){
+                    coll.setSelection(false);
+                    tvNumber.setText(String.valueOf(0));
+                    adapter.setSelection(position, false);
                 }else{
-                    comActy.setSelection(true);
-                    collIdSet.add(comActy.getId());
+                    coll.setSelection(true);
+                    tvNumber.setText(String.valueOf(1));
+                    adapter.setSelection(position, true);
+                    id = coll.getId();
                 }
-                tvNumber.setText(String.valueOf(collIdSet.size()));
-                adapter.notifyDataSetChanged();
+//                CustomActivity comActy = lists.get(position);
+//                boolean sele = comActy.isSelection();
+//                if (sele){
+//                    comActy.setSelection(false);
+//                    collIdSet.remove(collIdSet.indexOf(comActy.getId()));
+//                }else{
+//                    comActy.setSelection(true);
+//                    collIdSet.add(comActy.getId());
+//                }
+//                tvNumber.setText(String.valueOf(collIdSet.size()));
+//                adapter.notifyDataSetChanged();
             }
         };
         adapter.setVisible(edit);
@@ -195,13 +207,16 @@ public class Tab4MyReleaseActivity extends BaseActivity implements View.OnClickL
 
     //删除所选
     private void delete() { //{"head":{"code":"User_delactivity"},"field":{"id":"1"}}
-        if (collIdSet == null || collIdSet.size() == 0){
+//        if (collIdSet == null || collIdSet.size() == 0){
+//            return;
+//        }
+        if (id == null){
+            ToastUtil.show(getApplicationContext(), "请选择要删除的发布条目");
             return;
         }
-
         LoadingIndicator.show(this, getString(R.string.http_notice));
         MemberCenterActionBiz biz = new MemberCenterActionBiz();
-        MemberReleaseDeleteFetch fetch = new MemberReleaseDeleteFetch(collIdSet.get(collIdSet.size() - 1));
+        MemberReleaseDeleteFetch fetch = new MemberReleaseDeleteFetch(id);
         biz.memberReleaseDelete(fetch, new BizGenericCallback<Object>() {
             @Override
             public void onCompletion(GenericResponseModel<Object> model) {
@@ -212,6 +227,8 @@ public class Tab4MyReleaseActivity extends BaseActivity implements View.OnClickL
                     edit = false;
                     adapter.setVisible(edit);
                     tvTitleRight.setText("编辑");
+                    ToastUtil.show(getApplicationContext(), "删除成功");
+                    id = null;
                     getData();
                 }else{
                     ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);

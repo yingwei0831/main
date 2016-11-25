@@ -36,6 +36,21 @@ public abstract class UserCollectionListAdapter extends MyBaseAdapter implements
         notifyDataSetChanged();
     }
 
+    public void setSelection(int position, boolean result){
+        if (result){
+            for (int i = 0; i < list.size(); i++){
+                if (i == position) {
+                    ((Collection) list.get(i)).setSelection(true);
+                }else{
+                    ((Collection) list.get(i)).setSelection(false);
+                }
+            }
+        }else{
+            ((Collection) list.get(position)).setSelection(false);
+        }
+        notifyDataSetChanged();
+    }
+
     @Override
     public View getView(final int i, View view, final ViewGroup viewGroup) {
         CollectionViewHolder holder = null;

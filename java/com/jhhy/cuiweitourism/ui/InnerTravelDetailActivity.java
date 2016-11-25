@@ -475,6 +475,8 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
                         ToastUtil.show(getApplicationContext(), "当前商户暂未提供客服功能");
                         return;
                     }
+//                    intent.putExtra("name", );
+//                    intent.putExtra("icon", );
                     intent.putExtra("im", im);
                     startActivity(intent);
                 } else {

@@ -18,7 +18,7 @@ public class CuiWeiTourismApplication extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         x.Ext.init(this); // 这一步之后, 我们就可以在任何地方使用x.app()来获取Application的实例了.
-        x.Ext.setDebug(true); // 是否输出debug日志
+        x.Ext.setDebug(false); // 是否输出debug日志
 
         // 初始化ImageLoader
 //        DisplayImageOptions options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.icon_stub) // 设置图片下载期间显示的图片
@@ -38,8 +38,8 @@ public class CuiWeiTourismApplication extends MultiDexApplication {
 
         // init demo helper
         //代码中设置环信IM的Appkey
-        String appkey = HelpDeskPreferenceUtils.getInstance(this).getSettingCustomerAppkey();
-        EMChat.getInstance().setAppkey(appkey);
+//        String appkey = HelpDeskPreferenceUtils.getInstance(this).getSettingCustomerAppkey();
+//        EMChat.getInstance().setAppkey(appkey);
         DemoHelper.getInstance().init(this);
 
         //环信

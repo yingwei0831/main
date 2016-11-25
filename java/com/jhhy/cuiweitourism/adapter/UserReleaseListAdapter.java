@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.ArgumentOnClick;
 import com.jhhy.cuiweitourism.R;
+import com.jhhy.cuiweitourism.moudle.Collection;
 import com.jhhy.cuiweitourism.moudle.CustomActivity;
 import com.jhhy.cuiweitourism.utils.ImageLoaderUtil;
 
@@ -37,6 +38,20 @@ public abstract class UserReleaseListAdapter extends MyBaseAdapter
         notifyDataSetChanged();
     }
 
+    public void setSelection(int position, boolean result){
+        if (result){
+            for (int i = 0; i < list.size(); i++){
+                if (i == position) {
+                    ((CustomActivity) list.get(i)).setSelection(true);
+                }else{
+                    ((CustomActivity) list.get(i)).setSelection(false);
+                }
+            }
+        }else{
+            ((CustomActivity) list.get(position)).setSelection(false);
+        }
+        notifyDataSetChanged();
+    }
     @Override
     public View getView(final int i, View view, final ViewGroup viewGroup) {
         CollectionViewHolder holder = null;

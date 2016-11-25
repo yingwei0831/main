@@ -20,6 +20,7 @@ import com.jhhy.cuiweitourism.biz.UserCollectionBiz;
 import com.jhhy.cuiweitourism.moudle.Collection;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
+import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.jhhy.cuiweitourism.utils.Utils;
 import com.just.sun.pricecalendar.ToastCommon;
 
@@ -47,7 +48,8 @@ public class Tab4MyCollectionActivity extends BaseActivity implements View.OnCli
     private UserCollectionListAdapter adapter;
     private List<Collection> lists = new ArrayList<>();
 
-    private List<String> collIdSet = new ArrayList<>(); //选择的收藏的id数组
+//    private List<String> collIdSet = new ArrayList<>(); //选择的收藏的id数组
+    private Collection coll;
 
     private Handler handler = new Handler(){
         @Override
@@ -70,6 +72,19 @@ public class Tab4MyCollectionActivity extends BaseActivity implements View.OnCli
 //                        }
                     }else{
                         ToastCommon.toastShortShow(getApplicationContext(), null, String.valueOf(msg.obj));
+                    }
+                    break;
+                case Consts.MESSAGE_DO_COLLECTION: //删除收藏
+                    ToastUtil.show(getApplicationContext(), String.valueOf(msg.obj));
+                    if (msg.arg1 == 1){
+                        layoutDelete.setVisibility(View.GONE);
+                        edit = false;
+                        adapter.setVisible(edit);
+                        tvTitleRight.setText("编辑");
+                        coll = null;
+                        getData();
+                    } else {
+
                     }
                     break;
             }
@@ -118,18 +133,30 @@ public class Tab4MyCollectionActivity extends BaseActivity implements View.OnCli
         adapter = new UserCollectionListAdapter(getApplicationContext(), lists) {
             @Override
             public void goToArgument(View view, View viewGroup, int position, int which) {
-
-                Collection coll = lists.get(position);
-                boolean sele = coll.isSelection();
-                if (sele){
+                //选择当前，如果当前被选中，则变味空；如果当前不被选中，则被选中
+                //如果再选其他的，则清空列表，并全部置false，再添加
+                coll = lists.get(position);
+                if (coll.isSelection()){
                     coll.setSelection(false);
-                    collIdSet.remove(collIdSet.indexOf(coll.getColId()));
+                    tvNumber.setText(String.valueOf(0));
+                    adapter.setSelection(position, false);
+                    coll = null;
                 }else{
                     coll.setSelection(true);
-                    collIdSet.add(coll.getColId());
+                    tvNumber.setText(String.valueOf(1));
+                    adapter.setSelection(position, true);
                 }
-                tvNumber.setText(String.valueOf(collIdSet.size()));
-                adapter.notifyDataSetChanged();
+//                Collection coll = lists.get(position);
+//                boolean sele = coll.isSelection();
+//                if (sele){
+//                    coll.setSelection(false);
+//                    collIdSet.remove(collIdSet.indexOf(coll.getColId()));
+//                }else{
+//                    coll.setSelection(true);
+//                    collIdSet.add(coll.getColId());
+//                }
+//                tvNumber.setText(String.valueOf(collIdSet.size()));
+//                adapter.notifyDataSetChanged();
             }
         };
         listView.setAdapter(adapter);
@@ -187,7 +214,13 @@ public class Tab4MyCollectionActivity extends BaseActivity implements View.OnCli
 
     //删除所选
     private void delete() {
-
+        //传入id，收藏接口自动删除
+        if (coll == null){
+            ToastUtil.show(getApplicationContext(), "请选择要删除的收藏条目");
+            return;
+        }
+        UserCollectionBiz biz = new UserCollectionBiz(getApplicationContext(), handler);
+        biz.doCollection(MainActivity.user.getUserId(), coll.getColTypeId(), coll.getColProductId());
     }
 
     private void save() {
@@ -202,17 +235,17 @@ public class Tab4MyCollectionActivity extends BaseActivity implements View.OnCli
         LogUtil.e(TAG, "i = " + i + ", l = " + l);
         if (edit){
 //            adapter.setVisible(edit);
-            Collection coll = lists.get((int) l);
-            boolean sele = coll.isSelection();
-            if (sele){
-                coll.setSelection(false);
-                collIdSet.remove(collIdSet.indexOf(coll.getColId()));
-            }else{
-                coll.setSelection(true);
-                collIdSet.add(coll.getColId());
-            }
-            tvNumber.setText(String.valueOf(collIdSet.size()));
-            adapter.notifyDataSetChanged();
+//            Collection coll = lists.get((int) l);
+//            boolean sele = coll.isSelection();
+//            if (sele){
+//                coll.setSelection(false);
+//                collIdSet.remove(collIdSet.indexOf(coll.getColId()));
+//            }else{
+//                coll.setSelection(true);
+//                collIdSet.add(coll.getColId());
+//            }
+//            tvNumber.setText(String.valueOf(collIdSet.size()));
+//            adapter.notifyDataSetChanged();
         }else{ //进入xxx详情
             Collection coll = lists.get((int) l);
             String typeId = coll.getColTypeId(); //1.线路、2.酒店、3租车、8签证、14私人定制、202活动(个人发布)

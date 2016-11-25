@@ -381,11 +381,11 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragment.E
 			JSONObject visitorJson = new JSONObject();
 			visitorJson.put("userNickname", currentUserNick);
 			visitorJson.put("trueName", currentUserNick);
-			visitorJson.put("qq", "10000");
-			visitorJson.put("phone", "13512345678");
-			visitorJson.put("companyName", "环信");
+			visitorJson.put("qq", "");
+			visitorJson.put("phone", "");
+			visitorJson.put("companyName", "");
 			visitorJson.put("description", "");
-			visitorJson.put("email", "abc@123.com");
+			visitorJson.put("email", "");
 			weichatJson.put("visitor", visitorJson);
 
 			message.setAttribute("weichat", weichatJson);

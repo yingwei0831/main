@@ -139,7 +139,7 @@ public class Tab4MyCommentActivity extends BaseActivity implements View.OnClickL
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        ToastCommon.toastShortShow(getApplicationContext(), null, "没有点评详情");
+//        ToastCommon.toastShortShow(getApplicationContext(), null, "没有点评详情");
     }
 
     public static void actionStart(Context context, Bundle data){
