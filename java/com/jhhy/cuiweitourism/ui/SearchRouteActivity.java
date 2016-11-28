@@ -308,20 +308,20 @@ public class SearchRouteActivity extends BaseActivity implements View.OnClickLis
             case R.id.title_main_tv_left_location:
                 finish();
                 break;
-            case R.id.tv_tab1_search_route_list_sort_default:
+            case R.id.tv_tab1_search_route_list_sort_default: //默认排序
                 tag = 1;
 //                new InnerTravelPopupWindow(this, layout, tag);
                 showPopupWindow();
                 break;
-            case R.id.tv_tab1_search_route_list_trip_days:
+            case R.id.tv_tab1_search_route_list_trip_days: //行程天数
                 tag = 2;
                 showPopupWindow();
                 break;
-            case R.id.tv_tab1_search_route_list_start_time:
+            case R.id.tv_tab1_search_route_list_start_time: //出发时间
                 tag = 3;
                 showPopupWindow();
                 break;
-            case R.id.tv_tab1_search_route_list_screen_price:
+            case R.id.tv_tab1_search_route_list_screen_price: //价格筛选
                 tag = 4;
                 showPopupWindow();
                 break;
@@ -335,7 +335,15 @@ public class SearchRouteActivity extends BaseActivity implements View.OnClickLis
             addPopListener();
         }else{
             popupWindowSearchLine.showAtLocation(layout, Gravity.BOTTOM, 0, 0);
-            popupWindowSearchLine.refreshView(tag, sort, String.valueOf(dayPosition), earlyTime, laterTime, pricePosition);
+            String toSrot = "";
+            if ("2".equals(sort)){
+                toSrot = "1";
+            }else if ("1".equals(sort)){
+                toSrot = "2";
+            }else{
+                toSrot = sort;
+            }
+            popupWindowSearchLine.refreshView(tag, toSrot, String.valueOf(dayPosition), earlyTime, laterTime, pricePosition);
         }
     }
 
@@ -351,8 +359,10 @@ public class SearchRouteActivity extends BaseActivity implements View.OnClickLis
                     String newSort = popupWindowSearchLine.getSort();
                     if ("0".equals(newSort)){
                         sort = "";
-                    }else{
-                        sort = String.valueOf(newSort);
+                    }else if ("1".equals(newSort)){
+                        sort = "2";
+                    }else if ("2".equals(newSort)){
+                        sort = "1";
                     }
                     String newDay = popupWindowSearchLine.getDay();
                     if (newDay != null && newDay.length() != 0) {

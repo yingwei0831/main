@@ -65,11 +65,11 @@ public class Tab4MyCollectionActivity extends BaseActivity implements View.OnCli
                         if (newlists == null || newlists.size() == 0){
 //                            ToastCommon.toastShortShow(getApplicationContext(), null, "获取收藏数据为空");
                             tvTitleRight.setVisibility(View.INVISIBLE);
+                        } else {
+                            tvTitleRight.setVisibility(View.VISIBLE);
                         }
-//                      else {
-                            lists = newlists;
-                            adapter.setData(newlists);
-//                        }
+                        lists = newlists;
+                        adapter.setData(newlists);
                     }else{
                         ToastCommon.toastShortShow(getApplicationContext(), null, String.valueOf(msg.obj));
                     }
@@ -110,6 +110,7 @@ public class Tab4MyCollectionActivity extends BaseActivity implements View.OnCli
         tvTitle.setText("我的收藏");
         tvTitleRight = (TextView) findViewById(R.id.tv_title_simple_title_right);
         tvTitleRight.setText("编辑");
+        tvTitleRight.setVisibility(View.INVISIBLE);
         tvTitleRight.setTextColor(getResources().getColor(R.color.colorActionBar));
         tvTitleLeft = (TextView) findViewById(R.id.tv_title_simple_title_left);
 

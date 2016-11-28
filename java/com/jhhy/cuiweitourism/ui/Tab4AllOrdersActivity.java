@@ -86,8 +86,10 @@ public class Tab4AllOrdersActivity extends BaseActivity implements View.OnClickL
         tvTitle.setText(typeTitles[selection]);
         ivTitleLeft = (ImageView) findViewById(R.id.title_main_tv_left_location);
 
-        View view = findViewById(R.id.layout_parent);
-        view.setPadding(0, 0, 0, 0);
+//        View view = findViewById(R.id.layout_parent);
+//        view.setPadding(0, 0, 0, 0);
+        View viewTop = findViewById(R.id.view_top);
+        viewTop.setVisibility(View.GONE);
 
         drawableRightDown = ContextCompat.getDrawable(Tab4AllOrdersActivity.this, R.mipmap.arrow_tran_down);
         drawableRightDown.setBounds(0, 0, drawableRightDown.getMinimumWidth(), drawableRightDown.getMinimumHeight());

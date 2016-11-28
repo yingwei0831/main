@@ -202,7 +202,7 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
             tvTravelIconNotice.setText("账户共" + MainActivity.user.getUserScore() + "个旅游币，本次使用" + order.getUseTravelIcon() + "个旅游币折扣");
             tvTravelIconCount.setText(order.getUseTravelIcon());
         }
-        if ("3".equals(typeId)){ //游客信息隐藏
+        if ("3".equals(typeId) || "202".equals(typeId)){ //游客信息隐藏
             layoutTravel.setVisibility(View.GONE);
         }
     }
