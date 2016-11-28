@@ -13,10 +13,11 @@
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="1.2px"
         android:background="#E7E7E7"
         android:contentDescription="@null"
-        android:src="@mipmap/line_gray_border" />
+        android:src="@mipmap/line_gray_border"
+        android:scaleType="fitXY"/>
 
     <RadioGroup
         android:id="@+id/tab_menu"
