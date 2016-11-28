@@ -255,7 +255,13 @@ public class InnerTravelCityActivity extends BaseActivity implements View.OnClic
         } else {
             popupWindow.showAtLocation(layout, Gravity.BOTTOM, 0, 0);
             LogUtil.e(TAG, tag + ", " + sort + ", " + String.valueOf(dayPosition) + ", " + earlyTime + ", " + laterTime + ", " + pricePosition); //2, , -1, , , -1
-            popupWindow.refreshView(tag, sort, String.valueOf(dayPosition), earlyTime, laterTime, pricePosition);
+            String toSrot = "";
+            if ("2".equals(sort)){
+                toSrot = "1";
+            }else if ("1".equals(sort)){
+                toSrot = "2";
+            }
+            popupWindow.refreshView(tag, toSrot, String.valueOf(dayPosition), earlyTime, laterTime, pricePosition);
         }
     }
 
@@ -267,10 +273,12 @@ public class InnerTravelCityActivity extends BaseActivity implements View.OnClic
                 boolean commit = popupWindow.getCommit();
                 if (commit) {
                     String newSort = popupWindow.getSort();
-                    if ("0".equals(newSort)) {
+                    if ("0".equals(newSort)){
                         sort = "";
-                    } else {
-                        sort = String.valueOf(newSort);
+                    }else if ("1".equals(newSort)){
+                        sort = "2";
+                    }else if ("2".equals(newSort)){
+                        sort = "1";
                     }
                     String newDay = popupWindow.getDay();
                     if (newDay != null && newDay.length() != 0) {
@@ -305,6 +313,7 @@ public class InnerTravelCityActivity extends BaseActivity implements View.OnClic
                     } else if (currentItem == 1) {
                         freedomFragment.getData(true);
                     }
+
                 }
             }
         });
@@ -592,7 +601,6 @@ public class InnerTravelCityActivity extends BaseActivity implements View.OnClic
         tvSortDays = null;
         tvStartTime = null;
         tvScreenPrice = null;
-        tag = 0;
         cityId = null;
         cityName = null;
         sort = null;
@@ -605,7 +613,5 @@ public class InnerTravelCityActivity extends BaseActivity implements View.OnClic
         listPrices.clear();
         listPrices= null;
         popupWindow = null;
-        pricePosition = 0;
-        dayPosition = 0;
     }
 }

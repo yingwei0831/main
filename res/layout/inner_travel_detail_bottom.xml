@@ -19,6 +19,7 @@
         android:drawablePadding="4dp"
         android:background="@android:color/white"
         android:textSize="12sp"
+        android:textColor="@android:color/black"
         />
 
     <TextView
@@ -33,6 +34,7 @@
         android:drawableTop="@mipmap/icon_share"
         android:paddingTop="4dp"
         android:textSize="12sp"
+        android:textColor="@android:color/black"
         />
 
     <Button

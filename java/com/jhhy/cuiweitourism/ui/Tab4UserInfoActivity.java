@@ -209,7 +209,8 @@ public class Tab4UserInfoActivity extends BaseActivity implements View.OnClickLi
 
     private void modifyGender() {
         AlertDialog.Builder builder = new AlertDialog.Builder(Tab4UserInfoActivity.this);
-        builder.setIcon(R.mipmap.ic_launcher);
+//        builder.setView();
+        builder.setIcon(R.mipmap.app_logo);
         builder.setTitle("选择性别");
         // 指定下拉列表的显示数据
         final String[] sexs = {"女", "男"};

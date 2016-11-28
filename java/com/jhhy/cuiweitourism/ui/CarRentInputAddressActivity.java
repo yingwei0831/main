@@ -63,15 +63,14 @@ public class CarRentInputAddressActivity extends BaseActivity implements View.On
 
         if (type == 1){
             tvTitle.setText("出发地点");
-            etCurrentPwd.setEnabled(false);
-            etCurrentPwd.setText(getString(R.string.car_rent_city));
         }else if (type == 2){
             tvTitle.setText("目的地点");
-            etNewPwd.setVisibility(View.GONE);
-            etConfirmPwd.setVisibility(View.GONE);
-            etCurrentPwd.setText("");
-            etCurrentPwd.setHint("请输入北京市内地址信息");
+//            etNewPwd.setVisibility(View.GONE);
+//            etConfirmPwd.setVisibility(View.GONE);
+//            etCurrentPwd.setHint("请输入北京市内地址信息");
         }
+        etCurrentPwd.setEnabled(false);
+        etCurrentPwd.setText(getString(R.string.car_rent_city));
     }
 
     private void addListener() {
@@ -94,7 +93,7 @@ public class CarRentInputAddressActivity extends BaseActivity implements View.On
     private void save() {
         String city = etCurrentPwd.getText().toString();
         StringBuffer sb = new StringBuffer();
-        if (type == 1){
+//        if (type == 1){
             String county = etNewPwd.getText().toString();
             String address = etConfirmPwd.getText().toString();
             if (TextUtils.isEmpty(city) || TextUtils.isEmpty(county) || TextUtils.isEmpty(address)){
@@ -102,13 +101,13 @@ public class CarRentInputAddressActivity extends BaseActivity implements View.On
                 return;
             }
             sb.append(city.trim()).append(county.trim()).append(address.trim());
-        }else if (type == 2){
-            if (TextUtils.isEmpty(city)){
-                ToastCommon.toastShortShow(getApplicationContext(), null, getString(R.string.empty_input));
-                return;
-            }
-            sb.append(city.trim());
-        }
+//        }else if (type == 2){
+//            if (TextUtils.isEmpty(city)){
+//                ToastCommon.toastShortShow(getApplicationContext(), null, getString(R.string.empty_input));
+//                return;
+//            }
+//            sb.append(city.trim());
+//        }
         Intent data = new Intent();
         Bundle bundle = new Bundle();
         bundle.putString("address", sb.toString());

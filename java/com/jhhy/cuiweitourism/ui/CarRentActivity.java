@@ -151,13 +151,17 @@ public class CarRentActivity extends BaseActivity implements View.OnClickListene
             case R.id.tv_select_to_addr: //选择目的地址
                 Intent intentTo = new Intent(getApplicationContext(), CarRentInputAddressActivity.class);
                 Bundle bundleTo = new Bundle();
-                bundleTo.putInt("type", 1);
+                bundleTo.putInt("type", 2);
                 intentTo.putExtras(bundleTo);
                 startActivityForResult(intentTo, INPUT_TO_ADDRESS);
                 break;
             case R.id.btn_car_rent_next:
-                if (TextUtils.isEmpty(rentTime) || TextUtils.isEmpty(rentType) || TextUtils.isEmpty(rentDay) || TextUtils.isEmpty(rentFromAddr) || TextUtils.isEmpty(rentToAddr)){
+                if (TextUtils.isEmpty(rentTime) || TextUtils.isEmpty(rentType) || TextUtils.isEmpty(rentFromAddr) || TextUtils.isEmpty(rentToAddr)){
                     ToastCommon.toastShortShow(getApplicationContext(), null, getString(R.string.empty_input));
+                    return;
+                }
+                if (TextUtils.isEmpty(rentDay)){
+                    ToastCommon.toastShortShow(getApplicationContext(), null, "租车天数不能为空");
                     return;
                 }
                 LoadingIndicator.show(CarRentActivity.this, getString(R.string.http_notice));

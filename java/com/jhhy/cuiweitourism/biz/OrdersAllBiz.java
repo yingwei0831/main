@@ -321,6 +321,7 @@ public class OrdersAllBiz {
                             order.setStatusComment(orderObj.getString(Consts.ORDER_IS_COMMENT));
                             order.setOrderSN(orderObj.getString("ordersn"));
                             order.setPicPath(orderObj.getString(Consts.PIC_PATH_LITPIC));
+                            order.setTypeId(orderObj.getString("typeid"));
                             listWaitPay.add(order);
                         }
                     }
@@ -478,6 +479,7 @@ public class OrdersAllBiz {
                             order.setStatusComment(orderObj.getString(Consts.ORDER_IS_COMMENT));
                             order.setOrderSN(orderObj.getString("ordersn"));
                             order.setPicPath(orderObj.getString(Consts.PIC_PATH_LITPIC));
+                            order.setTypeId(orderObj.getString("typeid"));
                             listWaitRefund.add(order);
                         }
                     }

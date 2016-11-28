@@ -52,7 +52,9 @@
                     android:maxLines="1"
                     android:paddingBottom="16dp"
                     android:paddingTop="16dp"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@android:color/darker_gray"/>
             </LinearLayout>
 
             <View
@@ -89,7 +91,10 @@
                     android:inputType="number"
                     android:paddingBottom="16dp"
                     android:paddingTop="16dp"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@android:color/darker_gray"
+                    />
             </LinearLayout>
 
             <View
@@ -125,7 +130,10 @@
                     android:maxLines="1"
                     android:paddingBottom="16dp"
                     android:paddingTop="16dp"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@android:color/darker_gray"
+                    />
             </LinearLayout>
 
             <View
@@ -162,7 +170,10 @@
                     android:maxLines="1"
                     android:paddingBottom="16dp"
                     android:paddingTop="16dp"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@android:color/darker_gray"
+                    />
             </LinearLayout>
 
             <View
@@ -307,7 +318,10 @@
                     android:gravity="left"
                     android:hint="@string/tab4_account_certification_remarks_notice"
                     android:padding="4dp"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@android:color/darker_gray"
+                    />
             </LinearLayout>
 
             <View

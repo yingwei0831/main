@@ -340,8 +340,6 @@ public class SearchRouteActivity extends BaseActivity implements View.OnClickLis
                 toSrot = "1";
             }else if ("1".equals(sort)){
                 toSrot = "2";
-            }else{
-                toSrot = sort;
             }
             popupWindowSearchLine.refreshView(tag, toSrot, String.valueOf(dayPosition), earlyTime, laterTime, pricePosition);
         }

@@ -27,8 +27,11 @@ public class HttpUtils {
 
         try {
 
-            json.put(Consts.KEY_HEAD, setFieldParams(codeMap));
-            json.put(Consts.KEY_FIELD, setFieldParams(paramsMap));
+//            json.put(Consts.KEY_HEAD, setFieldParams(codeMap));
+            json.put(Consts.KEY_HEAD, new JSONObject(codeMap));
+            if (paramsMap != null) {
+                json.put(Consts.KEY_FIELD, new JSONObject(paramsMap));
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();

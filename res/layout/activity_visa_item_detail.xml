@@ -44,7 +44,8 @@
                     android:layout_marginTop="16dp"
                     android:paddingLeft="16dp"
                     android:paddingRight="16dp"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"/>
                 <!--价格-->
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -94,6 +95,7 @@
                         android:id="@+id/tv_visa_period"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textColor="@android:color/black"
                         />
 
                 </LinearLayout>
@@ -115,6 +117,7 @@
                         android:id="@+id/tv_visa_type"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textColor="@android:color/black"
                         />
 
                 </LinearLayout>
@@ -136,6 +139,7 @@
                         android:id="@+id/tv_visa_stay_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textColor="@android:color/black"
                         />
 
                 </LinearLayout>
@@ -157,6 +161,7 @@
                         android:id="@+id/tv_visa_effective_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textColor="@android:color/black"
                         />
 
                 </LinearLayout>
@@ -179,6 +184,7 @@
                         android:id="@+id/tv_visa_apply_to"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textColor="@android:color/black"
                         />
 
                 </LinearLayout>

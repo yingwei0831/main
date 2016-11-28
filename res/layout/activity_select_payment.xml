@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.jhhy.cuiweitourism.ui.SelectPaymentActivity">
+    tools:context="com.jhhy.cuiweitourism.ui.SelectPaymentActivity"
+    android:background="@color/colorTab2Space">
 
     <include layout="@layout/title_tab1_inner_travel" />
 
@@ -26,7 +27,9 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:text="@string/pay_type_money_unit"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textColor="@android:color/black"
+            android:textColorHint="@android:color/black"/>
 
         <TextView
             android:id="@+id/tv_select_payment_money"
@@ -71,7 +74,9 @@
             android:drawableRight="@mipmap/arrow_right_dark"
             android:gravity="center_vertical"
             android:text="@string/pay_type_alipay"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textColor="@android:color/black"
+            android:textColorHint="@android:color/black"/>
 
         <View
             android:visibility="gone"
@@ -94,6 +99,8 @@
             android:drawableRight="@mipmap/arrow_right_dark"
             android:gravity="center_vertical"
             android:text="@string/pay_type_weichatpay"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textColor="@android:color/black"
+            android:textColorHint="@android:color/black"/>
     </LinearLayout>
 </LinearLayout>

@@ -31,7 +31,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/tab4_account_security_password"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textColor="@android:color/black"/>
 
             <TextView
                 android:id="@+id/tv_modify_password"
@@ -60,7 +61,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/tab4_account_security_telephone_authentication"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textColor="@android:color/black"/>
 
             <TextView
                 android:id="@+id/tv_certification_mobile"
@@ -99,7 +101,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/tab4_account_security_real_name_authentication"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textColor="@android:color/black"/>
 
             <TextView
                 android:id="@+id/tv_certification_true"

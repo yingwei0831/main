@@ -15,6 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="购买去三亚的路线"
+        android:textColor="@android:color/black"
         />
     <TextView
         android:id="@+id/tv_item_my_tourim_time"
@@ -23,12 +24,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="2016-08-20"
+        android:textColor="@android:color/black"
         />
     <TextView
         android:id="@+id/tv_item_my_tourism_score"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="-1000"
         android:textColor="@color/colorBgTitleMain"
         android:layout_alignParentRight="true"
         android:textSize="18sp"

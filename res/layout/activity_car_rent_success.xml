@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.jhhy.cuiweitourism.ui.CarRentSuccessActivity">
+    tools:context="com.jhhy.cuiweitourism.ui.CarRentSuccessActivity"
+    android:background="@color/colorTab2Space">
 
     <include layout="@layout/title_tab1_inner_travel"/>
 
@@ -62,7 +63,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/car_rent_order_number"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:textColorHint="@android:color/black"/>
 
             <TextView
                 android:id="@+id/tv_order_no"
@@ -70,7 +73,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:drawablePadding="16dp"
-
+                android:textColor="@android:color/black"
+                android:textColorHint="@android:color/black"
                 android:gravity="right"
                 android:text="55226652" />
         </LinearLayout>
@@ -90,7 +94,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/car_rent_order_time"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:textColorHint="@android:color/black"/>
 
             <TextView
                 android:id="@+id/tv_order_time"
@@ -98,7 +104,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:drawablePadding="16dp"
-
+                android:textColor="@android:color/black"
+                android:textColorHint="@android:color/black"
                 android:gravity="right"
                 android:text="55226652" />
         </LinearLayout>
@@ -118,7 +125,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-
+                android:textColor="@android:color/black"
+                android:textColorHint="@android:color/black"
                 android:text="@string/car_rent_order_total_price"
                 android:textSize="16sp" />
 

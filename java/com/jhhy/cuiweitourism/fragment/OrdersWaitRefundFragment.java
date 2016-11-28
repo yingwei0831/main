@@ -61,12 +61,8 @@ public class OrdersWaitRefundFragment extends Fragment  implements ArgumentOnCli
                     }
                     if (msg.arg1 == 1){
                         List<Order> listWaitRefund = (List<Order>) msg.obj;
-//                        if (listWaitRefund == null || listWaitRefund.size() == 0){
-//                            ToastCommon.toastShortShow(getContext(), null, "获取数据为空");
-//                        }else{
-                            lists = listWaitRefund;
-                            adapter.setData(listWaitRefund);
-//                        }
+                        lists = listWaitRefund;
+                        adapter.setData(listWaitRefund);
                     }else{
                         ToastCommon.toastShortShow(getContext(), null, "获取数据失败");
                     }
@@ -150,10 +146,10 @@ public class OrdersWaitRefundFragment extends Fragment  implements ArgumentOnCli
         if (refresh){
             return;
         }
-        getData();
+        getData(type);
         refresh = true;
-//        pullListView.onRefreshComplete();
     }
+
     private void loadMore() {
         //TODO 加载更多
         pullListView.onRefreshComplete();
@@ -192,15 +188,6 @@ public class OrdersWaitRefundFragment extends Fragment  implements ArgumentOnCli
         listView.setAdapter(adapter);
     }
 
-    private void getData() {
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                pullListView.onRefreshComplete();
-            }
-        }, 2000);
-    }
-
     private int REQUEST_CODE_REFUND = 1501; //
 
     @Override
@@ -228,7 +215,6 @@ public class OrdersWaitRefundFragment extends Fragment  implements ArgumentOnCli
                 OrderActionBiz biz = new OrderActionBiz(getContext(), handler);
                 biz.requestCancelRefund(lists.get(position).getOrderSN());
                 break;
-
         }
     }
 }

@@ -7,7 +7,8 @@
     android:paddingBottom="8dp"
     android:paddingLeft="20dp"
     android:paddingRight="20dp"
-    android:paddingTop="8dp">
+    android:paddingTop="8dp"
+    android:background="@color/colorTab2Space">
 
     <ImageView
         android:id="@+id/iv_title_search_left"
@@ -21,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_toRightOf="@+id/iv_title_search_left"
-        android:background="#EFF2F7"
+        android:background="@android:color/white"
         android:drawableLeft="@mipmap/edit_search"
         android:drawablePadding="6dp"
         android:focusableInTouchMode="true"

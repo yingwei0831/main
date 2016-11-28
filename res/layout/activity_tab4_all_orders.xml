@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.jhhy.cuiweitourism.ui.Tab4AllOrdersActivity">
+    tools:context="com.jhhy.cuiweitourism.ui.Tab4AllOrdersActivity"
+    android:background="@color/colorTab2Space">
 
     <View
         android:id="@+id/view_top"

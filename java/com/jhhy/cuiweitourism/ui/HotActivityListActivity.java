@@ -254,7 +254,13 @@ public class HotActivityListActivity extends BaseActivity implements View.OnClic
             addPopListener();
         }else{
             popupWindowSearchLine.showAtLocation(layout, Gravity.BOTTOM, 0, 0);
-            popupWindowSearchLine.refreshView(tag, sort, day, earlyTime, laterTime, pricePosition);
+            String toSrot = "";
+            if ("2".equals(sort)){
+                toSrot = "1";
+            }else if ("1".equals(sort)){
+                toSrot = "2";
+            }
+            popupWindowSearchLine.refreshView(tag, toSrot, day, earlyTime, laterTime, pricePosition);
         }
     }
 
@@ -302,11 +308,11 @@ public class HotActivityListActivity extends BaseActivity implements View.OnClic
                     if (newSort != null) {
                         sort = newSort;
                         if ("0".equals(newSort)){
-                            sortCommit = "";
+                            sort = "";
                         }else if ("1".equals(newSort)){
-                            sortCommit = "price asc";
+                            sort = "2";
                         }else if ("2".equals(newSort)){
-                            sortCommit = "price desc"; //价格降序
+                            sort = "1";
                         }
                     }
                     String newDay = popupWindowSearchLine.getDay();

@@ -31,7 +31,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:text="@string/tab4_account_security_modify_password_current"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textColorHint="@android:color/black"
+                android:textColor="@android:color/black"/>
 
             <EditText
                 android:paddingLeft="10dp"
@@ -45,6 +47,7 @@
                 android:paddingBottom="16dp"
                 android:paddingTop="16dp"
                 android:textSize="16sp"
+                android:textColorHint="@android:color/darker_gray"
                 android:textColor="@android:color/black"/>
         </LinearLayout>
 
@@ -72,7 +75,8 @@
                 android:background="@drawable/bg_car_corner_1"
                 android:drawablePadding="10dp"
                 android:hint="请输入区（县）"
-
+                android:textColorHint="@android:color/darker_gray"
+                android:textColor="@android:color/black"
                 android:paddingBottom="16dp"
                 android:paddingTop="16dp"
                 android:textSize="16sp" />
@@ -101,7 +105,8 @@
                 android:background="@drawable/bg_car_corner_1"
                 android:drawablePadding="10dp"
                 android:hint="填写详细街道地址"
-
+                android:textColor="@android:color/black"
+                android:textColorHint="@android:color/darker_gray"
                 android:paddingBottom="16dp"
                 android:paddingTop="16dp"
                 android:textSize="16sp"/>

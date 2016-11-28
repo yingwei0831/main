@@ -39,7 +39,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="出发城市"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@android:color/black"/>
 
                 <EditText
                     android:id="@+id/et_select_from_city"
@@ -53,7 +55,10 @@
                     android:paddingTop="16dp"
                     android:hint="请输入出发城市"
                     android:textSize="14sp"
-                    android:background="@android:color/transparent"/>
+                    android:background="@android:color/transparent"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@android:color/darker_gray"
+                    />
             </LinearLayout>
 
             <View
@@ -76,7 +81,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="旅游目的地"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@android:color/black"/>
 
                 <EditText
                     android:id="@+id/et_select_to_city"
@@ -90,7 +97,10 @@
                     android:gravity="right"
                     android:hint="请输入目的地"
                     android:textSize="14sp"
-                    android:background="@android:color/transparent"/>
+                    android:background="@android:color/transparent"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@android:color/darker_gray"
+                    />
             </LinearLayout>
 
             <View
@@ -113,7 +123,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="出发时间"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@android:color/black"
+                    />
 
                 <TextView
                     android:id="@+id/tv_select_from_date"
@@ -125,7 +138,10 @@
                     android:drawablePadding="16dp"
                     android:drawableRight="@mipmap/arrow_right_dark"
                     android:gravity="right"
-                    android:text="请选择出发日期" />
+                    android:hint="请选择出发日期"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@android:color/darker_gray"
+                    />
             </LinearLayout>
 
             <View
@@ -150,7 +166,9 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:text="天数"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@android:color/black"/>
 
                 <ImageView
                     android:id="@+id/tv_price_calendar_day_number_reduce"
@@ -169,7 +187,9 @@
                     android:layout_toLeftOf="@+id/tv_price_calendar_day_number_add"
                     android:background="@drawable/bg_tv_price_calendar_number_border"
                     android:gravity="center"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:textColor="@android:color/black"
+                    />
 
                 <ImageView
                     android:id="@+id/tv_price_calendar_day_number_add"
@@ -190,7 +210,9 @@
                     android:layout_centerVertical="true"
                     android:paddingLeft="16dp"
                     android:text="天"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"
+                    />
             </RelativeLayout>
 
             <View
@@ -214,7 +236,9 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:text="人数"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@android:color/black"/>
 
                 <ImageView
                     android:id="@+id/tv_price_calendar_number_reduce"
@@ -233,7 +257,9 @@
                     android:layout_toLeftOf="@+id/tv_price_calendar_number_add"
                     android:background="@drawable/bg_tv_price_calendar_number_border"
                     android:gravity="center"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:textColor="@android:color/black"
+                    />
 
                 <ImageView
                     android:id="@+id/tv_price_calendar_number_add"
@@ -253,7 +279,9 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:text="成人"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"
+                    />
             </RelativeLayout>
 
             <RelativeLayout
@@ -284,7 +312,9 @@
                     android:background="@drawable/bg_tv_price_calendar_number_border"
                     android:gravity="center"
                     android:scaleType="centerInside"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:textColor="@android:color/black"
+                    />
 
                 <ImageView
                     android:id="@+id/tv_price_calendar_number_add_child"
@@ -304,7 +334,9 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:text="儿童"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"
+                    />
 
             </RelativeLayout>
 
@@ -329,7 +361,9 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:text="价格预算"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@android:color/black"/>
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -346,7 +380,9 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="￥" />
+                        android:text="￥"
+                        android:textColor="@android:color/black"
+                        android:textColorHint="@android:color/black"/>
 
                     <EditText
                         android:layout_gravity="center_vertical"
@@ -358,7 +394,9 @@
                         android:gravity="right"
                         android:background="@android:color/white"
                         android:paddingLeft="6dp"
-                        android:paddingRight="6dp" />
+                        android:paddingRight="6dp"
+                        android:textColor="@android:color/black"
+                        android:textColorHint="@android:color/black"/>
                 </LinearLayout>
 
                 <TextView
@@ -384,7 +422,9 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="￥" />
+                        android:text="￥"
+                        android:textColor="@android:color/black"
+                        android:textColorHint="@android:color/black"/>
 
                     <EditText
                         android:layout_gravity="center_vertical"
@@ -396,7 +436,9 @@
                         android:gravity="right"
                         android:background="@android:color/white"
                         android:paddingLeft="6dp"
-                        android:paddingRight="6dp" />
+                        android:paddingRight="6dp"
+                        android:textColor="@android:color/black"
+                        android:textColorHint="@android:color/black"/>
 
                 </LinearLayout>
 
@@ -406,7 +448,10 @@
                     android:layout_gravity="center_vertical"
                     android:paddingLeft="12dp"
                     android:text="元"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@android:color/black"
+                    />
             </LinearLayout>
 
             <View
@@ -431,7 +476,9 @@
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:text="酒店类型"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@android:color/black"/>
 
                 <TextView
                     android:id="@+id/tv_hotel_type_luxury"
@@ -442,7 +489,9 @@
                     android:layout_weight="1"
                     android:background="@drawable/bg_et_border_corner"
                     android:gravity="center"
-                    android:text="奢华型" />
+                    android:text="奢华型"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@android:color/black"/>
 
                 <TextView
                     android:id="@+id/tv_personalized_custom_hotel_luxury"
@@ -453,7 +502,10 @@
                     android:layout_weight="1"
                     android:background="@drawable/bg_et_border_corner"
                     android:gravity="center"
-                    android:text="豪华型" />
+                    android:text="豪华型"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@android:color/black"
+                    />
 
                 <TextView
                     android:id="@+id/tv_personalized_custom_hotel_comfortable"
@@ -463,7 +515,10 @@
                     android:layout_weight="1"
                     android:background="@drawable/bg_et_border_corner"
                     android:gravity="center"
-                    android:text="舒适型" />
+                    android:text="舒适型"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@android:color/black"
+                    />
 
             </LinearLayout>
 
@@ -486,7 +541,10 @@
                     android:layout_weight="1"
                     android:background="@drawable/bg_et_border_corner"
                     android:gravity="center"
-                    android:text="经济型" />
+                    android:text="经济型"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@android:color/black"
+                    />
 
                 <TextView
                     android:id="@+id/tv_personalized_custom_hotel_bb"
@@ -497,7 +555,10 @@
                     android:layout_weight="1"
                     android:background="@drawable/bg_et_border_corner"
                     android:gravity="center"
-                    android:text="民宿型" />
+                    android:text="民宿型"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@android:color/black"
+                    />
             </LinearLayout>
 
             <View
@@ -518,7 +579,9 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:text="备注："
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@android:color/black"/>
 
                 <EditText
                     android:id="@+id/et_personalized_custom_remarks"
@@ -530,7 +593,9 @@
                     android:gravity="top"
                     android:hint="请输入备注信息"
                     android:padding="4dp"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@android:color/darker_gray"/>
             </LinearLayout>
 
             <View
@@ -549,7 +614,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="姓名：" />
+                    android:text="姓名："
+                    android:textColor="@android:color/black"
+                    />
 
                 <EditText
                     android:id="@+id/et_customized_name"
@@ -558,7 +625,9 @@
                     android:layout_weight="1"
                     android:background="@android:color/white"
                     android:hint="必填，请输入您的姓名"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@android:color/darker_gray"/>
             </LinearLayout>
 
             <View
@@ -575,7 +644,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="手机：" />
+                    android:text="手机："
+                    android:textColor="@android:color/black"
+                    />
 
                 <EditText
                     android:id="@+id/et_customized_mobile"
@@ -584,7 +655,9 @@
                     android:layout_weight="1"
                     android:background="@android:color/white"
                     android:hint="必填，请输入您的电话"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@android:color/darker_gray"/>
             </LinearLayout>
 
             <View
@@ -601,7 +674,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="邮箱：" />
+                    android:text="邮箱："
+                    android:textColor="@android:color/black"
+                    />
 
                 <EditText
                     android:id="@+id/et_customized_mail"
@@ -610,7 +685,10 @@
                     android:layout_weight="1"
                     android:background="@android:color/white"
                     android:hint="必填，请输入您的邮箱"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@android:color/darker_gray"
+                    />
             </LinearLayout>
 
             <Button

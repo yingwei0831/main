@@ -4,7 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.Tab4MyTourismCoinActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/colorTab2Space"
+    >
 
     <include layout="@layout/title_tab1_inner_travel" />
 

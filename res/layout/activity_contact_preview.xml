@@ -52,7 +52,9 @@
                 android:maxLines="1"
                 android:paddingBottom="16dp"
                 android:paddingTop="16dp"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:textColor="@android:color/black"
+                android:textColorHint="@android:color/black"/>
         </LinearLayout>
 
         <View
@@ -87,7 +89,9 @@
                 android:maxLines="1"
                 android:paddingBottom="16dp"
                 android:paddingTop="16dp"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:textColor="@android:color/black"
+                android:textColorHint="@android:color/black"/>
         </LinearLayout>
 
         <View
@@ -121,7 +125,9 @@
                 android:maxLines="1"
                 android:paddingBottom="16dp"
                 android:paddingTop="16dp"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:textColor="@android:color/black"
+                android:textColorHint="@android:color/black"/>
         </LinearLayout>
 
         <View
@@ -151,7 +157,9 @@
                 android:maxLines="1"
                 android:paddingBottom="16dp"
                 android:paddingTop="16dp"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:textColor="@android:color/black"
+                android:textColorHint="@android:color/black"/>
         </LinearLayout>
 
         <View

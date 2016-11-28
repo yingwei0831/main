@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/colorTab2Space"
     >
 
     <include layout="@layout/title_tab1_inner_travel" />
@@ -96,7 +97,8 @@
                 android:drawablePadding="10dp"
                 android:drawableRight="@mipmap/arrow_right_dark"
                 android:hint="昵称"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textColor="@android:color/black"/>
 
 
         </RelativeLayout>
@@ -132,7 +134,8 @@
                 android:drawablePadding="10dp"
                 android:drawableRight="@mipmap/arrow_right_dark"
                 android:hint="请选择"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textColor="@android:color/black"/>
 
 
         </RelativeLayout>
@@ -166,8 +169,8 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:drawablePadding="10dp"
-                android:hint="13366669999"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textColor="@android:color/black"/>
 
         </RelativeLayout>
     </LinearLayout>
@@ -215,7 +218,8 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:drawablePadding="10dp"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textColor="@android:color/black"/>
 
         </RelativeLayout>
 
@@ -247,7 +251,8 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:drawablePadding="10dp"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textColor="@android:color/black"/>
 
         </RelativeLayout>
 

@@ -64,7 +64,7 @@ public class InnerTravelCityListBiz {
                     headMap.put(Consts.KEY_CODE, CODE_INNER_TRAVEL_CITY);
                     Map<String, Object> fieldMap = new HashMap<>();
                     fieldMap.put("areaid", areaId);
-                    fieldMap.put("sort", sort);
+                    fieldMap.put("order", sort);
                     fieldMap.put("day", day);
                     fieldMap.put(Consts.KEY_PRICE, price);
                     fieldMap.put("zcfdate", earlyTime);

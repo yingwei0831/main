@@ -2,9 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorTab2Space"
     android:orientation="vertical">
 
-    <include layout="@layout/title_tab1_inner_travel"/>
+    <include layout="@layout/title_tab1_inner_travel" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -17,11 +18,11 @@
             android:orientation="vertical">
 
             <RelativeLayout
-                android:visibility="visible"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/white"
-                android:padding="16dp">
+                android:padding="16dp"
+                android:visibility="visible">
 
                 <TextView
                     android:id="@+id/tv_inner_travel_edit_order_title"
@@ -40,6 +41,8 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/tv_inner_travel_edit_order_title"
                     android:text="出发城市： "
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@android:color/black"
                     android:textSize="12sp" />
 
                 <TextView
@@ -50,6 +53,8 @@
                     android:layout_toLeftOf="@+id/tv_inner_travel_edit_order_city_name"
                     android:layout_toRightOf="@+id/tv_inner_travel_edit_order_from_city"
                     android:text="北京"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@android:color/black"
                     android:textSize="12sp" />
 
                 <TextView
@@ -59,8 +64,10 @@
                     android:layout_below="@+id/tv_inner_travel_edit_order_title"
                     android:layout_toLeftOf="@+id/tv_inner_travel_edit_order_travel_number"
                     android:text="产品编号： "
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@android:color/black"
                     android:textSize="12sp"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/tv_inner_travel_edit_order_travel_number"
@@ -69,33 +76,38 @@
                     android:layout_alignParentRight="true"
                     android:layout_below="@+id/tv_inner_travel_edit_order_title"
                     android:text="021545645499"
-                    android:textSize="12sp"
-                    android:visibility="gone"/>
-            </RelativeLayout>
-            <LinearLayout
-                android:visibility="gone"
-                android:layout_marginTop="10dp"
-                android:padding="16dp"
-                android:background="@android:color/white"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
                     android:textColor="@android:color/black"
+                    android:textColorHint="@android:color/black"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@android:color/white"
+                android:padding="16dp"
+                android:visibility="gone">
+
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="出发城市"
-                    />
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@android:color/black" />
+
                 <TextView
                     android:id="@+id/tv_travel_edit_order_select_from_city"
-                    android:textColor="@android:color/black"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:gravity="right"
                     android:layout_height="wrap_content"
-                    android:text="北京"
+                    android:layout_weight="1"
                     android:drawablePadding="10dp"
-                    />
+                    android:gravity="right"
+                    android:text="北京"
+                    android:textColor="@android:color/black" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -132,11 +144,13 @@
                         android:background="@android:color/white"
                         android:gravity="center_vertical"
                         android:hint="必填"
+                        android:inputType="text"
                         android:maxLines="1"
                         android:paddingBottom="16dp"
                         android:paddingTop="16dp"
-                        android:textSize="14sp"
-                        android:inputType="text"/>
+                        android:textColor="@android:color/black"
+                        android:textColorHint="@android:color/darker_gray"
+                        android:textSize="14sp" />
                 </LinearLayout>
 
                 <View
@@ -180,9 +194,11 @@
                         android:maxLines="1"
                         android:paddingBottom="16dp"
                         android:paddingTop="16dp"
-                        android:textSize="14sp"
-                        />
+                        android:textColor="@android:color/black"
+                        android:textColorHint="@android:color/darker_gray"
+                        android:textSize="14sp" />
                 </LinearLayout>
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1.2px"
@@ -223,9 +239,11 @@
                         android:maxLines="1"
                         android:paddingBottom="16dp"
                         android:paddingTop="16dp"
-                        android:textSize="14sp"
-                        />
+                        android:textColor="@android:color/black"
+                        android:textColorHint="@android:color/darker_gray"
+                        android:textSize="14sp" />
                 </LinearLayout>
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1.2px"
@@ -234,11 +252,11 @@
                     android:background="@color/colorLineGray2" />
                 <!--订单留言-->
                 <LinearLayout
-                    android:visibility="visible"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@android:color/white"
-                    android:paddingLeft="16dp">
+                    android:paddingLeft="16dp"
+                    android:visibility="visible">
 
                     <TextView
                         android:id="@+id/tv_inner_travel_edit_order_contact_leaving"
@@ -250,8 +268,6 @@
 
                     <EditText
                         android:id="@+id/et_travel_edit_order_contact_remark"
-                        android:paddingBottom="16dp"
-                        android:paddingTop="16dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignBottom="@+id/tv_inner_travel_edit_order_contact_leaving"
@@ -261,10 +277,13 @@
                         android:background="@android:color/white"
                         android:gravity="center_vertical"
                         android:hint="选填"
+                        android:paddingBottom="16dp"
+                        android:paddingTop="16dp"
+                        android:textColor="@android:color/black"
+                        android:textColorHint="@android:color/darker_gray"
                         android:textSize="14sp" />
                 </LinearLayout>
             </LinearLayout>
-
 
 
             <LinearLayout
@@ -279,8 +298,7 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    >
+                    android:gravity="center_vertical">
 
                     <TextView
                         android:id="@+id/tv_inner_travel_edit_order_traveller_detail"
@@ -297,12 +315,12 @@
                         android:layout_centerVertical="true"
                         android:layout_toRightOf="@+id/tv_inner_travel_edit_order_traveller_detail"
                         android:gravity="center_vertical"
-                        android:text="2成人，2儿童" />
+                        android:text="2成人，2儿童"
+                        android:textColor="@android:color/black"
+                        />
 
                     <TextView
                         android:id="@+id/tv_travel_edit_order_select_traveler"
-                        android:paddingTop="16dp"
-                        android:paddingBottom="16dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
@@ -310,12 +328,14 @@
                         android:drawablePadding="10dp"
                         android:drawableRight="@mipmap/arrow_right_dark"
                         android:gravity="center_vertical"
-                        android:hint="常用游客"
+                        android:text="常用游客"
                         android:maxLines="1"
+                        android:paddingBottom="16dp"
                         android:paddingLeft="16dp"
+                        android:paddingTop="16dp"
+                        android:textColor="@android:color/black"
                         android:textSize="14sp" />
                 </RelativeLayout>
-
 
 
                 <!--出行人信息，需要动态添加，默认有一个-->
@@ -324,7 +344,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
-
 
 
                 </LinearLayout>
@@ -339,218 +358,237 @@
                 android:background="@android:color/white"
                 android:orientation="vertical"
                 android:visibility="visible">
+
                 <LinearLayout
                     android:id="@+id/layout_tourism_icon"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
                     <TextView
-                        android:paddingLeft="16dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="旅游币"/>
+                        android:paddingLeft="16dp"
+                        android:text="旅游币"
+                        android:textColor="@android:color/black" />
+
                     <TextView
                         android:id="@+id/tv_travel_edit_order_icon"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="1旅游币可抵1元"
+                        android:drawablePadding="10dp"
                         android:drawableRight="@mipmap/arrow_right_dark"
                         android:gravity="right"
-                        android:drawablePadding="10dp"
-                        android:paddingTop="16dp"
                         android:paddingBottom="16dp"
                         android:paddingRight="16dp"
-                        />
+                        android:paddingTop="16dp"
+                        android:text="1旅游币可抵1元"
+                        android:textColor="@android:color/black" />
                 </LinearLayout>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    >
+                    android:layout_height="wrap_content">
+
                     <View
                         android:id="@+id/line_tourism_icon"
                         android:layout_width="match_parent"
                         android:layout_height="1.2px"
-                        android:background="@color/colorLineGray2"
-                        android:layout_marginRight="16dp"
+                        android:layout_alignParentTop="true"
                         android:layout_marginLeft="16dp"
-                        android:layout_alignParentTop="true"/>
+                        android:layout_marginRight="16dp"
+                        android:background="@color/colorLineGray2" />
+
                     <TextView
                         android:id="@+id/tv_left_title_invoice"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="发票"
-                        android:paddingLeft="16dp"
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
-                        />
+                        android:paddingLeft="16dp"
+                        android:text="发票"
+                        android:textColor="@android:color/black" />
+
                     <TextView
                         android:id="@+id/tv_travel_edit_order_invoice"
-                        android:layout_toRightOf="@+id/tv_left_title_invoice"
-                        android:gravity="right"
-                        android:layout_alignParentRight="true"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_toRightOf="@+id/tv_left_title_invoice"
                         android:layout_weight="1"
-                        android:text="不需要发票"
-                        android:drawableRight="@mipmap/arrow_right_dark"
                         android:drawablePadding="10dp"
+                        android:drawableRight="@mipmap/arrow_right_dark"
+                        android:gravity="right"
+                        android:paddingBottom="16dp"
                         android:paddingRight="16dp"
                         android:paddingTop="16dp"
-                        android:paddingBottom="16dp"
-                        />
+                        android:text="不需要发票"
+                        android:textColor="@android:color/black" />
                 </RelativeLayout>
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1.2px"
-                    android:background="@color/colorLineGray2"
+                    android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
-                    android:layout_marginLeft="16dp"/>
+                    android:background="@color/colorLineGray2" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    >
+                    android:layout_height="wrap_content">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="预订须知"
                         android:paddingLeft="16dp"
-                        />
+                        android:text="预订须知"
+                        android:textColor="@android:color/black" />
+
                     <TextView
                         android:id="@+id/tv_travel_edit_order_notice"
-                        android:gravity="right"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="查看"
-                        android:drawableRight="@mipmap/arrow_right_dark"
                         android:drawablePadding="10dp"
+                        android:drawableRight="@mipmap/arrow_right_dark"
+                        android:gravity="right"
+                        android:paddingBottom="16dp"
                         android:paddingRight="16dp"
                         android:paddingTop="16dp"
-                        android:paddingBottom="16dp"
-                        />
+                        android:text="查看"
+                        android:textColor="@android:color/black" />
                 </LinearLayout>
 
             </LinearLayout>
 
             <LinearLayout
-                android:background="@android:color/white"
-                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:background="@android:color/white"
                 android:orientation="vertical"
                 android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:layout_marginBottom="10dp">
+                android:paddingRight="16dp">
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="12dp"
-                    android:paddingBottom="8dp">
+                    android:paddingBottom="8dp"
+                    android:paddingTop="12dp">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="商品金额"
-                        />
+                        android:textColor="@android:color/black" />
+
                     <TextView
-                        android:layout_toLeftOf="@+id/tv_inner_travel_currency_price"
-                        android:textColor="@android:color/holo_red_light"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_toLeftOf="@+id/tv_inner_travel_currency_price"
                         android:text="￥"
-                        />
+                        android:textColor="@android:color/holo_red_light" />
+
                     <TextView
                         android:id="@+id/tv_inner_travel_currency_price"
-                        android:textColor="@android:color/holo_red_light"
-                        android:layout_alignParentRight="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="5526"
-                        android:textSize="16sp"/>
+                        android:layout_alignParentRight="true"
+                        android:textColor="@android:color/holo_red_light"
+                        android:textSize="16sp" />
 
                 </RelativeLayout>
+
                 <RelativeLayout
                     android:id="@+id/layout_tourism_icon_num"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp">
+                    android:paddingBottom="8dp"
+                    android:paddingTop="8dp">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="旅游币"
-                        android:layout_centerVertical="true"/>
-                    <TextView
-                        android:layout_toLeftOf="@+id/tv_inner_travel_total_price_icon"
-                        android:textColor="@android:color/holo_red_light"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="-￥"
                         android:layout_centerVertical="true"
-                        />
+                        android:text="旅游币"
+                        android:textColor="@android:color/black" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@+id/tv_inner_travel_total_price_icon"
+                        android:text="-￥"
+                        android:textColor="@android:color/holo_red_light" />
+
                     <TextView
                         android:id="@+id/tv_inner_travel_total_price_icon"
-                        android:textColor="@android:color/holo_red_light"
-                        android:layout_alignParentRight="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
                         android:text="5526"
-                        android:textSize="16sp"/>
+                        android:textColor="@android:color/holo_red_light"
+                        android:textSize="16sp" />
                 </RelativeLayout>
+
                 <RelativeLayout
                     android:id="@+id/layout_price_express"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="8dp"
                     android:paddingBottom="8dp"
-                    >
-                    <TextView
+                    android:paddingTop="8dp">
 
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="发票快递费"
-                        android:layout_centerVertical="true"/>
                     <TextView
-                        android:layout_toLeftOf="@+id/tv_inner_travel_express_price"
-                        android:textColor="@android:color/holo_red_light"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="+￥"
                         android:layout_centerVertical="true"
-                        />
+                        android:text="发票快递费"
+                        android:textColor="@android:color/black" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@+id/tv_inner_travel_express_price"
+                        android:text="+￥"
+                        android:textColor="@android:color/holo_red_light" />
+
                     <TextView
                         android:id="@+id/tv_inner_travel_express_price"
-                        android:textColor="@android:color/holo_red_light"
-                        android:layout_alignParentRight="true"
-                        android:textSize="16sp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
                         android:text="15"
-                        />
+                        android:textColor="@android:color/holo_red_light"
+                        android:textSize="16sp" />
                 </RelativeLayout>
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1.2px"
-                    android:background="@color/colorLineGray2"
-                    />
+                    android:background="@color/colorLineGray2" />
 
                 <LinearLayout
-                    android:layout_marginTop="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    >
+                    android:layout_marginTop="10dp"
+                    android:gravity="center_vertical">
+
                     <CheckBox
                         android:id="@+id/cb_travel_edit_order_deal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:checked="true"/>
+                        android:checked="true"
+                        android:textColor="@android:color/black" />
+
                     <TextView
                         android:id="@+id/tv_travel_edit_order_deal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="我已阅读并接受预订须知，旅游合同，特别预订提示等款项"
-                        android:textSize="12sp"/>
+                        android:textColor="@android:color/black"
+                        android:textSize="12sp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -558,8 +596,7 @@
     </ScrollView>
 
     <include
-        android:visibility="visible"
         layout="@layout/layout_bottom_edit_order"
-        />
+        android:visibility="visible" />
 </LinearLayout>
 

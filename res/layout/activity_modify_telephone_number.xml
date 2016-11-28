@@ -33,6 +33,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/tab4_account_security_modify_telephone_number"
                 android:textSize="16sp"
+                android:textColor="@android:color/black"
                 />
 
             <EditText
@@ -49,6 +50,8 @@
                 android:paddingTop="16dp"
                 android:maxLength="11"
                 android:maxLines="1"
+                android:textColor="@android:color/black"
+                android:textColorHint="@android:color/darker_gray"
                 />
         </LinearLayout>
         <View
@@ -67,6 +70,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/tab4_account_security_modify_telephone_verification_code"
                 android:textSize="16sp"
+                android:textColor="@android:color/black"
                 />
 
             <EditText
@@ -83,6 +87,8 @@
                 android:background="@android:color/transparent"
                 android:textSize="14sp"
                 android:inputType="text"
+                android:textColor="@android:color/black"
+                android:textColorHint="@android:color/darker_gray"
                 />
             <Button
                 android:id="@+id/activity_regist_btn_getnum"
@@ -92,6 +98,7 @@
                 android:textSize="14sp"
                 android:gravity="center"
                 android:background="@drawable/bg_btn_circle_corner_border"
+                android:textColor="@android:color/black"
                 />
 
         </LinearLayout>

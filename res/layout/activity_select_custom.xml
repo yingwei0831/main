@@ -24,6 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="已选择"
+            android:textColor="@android:color/black"
             />
         <TextView
             android:textColor="@color/colorActionBar"
@@ -43,6 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="/2游客"
+            android:textColor="@android:color/black"
             />
     </LinearLayout>
 

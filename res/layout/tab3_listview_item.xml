@@ -31,7 +31,8 @@
             android:text="2016-07-28"
             android:layout_alignParentRight="true"
             android:gravity="center_vertical"
-            android:drawablePadding="6dp"/>
+            android:drawablePadding="6dp"
+            android:textColor="@android:color/darker_gray"/>
 
     </RelativeLayout>
 
@@ -64,6 +65,7 @@
             android:lineSpacingMultiplier="1.2"
             android:ellipsize="end"
             android:gravity="center_vertical"
+            android:textColor="@android:color/black"
             />
 
         <View
@@ -118,6 +120,7 @@
             android:paddingRight="6dp"
             android:layout_marginRight="10dp"
             android:textSize="16sp"
+            android:textColor="@android:color/black"
             />
         <Button
             android:textSize="16sp"
