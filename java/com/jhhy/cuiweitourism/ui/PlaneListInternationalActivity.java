@@ -6,33 +6,27 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.ContextCompat;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.PlaneListAdapter;
-import com.jhhy.cuiweitourism.adapter.TrainListAdapter;
 import com.jhhy.cuiweitourism.net.biz.PlaneTicketActionBiz;
 import com.jhhy.cuiweitourism.net.biz.TrainTicketActionBiz;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketInfoForChinalRequest;
-import com.jhhy.cuiweitourism.net.models.FetchModel.TrainTicketFetch;
+import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketInfoInternationalRequest;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketCityInfo;
-import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketCityInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketInfoOfChina;
-import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainTicketDetailInfo;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketInternationalInfo;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
-import com.jhhy.cuiweitourism.popupwindows.PopupWindowScreenTrain;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.utils.Utils;
 import com.just.sun.pricecalendar.ToastCommon;
@@ -45,10 +39,10 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-public class PlaneListActivity extends BaseActionBarActivity implements  AdapterView.OnItemClickListener //,RadioGroup.OnCheckedChangeListener
+public class PlaneListInternationalActivity extends BaseActionBarActivity implements  AdapterView.OnItemClickListener //,RadioGroup.OnCheckedChangeListener
 {
 
-    private String TAG = PlaneListActivity.class.getSimpleName();
+    private String TAG = PlaneListInternationalActivity.class.getSimpleName();
     private PlaneTicketActionBiz planeBiz; //机票业务类
 
     private TrainTicketActionBiz trainBiz;
@@ -60,10 +54,10 @@ public class PlaneListActivity extends BaseActionBarActivity implements  Adapter
 //    private View parent;
     private PullToRefreshListView pullListView;
     private ListView listView;
-    private List<PlaneTicketInfoOfChina.FlightInfo> list = new ArrayList<>();
+//    private List<PlaneTicketInfoOfChina.FlightInfo> list = new ArrayList<>();
     private PlaneListAdapter adapter;
 
-    private PlaneTicketInfoOfChina info; //查询得到的航班信息
+    private PlaneTicketInternationalInfo info; //查询得到的航班信息
 
 //    private RadioGroup bottomRg; //底部筛选组合
     private RadioButton rbScreen;       //筛选
@@ -84,8 +78,10 @@ public class PlaneListActivity extends BaseActionBarActivity implements  Adapter
     private String dateFrom; //出发日期
     private String tempTime; //出发时间，下一天，上一天用
 
-    private String dateReturn; //返程日期
+    private String dateReturn = ""; //返程日期
     private String traveltype; //航程类型 OW（单程） RT（往返）
+    private String stoptype = "A"; // 是否中转 A（所有） D（直达）
+    private String carrier = ""; //航司
 
     private Handler handler = new Handler(){
         @Override
@@ -121,8 +117,8 @@ public class PlaneListActivity extends BaseActionBarActivity implements  Adapter
         fromCity = (PlaneTicketCityInfo) bundle.getSerializable("fromCity");
         toCity = (PlaneTicketCityInfo) bundle.getSerializable("toCity");
         dateFrom = bundle.getString("dateFrom");
-        traveltype = bundle.getString("traveltype");
-        if ("RT".equals(traveltype)){ //往返
+        traveltype = bundle.getString("type");
+        if ("RT".equals(traveltype)){
             dateReturn = bundle.getString("dateReturn");
         }
     }
@@ -174,14 +170,14 @@ public class PlaneListActivity extends BaseActionBarActivity implements  Adapter
         rbSortPrice = (RadioButton) findViewById(R.id.rb_plane_price);
 
         //起飞时间升序
-        drawableSortStartTimeIncrease = ContextCompat.getDrawable(PlaneListActivity.this, R.mipmap.icon_train_start_time_decrease); //时间从早到晚
+        drawableSortStartTimeIncrease = ContextCompat.getDrawable(PlaneListInternationalActivity.this, R.mipmap.icon_train_start_time_decrease); //时间从早到晚
         drawableSortStartTimeDecrease = ContextCompat.getDrawable(getApplicationContext(), R.mipmap.icon_train_start_time_increase); //时间从晚到早
 
         drawableSortStartTimeIncrease.setBounds(0, 0, drawableSortStartTimeIncrease.getMinimumWidth(), drawableSortStartTimeIncrease.getMinimumHeight());
         drawableSortStartTimeDecrease.setBounds(0, 0, drawableSortStartTimeDecrease.getMinimumWidth(), drawableSortStartTimeDecrease.getMinimumHeight());
 
         //价格排序
-        drawableSortPriceIncrease = ContextCompat.getDrawable(PlaneListActivity.this, R.mipmap.icon_price_incrase); //时间从早到晚
+        drawableSortPriceIncrease = ContextCompat.getDrawable(PlaneListInternationalActivity.this, R.mipmap.icon_price_incrase); //时间从早到晚
         drawableSortPriceDecrease = ContextCompat.getDrawable(getApplicationContext(), R.mipmap.icon_price_decrase); //时间从晚到早
 
         drawableSortPriceIncrease.setBounds(0, 0, drawableSortPriceIncrease.getMinimumWidth(), drawableSortPriceIncrease.getMinimumHeight());
@@ -381,15 +377,15 @@ public class PlaneListActivity extends BaseActionBarActivity implements  Adapter
 
     //获取国内飞机票
     private void getInternetData(){
-        LoadingIndicator.show(PlaneListActivity.this, getString(R.string.http_notice));
+        LoadingIndicator.show(PlaneListInternationalActivity.this, getString(R.string.http_notice));
         new Thread(){
             @Override
             public void run() {
                 super.run();
-                PlaneTicketInfoForChinalRequest request = new PlaneTicketInfoForChinalRequest(fromCity.getCode(), toCity.getCode(), tempTime.substring(0, tempTime.indexOf(" ")));
-                planeBiz.planeTicketInfoInChina(request, new BizGenericCallback<PlaneTicketInfoOfChina>() {
+                PlaneTicketInfoInternationalRequest request = new PlaneTicketInfoInternationalRequest(traveltype, fromCity.getCode(), toCity.getCode(), dateFrom, dateReturn, stoptype, carrier);
+                planeBiz.planeTicketInfoOfInternational(request, new BizGenericCallback<PlaneTicketInternationalInfo>() {
                     @Override
-                    public void onCompletion(GenericResponseModel<PlaneTicketInfoOfChina> model) {
+                    public void onCompletion(GenericResponseModel<PlaneTicketInternationalInfo> model) {
                         if ("0001".equals(model.headModel.res_code)){
                             Message msg = new Message();
                             msg.what = -1;
@@ -397,9 +393,9 @@ public class PlaneListActivity extends BaseActionBarActivity implements  Adapter
                             handler.sendMessage(msg);
                         }else if ("0000".equals(model.headModel.res_code)){
                             info = model.body;
-                            list = info.returnInfo.flightItems.flights;
+                            list = info.F;
                             handler.sendEmptyMessage(1);
-                            LogUtil.e(TAG,"planeTicketInfoInChina =" + info.toString());
+                            LogUtil.e(TAG,"planeTicketInfoInternational =" + info.toString());
                         }
                         LoadingIndicator.cancel();
                     }
@@ -415,7 +411,7 @@ public class PlaneListActivity extends BaseActionBarActivity implements  Adapter
                             handler.sendEmptyMessage(-2);
                         }
                         LoadingIndicator.cancel();
-                        LogUtil.e(TAG, "planeTicketInfoInChina: " + error.toString());
+                        LogUtil.e(TAG, "planeTicketInfoInternational: " + error.toString());
                     }
                 });
             }

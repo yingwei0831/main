@@ -84,9 +84,9 @@ public class Tab1InnerTravelListViewAdapter extends BaseAdapter {
                 if (travel.getType().contains("跟团游")) {
                     holder.tvType.setBackgroundColor(context.getResources().getColor(R.color.colorTab1RecommendForYouArgument));
                     holder.tvType.setText("跟团游");
-                } else if (travel.getType().contains("自由游")) {
+                } else if (travel.getType().contains("自由行")) {
                     holder.tvType.setBackgroundColor(context.getResources().getColor(R.color.colorFreedom));
-                    holder.tvType.setText("自由游");
+                    holder.tvType.setText("自由行");
                 }else {
                     holder.tvType.setVisibility(View.GONE);
                 }

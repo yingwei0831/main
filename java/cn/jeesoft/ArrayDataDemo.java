@@ -13,6 +13,7 @@ import java.util.Random;
 public class ArrayDataDemo {
 
     public static final Map<String, Map<String, String>> DATAs = new LinkedHashMap<>();
+    public static final Map<String, Map<String, String>> SEATTYPE = new LinkedHashMap<>();
 
     public static final Map<String, String> TRAIN = new LinkedHashMap<>();
 
@@ -96,10 +97,22 @@ public class ArrayDataDemo {
         return new HashMap<>(DATAs);
     }
 
-//    public static List<String> getTrain() {
-//        init();
-//        return DATA_SEAT;
+//    public static Map<String, Map<String, String>>  getSeatType(List<String> list) {
+//        initSeatType(list);
+//        return SEATTYPE;
 //    }
+
+//    private static void initSeatType(List<String> list) {
+//        if (!SEATTYPE.isEmpty()) {
+//            return;
+//        }
+//        if (list != null) {
+//            for (int i = 0; i < list.size(); i++) {
+//                SEATTYPE.put(list.get(i), new HashMap<String, String>());
+//            }
+//        }
+//    }
+
     public static  Map<String, String> getSeat(int tag) {
         init();
         if (tag == 1) {

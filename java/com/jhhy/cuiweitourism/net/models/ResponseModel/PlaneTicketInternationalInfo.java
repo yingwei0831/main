@@ -1,6 +1,7 @@
 package com.jhhy.cuiweitourism.net.models.ResponseModel;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Created by birney on 2016-10-11.
@@ -103,6 +104,8 @@ public class PlaneTicketInternationalInfo {
                 ", R=" + R +
                 '}';
     }
+
+    public Map<String, PlaneTicketInternationalF> FMap;
 
 
     //    "F": {

@@ -4,7 +4,12 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.style.URLSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -32,6 +37,7 @@ import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
+import com.jhhy.cuiweitourism.utils.LinkSpanWrapper;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.just.sun.pricecalendar.GroupDeadline;
@@ -87,7 +93,6 @@ public class InnerTravelEditOrderActivity extends BaseActivity implements View.O
     private TextView tvPriceInvoice; //快递费
 
     private CheckBox cbDeal;
-    private TextView tvDeal;
 
     private TextView tvPriceTotal; //订单金额
     private Button btnPay; //立即支付
@@ -173,7 +178,30 @@ public class InnerTravelEditOrderActivity extends BaseActivity implements View.O
         tvReserveNotice = (TextView) findViewById(R.id.tv_travel_edit_order_notice);
 
         cbDeal = (CheckBox) findViewById(R.id.cb_travel_edit_order_deal); //条款
-        tvDeal = (TextView) findViewById(R.id.tv_travel_edit_order_deal); //进入条款内容
+        TextView tvDeal = (TextView) findViewById(R.id.tv_travel_edit_order_deal);
+
+        StringBuilder actionText = new StringBuilder();
+        actionText.append("我已阅读并接受");
+        actionText.append("<a style=\"text-decoration:none;\" href='name' ><font color='" + "#28CE9D" + "'>" + "旅游须知、旅游合同、特别预订提示" + "</font> </a>").append("等条款");
+
+        tvDeal.setText(Html.fromHtml(actionText.toString()));
+        tvDeal.setMovementMethod(LinkMovementMethod.getInstance());
+        CharSequence text = tvDeal.getText();
+        int ends = text.length();
+        Spannable spannable = (Spannable) tvDeal.getText();
+        URLSpan[] urlspan = spannable.getSpans(0, ends, URLSpan.class);
+        SpannableStringBuilder stylesBuilder = new SpannableStringBuilder(text);
+        stylesBuilder.clearSpans();
+        for (URLSpan url : urlspan) {
+            LinkSpanWrapper myURLSpan = new LinkSpanWrapper(url.getURL(), getApplicationContext(), "旅游须知、旅游合同、特别预订提示", null, null, "#28CE9D"){
+                @Override
+                public void onItemTextViewClick(int position, View textView, int id) {
+                    startActivity(new Intent(getApplicationContext(), ReserveNoticeActivity.class));
+                }
+            };
+            stylesBuilder.setSpan(myURLSpan, spannable.getSpanStart(url), spannable.getSpanEnd(url), spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+        tvDeal.setText(stylesBuilder);
 
         tvPriceTotal = (TextView) findViewById(R.id.tv_edit_order_price); //订单总金额
         tvPriceTotal.setText(String.valueOf(priceTotal));
@@ -445,7 +473,6 @@ public class InnerTravelEditOrderActivity extends BaseActivity implements View.O
         layoutPriceExpress = null;
         tvPriceInvoice = null;
         cbDeal = null;
-        tvDeal = null;
         tvPriceTotal = null;
         btnPay = null;
         listCommitCon.clear();

@@ -3,23 +3,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusable="true"
-    android:focusableInTouchMode="true"
-    >
+    android:focusableInTouchMode="true">
 
-    <include layout="@layout/title_tab1_inner_travel"
-        android:id="@+id/title_city_selection"/>
+    <include
+        android:id="@+id/title_city_selection"
+        layout="@layout/title_tab1_inner_travel" />
 
     <!--<include layout="@layout/search_bar_simple_out" android:id="@+id/layout_search"/>-->
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout
         android:id="@+id/layout_search"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_below="@+id/title_city_selection"
-        android:paddingBottom="8dp"
+        android:background="#EFF2F7"
+        android:paddingBottom="10dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:paddingTop="8dp"
-        android:background="#EFF2F7">
+        android:paddingTop="10dp">
 
         <ImageView
             android:id="@+id/iv_title_search_left"
@@ -27,7 +27,7 @@
             android:layout_height="match_parent"
             android:scaleType="centerInside"
             android:src="@mipmap/arrow_left_green"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <EditText
             android:id="@+id/edit_search"
@@ -47,19 +47,46 @@
             android:textColorHint="#ff333333"
             android:textSize="16sp" />
     </RelativeLayout>
+
+    <RadioGroup
+        android:id="@+id/radio_group_airport"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/layout_search"
+        android:background="@color/colorTab2Space"
+        android:orientation="horizontal"
+        android:paddingBottom="6dp"
+        android:paddingTop="6dp"
+        android:visibility="visible">
+
+        <RadioButton
+            android:id="@+id/rb_city_inner"
+            android:layout_marginLeft="26dp"
+            android:layout_marginRight="13dp"
+            android:text="国内城市"
+            android:checked="true"
+            style="@style/AirportRadioButtonStyle"/>
+
+        <RadioButton
+            android:id="@+id/rb_city_outer"
+            android:layout_marginLeft="13dp"
+            android:layout_marginRight="26dp"
+            android:text="国际城市"
+            style="@style/AirportRadioButtonStyle" />
+    </RadioGroup>
+
     <RelativeLayout
-        android:layout_below="@id/layout_search"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/white" >
+        android:layout_below="@id/radio_group_airport"
+        android:background="@android:color/white">
 
         <com.jhhy.cuiweitourism.view.PinnedSectionListView
             android:id="@+id/phone_listview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:dividerHeight="1.2px"
             android:divider="@color/colorLineGray2"
-            />
+            android:dividerHeight="1.2px" />
 
         <com.jhhy.cuiweitourism.view.LetterIndexView
             android:id="@+id/phone_LetterIndexView"
@@ -69,10 +96,10 @@
 
         <ListView
             android:id="@+id/list_search"
-            android:visibility="gone"
-            android:background="@android:color/white"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:background="@android:color/white"
+            android:visibility="gone" />
 
     </RelativeLayout>
 

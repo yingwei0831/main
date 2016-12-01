@@ -358,7 +358,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="10dp"
-        android:background="@color/colorLineGray2" />
+        android:background="@color/colorTab2Space" />
 
     <!--费用说明-->
     <LinearLayout
@@ -412,7 +412,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="10dp"
-        android:background="@color/colorLineGray2" />
+        android:background="@color/colorTab2Space" />
     <!--行程描述-->
     <LinearLayout
         android:id="@+id/layout_travel_describe"
@@ -444,7 +444,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="10dp"
-        android:background="@color/colorLineGray2" />
+        android:background="@color/colorTab2Space" />
     <!--预订须知-->
     <LinearLayout
         android:id="@+id/layout_reserve_notice_hot_activity"
@@ -473,7 +473,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="10dp"
-        android:background="@color/colorLineGray2" />
+        android:background="@color/colorTab2Space" />
 </LinearLayout>
 
 

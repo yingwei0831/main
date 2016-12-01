@@ -96,7 +96,7 @@ public class InnerActivity4 extends AppCompatActivity  implements ISlideCallback
     private List<CityRecommend> listHotRecommend = new ArrayList<>();
     private HotRecommendGridViewAdapter hotRecomAdapter;
 
-    private String[] mTitles = new String[]{"跟团游", "自由游"};
+    private String[] mTitles = new String[]{"跟团游", "自由行"};
     private TabLayout tabIndicator; //跟团游，自由游
     private ViewPager viewPager;
     private List<Fragment> mContent = new ArrayList<>();

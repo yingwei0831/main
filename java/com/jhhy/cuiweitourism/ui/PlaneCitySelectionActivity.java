@@ -14,6 +14,8 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
@@ -40,11 +42,16 @@ import java.util.List;
 import java.util.Set;
 
 
-public class PlaneCitySelectionActivity extends BaseActivity implements View.OnClickListener {
+public class PlaneCitySelectionActivity extends BaseActivity implements View.OnClickListener, RadioGroup.OnCheckedChangeListener {
 
     private static final String TAG = PlaneCitySelectionActivity.class.getSimpleName();
-    private TextView tvTitle;
-    private ImageView ivTitleLeft;
+//    private TextView tvTitle;
+//    private ImageView ivTitleLeft;
+    private View layoutTitle;
+    private RadioGroup radioGroup; //国内城市，国际城市
+    private RadioButton radioButtonInner;
+    private RadioButton radioButtonOuter;
+    private int cityType = 1; //国内/国外
     /**
      * 搜索栏
      */
@@ -116,14 +123,23 @@ public class PlaneCitySelectionActivity extends BaseActivity implements View.OnC
     }
 
     private void setupView() {
-        tvTitle = (TextView) findViewById(R.id.tv_title_inner_travel);
-        tvTitle.setText(getString(R.string.tab4_account_certification_gender_notice));
-        ivTitleLeft = (ImageView) findViewById(R.id.title_main_tv_left_location);
+        layoutTitle = findViewById(R.id.title_city_selection);
+        layoutTitle.setVisibility(View.GONE);
+        radioGroup = (RadioGroup) findViewById(R.id.radio_group_airport);
+        radioButtonInner = (RadioButton) findViewById(R.id.rb_city_inner);
+        radioButtonOuter = (RadioButton) findViewById(R.id.rb_city_outer);
+//        tvTitle = (TextView) findViewById(R.id.tv_title_inner_travel);
+//        tvTitle.setText(getString(R.string.tab4_account_certification_gender_notice));
+//        ivTitleLeft = (ImageView) findViewById(R.id.title_main_tv_left_location);
 
+        View layoutSearch = findViewById(R.id.layout_search);
+        layoutSearch.setBackgroundColor(Color.WHITE);
+        layoutSearch.setPadding(0, 10, 20, 10);
         edit_search = (EditText) findViewById(R.id.edit_search);
         edit_search.setHint("北京/beijing/bj");
+        edit_search.setBackgroundColor(getResources().getColor(R.color.colorTab2Space));
         ivSearchLeft = (ImageView) findViewById(R.id.iv_title_search_left);
-        ivSearchLeft.setVisibility(View.GONE);
+        ivSearchLeft.setVisibility(View.VISIBLE);
         listView = (PinnedSectionListView) findViewById(R.id.phone_listview);
         letterIndexView = (LetterIndexView) findViewById(R.id.phone_LetterIndexView);
         txt_center = (TextView) findViewById(R.id.phone_txt_center);
@@ -157,13 +173,16 @@ public class PlaneCitySelectionActivity extends BaseActivity implements View.OnC
         adapterSearch = new PlaneAirportAdapter(PlaneCitySelectionActivity.this, list_show, map_IsHead);
         listSearch = (ListView) findViewById(R.id.list_search);
         listSearch.setAdapter(adapterSearch);
+
+        radioGroup.setOnCheckedChangeListener(this);
+        ivSearchLeft.setOnClickListener(this);
     }
 
 
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            case R.id.title_main_tv_left_location:
+            case R.id.iv_title_search_left:
                 finish();
                 break;
         }
@@ -176,13 +195,32 @@ public class PlaneCitySelectionActivity extends BaseActivity implements View.OnC
         }
         if (type == 1) {
             list_all = PlaneMainActivity.airportInner;
+            cityType = 1;
         }else if (type == 2){
             list_all = PlaneMainActivity.airportOuter;
+            cityType = 2;
         }
     }
 
+    @Override
+    public void onCheckedChanged(RadioGroup radioGroup, int i) {
+        list_show.clear();
+        map_IsHead.clear();
+        switch (i){
+            case R.id.rb_city_inner:
+                list_all = PlaneMainActivity.airportInner;
+                cityType = 1;
+                break;
+            case R.id.rb_city_outer:
+                list_all = PlaneMainActivity.airportOuter;
+                cityType = 2;
+                break;
+        }
+        setupData();
+    }
+
     private void initView() {
-        ivTitleLeft.setOnClickListener(this);
+//        ivTitleLeft.setOnClickListener(this);
         // 输入监听
         edit_search.addTextChangedListener(new TextWatcher() {
             @Override
@@ -255,11 +293,15 @@ public class PlaneCitySelectionActivity extends BaseActivity implements View.OnC
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 LogUtil.e(TAG, "--------------listView---onItemClick--------------");
                 if (list_show.get(i).type == PlaneCitySelectionActivity.ITEM) { // 标题点击不给操作
+                    if (cityType == 2){
+                    }else if (cityType == 1){
+                    }
                     PlaneTicketCityInfo city = list_show.get(i);
                     ToastCommon.toastShortShow(getApplicationContext(), null, city.getName());
                     Intent intent = new Intent();
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("selectCity", city);
+                    bundle.putInt("typeSearch", cityType);
                     intent.putExtras(bundle);
                     LogUtil.e(TAG, "selectCity = " + city);
                     setResult(RESULT_OK, intent);
@@ -273,11 +315,15 @@ public class PlaneCitySelectionActivity extends BaseActivity implements View.OnC
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 LogUtil.e(TAG, "--------------listSearch---onItemClick--------------");
                 if (list_show.get(i).type == PlaneCitySelectionActivity.ITEM) { // 标题点击不给操作
+                    if (cityType == 2){
+                    }else if (cityType == 1){
+                    }
                     PlaneTicketCityInfo city = list_show.get(i);
                     ToastCommon.toastShortShow(getApplicationContext(), null, city.getName());
                     Intent intent = new Intent();
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("selectCity", city);
+                    bundle.putInt("typeSearch", cityType);
                     intent.putExtras(bundle);
                     LogUtil.e(TAG, "selectCity = " + city);
                     setResult(RESULT_OK, intent);
@@ -347,14 +393,15 @@ public class PlaneCitySelectionActivity extends BaseActivity implements View.OnC
             public void touchFinish() {
                 txt_center.setVisibility(View.GONE);
             }
-        }, headAry);
+        }, headAry, 0);
         //-------------end-----------
 
         adapter.notifyDataSetChanged();
         LoadingIndicator.cancel(); //handler.sendMessage(handler.obtainMessage());
     }
 
-        public class MemberSortUtil implements Comparator<PlaneTicketCityInfo> {
+
+    public class MemberSortUtil implements Comparator<PlaneTicketCityInfo> {
         /**
          * 按拼音排序
          */

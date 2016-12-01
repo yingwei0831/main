@@ -95,7 +95,7 @@
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="自由游"
+                    android:text="自由行"
                     />
             </LinearLayout>
             <com.jhhy.cuiweitourism.view.MyGridView

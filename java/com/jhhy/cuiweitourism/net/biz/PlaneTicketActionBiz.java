@@ -92,9 +92,8 @@ public class PlaneTicketActionBiz extends BasicActionBiz {
     }
 
     /**
-     *  国际机票
+     *  国际机票(查询)
      */
-
     public void planeTicketInfoOfInternational(final PlaneTicketInfoInternationalRequest request, BizGenericCallback<PlaneTicketInternationalInfo> callback){
         request.code = "Plane_gjhb";
         FetchGenericResponse<PlaneTicketInternationalInfo> fetchGenericResponse = new FetchGenericResponse<PlaneTicketInternationalInfo>(callback) {
@@ -202,6 +201,12 @@ public class PlaneTicketActionBiz extends BasicActionBiz {
      *  出发城市，到达城市
      */
     public void planeTicketDepartureAndReachCity(){
+
+    }
+    /**
+     * 国际机票下单
+     */
+    public void planeTicketOrderInternational(){
 
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 
 import com.jhhy.cuiweitourism.net.models.FetchModel.NullArrayFetchModel;
+import com.jhhy.cuiweitourism.net.models.FetchModel.TrainOrderListFetch;
 import com.jhhy.cuiweitourism.net.models.FetchModel.TrainStationFetch;
 import com.jhhy.cuiweitourism.net.models.FetchModel.TrainStopsFetch;
 import com.jhhy.cuiweitourism.net.models.FetchModel.TrainTicketFetch;
@@ -189,17 +190,16 @@ public class TrainTicketActionBiz extends BasicActionBiz {
     }
 
     /**
-     *  火车票订单查询
+     *  火车票订单查询 Order_searchtrainorder
      */
-
-    public void trainTicketOrderQuery(){
-
-    }
+//    public void trainTicketOrderQuery(TrainOrderListFetch fetch, BizGenericCallback<> callback){
+//        fetch.code = "Order_searchtrainorder";
+//
+//    }
 
     /**
-     *  火车票退票
+     *  火车票退票 Order_refund
      */
-
     public void trainTicketCancel(){
 
     }

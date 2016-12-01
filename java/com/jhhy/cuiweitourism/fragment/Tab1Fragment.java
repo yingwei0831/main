@@ -600,11 +600,11 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
                     bundleOut.putInt("type", 2);
                     InnerTravelMainActivity.actionStart(getContext(), bundleOut);
                     break;
-                case R.id.tv_tab1_plane_ticket: //飞机票
-                    ToastCommon.toastShortShow(getContext(), null, getString(R.string.developing_notice));
-//                    Bundle bundlePlane = new Bundle();
-//                    bundlePlane.putInt("type", 2);
-//                    PlaneMainActivity.actionStart(getContext(), bundlePlane);
+                case R.id.tv_tab1_plane_ticket: //TODO 飞机票
+//                    ToastCommon.toastShortShow(getContext(), null, getString(R.string.developing_notice));
+                    Bundle bundlePlane = new Bundle();
+                    bundlePlane.putInt("type", 2);
+                    PlaneMainActivity.actionStart(getContext(), bundlePlane);
                     break;
                 case R.id.tv_tab1_start_activity: //发起活动
                     StartActivityEditActivity.actionStart(getContext(), null);
@@ -618,15 +618,15 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
                 case R.id.tv_tab1_visa: //签证
                     VisaMainActivity.actionStart(getContext(), null);
                     break;
-                case R.id.tv_tab1_train: //火车票
-                    ToastCommon.toastShortShow(getContext(), null, getString(R.string.developing_notice));
-//                    TrainMainActivity.actionStart(getContext(), null);
+                case R.id.tv_tab1_train: //TODO 火车票
+//                    ToastCommon.toastShortShow(getContext(), null, getString(R.string.developing_notice));
+                    TrainMainActivity.actionStart(getContext(), null);
                     break;
-                case R.id.tv_tab1_hotel: //酒店
-                    ToastCommon.toastShortShow(getContext(), null, getString(R.string.developing_notice));
-//                    Bundle bundleHotel = new Bundle();
-//                    bundleHotel.putSerializable("selectCity", selectCity);
-//                    HotelMainActivity.actionStart(getContext(), bundleHotel);
+                case R.id.tv_tab1_hotel: //TODO 酒店
+//                    ToastCommon.toastShortShow(getContext(), null, getString(R.string.developing_notice));
+                    Bundle bundleHotel = new Bundle();
+                    bundleHotel.putSerializable("selectCity", selectCity);
+                    HotelMainActivity.actionStart(getContext(), bundleHotel);
                     break;
                 case R.id.layout_personalized_custom: //个性定制
                     Bundle bundleCustom = new Bundle();

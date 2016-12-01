@@ -17,7 +17,7 @@ import com.jhhy.cuiweitourism.moudle.Invoice;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.just.sun.pricecalendar.ToastCommon;
 
-public class SettingInvoiceActivity extends BaseActivity implements RadioGroup.OnCheckedChangeListener, View.OnClickListener {
+public class SettingInvoiceActivity extends BaseActionBarActivity implements RadioGroup.OnCheckedChangeListener, View.OnClickListener {
 
     private String TAG = SettingInvoiceActivity.class.getSimpleName();
 
@@ -37,18 +37,9 @@ public class SettingInvoiceActivity extends BaseActivity implements RadioGroup.O
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        //获取ActionBar对象
-        ActionBar bar =  getSupportActionBar();
-        //自定义一个布局，并居中
-        bar.setDisplayShowCustomEnabled(true);
-        View v = LayoutInflater.from(getApplicationContext()).inflate(R.layout.title_tab1_inner_travel, null);
-        bar.setCustomView(v, new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT));
-
-        setContentView(R.layout.activity_setting_invoice);
         getData();
-        setupView();
-        addListener();
+        setContentView(R.layout.activity_setting_invoice);
+        super.onCreate(savedInstanceState);
     }
 
     private void getData() {
@@ -59,7 +50,11 @@ public class SettingInvoiceActivity extends BaseActivity implements RadioGroup.O
         }
     }
 
-    private void setupView() {
+    @Override
+    protected void setupView() {
+        super.setupView();
+        tvTitle.setText("发票");
+
         radioGroup = (RadioGroup) findViewById(R.id.radio_group_invoice);
 
         etTitle = (EditText) findViewById(R.id.et_input_title);
@@ -92,7 +87,9 @@ public class SettingInvoiceActivity extends BaseActivity implements RadioGroup.O
 
     }
 
-    private void addListener() {
+    @Override
+    protected void addListener() {
+        super.addListener();
         radioGroup.setOnCheckedChangeListener(this);
         btnSaveInvoice.setOnClickListener(this);
     }
@@ -123,6 +120,8 @@ public class SettingInvoiceActivity extends BaseActivity implements RadioGroup.O
 
     @Override
     public void onClick(View view) {
+        super.onClick(view);
+
         switch (view.getId()){
             case R.id.btn_save_invoice:
                 Intent intent = new Intent();

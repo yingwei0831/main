@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -14,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.OnItemTextViewClick;
@@ -29,6 +31,7 @@ import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainTicketOrderInfo;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
+import com.jhhy.cuiweitourism.popupwindows.PopTrainSeatType;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.jhhy.cuiweitourism.utils.Utils;
@@ -37,9 +40,14 @@ import com.just.sun.pricecalendar.ToastCommon;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.jeesoft.OptionsWindowHelper;
+import cn.jeesoft.widget.pickerview.CharacterPickerWindow;
+
 public class TrainEditOrderActivity extends AppCompatActivity implements View.OnClickListener, OnItemTextViewClick {
 
     private String TAG = TrainEditOrderActivity.class.getSimpleName();
+
+    private View parent;
 
     private TextView tvTitleRight;
     private TextView tvTitleLeft;
@@ -121,6 +129,7 @@ public class TrainEditOrderActivity extends AppCompatActivity implements View.On
     }
 
     private void setupView() {
+        parent = findViewById(R.id.view_parent);
         tvTitle = (TextView) actionBar.getCustomView().findViewById(R.id.tv_title_simple_title);
         tvTitle.setText(getString(R.string.train_order_edit));
         tvTitleRight = (TextView) actionBar.getCustomView().findViewById(R.id.tv_title_simple_title_right);
@@ -148,7 +157,7 @@ public class TrainEditOrderActivity extends AppCompatActivity implements View.On
         etLinkMobile = (EditText) findViewById(R.id.et_train_link_mobile); //联系电话
 
         tvPriceTotal = (TextView) findViewById(R.id.tv_edit_order_price); //订单总金额
-        tvPriceTotal.setText(seatInfo.floorPrice);
+
         btnPay = (Button) findViewById(R.id.btn_edit_order_pay); //去往立即支付
 
         tvStartTime.setText(detail.departureTime);
@@ -159,10 +168,14 @@ public class TrainEditOrderActivity extends AppCompatActivity implements View.On
         tvTrainInfo.setText(String.format("%s%s", detail.trainTypeName, detail.trainNum));
         tvTicketDate.setText(startDate);
 
+        trainBiz = new TrainTicketActionBiz();
+        refreshview();
+    }
+
+    private void refreshview(){
+        tvPriceTotal.setText(seatInfo.floorPrice);
         tvSeatType.setText(seatInfo.seatName);
         tvTicketPrice.setText(seatInfo.floorPrice);
-
-        trainBiz = new TrainTicketActionBiz();
     }
 
     private void getData() {
@@ -192,8 +205,9 @@ public class TrainEditOrderActivity extends AppCompatActivity implements View.On
             case R.id.tv_title_simple_title_left:
                 finish();
                 break;
-            case R.id.tv_train_seat_info: //坐席
-
+            case R.id.tv_train_seat_info: //TODO 切换坐席，显示有车票的
+//                detail.seatInfoArray;
+                selectSeatType();
                 break;
             case R.id.tv_train_add_passenger: //添加乘客
                 Intent intent = new Intent(getApplicationContext(), SelectCustomActivity.class);
@@ -212,6 +226,45 @@ public class TrainEditOrderActivity extends AppCompatActivity implements View.On
                 goToPay();
                 break;
         }
+    }
+
+    private PopTrainSeatType changeSeatType;
+    private String typeSeat; //座位类型
+    private int seatTypeSelection; //座位index
+    private ArrayList<TrainTicketDetailInfo.SeatInfo> mList;
+//    private TrainTicketDetailInfo.SeatInfo mSeatInfo;
+
+    //选择席别类型，弹窗
+    private void selectSeatType() {
+        if (changeSeatType == null) {
+            if (detail.seatInfoArray != null){
+                ArrayList<TrainTicketDetailInfo.SeatInfo> list = detail.seatInfoArray;
+                mList = new ArrayList<>();
+                for (int j = 0; j < list.size(); j ++){
+                    TrainTicketDetailInfo.SeatInfo seatInfo = list.get(j);
+                    if (Integer.parseInt(seatInfo.seatCount) > 0){
+                        mList.add(seatInfo);
+                    }
+                }
+            }
+            changeSeatType = new PopTrainSeatType(getApplicationContext(), mList);
+            changeSeatType.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                @Override
+                public void onDismiss() {
+                    boolean commit = changeSeatType.getCommit();
+                    if (commit){
+                        seatInfo = changeSeatType.getSeatInfo();
+                        seatTypeSelection = changeSeatType.getSelection();
+                        //TODO 改变订单中所选座位
+                        refreshview();
+                    }
+                }
+            });
+        }else{
+            changeSeatType.refreshView(seatTypeSelection);
+        }
+        changeSeatType.showAtLocation(parent, Gravity.BOTTOM, 0, 0);
+
     }
 
     @Override
@@ -293,7 +346,7 @@ public class TrainEditOrderActivity extends AppCompatActivity implements View.On
         //提交订单，进入支付页面
         final TrainTicketOrderFetch ticketOrderFetch = new TrainTicketOrderFetch(
                 MainActivity.user.getUserId(), name, mobile, detail.departureStation, detail.arrivalStation, detail.trainNum,
-                detail.departureDate, detail.departureTime, detail.arrivalDate, detail.arrivalTime, listContact, seatInfo.seatCode, seatInfo.floorPrice);
+                detail.departureDate, detail.departureTime, detail.arrivalDate, detail.arrivalTime, listContact, seatInfo.seatCode, String.valueOf(Float.parseFloat(seatInfo.floorPrice) * listContact.size()));
         new Thread(){
             @Override
             public void run() {

@@ -35,7 +35,7 @@ public class HotelOfMineListActivity extends BaseActivity implements View.OnClic
     private TextView tvTitleTop;
     private ImageView ivTitleLeft;
 
-    private final List<String> titles = new ArrayList<>(Arrays.asList("跟团游", "自由游"));
+    private final List<String> titles = new ArrayList<>(Arrays.asList("跟团游", "自由行"));
     private TabLayout indicatorInnerTravel;
     private ViewPager viewPager;
     private InnerTravelPagerAdapter mAdapter;

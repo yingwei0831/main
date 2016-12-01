@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:background="@color/colorLineGray3"
     android:orientation="vertical"
-    tools:context="com.jhhy.cuiweitourism.ui.TrainEditOrderActivity">
+    tools:context="com.jhhy.cuiweitourism.ui.TrainEditOrderActivity"
+    android:id="@+id/view_parent">
 
     <!--<include layout="@layout/title_simple" android:visibility="gone"/>-->
 

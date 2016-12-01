@@ -152,17 +152,39 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
 
     //搜索
     private void search() {
-        Intent intent = new Intent(getApplicationContext(), PlaneListActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("fromCity", fromCity);
-        bundle.putSerializable("toCity", toCity);
-        bundle.putString("dateFrom", dateFrom);
-        bundle.putInt("type", type);
-        if (type == 2) {
-            bundle.putString("dateReturn", dateReturn);
+        if (type == 1){ //单程，目前设计是单程的样式
+
+        }else if(type == 2){ //往返，添加返程时间
+
+        }else if (type == 3){ //询价，不同订单类型
+
         }
-        intent.putExtras(bundle);
-        startActivityForResult(intent, VIEW_PLANE_LIST);
+
+        if (typeSearch == 1) { //国内机票
+            Intent intent = new Intent(getApplicationContext(), PlaneListActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("fromCity", fromCity);
+            bundle.putSerializable("toCity", toCity);
+            bundle.putString("dateFrom", dateFrom);
+            bundle.putString("traveltype", traveltype);
+            if (type == 2) { //往返，询价
+                bundle.putString("dateReturn", dateReturn);
+            }
+            intent.putExtras(bundle);
+            startActivityForResult(intent, VIEW_PLANE_LIST);
+        }else if ( typeSearch == 2){ //国际机票 PlaneListInternationalActivity
+            Intent intent = new Intent(getApplicationContext(), PlaneListInternationalActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("fromCity", fromCity);
+            bundle.putSerializable("toCity", toCity);
+            bundle.putString("dateFrom", dateFrom);
+            bundle.putString("traveltype", traveltype);
+            if (type == 2) { //往返，询价
+                bundle.putString("dateReturn", dateReturn);
+            }
+            intent.putExtras(bundle);
+            startActivityForResult(intent, VIEW_PLANE_LIST);
+        }
     }
 
     //出发城市
@@ -228,15 +250,19 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
             }
         }else if (requestCode == SELECT_FROM_CITY){ //选择出发城市
             if (resultCode == RESULT_OK){
-                PlaneTicketCityInfo city = (PlaneTicketCityInfo) data.getExtras().getSerializable("selectCity");
-                LogUtil.e(TAG, "selectCity = " + city);
+                Bundle bundle = data.getExtras();
+                PlaneTicketCityInfo city = (PlaneTicketCityInfo) bundle.getSerializable("selectCity");
+                typeSearch = bundle.getInt("typeSearch");
+                LogUtil.e(TAG, "selectCity = " + city +", typeSearch = " + typeSearch);
                 fromCity = city;
                 tvFromCity.setText(city.getName());
             }
         } else if (requestCode == SELECT_TO_CITY){ //选择到达城市
             if (resultCode == RESULT_OK){
-                PlaneTicketCityInfo city = (PlaneTicketCityInfo) data.getExtras().getSerializable("selectCity");
-                LogUtil.e(TAG, "selectCity = " + city);
+                Bundle bundle = data.getExtras();
+                PlaneTicketCityInfo city = (PlaneTicketCityInfo) bundle.getSerializable("selectCity");
+                typeSearch = bundle.getInt("typeSearch");
+                LogUtil.e(TAG, "selectCity = " + city +", typeSearch = " + typeSearch);
                 toCity = city;
                 tvToCity.setText(city.getName());
             }
@@ -253,16 +279,19 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
             case R.id.rb_plane_one_way: //单程
                 layoutReturnDate.setVisibility(View.GONE);
                 type = 1;
+                traveltype = "OW";
                 break;
             case R.id.rb_plane_return: //往返
                 layoutReturnDate.setVisibility(View.VISIBLE);
                 type = 2;
+                traveltype = "RT";
                 break;
             case R.id.rb_plane_inquiry: //询价
                 layoutReturnDate.setVisibility(View.GONE);
                 tvFromCity.setText("请选择");
                 tvToCity.setText("请选择");
                 type = 3;
+                traveltype = "";
                 break;
         }
     }
@@ -278,8 +307,11 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
     }
 
     private int type = 1; //1：单程 2：往返 3：询价
+    private int typeSearch = 1; //1:国内，2：国外
+    private String traveltype = "OW"; //航程类型 OW（单程） RT（往返）
     private boolean inner;
     private boolean outer;
+
 
     //获取国内机场列表
     private void getInternetData() {
@@ -375,6 +407,16 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
                 });
             }
         }.start();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        airportInner = null;
+        airportOuter = null;
+        planeBiz = null;
+        fromCity = null;
+        toCity = null;
     }
 
     public static void actionStart(Context context, Bundle bundle){

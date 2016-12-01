@@ -4,11 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.ContextCompat;
 import android.view.GestureDetector;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
@@ -495,18 +498,69 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
                 startActivity(intentComment);
                 break;
             case R.id.btn_inner_travel_reserve: //立即预定
-//                ToastUtil.show(getApplicationContext(), "木有操作流程图");
+                //TODO 选择人数
+                showSelectNumber();
+                break;
+            case R.id.tv_price_calendar_number_reduce: //人数减少
+                if (number <= 1){
+                    return;
+                }
+                number --;
+                popShow();
+                break;
+            case R.id.tv_price_calendar_number_add: //人数增加
+                number ++;
+                popShow();
+                break;
+            case R.id.btn_hot_activity_reserve: //下一步填写订单
                 Bundle bundle = new Bundle();
                 bundle.putString("id", id);
                 bundle.putSerializable("hotActivityDetail", detail);
                 bundle.putInt("type", 11);
+                bundle.putInt("count", number);
                 Intent intent = new Intent(getApplicationContext(), HotActivityEditOrderActivity.class);
                 intent.putExtras(bundle);
-                startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_SELECT_DATE); //选择日期
-
+                startActivityForResult(intent, Consts.HOT_ACTIVITY_EDIT_ORDER); //热门活动，生成订单
                 break;
         }
     }
+    private PopupWindow popupWindow;
+
+    private TextView tvNumber;
+    private int number = 1;
+
+    private void showSelectNumber() {
+        if (popupWindow == null) {
+            View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.activity_hot_select_number, null);
+            popupWindow = new PopupWindow(view, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+            // 允许点击外部消失
+            popupWindow.setBackgroundDrawable(new BitmapDrawable());
+            popupWindow.setOutsideTouchable(true);
+            popupWindow.setFocusable(true);
+            setupPopView(view);
+        }
+        if (popupWindow.isShowing()){
+            popupWindow.dismiss();
+        }else{
+            popupWindow.showAtLocation(btnReserve, Gravity.NO_GRAVITY,0, 0);
+        }
+        popShow();
+    }
+
+    private void popShow() {
+        tvNumber.setText(String.valueOf(number));
+    }
+
+    private void setupPopView(View view) {
+        ImageView ivReduce = (ImageView) view.findViewById(R.id.tv_price_calendar_number_reduce);
+        ImageView ivAdd = (ImageView) view.findViewById(R.id.tv_price_calendar_number_add);
+        tvNumber = (TextView) view.findViewById(R.id.tv_price_calendar_number);
+        Button btnReserveOrder = (Button) view.findViewById(R.id.btn_hot_activity_reserve);
+        ivReduce.setOnClickListener(this);
+        ivAdd.setOnClickListener(this);
+        btnReserveOrder.setOnClickListener(this);
+    }
+
 
     private void changeIndicator(int indicator) {
         tvProduct.setTextColor(ContextCompat.getColor(getApplicationContext(), android.R.color.black));

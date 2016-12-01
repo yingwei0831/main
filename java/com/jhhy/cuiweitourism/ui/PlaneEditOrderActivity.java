@@ -28,8 +28,12 @@ import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.moudle.UserContacts;
 import com.jhhy.cuiweitourism.net.biz.PlaneTicketActionBiz;
 import com.jhhy.cuiweitourism.net.models.FetchModel.TrainTicketOrderFetch;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketCityInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketInfoOfChina;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainTicketOrderInfo;
+import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
@@ -374,6 +378,7 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
         }
 
         //提交订单，进入支付页面
+        planeBiz.planeTicketOrderInternational();
 //        final TrainTicketOrderFetch ticketOrderFetch = new TrainTicketOrderFetch(
 //                MainActivity.user.getUserId(), name, mobile, detail.departureStation, detail.arrivalStation, detail.trainNum,
 //                detail.departureDate, detail.departureTime, detail.arrivalDate, detail.arrivalTime, listContact, seatInfo.seatCode, seatInfo.floorPrice);

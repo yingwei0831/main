@@ -4,7 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.style.URLSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -33,6 +38,7 @@ import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
+import com.jhhy.cuiweitourism.utils.LinkSpanWrapper;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.utils.SharedPreferencesUtils;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
@@ -49,10 +55,10 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
     private TextView tvTitleTop;
     private ImageView ivTitleLeft;
 
-    private float priceAdult;
-    private float priceChild;
-    private int countAdult = 1; //成人
-    private int countChild; //儿童
+    private float priceAdult; //价格
+//    private float priceChild;
+//    private int countAdult = 1; //成人
+//    private int countChild; //儿童
     private int count; //人数总数
 //    private TravelDetail detail; //旅游详情
     private int type; //11:热门活动；国内游/出境游；
@@ -64,9 +70,10 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
 
     private TextView tvTitle;
     private TextView tvFromCity;
-    private TextView tvTravelId;
+//    private TextView tvTravelId; //产品编号
 
     private TextView tvSelectFromCity; //选择出发城市
+    private TextView tvNumber; //出游人数
 
     private EditText etContactName;
     private EditText etContactTel;
@@ -91,17 +98,16 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
     private TextView tvPriceInvoice; //快递费
 
     private CheckBox cbDeal;
-    private TextView tvDeal;
 
-    private ImageView ivReduceAdult; //成人减少
-    private ImageView ivPlusAdult;   //成人增加
-    private ImageView ivReduceChild; //儿童减少
-    private ImageView ivPlusChild;   //儿童增加
+//    private ImageView ivReduceAdult; //成人减少
+//    private ImageView ivPlusAdult;   //成人增加
+//    private ImageView ivReduceChild; //儿童减少
+//    private ImageView ivPlusChild;   //儿童增加
 
-    private TextView tvCountAdult; //成人数量
-    private TextView tvCountChild; //儿童数量
-    private TextView tvPriceAdult; //成人价格
-    private TextView tvPriceChild; //儿童价格
+//    private TextView tvCountAdult; //成人数量
+//    private TextView tvCountChild; //儿童数量
+//    private TextView tvPriceAdult; //成人价格
+//    private TextView tvPriceChild; //儿童价格
 
     private TextView tvPriceTotal; //订单金额
     private Button btnPay; //立即支付
@@ -150,9 +156,8 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
         type = bundle.getInt("type");
         hotActivityDetail = (ActivityHotDetailInfo) bundle.getSerializable("hotActivityDetail");
         priceAdult = Float.parseFloat(hotActivityDetail.getPrice());
-        priceChild = priceAdult;
-        priceTotal = countAdult * priceAdult + countChild * priceChild;
-        count = countAdult + countChild;
+        count = bundle.getInt("count");
+        priceTotal = count * priceAdult;
     }
 
     private void setupView() {
@@ -164,22 +169,7 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
         tvFromCity = (TextView) findViewById(R.id.tv_travel_edit_order_from_city);
 
         tvSelectFromCity = (TextView) findViewById(R.id.tv_travel_edit_order_select_from_city);
-
-        tvTravelId = (TextView) findViewById(R.id.tv_inner_travel_edit_order_travel_number);
-
-        ivReduceChild = (ImageView) findViewById(R.id.tv_price_calendar_number_reduce);
-        ivPlusChild = (ImageView) findViewById(R.id.tv_price_calendar_number_add);
-        ivReduceAdult = (ImageView) findViewById(R.id.tv_price_calendar_number_reduce_child);
-        ivPlusAdult = (ImageView) findViewById(R.id.tv_price_calendar_number_add_child);
-
-        tvCountAdult = (TextView) findViewById(R.id.tv_price_calendar_number);
-        tvCountChild = (TextView) findViewById(R.id.tv_price_calendar_number_child);
-        tvCountAdult.setText(String.valueOf(countAdult));
-        tvCountChild.setText(String.valueOf(countChild));
-        tvPriceAdult = (TextView) findViewById(R.id.tv_price_adult);
-        tvPriceChild = (TextView) findViewById(R.id.tv_price_child);
-        tvPriceAdult.setText(String.format(Locale.getDefault(), "￥%s/人", hotActivityDetail.getPrice()));
-        tvPriceChild.setText(String.format(Locale.getDefault(), "￥%s/人", hotActivityDetail.getPrice()));
+        tvNumber = (TextView) findViewById(R.id.tv_travelers_number);
 
         etContactName = (EditText) findViewById(R.id.et_travel_edit_order_contact_name);
         etContactTel = (EditText) findViewById(R.id.et_travel_edit_order_contact_tel);
@@ -203,44 +193,52 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
         tvReserveNotice = (TextView) findViewById(R.id.tv_travel_edit_order_notice);
 
         cbDeal = (CheckBox) findViewById(R.id.cb_travel_edit_order_deal); //条款
-        tvDeal = (TextView) findViewById(R.id.tv_travel_edit_order_deal); //进入条款内容
+        TextView tvDeal = (TextView) findViewById(R.id.tv_travel_edit_order_deal);
+        StringBuilder actionText = new StringBuilder();
+        actionText.append("我已阅读并接受");
+        actionText.append("<a style=\"text-decoration:none;\" href='name' ><font color='" + "#28CE9D" + "'>" + "旅游须知、旅游合同、特别预订提示" + "</font> </a>").append("等条款");
+
+        tvDeal.setText(Html.fromHtml(actionText.toString()));
+        tvDeal.setMovementMethod(LinkMovementMethod.getInstance());
+        CharSequence text = tvDeal.getText();
+        int ends = text.length();
+        Spannable spannable = (Spannable) tvDeal.getText();
+        URLSpan[] urlspan = spannable.getSpans(0, ends, URLSpan.class);
+        SpannableStringBuilder stylesBuilder = new SpannableStringBuilder(text);
+        stylesBuilder.clearSpans();
+        for (URLSpan url : urlspan) {
+            LinkSpanWrapper myURLSpan = new LinkSpanWrapper(url.getURL(), getApplicationContext(), "旅游须知、旅游合同、特别预订提示", null, null, "#28CE9D"){
+                @Override
+                public void onItemTextViewClick(int position, View textView, int id) {
+                    startActivity(new Intent(getApplicationContext(), ReserveNoticeActivity.class));
+                }
+            };
+            stylesBuilder.setSpan(myURLSpan, spannable.getSpanStart(url), spannable.getSpanEnd(url), spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+        tvDeal.setText(stylesBuilder);
 
         tvPriceTotal = (TextView) findViewById(R.id.tv_edit_order_price); //订单总金额
         tvPriceTotal.setText(String.valueOf(priceTotal));
         btnPay = (Button) findViewById(R.id.btn_edit_order_pay); //去往立即支付
 
         calculateContacts(); //计算游客
-//        if (type == 11){
-            tvTitle.setText(hotActivityDetail.getTitle());
-            tvTravelId.setText("A00" + hotActivityDetail.getId());
-//        } else {
-//            tvTitle.setText(detail.getTitle());
-//            tvTravelId.setText("A00" + detail.getId());
-//        }
+
         //TODO 这个为什么是不能动的？
         tvFromCity.setText("北京");
 
-//        String str = null;
-//        if (countChild > 0){
-//            str = "," + countChild + "儿童";
-
-//        }else{
-//            str = "";
-//            count = countAdult;
-//        }
-//        tvTravelers.setText(countAdult + "成人"+ str);
         tvPriceTravel = (TextView) findViewById(R.id.tv_inner_travel_currency_price); //商品总金额
         tvPriceTravel.setText(String.valueOf(priceTotal));
 //        tvPriceIcon = (TextView) findViewById(R.id.tv_inner_travel_total_price_icon); //旅游币
         layoutIconPrice = (RelativeLayout) findViewById(R.id.layout_tourism_icon_num); //抵扣旅游币数量布局
         layoutIconPrice.setVisibility(View.GONE); //热门活动，不可用旅游币支付
 
-
         layoutPriceExpress = (RelativeLayout) findViewById(R.id.layout_price_express);
         layoutPriceExpress.setVisibility(View.GONE);
         tvPriceInvoice = (TextView) findViewById(R.id.tv_inner_travel_express_price); //发票
 
         tvSelectFromCity.setText(hotActivityDetail.getCfcity());
+        tvTitle.setText(hotActivityDetail.getTitle());
+        tvNumber.setText(String.valueOf(count)+"人");
     }
 
     private void calculateContacts() {
@@ -266,11 +264,6 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
         layoutTravelers.addView(viewCustom);
     }
 
-    private void reduceContacts(){
-        layoutTravelers.removeViewAt(count - 1);
-    }
-
-
     int position = -1; //点击的联系人布局中的位置
     boolean childClick = false; //是否点击了联系人列表
 
@@ -288,17 +281,13 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
     private void addListener() {
         ivTitleLeft.setOnClickListener(this);
 
-//        tvSelectFromCity.setOnClickListener(this);
         tvSelectTraveler.setOnClickListener(this);
         btnPay.setOnClickListener(this);
         tvTravelIcon.setOnClickListener(this);
         tvInvoice.setOnClickListener(this);
         tvReserveNotice.setOnClickListener(this);
+//        tvDeal.setOnClickListener(this);
 
-        ivReduceChild.setOnClickListener(this);
-        ivPlusChild.setOnClickListener(this);
-        ivReduceAdult.setOnClickListener(this);
-        ivPlusAdult.setOnClickListener(this);
     }
 
     @Override
@@ -349,48 +338,11 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
                 startActivityForResult(invoice, Consts.REQUEST_CODE_RESERVE_SELECT_INVOICE);
                 break;
             case R.id.tv_travel_edit_order_notice: //去往预订须知
+//            case R.id.tv_travel_edit_order_deal:
                 startActivity(new Intent(getApplicationContext(), ReserveNoticeActivity.class));
                 break;
-            case R.id.tv_price_calendar_number_reduce:
-                if (countAdult > 1) {
-                    countAdult -= 1;
-                    tvCountAdult.setText(Integer.toString(countAdult));
-                }
-                calculateTotal();
-                reduceContacts();
-                break;
-            case R.id.tv_price_calendar_number_add:
-                countAdult += 1;
-                tvCountAdult.setText(Integer.toString(countAdult));
-                calculateTotal();
-                addContact(count);
-                break;
-            case R.id.tv_price_calendar_number_reduce_child:
-                if (countChild > 0) {
-                    countChild -= 1;
-                    tvCountChild.setText(Integer.toString(countChild));
-                }
-                calculateTotal();
-                reduceContacts();
-                break;
-            case R.id.tv_price_calendar_number_add_child:
-                countChild += 1;
-                tvCountChild.setText(Integer.toString(countChild));
-                calculateTotal();
-                addContact(count);
-                break;
+
         }
-    }
-
-    private void calculateTotal() {
-        count = countAdult + countChild;
-        calculatePrice();
-    }
-
-    private void calculatePrice() {
-        calcate();
-        tvPriceTravel.setText(String.valueOf(priceTotal));
-        tvPriceTotal.setText(String.valueOf(priceTotal));
     }
 
     private int REQUEST_LOGIN = 2913; //请求登录
@@ -482,7 +434,7 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
     }
 
     private void calcate() {
-        priceTotal = countAdult * priceAdult + countChild * priceChild;
+        priceTotal = count * priceAdult;
         if (invoiceTag != 1){
             priceTotal += priceInvoice;
         }
@@ -532,7 +484,7 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
         }
             //提交活动订单
             ActivityOrder order = new ActivityOrder(MainActivity.user.getUserId(), hotActivityDetail.getId(), hotActivityDetail.getCftime(),
-                    String.valueOf(priceTotal), String.valueOf(countAdult+countChild), name, mobile, hotActivityDetail.getTitle(), listHotContact);
+                    String.valueOf(priceTotal), String.valueOf(count), name, mobile, hotActivityDetail.getTitle(), listHotContact);
 
             ActivityActionBiz activityBiz = new ActivityActionBiz();
             activityBiz.activitiesOrderSubmit(order, new BizGenericCallback<ActivityOrderInfo>() {

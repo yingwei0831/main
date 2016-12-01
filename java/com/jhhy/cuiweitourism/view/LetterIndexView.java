@@ -124,6 +124,7 @@ public class LetterIndexView extends LinearLayout {
     }
 
     public void init(OnTouchLetterIndex touchLetterIndex, final char[] listLetters, int type) {
+        removeAllViews();
         this.touchLetterIndex = touchLetterIndex;
         this.setBackgroundColor(getResources().getColor(android.R.color.transparent));
         this.setOrientation(LinearLayout.VERTICAL);

@@ -63,9 +63,9 @@ public class SearchListAdapter extends MyBaseAdapter {
                 if (searchInfo.getDescription().contains("跟团游")) {
                     holder.tvType.setBackgroundColor(context.getResources().getColor(R.color.colorTab1RecommendForYouArgument));
                     holder.tvType.setText("跟团游");
-                } else if (searchInfo.getDescription().contains("自由游")) {
+                } else if (searchInfo.getDescription().contains("自由行")) {
                     holder.tvType.setBackgroundColor(context.getResources().getColor(R.color.colorFreedom));
-                    holder.tvType.setText("自由游");
+                    holder.tvType.setText("自由行");
                 }else {
                     holder.tvType.setVisibility(View.GONE);
                 }

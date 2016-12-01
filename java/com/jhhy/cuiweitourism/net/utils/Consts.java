@@ -234,6 +234,7 @@ public class Consts {
     public static final int REQUEST_CODE_RESERVE_SELECT_COIN = 1306; //选择旅游币
     public static final int REQUEST_CODE_RESERVE_SELECT_INVOICE = 1307; //选择是否开发票
     public static final int REQUEST_CODE_RESERVE_PAY = 1308; //订单生成成功，去支付
+    public static final int HOT_ACTIVITY_EDIT_ORDER = 1309; //热门活动，生成订单
 
 //    选择城市
     public static final int MESSAGE_GET_CITY = 130; //获取城市列表

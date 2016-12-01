@@ -25,7 +25,8 @@
         android:gravity="left|center_vertical"
         android:paddingBottom="16dp"
         android:paddingTop="16dp"
-        android:text="预订须知" />
+        android:text="预订须知"
+        android:textColor="@android:color/black"/>
 
     <View
         android:layout_width="match_parent"
@@ -45,7 +46,8 @@
         android:gravity="left|center_vertical"
         android:paddingBottom="16dp"
         android:paddingTop="16dp"
-        android:text="旅游合同" />
+        android:text="旅游合同"
+        android:textColor="@android:color/black"/>
 
     <View
         android:layout_width="match_parent"
@@ -65,6 +67,7 @@
         android:gravity="left|center_vertical"
         android:paddingBottom="16dp"
         android:paddingTop="16dp"
-        android:text="特别提示" />
+        android:text="特别提示"
+        android:textColor="@android:color/black"/>
 
 </LinearLayout>

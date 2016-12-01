@@ -389,7 +389,7 @@ public class Utils {
         SimpleDateFormat format = new java.text.SimpleDateFormat("HHmm");
         Date beginDate= null;
         Date endDate= null;
-        long day = 0;
+        long day = 0; //分钟数
         try {
             beginDate = format.parse(beginDateStr);
             endDate = format.parse(endDateStr);
@@ -401,6 +401,9 @@ public class Utils {
 //        String date2 = getTimeStr(endDate.getTime());
 //        LogUtil.e(TAG, "date1 = " + date1 +", date2 = " + date2);
 //        LogUtil.e(TAG, "minute = " + day);
+        if (day < 0){
+            day = 24 * 60 + day;
+        }
         return getDuration(String.valueOf(day));
     }
 

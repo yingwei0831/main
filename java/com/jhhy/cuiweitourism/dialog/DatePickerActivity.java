@@ -110,38 +110,15 @@ public class DatePickerActivity extends Activity implements View.OnClickListener
         tvDate.setText(newString);
         npMonth.setValue(month);
         npDay.setValue(date);
+
+        listenerMonth(month);
     }
 
     private void addListener() {
-
         npMonth.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                switch (newVal){
-                    case 01:
-                    case 03:
-                    case 05:
-                    case 07:
-                    case 8:
-                    case 10:
-                    case 12:
-                        npDay.setMaxValue(31);
-                        break;
-                    case 04:
-                    case 06:
-                    case 9:
-                    case 11:
-                        npDay.setMaxValue(30);
-                        break;
-                    case 02:
-                        int year = npYear.getValue();
-                        if ( year / 4 == 0 && year / 100 != 0 || year / 400 == 0){
-                            npDay.setMaxValue(29);
-                        } else {
-                            npDay.setMaxValue(28);
-                        }
-                        break;
-                }
+                listenerMonth(newVal);
                 month = npMonth.getValue();
                 date = npDay.getValue();
                 //xxxx年xx月xx日 星期X
@@ -152,6 +129,7 @@ public class DatePickerActivity extends Activity implements View.OnClickListener
         npDay.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                listenerMonth(month);
                 date = npDay.getValue();
                 //xxxx年xx月xx日 星期X
                 setPreviewDate();
@@ -215,4 +193,33 @@ public class DatePickerActivity extends Activity implements View.OnClickListener
         setResult(RESULT_OK, intent);
         finish();
     }
+
+    private void listenerMonth(int month) {
+        switch (month){
+            case 01:
+            case 03:
+            case 05:
+            case 07:
+            case 8:
+            case 10:
+            case 12:
+                npDay.setMaxValue(31);
+                break;
+            case 04:
+            case 06:
+            case 9:
+            case 11:
+                npDay.setMaxValue(30);
+                break;
+            case 02:
+                int year = npYear.getValue();
+                if ( year / 4 == 0 && year / 100 != 0 || year / 400 == 0){ //闰年29天
+                    npDay.setMaxValue(29);
+                } else { //平年28天
+                    npDay.setMaxValue(28);
+                }
+                break;
+        }
+    }
+
 }

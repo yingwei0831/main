@@ -92,4 +92,19 @@ public class OptionsWindowHelper {
         view.setPicker(options1Items, options2Items, null);
     }
 
+//    public static void setPickerData(CharacterPickerView view, List<String> seat) {
+//        if (options1Items == null) {
+//            options1Items = new ArrayList<>();
+//
+//            final Map<String, Map<String, String>> allCitys = ArrayDataDemo.getSeatType(seat);
+//            for (Map.Entry<String, Map<String, String>> entry1 : allCitys.entrySet()) {
+//                String key1 = entry1.getKey(); //座位类型 价格
+//                 options1Items.add(key1);
+//            }
+//        }
+//
+//        //三级联动效果
+//        view.setPicker(options1Items, null, null);
+//    }
+
 }
