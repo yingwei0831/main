@@ -54,7 +54,7 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
 //    private View parent;
     private PullToRefreshListView pullListView;
     private ListView listView;
-//    private List<PlaneTicketInfoOfChina.FlightInfo> list = new ArrayList<>();
+    private List<PlaneTicketInfoOfChina.FlightInfo> list = new ArrayList<>();
     private PlaneListAdapter adapter;
 
     private PlaneTicketInternationalInfo info; //查询得到的航班信息
@@ -117,7 +117,7 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
         fromCity = (PlaneTicketCityInfo) bundle.getSerializable("fromCity");
         toCity = (PlaneTicketCityInfo) bundle.getSerializable("toCity");
         dateFrom = bundle.getString("dateFrom");
-        traveltype = bundle.getString("type");
+        traveltype = bundle.getString("traveltype");
         if ("RT".equals(traveltype)){
             dateReturn = bundle.getString("dateReturn");
         }
@@ -248,31 +248,6 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
         listView.setOnItemClickListener(this);
     }
 
-
-//    @Override
-//    public void onCheckedChanged(RadioGroup radioGroup, int i) {
-//        switch (i){
-//            case R.id.rb_train_screen: //筛选
-//                screenTrain();
-//                break;
-//            case R.id.rb_train_start_time: //出发时间
-//                sortByStartTime();
-//                adapter.setData(list);
-//                adapter.notifyDataSetChanged();
-//                break;
-//            case R.id.rb_train_time_consuming: //耗时
-//                sortByConsuming();
-//                adapter.setData(list);
-//                adapter.notifyDataSetChanged();
-//                break;
-//            case R.id.rb_train_arrival_time: //到达时间
-//                sortByArrivalTime();
-//                adapter.setData(list);
-//                adapter.notifyDataSetChanged();
-//                break;
-//        }
-//    }
-
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         Intent intent = new Intent(getApplicationContext(), PlaneItemInfoActivity.class);
@@ -382,7 +357,11 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
             @Override
             public void run() {
                 super.run();
-                PlaneTicketInfoInternationalRequest request = new PlaneTicketInfoInternationalRequest(traveltype, fromCity.getCode(), toCity.getCode(), dateFrom, dateReturn, stoptype, carrier);
+                PlaneTicketInfoInternationalRequest request = new PlaneTicketInfoInternationalRequest(traveltype, fromCity.getCode(), toCity.getCode(),
+                        dateFrom.substring(0, dateFrom.indexOf(" ")), dateReturn, stoptype, carrier);
+//                {"head":{"code":"Plane_gjhb"},"field":{"boardpoint":"PEK","offPoint":"CDG","departuredate":"2016-12-02 星期五","stoptype":"A","carrier":"","returndate":""}} //填写返程日期
+//                {"head":{"code":"Plane_gjhb"},"field":{"boardpoint":"PEK","offPoint":"CDG","departuredate":"2016-12-02 星期五","traveltype":"OW","stoptype":"A","carrier":"","returndate":""}} //参数错误
+//                {"head":{"code":"Plane_gjhb"},"field":{"boardpoint":"PEK","offPoint":"BER","departuredate":"2016-12-02","traveltype":"OW","stoptype":"A","carrier":"","returndate":""}} //参数错误?
                 planeBiz.planeTicketInfoOfInternational(request, new BizGenericCallback<PlaneTicketInternationalInfo>() {
                     @Override
                     public void onCompletion(GenericResponseModel<PlaneTicketInternationalInfo> model) {
@@ -390,12 +369,12 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
                             Message msg = new Message();
                             msg.what = -1;
                             msg.obj = model.headModel.res_arg;
-                            handler.sendMessage(msg);
+//                            handler.sendMessage(msg);
                         }else if ("0000".equals(model.headModel.res_code)){
                             info = model.body;
-                            list = info.F;
-                            handler.sendEmptyMessage(1);
-                            LogUtil.e(TAG,"planeTicketInfoInternational =" + info.toString());
+//                            list = info.FMap;
+//                            handler.sendEmptyMessage(1);
+//                            LogUtil.e(TAG,"planeTicketInfoInternational =" + info.toString());
                         }
                         LoadingIndicator.cancel();
                     }

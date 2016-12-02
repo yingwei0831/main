@@ -1,6 +1,7 @@
 package com.jhhy.cuiweitourism.net.models.ResponseModel;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -88,12 +89,11 @@ public class PlaneTicketInternationalInfo {
 
     public ArrayList<AircraftCabinInfo> R;//舱位级别列表
 
-    public static class AirLegInfo{
-        public String LegSequenceNum; //航段序号
-        public String voyageSequenceNum;//航程序号
-    }
-
-    public ArrayList<AirLegInfo> F; // 航段列表
+//    public static class AirLegInfo{
+//        public String LegSequenceNum; //航段序号
+//        public String voyageSequenceNum;//航程序号
+//    }
+//    public ArrayList<AirLegInfo> F; // 航段列表
 
     @Override
     public String toString() {
@@ -105,14 +105,147 @@ public class PlaneTicketInternationalInfo {
                 '}';
     }
 
+    public static class PlaneTicketInternationalF{ //航段列表
+        public PlaneTicketInternationalFS S1; //去程
+        public PlaneTicketInternationalFS S2; //返程
+
+        @Override
+        public String toString() {
+            return "PlaneTicketInternationalF{" +
+                    "S1=" + S1 +
+                    ", S2=" + S2 +
+                    '}';
+        }
+    }
     public Map<String, PlaneTicketInternationalF> FMap;
 
+    public static class PlaneTicketInternationalFS{
+        public String AVCode;
+        public String planeInfoNode;
+        public String fromAirportCode;
+        public String fromAirportName;
+        public String fromDate;
+        public String fromTime;
+        public String toAirportCode;
+        public String toAirportName;
+        public String toDate;
+        public String toTime;
+        public String transferFrequency;
+        public String flightPeriodTotal;
+        public String stopPeriod;
+        public ArrayList<Frequency> frequencys;
 
-    //    "F": {
+       public ArrayList<FlightInfo> flightInfos; //可能有多趟航班
+
+        @Override
+        public String toString() {
+            return "PlaneTicketInternationalFS{" +
+                    "AVCode='" + AVCode + '\'' +
+                    ", planeInfoNode='" + planeInfoNode + '\'' +
+                    ", fromAirportCode='" + fromAirportCode + '\'' +
+                    ", fromAirportName='" + fromAirportName + '\'' +
+                    ", fromDate='" + fromDate + '\'' +
+                    ", fromTime='" + fromTime + '\'' +
+                    ", toAirportCode='" + toAirportCode + '\'' +
+                    ", toAirportName='" + toAirportName + '\'' +
+                    ", toDate='" + toDate + '\'' +
+                    ", toTime='" + toTime + '\'' +
+                    ", transferFrequency='" + transferFrequency + '\'' +
+                    ", flightPeriodTotal='" + flightPeriodTotal + '\'' +
+                    ", stopPeriod='" + stopPeriod + '\'' +
+                    ", frequencys=" + frequencys +
+                    ", flightInfos=" + flightInfos +
+                    '}';
+        }
+    }
+    public static class FlightInfo{
+        public String airlineCompanyCheck;
+        public String flightNumberCheck;
+        public String fromAirportCodeCheck;
+        public String toAirportCodeCheck;
+        public String fromDateCheck;
+        public String fromTimeCheck;
+        public String toDateCheck;
+        public String toTimeCheck;
+        public String flightPeriod;
+        public String flightTypeCheck;
+        public Stopped stopped;
+        public String fromTerminal;
+        public String toTermianl;
+        public String meals;
+        public String mileage;
+        public String aircraftCabin;
+        public String fromWeekday;
+        public String entertainment;
+        public String electronicTicketIdentification;
+        public String shareFlightNumber;
+
+        @Override
+        public String toString() {
+            return "FlightInfo{" +
+                    "airlineCompanyCheck='" + airlineCompanyCheck + '\'' +
+                    ", flightNumberCheck='" + flightNumberCheck + '\'' +
+                    ", fromAirportCodeCheck='" + fromAirportCodeCheck + '\'' +
+                    ", toAirportCodeCheck='" + toAirportCodeCheck + '\'' +
+                    ", fromDateCheck='" + fromDateCheck + '\'' +
+                    ", fromTimeCheck='" + fromTimeCheck + '\'' +
+                    ", toDateCheck='" + toDateCheck + '\'' +
+                    ", toTimeCheck='" + toTimeCheck + '\'' +
+                    ", flightPeriod='" + flightPeriod + '\'' +
+                    ", flightTypeCheck='" + flightTypeCheck + '\'' +
+                    ", stopped=" + stopped +
+                    ", fromTerminal='" + fromTerminal + '\'' +
+                    ", toTermianl='" + toTermianl + '\'' +
+                    ", meals='" + meals + '\'' +
+                    ", mileage='" + mileage + '\'' +
+                    ", aircraftCabin='" + aircraftCabin + '\'' +
+                    ", fromWeekday='" + fromWeekday + '\'' +
+                    ", entertainment='" + entertainment + '\'' +
+                    ", electronicTicketIdentification='" + electronicTicketIdentification + '\'' +
+                    ", shareFlightNumber='" + shareFlightNumber + '\'' +
+                    '}';
+        }
+    }
+    public static class Frequency{
+        public String frequencyAirport; //"中转机场",
+        public String frequencyTerminal; //"中转航站楼"
+
+        public Frequency() {
+        }
+
+        public Frequency(String frequencyAirport, String frequencyTerminal) {
+            this.frequencyAirport = frequencyAirport;
+            this.frequencyTerminal = frequencyTerminal;
+        }
+
+        @Override
+        public String toString() {
+            return "Frequency{" +
+                    "frequencyAirport='" + frequencyAirport + '\'' +
+                    ", frequencyTerminal='" + frequencyTerminal + '\'' +
+                    '}';
+        }
+    }
+
+    public static class Stopped{
+        public String stoppedTimes;
+        public String stoppedAirport;
+        public String stoppedPeriod;
+
+        @Override
+        public String toString() {
+            return "Stopped{" +
+                    "stoppedTimes='" + stoppedTimes + '\'' +
+                    ", stoppedAirport='" + stoppedAirport + '\'' +
+                    ", stoppedPeriod='" + stoppedPeriod + '\'' +
+                    '}';
+        }
+    }
+//    "F": {
 //        "航段序号(F1、F2、F3…)":{
 //            "航程序号(S1:去程;S2:返程)":[
-//            [
-//            "AV编号(查询舱位时需要回传)",
+//                [
+//                    "AV编号(查询舱位时需要回传)",
 //                    "航班信息节点(查询舱位时需要回传)",
 //                    "起飞机场代码(查询舱位时需要回传)",
 //                    "起飞航站楼",
@@ -125,14 +258,14 @@ public class PlaneTicketInternationalInfo {
 //                    "中转次数",
 //                    "飞行总时长",
 //                    "经停时间",
+//                    [
+//                        "中转机场",
+//                        "中转航站楼"
+//                    ]
+//                ],
 //            [
-//            "中转机场",
-//                    "中转航站楼"
-//            ]
-//            ],
-//            [
-//            [
-//            "航司(验价时需要回传)",
+//                [
+//                    "航司(验价时需要回传)",
 //                    "航班号(验价时需要回传)",
 //                    "起飞机场代码(验价时需要回传)",
 //                    "到达机场代码(验价时需要回传)",
@@ -142,12 +275,12 @@ public class PlaneTicketInternationalInfo {
 //                    "到达时间(验价时需要回传)",
 //                    "飞行时长",
 //                    "机型(验价时需要回传)",
-//            [
-//            "经停次数",
-//                    "经停机场",
-//                    "经停时间",
-//            ],
-//            "起飞航站楼",
+//                    [
+//                        "经停次数",
+//                        "经停机场",
+//                        "经停时间",
+//                    ],
+//                    "起飞航站楼",
 //                    "到达航站楼",
 //                    "餐食",
 //                    "里程",
@@ -156,18 +289,159 @@ public class PlaneTicketInternationalInfo {
 //                    "娱乐标识 0:无;1:有",
 //                    "电子客票标识 0:不支持;1:支持",
 //                    "共享航班号"
-//            ]
+//                ]
 //            ]
 //            ]
 //        }
 //    }
 
+    public static class PlaneTicketInternationalHF{
+        public String aircraftCabin;
+        public PlaneTicketInternationalHFCabin cabin;
 
+        @Override
+        public String toString() {
+            return "PlaneTicketInternationalHF{" +
+                    "aircraftCabin='" + aircraftCabin + '\'' +
+                    ", cabin=" + cabin +
+                    '}';
+        }
+    }
+    public Map<String, PlaneTicketInternationalHF> HMap; //<F1, PlaneTicketInternationalHF>
 
+    public static class PlaneTicketInternationalHFCabin{
+        public String passengerTypeKey;
+        public PassengerType passengerType;
+        public BaseFare baseFare;
+        public TotalFare totalFare;
+
+        @Override
+        public String toString() {
+            return "PlaneTicketInternationalHFCabin{" +
+                    "passengerTypeKey='" + passengerTypeKey + '\'' +
+                    ", passengerType=" + passengerType +
+                    ", baseFare=" + baseFare +
+                    ", totalFare=" + totalFare +
+                    '}';
+        }
+    }
+
+    public static class PassengerType{
+        public String faceValue;
+        public String releasePriceFlightCompanyCheck;
+        public String fromAirportCheck;
+        public String toAirportCheck;
+        public String airportCabinCode;
+        public String airportCabinType;
+        public String changeBackSign;
+        public String priceSource;
+        public String freightBaseCheck;
+        public String currencyType;
+        public String passengerCount;
+        public Map<String, TaxTypeCode> taxTypeCodeMap;
+        public String mainCarrierCheck;
+        public String cabinCount;
+        public String rebate;
+        public String award;
+        public String backMoney;
+        public String serviceCharge;
+        public String extraCharge;
+
+        @Override
+        public String toString() {
+            return "PassengerType{" +
+                    "faceValue='" + faceValue + '\'' +
+                    ", releasePriceFlightCompanyCheck='" + releasePriceFlightCompanyCheck + '\'' +
+                    ", fromAirportCheck='" + fromAirportCheck + '\'' +
+                    ", toAirportCheck='" + toAirportCheck + '\'' +
+                    ", airportCabinCode='" + airportCabinCode + '\'' +
+                    ", airportCabinType='" + airportCabinType + '\'' +
+                    ", changeBackSign='" + changeBackSign + '\'' +
+                    ", priceSource='" + priceSource + '\'' +
+                    ", freightBaseCheck='" + freightBaseCheck + '\'' +
+                    ", currencyType='" + currencyType + '\'' +
+                    ", passengerCount='" + passengerCount + '\'' +
+                    ", taxTypeCodeMap=" + taxTypeCodeMap +
+                    ", mainCarrierCheck='" + mainCarrierCheck + '\'' +
+                    ", cabinCount='" + cabinCount + '\'' +
+                    ", rebate='" + rebate + '\'' +
+                    ", award='" + award + '\'' +
+                    ", backMoney='" + backMoney + '\'' +
+                    ", serviceCharge='" + serviceCharge + '\'' +
+                    ", extraCharge='" + extraCharge + '\'' +
+                    '}';
+        }
+    }
+    public static class TaxTypeCode{
+        public String price;
+        public String currencyType;
+
+        @Override
+        public String toString() {
+            return "TaxTypeCode{" +
+                    "price='" + price + '\'' +
+                    ", currencyType='" + currencyType + '\'' +
+                    '}';
+        }
+    }
+    public static class BaseFare{
+        public String faceValueTotal;
+        public String currencyType;
+
+        @Override
+        public String toString() {
+            return "BaseFare{" +
+                    "faceValueTotal='" + faceValueTotal + '\'' +
+                    ", currencyType='" + currencyType + '\'' +
+                    '}';
+        }
+    }
+    public static class TotalFare{
+        public String taxTotal;
+        public String currencyType;
+
+        @Override
+        public String toString() {
+            return "TotalFare{" +
+                    "taxTotal='" + taxTotal + '\'' +
+                    ", currencyType='" + currencyType + '\'' +
+                    '}';
+        }
+    }
+//    "H": {
+//        "航段序号(F1、F2、F3…,与F节点中的航段序号一一对应)":{
+//
+//            "舱位组合(去程/回程, 验价时需要回传)":{
+//                "乘客类型(ADT/CHD/INF)":[
+//                        "票面价",
+//                        "发布运价的航空公司(去程/回程) (查询退改签时需要回传)",
+//                        "起飞机场(去程出发/回程出发) (查询退改签时需要回传)",
+//                        "目的机场(去程到达/回程到达) (查询退改签时需要回传)",
+//                        "舱位代码(去程/回程)",
+//                        "舱位类型(去程/回程)",
+//                        "退改签Sign(去程_回程)",
+//                        "价格来源",
+//                        "运价基础(去程,回程) (查询退改签时需要回传)",
+//                        "货币类型",
+//                        "旅客数量",
+//                        {
+//                                "税类型代码":["金额","货币类型"]
+//                        },
+//                        "整个行程的主承运人(验价时需要回传)",
+//                        "该组合舱位的剩余张数(注:9代表大于等于9张)" ,
+//                        "返点" ,
+//                        "奖励" ,
+//                        "返款" ,
+//                        "服务费" ,
+//                        "附加费"
+//                ],
+//                "BaseFare":["票面价总计金额","货币类型"],
+//                "TotalFare":["含税总计金额","货币类型"]
+//            }
+//        }
+//    }
 /***********************************************
  "P": {
-
-
  "HGH": [
  "杭州",
  "杭州萧山机场",
