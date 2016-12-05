@@ -96,8 +96,7 @@ public class PlaneListAdapter extends MyBaseAdapter {
                 holder.tvFromAirport.setText(fromCity.getAirportname());
                 holder.tvArrivalTime.setText(s1.toTime);
                 holder.tvArrivalAirport.setText(toCity.getAirportname());
-                LogUtil.e(TAG, "s1.transferFrequency = " + s1.transferFrequency);
-                if (s1.transferFrequency == null || s1.transferFrequency.length() == 0) {
+                if ("0".equals(s1.transferFrequency)) {
                     holder.tvArrivalType.setText(context.getString(R.string.plane_flight_single)); //直达
                 }else{
                     holder.tvArrivalType.setText(context.getString(R.string.plane_flight_unsingle)); //中转
