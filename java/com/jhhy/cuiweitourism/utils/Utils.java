@@ -284,9 +284,9 @@ public class Utils {
     }
 
     //将分钟数转化为XX时XX分
-    public static String getDuration(String minute){
-        int mi = Integer.parseInt(minute);
-        int ho = mi / 60;
+    public static String getDuration(long minute){
+        long mi = minute;
+        long ho = mi / 60;
         mi = mi % 60;
         return String.format("%d时%02d分", ho, mi);
     }
@@ -364,9 +364,9 @@ public class Utils {
 
     /**
      * 获取两个日期相隔的天数
-     * @param beginDateStr
-     * @param endDateStr
-     * @return
+     * @param beginDateStr yyyy-MM-dd
+     * @param endDateStr yyyy-MM-dd
+     * @return 相差几天
      */
     public static long getDiff(String beginDateStr, String endDateStr){
         SimpleDateFormat format = new java.text.SimpleDateFormat("yyyy-MM-dd");
@@ -404,7 +404,28 @@ public class Utils {
         if (day < 0){
             day = 24 * 60 + day;
         }
-        return getDuration(String.valueOf(day));
+        return getDuration(day);
+    }
+
+    /**
+     *
+     * @param beginDateStr yyyy-MM-dd HH:mm
+     * @param endDateStr yyyy-MM-dd HH:mm
+     * @return xx时xx分
+     */
+    public static String getDiffMinuteStr(String beginDateStr, String endDateStr){
+        SimpleDateFormat format = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm");
+        Date beginDate= null;
+        Date endDate= null;
+        long day = 0; //分钟数
+        try {
+            beginDate = format.parse(beginDateStr);
+            endDate = format.parse(endDateStr);
+            day = (endDate.getTime() - beginDate.getTime()) / (60*1000);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return getDuration(day);
     }
 
     /**

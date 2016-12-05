@@ -126,18 +126,18 @@ public class PlaneTicketActionBiz extends BasicActionBiz {
                 if (map.containsKey("J")){
                     LinkedTreeMap<String,LinkedTreeMap<String,ArrayList<String>>> content =  (LinkedTreeMap<String,LinkedTreeMap<String,ArrayList<String>>>)map.get("J");;
                     Iterator iter = content.entrySet().iterator();
-                    ArrayList<PlaneTicketInternationalInfo.AircraftTypeInfo> aircrafts = new ArrayList<>();
+                    Map<String, PlaneTicketInternationalInfo.AircraftTypeInfo> aircrafts = new HashMap<>();
                     while (iter.hasNext()) {
                         Map.Entry<String,ArrayList<String>> entry = (Map.Entry<String,ArrayList<String>>) iter.next();
                         ArrayList<String> value = entry.getValue();
                         PlaneTicketInternationalInfo.AircraftTypeInfo aircraft = new PlaneTicketInternationalInfo.AircraftTypeInfo();
-                        aircraft.typeCode = entry.getKey();
+//                        aircraft.typeCode = entry.getKey();
                         aircraft.typeName = value.get(0);
                         aircraft.typeNum = value.get(1);
                         aircraft.airframe = value.get(2);
                         aircraft.minNum = value.get(3);
                         aircraft.maxNum = value.get(4);
-                        aircrafts.add(aircraft);
+                        aircrafts.put(entry.getKey(), aircraft);
                     }
                     info.J = aircrafts;
                 }
@@ -164,13 +164,14 @@ public class PlaneTicketActionBiz extends BasicActionBiz {
                 if (map.containsKey("R")){
                     LinkedTreeMap<String, LinkedTreeMap<String, String>> content = (LinkedTreeMap<String, LinkedTreeMap<String, String>>) map.get("R");
                     Iterator iter = content.entrySet().iterator();
-                    ArrayList<PlaneTicketInternationalInfo.AircraftCabinInfo> aircraftCabinInfos = new ArrayList<>();
+//                    ArrayList<PlaneTicketInternationalInfo.AircraftCabinInfo> aircraftCabinInfos = new ArrayList<>();
+                    Map<String, String> aircraftCabinInfos = new HashMap<>();
                     while (iter.hasNext()) {
                         Map.Entry<String, String> entry = (Map.Entry<String, String>) iter.next();
-                        PlaneTicketInternationalInfo.AircraftCabinInfo aircraftCabinInfo = new PlaneTicketInternationalInfo.AircraftCabinInfo();
-                        aircraftCabinInfo.levelCode = entry.getKey();
-                        aircraftCabinInfo.levelDescription = entry.getValue();
-                        aircraftCabinInfos.add(aircraftCabinInfo);
+//                        PlaneTicketInternationalInfo.AircraftCabinInfo aircraftCabinInfo = new PlaneTicketInternationalInfo.AircraftCabinInfo();
+//                        aircraftCabinInfo.levelCode = entry.getKey();
+//                        aircraftCabinInfo.levelDescription = entry.getValue();
+                        aircraftCabinInfos.put(entry.getKey(), entry.getValue());
                     }
                     info.R = aircraftCabinInfos;
                 }

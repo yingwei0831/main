@@ -111,7 +111,7 @@ public class TrainListItemInfoActivity extends BaseActionBarActivity {
 
         tvStartTime.setText(detail.departureTime);
         tvStartStation .setText(detail.departureStation);
-        tvConsumingtime.setText(Utils.getDuration(detail.duration));
+        tvConsumingtime.setText(Utils.getDuration(Long.parseLong(detail.duration)));
         tvArrivalTime.setText(detail.arrivalTime);
         tvArrivalStation.setText(detail.arrivalStation);
         tvTrainInfo.setText(String.format("%s%s", detail.trainTypeName, detail.trainNum));

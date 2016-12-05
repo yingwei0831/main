@@ -342,6 +342,20 @@
     <string name="plane_screen_from_airport">机场</string>
     <string name="plane_screen_aircraft_model">机型</string>
     <string name="plane_screen_airline_company">航空公司</string>
+    <string name="plane_flight_single">直达</string>
+    <string name="plane_flight_unsingle">中转</string>
+    <string name="plane_flight_tax">含税总价</string>
+    <string name="plane_flight_separate">票价+税价</string>
+    <string name="plane_flight_price_sort">价格排序</string>
+    <string name="plane_flight_price_sort_recommend">推荐排序</string>
+    <string name="plane_flight_price_sort_direct">推荐排序 (直飞优先)</string>
+    <string name="plane_flight_price_sort_increase">价格 低—>高</string>
+    <string name="plane_flight_price_sort_from_increase">起飞 早—>晚</string>
+    <string name="plane_flight_price_sort_from_decrease">起飞 晚—>早</string>
+    <string name="plane_flight_price_sort_arrival_increase">到达 早—>晚</string>
+    <string name="plane_flight_price_sort_arrival_decrease">到达 晚—>早</string>
+    <string name="plane_flight_price_sort_consuming_increase">总时长 短—>长</string>
+
 
     <!--XScrollView-->
     <string name="header_hint_refresh_normal">下拉刷新</string>

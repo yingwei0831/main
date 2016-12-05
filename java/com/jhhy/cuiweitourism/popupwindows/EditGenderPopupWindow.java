@@ -30,29 +30,6 @@ public class EditGenderPopupWindow extends PopupWindow{
 
     private FragmentActivity mActivity;
 
-    private ListView listViewFirst;
-    private ListView listViewSecond;
-
-    private InnerTravelFirstListViewAdapter firstAdapter;
-
-    private List<String> secondListDefault;
-    private List<String> secondList1;
-    private List<String> secondList3;
-    private InnerTravelTripDaysListViewAdapter secondAdapter1;
-
-    private List<String> firstList;
-
-    private LinearLayout layoutStartTime;
-    private RelativeLayout layoutStartTime1;
-    private RelativeLayout layoutStartTime2;
-    private TextView tvStartTime1;
-    private TextView tvStartTime2;
-
-//    private List<Fragment> listFragments;
-
-//	private String[][] secondArray = {
-//			{"不限", "1天", "2天", "3天", "4天", "5天", "6天", "7天", "8天", "9天", "10天", "10天以上"},
-//			{}, {} };
 
     public EditGenderPopupWindow(FragmentActivity activity, View parent) {
         super(activity);

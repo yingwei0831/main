@@ -54,7 +54,7 @@ public class TrainListAdapter extends MyBaseAdapter {
             holder.tvTrainName.setText(info.trainNum);
             holder.tvTrainFromTime.setText(info.departureTime);
             holder.tvTrainFromStation.setText(info.departureStation);
-            holder.tvConsumingTime.setText(Utils.getDuration(info.duration));
+            holder.tvConsumingTime.setText(Utils.getDuration(Long.parseLong(info.duration)));
             holder.tvArrivalTime.setText(info.arrivalTime);
             holder.tvArrivalStation.setText(info.arrivalStation);
             ArrayList<TrainTicketDetailInfo.SeatInfo> ticketKinds = info.seatInfoArray;

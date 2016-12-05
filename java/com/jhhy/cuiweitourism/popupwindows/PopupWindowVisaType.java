@@ -32,13 +32,6 @@ import java.util.List;
 public class PopupWindowVisaType extends PopupWindow implements AdapterView.OnItemClickListener {
 
     private Activity activity;
-//    private TextView tv1;
-//    private TextView tv2;
-//    private TextView tv3;
-//    private TextView tv4;
-//    private TextView tv5;
-//
-//    private EditText etMail;
 
     private VisaTypeListAdapter adapter;
     private List<String> lists;

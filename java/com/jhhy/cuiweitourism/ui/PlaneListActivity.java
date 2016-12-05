@@ -164,7 +164,7 @@ public class PlaneListActivity extends BaseActionBarActivity implements  Adapter
             }
         });
 
-        adapter = new PlaneListAdapter(getApplicationContext(), list, fromCity, toCity);
+        adapter = new PlaneListAdapter(getApplicationContext(), list, fromCity, toCity, 1);
         listView.setAdapter(adapter);
 
         rbScreen = (RadioButton) findViewById(R.id.rb_plane_screen);

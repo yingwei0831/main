@@ -51,17 +51,17 @@ public class PlaneTicketInternationalInfo {
 
 
     public static class AircraftTypeInfo{
-        public String typeCode;//    "机型代码"
+//        public String typeCode;//    "机型代码"
         public String typeName;//    :"机型名称"
         public String typeNum; //    ,"型号",
-        public String airframe;//    "机体",
+        public String airframe;//    "机体",(窄体)
         public String minNum;  //    最少人数,
         public String maxNum;  //    最多人数
 
         @Override
         public String toString() {
             return "AircraftTypeInfo{" +
-                    "typeCode='" + typeCode + '\'' +
+//                    "typeCode='" + typeCode + '\'' +
                     ", typeName='" + typeName + '\'' +
                     ", typeNum='" + typeNum + '\'' +
                     ", airframe='" + airframe + '\'' +
@@ -71,23 +71,23 @@ public class PlaneTicketInternationalInfo {
         }
     }
 
-    public ArrayList<AircraftTypeInfo> J; //机型列表
+    public Map<String, AircraftTypeInfo> J; //机型列表
 
 
-    public static class AircraftCabinInfo{
-        public String levelCode;//"舱位级别代码"
-        public String levelDescription;//"舱位级别描述"
+//    public static class AircraftCabinInfo{
+//        public String levelCode;//"舱位级别代码"
+//        public String levelDescription;//"舱位级别描述"
+//
+//        @Override
+//        public String toString() {
+//            return "AircraftCabinInfo{" +
+//                    "levelCode='" + levelCode + '\'' +
+//                    ", levelDescription='" + levelDescription + '\'' +
+//                    '}';
+//        }
+//    }
 
-        @Override
-        public String toString() {
-            return "AircraftCabinInfo{" +
-                    "levelCode='" + levelCode + '\'' +
-                    ", levelDescription='" + levelDescription + '\'' +
-                    '}';
-        }
-    }
-
-    public ArrayList<AircraftCabinInfo> R;//舱位级别列表
+    public Map<String, String> R;//舱位级别列表
 
 //    public static class AirLegInfo{
 //        public String LegSequenceNum; //航段序号
@@ -120,20 +120,20 @@ public class PlaneTicketInternationalInfo {
     public Map<String, PlaneTicketInternationalF> FMap;
 
     public static class PlaneTicketInternationalFS{
-        public String AVCode;
-        public String planeInfoNode;
-        public String fromAirportCode;
-        public String fromAirportName;
-        public String fromDate;
-        public String fromTime;
-        public String toAirportCode;
-        public String toAirportName;
-        public String toDate;
-        public String toTime;
-        public String transferFrequency;
-        public String flightPeriodTotal;
-        public String stopPeriod;
-        public ArrayList<Frequency> frequencys;
+        public String AVCode; // "AV编号(查询舱位时需要回传)",
+        public String planeInfoNode; // "航班信息节点(查询舱位时需要回传)",
+        public String fromAirportCode; // "起飞机场代码(查询舱位时需要回传)",
+        public String fromAirportName; // "起飞航站楼",
+        public String fromDate; // "起飞日期(查询舱位,退改签时需要回传)",
+        public String fromTime; // "起飞时间(查询退改签,验价时需要回传)",
+        public String toAirportCode; // "到达机场代码(查询舱位时需要回传)",
+        public String toAirportName; // "到达航站楼",
+        public String toDate; // "到达日期",
+        public String toTime; // "到达时间",
+        public String transferFrequency; // "中转次数",
+        public String flightPeriodTotal; // "飞行总时长",
+        public String stopPeriod; // "经停时间",
+        public ArrayList<Frequency> frequencys; //中转
 
        public ArrayList<FlightInfo> flightInfos; //可能有多趟航班
 
@@ -158,27 +158,27 @@ public class PlaneTicketInternationalInfo {
                     '}';
         }
     }
-    public static class FlightInfo{
-        public String airlineCompanyCheck;
-        public String flightNumberCheck;
-        public String fromAirportCodeCheck;
-        public String toAirportCodeCheck;
-        public String fromDateCheck;
-        public String fromTimeCheck;
-        public String toDateCheck;
-        public String toTimeCheck;
-        public String flightPeriod;
-        public String flightTypeCheck;
-        public Stopped stopped;
-        public String fromTerminal;
-        public String toTermianl;
-        public String meals;
-        public String mileage;
-        public String aircraftCabin;
-        public String fromWeekday;
-        public String entertainment;
-        public String electronicTicketIdentification;
-        public String shareFlightNumber;
+    public static class FlightInfo{ //每趟航班信息
+        public String airlineCompanyCheck; //"航司(验价时需要回传)",
+        public String flightNumberCheck; //"航班号(验价时需要回传)",
+        public String fromAirportCodeCheck; //"起飞机场代码(验价时需要回传)",
+        public String toAirportCodeCheck; //"到达机场代码(验价时需要回传)",
+        public String fromDateCheck; //"起飞日期(验价时需要回传)",
+        public String fromTimeCheck; //"起飞时间(验价时需要回传)",
+        public String toDateCheck; //"到达日期(验价时需要回传)",
+        public String toTimeCheck; //"到达时间(验价时需要回传)",
+        public String flightPeriod; //"飞行时长",
+        public String flightTypeCheck; //"机型(验价时需要回传)",
+        public Stopped stopped; //经停
+        public String fromTerminal; //"起飞航站楼",
+        public String toTermianl; //"到达航站楼",
+        public String meals; //"餐食",
+        public String mileage; //"里程",
+        public String aircraftCabin; //"订座舱位列表",
+        public String fromWeekday; //"起飞对应的星期数",
+        public String entertainment; //"娱乐标识 0:无;1:有",
+        public String electronicTicketIdentification; //"电子客票标识 0:不支持;1:支持",
+        public String shareFlightNumber; //"共享航班号"
 
         @Override
         public String toString() {
@@ -206,7 +206,7 @@ public class PlaneTicketInternationalInfo {
                     '}';
         }
     }
-    public static class Frequency{
+    public static class Frequency{ //中转
         public String frequencyAirport; //"中转机场",
         public String frequencyTerminal; //"中转航站楼"
 
@@ -227,10 +227,10 @@ public class PlaneTicketInternationalInfo {
         }
     }
 
-    public static class Stopped{
-        public String stoppedTimes;
-        public String stoppedAirport;
-        public String stoppedPeriod;
+    public static class Stopped{ //经停
+        public String stoppedTimes; //"经停次数",
+        public String stoppedAirport; //"经停机场",
+        public String stoppedPeriod; //"经停时间",
 
         @Override
         public String toString() {
@@ -310,10 +310,10 @@ public class PlaneTicketInternationalInfo {
     public Map<String, PlaneTicketInternationalHF> HMap; //<F1, PlaneTicketInternationalHF>
 
     public static class PlaneTicketInternationalHFCabin{
-        public String passengerTypeKey;
-        public PassengerType passengerType;
-        public BaseFare baseFare;
-        public TotalFare totalFare;
+        public String passengerTypeKey; //乘客类型(ADT/CHD/INF)
+        public PassengerType passengerType; //乘客类型
+        public BaseFare baseFare; //"票面价总计金额","货币类型"
+        public TotalFare totalFare; //"含税总计金额","货币类型"
 
         @Override
         public String toString() {
@@ -327,25 +327,25 @@ public class PlaneTicketInternationalInfo {
     }
 
     public static class PassengerType{
-        public String faceValue;
-        public String releasePriceFlightCompanyCheck;
-        public String fromAirportCheck;
-        public String toAirportCheck;
-        public String airportCabinCode;
-        public String airportCabinType;
-        public String changeBackSign;
-        public String priceSource;
-        public String freightBaseCheck;
-        public String currencyType;
-        public String passengerCount;
-        public Map<String, TaxTypeCode> taxTypeCodeMap;
-        public String mainCarrierCheck;
-        public String cabinCount;
-        public String rebate;
-        public String award;
-        public String backMoney;
-        public String serviceCharge;
-        public String extraCharge;
+        public String faceValue; //"票面价",
+        public String releasePriceFlightCompanyCheck; //"发布运价的航空公司(去程/回程) (查询退改签时需要回传)",
+        public String fromAirportCheck; //"起飞机场(去程出发/回程出发) (查询退改签时需要回传)",
+        public String toAirportCheck; //"目的机场(去程到达/回程到达) (查询退改签时需要回传)",
+        public String airportCabinCode; //"舱位代码(去程/回程)",
+        public String airportCabinType; //"舱位类型(去程/回程)",
+        public String changeBackSign; //"退改签Sign(去程_回程)",
+        public String priceSource; //"价格来源",
+        public String freightBaseCheck; //"运价基础(去程,回程) (查询退改签时需要回传)",
+        public String currencyType; //"货币类型",
+        public String passengerCount; //"旅客数量",
+        public Map<String, TaxTypeCode> taxTypeCodeMap; //XT : 税类型代码
+        public String mainCarrierCheck; //"整个行程的主承运人(验价时需要回传)",
+        public String cabinCount; //"该组合舱位的剩余张数(注:9代表大于等于9张)" ,
+        public String rebate; //"返点" ,
+        public String award; //"奖励" ,
+        public String backMoney; //"返款" ,
+        public String serviceCharge; //"服务费" ,
+        public String extraCharge; //"附加费"
 
         @Override
         public String toString() {
@@ -373,8 +373,8 @@ public class PlaneTicketInternationalInfo {
         }
     }
     public static class TaxTypeCode{
-        public String price;
-        public String currencyType;
+        public String price; //"金额",
+        public String currencyType; //"货币类型"
 
         @Override
         public String toString() {
@@ -385,8 +385,8 @@ public class PlaneTicketInternationalInfo {
         }
     }
     public static class BaseFare{
-        public String faceValueTotal;
-        public String currencyType;
+        public String faceValueTotal; //"票面价总计金额",
+        public String currencyType; //"货币类型"
 
         @Override
         public String toString() {
@@ -397,8 +397,8 @@ public class PlaneTicketInternationalInfo {
         }
     }
     public static class TotalFare{
-        public String taxTotal;
-        public String currencyType;
+        public String taxTotal; //"含税总计金额",
+        public String currencyType; //"货币类型"
 
         @Override
         public String toString() {
@@ -425,7 +425,7 @@ public class PlaneTicketInternationalInfo {
 //                        "货币类型",
 //                        "旅客数量",
 //                        {
-//                                "税类型代码":["金额","货币类型"]
+//                            "税类型代码":["金额","货币类型"]
 //                        },
 //                        "整个行程的主承运人(验价时需要回传)",
 //                        "该组合舱位的剩余张数(注:9代表大于等于9张)" ,

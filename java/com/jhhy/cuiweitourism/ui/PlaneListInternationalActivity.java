@@ -1,14 +1,17 @@
 package com.jhhy.cuiweitourism.ui;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.ContextCompat;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
@@ -27,7 +30,10 @@ import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketInfoOfChina;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketInternationalInfo;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
+import com.jhhy.cuiweitourism.popupwindows.PopupWindowPlanePriceType;
+import com.jhhy.cuiweitourism.popupwindows.PopupWindowPlaneSortType;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
+import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.jhhy.cuiweitourism.utils.Utils;
 import com.just.sun.pricecalendar.ToastCommon;
 
@@ -39,13 +45,11 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-public class PlaneListInternationalActivity extends BaseActionBarActivity implements  AdapterView.OnItemClickListener //,RadioGroup.OnCheckedChangeListener
+public class PlaneListInternationalActivity extends BaseActionBarActivity implements  AdapterView.OnItemClickListener, PopupWindow.OnDismissListener //,RadioGroup.OnCheckedChangeListener
 {
 
-    private String TAG = PlaneListInternationalActivity.class.getSimpleName();
+    private String TAG = "PlaneListInternationalActivity";
     private PlaneTicketActionBiz planeBiz; //机票业务类
-
-    private TrainTicketActionBiz trainBiz;
 
     private TextView tvPreDay; //前一天
     private TextView tvNextDay; //后一天
@@ -54,24 +58,26 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
 //    private View parent;
     private PullToRefreshListView pullListView;
     private ListView listView;
-    private List<PlaneTicketInfoOfChina.FlightInfo> list = new ArrayList<>();
+    private List<PlaneTicketInternationalInfo.PlaneTicketInternationalF> list = new ArrayList<>();
+
     private PlaneListAdapter adapter;
 
-    private PlaneTicketInternationalInfo info; //查询得到的航班信息
+    public static PlaneTicketInternationalInfo info; //查询得到的航班信息
 
 //    private RadioGroup bottomRg; //底部筛选组合
     private RadioButton rbScreen;       //筛选
     private RadioButton rbSortTime;    //出发时间排序
     private RadioButton rbSortPrice;    //机票价格排序
+    private int bottomTag = 0;
 
-    private Drawable drawableSortStartTimeIncrease; //时间从早到晚，升序，默认
-    private Drawable drawableSortStartTimeDecrease; //时间从晚到早，降序
+//    private Drawable drawableSortStartTimeIncrease; //时间从早到晚，升序，默认
+//    private Drawable drawableSortStartTimeDecrease; //时间从晚到早，降序
+//
+//    private Drawable drawableSortPriceIncrease; //价格从高到低，升序，默认
+//    private Drawable drawableSortPriceDecrease; //价格从高到低，降序
 
-    private Drawable drawableSortPriceIncrease; //价格从高到低，升序，默认
-    private Drawable drawableSortPriceDecrease; //价格从高到低，降序
-
-    private Drawable timeDrawable; //时间初始图片
-    private Drawable priceDrawable; //价格初始图片
+//    private Drawable timeDrawable; //时间初始图片
+//    private Drawable priceDrawable; //价格初始图片
 
     private PlaneTicketCityInfo fromCity; //出发城市
     private PlaneTicketCityInfo toCity; //到达城市
@@ -82,6 +88,8 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
     private String traveltype; //航程类型 OW（单程） RT（往返）
     private String stoptype = "A"; // 是否中转 A（所有） D（直达）
     private String carrier = ""; //航司
+
+    private boolean refresh; //下拉刷新
 
     private Handler handler = new Handler(){
         @Override
@@ -97,9 +105,22 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
                 case 1:
                     dateFrom = tempTime;
                     tvCurrentDay.setText(dateFrom);
-                    adapter.setData(list);
+                    adapter.setData(listData);
+                    adapter.setOuterFKey(new ArrayList(info.FMap.keySet()));
                     adapter.notifyDataSetChanged();
                     break;
+            }
+            if (refresh){ //下拉刷新，将数据清空
+                pullListView.onRefreshComplete();
+                refresh = false;
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (pullListView.isRefreshing()){
+                            pullListView.onRefreshComplete();
+                        }
+                    }
+                }, 2000);
             }
         }
     };
@@ -109,6 +130,7 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
         setContentView(R.layout.activity_plane_list);
         getData();
         super.onCreate(savedInstanceState);
+        LoadingIndicator.show(PlaneListInternationalActivity.this, getString(R.string.http_notice));
         getInternetData();
     }
 
@@ -127,7 +149,6 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
     protected void setupView() {
         super.setupView();
         tvTitle.setText(String.format("%s—%s", fromCity.getName(), toCity.getName()));
-        trainBiz = new TrainTicketActionBiz();
 
         tvPreDay = (TextView) findViewById( R.id.tv_train_preference);
         tvNextDay = (TextView) findViewById(R.id.tv_train_next_day);
@@ -144,52 +165,60 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
         pullListView.getLoadingLayoutProxy().setReleaseLabel("松开加载更多");
 
         //上拉、下拉设定
-        pullListView.setMode(PullToRefreshBase.Mode.DISABLED);
+        pullListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
         listView = pullListView.getRefreshableView();
 
         //上拉、下拉监听函数
         pullListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-
+                //下拉刷新,清空数据
+                if (refresh)    return;
+                refresh = true;
+                getInternetData();
             }
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+                //上拉加载
 
             }
         });
 
-        adapter = new PlaneListAdapter(getApplicationContext(), list, fromCity, toCity);
+        adapter = new PlaneListAdapter(getApplicationContext(), listData, fromCity, toCity, 2);
         listView.setAdapter(adapter);
 
         rbScreen = (RadioButton) findViewById(R.id.rb_plane_screen);
 
 //        bottomRg = (RadioGroup) findViewById(R.id.rg_train_list);
         rbSortTime = (RadioButton) findViewById(R.id.rb_plane_start_time);
+        rbSortTime.setText(getString(R.string.plane_flight_price_sort_recommend));
+
         rbSortPrice = (RadioButton) findViewById(R.id.rb_plane_price);
+        rbSortPrice.setText(getString(R.string.plane_flight_separate)); //默认：票价+税费
+        rbSortPrice.setTextColor(Color.WHITE);
 
         //起飞时间升序
-        drawableSortStartTimeIncrease = ContextCompat.getDrawable(PlaneListInternationalActivity.this, R.mipmap.icon_train_start_time_decrease); //时间从早到晚
-        drawableSortStartTimeDecrease = ContextCompat.getDrawable(getApplicationContext(), R.mipmap.icon_train_start_time_increase); //时间从晚到早
-
-        drawableSortStartTimeIncrease.setBounds(0, 0, drawableSortStartTimeIncrease.getMinimumWidth(), drawableSortStartTimeIncrease.getMinimumHeight());
-        drawableSortStartTimeDecrease.setBounds(0, 0, drawableSortStartTimeDecrease.getMinimumWidth(), drawableSortStartTimeDecrease.getMinimumHeight());
+//        drawableSortStartTimeIncrease = ContextCompat.getDrawable(PlaneListInternationalActivity.this, R.mipmap.icon_train_start_time_decrease); //时间从早到晚
+//        drawableSortStartTimeDecrease = ContextCompat.getDrawable(getApplicationContext(), R.mipmap.icon_train_start_time_increase); //时间从晚到早
+//
+//        drawableSortStartTimeIncrease.setBounds(0, 0, drawableSortStartTimeIncrease.getMinimumWidth(), drawableSortStartTimeIncrease.getMinimumHeight());
+//        drawableSortStartTimeDecrease.setBounds(0, 0, drawableSortStartTimeDecrease.getMinimumWidth(), drawableSortStartTimeDecrease.getMinimumHeight());
 
         //价格排序
-        drawableSortPriceIncrease = ContextCompat.getDrawable(PlaneListInternationalActivity.this, R.mipmap.icon_price_incrase); //时间从早到晚
-        drawableSortPriceDecrease = ContextCompat.getDrawable(getApplicationContext(), R.mipmap.icon_price_decrase); //时间从晚到早
-
-        drawableSortPriceIncrease.setBounds(0, 0, drawableSortPriceIncrease.getMinimumWidth(), drawableSortPriceIncrease.getMinimumHeight());
-        drawableSortPriceDecrease.setBounds(0, 0, drawableSortPriceDecrease.getMinimumWidth(), drawableSortPriceDecrease.getMinimumHeight());
+//        drawableSortPriceIncrease = ContextCompat.getDrawable(PlaneListInternationalActivity.this, R.mipmap.icon_price_incrase); //时间从早到晚
+//        drawableSortPriceDecrease = ContextCompat.getDrawable(getApplicationContext(), R.mipmap.icon_price_decrase); //时间从晚到早
+//
+//        drawableSortPriceIncrease.setBounds(0, 0, drawableSortPriceIncrease.getMinimumWidth(), drawableSortPriceIncrease.getMinimumHeight());
+//        drawableSortPriceDecrease.setBounds(0, 0, drawableSortPriceDecrease.getMinimumWidth(), drawableSortPriceDecrease.getMinimumHeight());
 
 
         //radioButton原始图片
-        timeDrawable = ContextCompat.getDrawable(getApplicationContext(), R.drawable.icon_train_start_time);
-        priceDrawable = ContextCompat.getDrawable(getApplicationContext(), R.mipmap.icon_price_plane);
+//        timeDrawable = ContextCompat.getDrawable(getApplicationContext(), R.drawable.icon_train_start_time);
+//        priceDrawable = ContextCompat.getDrawable(getApplicationContext(), R.mipmap.icon_price_plane);
 
-        timeDrawable.setBounds(0, 0, timeDrawable.getMinimumWidth(), timeDrawable.getMinimumHeight());
-        priceDrawable.setBounds(0, 0, priceDrawable.getMinimumWidth(), priceDrawable.getMinimumHeight());
+//        timeDrawable.setBounds(0, 0, timeDrawable.getMinimumWidth(), timeDrawable.getMinimumHeight());
+//        priceDrawable.setBounds(0, 0, priceDrawable.getMinimumWidth(), priceDrawable.getMinimumHeight());
 
         planeBiz = new PlaneTicketActionBiz();
     }
@@ -201,39 +230,47 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
         switch (view.getId()){
             case R.id.tv_train_preference: //前一天
                 tempTime = getDateStr(dateFrom.substring(0, dateFrom.indexOf(" ")), -1);
+                LoadingIndicator.show(PlaneListInternationalActivity.this, getString(R.string.http_notice));
                 getInternetData();
                 break;
             case R.id.tv_train_next_day: //后一天
                 tempTime = getDateStr(dateFrom.substring(0, dateFrom.indexOf(" ")), 1);
+                LoadingIndicator.show(PlaneListInternationalActivity.this, getString(R.string.http_notice));
                 getInternetData();
                 break;
             case R.id.rb_plane_screen: //筛选
+                bottomTag = 1;
                 screen();
                 break;
             case R.id.rb_plane_start_time: //出发时间排序
-                setRbBg();
-                sortByStartTime();
-                adapter.setData(list);
+//                setRbBg();
+//                sortByStartTime();
+                bottomTag = 2;
+                showPopSort();
+                adapter.setData(listData);
                 adapter.notifyDataSetChanged();
                 break;
-            case R.id.rb_plane_price: //价格排序
-                setRbBg();
-                sortByPrice();
-                adapter.setData(list);
+            case R.id.rb_plane_price: //价格筛选（含税总价/票价+税价）
+//                setRbBg();
+//                sortByPrice();
+                bottomTag = 3;
+                showPopPrice();
+                adapter.setData(listData);
                 adapter.notifyDataSetChanged();
                 break;
         }
     }
+
 
     //筛选
     private void screen() {
 
     }
 
-    private void setRbBg() {
-        rbSortTime.setCompoundDrawables(null, timeDrawable, null, null);
-        rbSortPrice.setCompoundDrawables(null, priceDrawable, null, null);
-    }
+//    private void setRbBg() {
+//        rbSortTime.setCompoundDrawables(null, timeDrawable, null, null);
+//        rbSortPrice.setCompoundDrawables(null, priceDrawable, null, null);
+//    }
 
     @Override
     protected void addListener() {
@@ -250,15 +287,16 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        Intent intent = new Intent(getApplicationContext(), PlaneItemInfoActivity.class);
-        Bundle bundle = new Bundle();
-        PlaneTicketInfoOfChina.FlightInfo flight = list.get((int) l);
-        bundle.putSerializable("flight", flight);
-        bundle.putString("dateFrom", dateFrom);
-        bundle.putSerializable("fromCity", fromCity);
-        bundle.putSerializable("toCity", toCity);
-        intent.putExtras(bundle);
-        startActivityForResult(intent, VIEW_TRAIN_ITEM); //查看某趟列车
+        ToastUtil.show(getApplicationContext(), "查看某各航班 " + l);
+//        Intent intent = new Intent(getApplicationContext(), PlaneItemInfoActivity.class);
+//        Bundle bundle = new Bundle();
+//        PlaneTicketInfoOfChina.FlightInfo flight = list.get((int) l);
+//        bundle.putSerializable("flight", flight);
+//        bundle.putString("dateFrom", dateFrom);
+//        bundle.putSerializable("fromCity", fromCity);
+//        bundle.putSerializable("toCity", toCity);
+//        intent.putExtras(bundle);
+//        startActivityForResult(intent, VIEW_TRAIN_ITEM); //查看某趟列车
     }
 
     private int VIEW_TRAIN_ITEM = 7546; //查看某趟列车
@@ -279,7 +317,7 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
     //按出发时间排序
     private void sortByStartTime() {
         //默认从早到晚排序
-        Collections.sort(list, new Comparator<PlaneTicketInfoOfChina.FlightInfo>() {
+        /*Collections.sort(list, new Comparator<PlaneTicketInfoOfChina.FlightInfo>() {
             public int compare(PlaneTicketInfoOfChina.FlightInfo arg0, PlaneTicketInfoOfChina.FlightInfo arg1) {
                 //1400
                 int hour1 = Integer.parseInt(arg0.depTime.substring(0, 2));
@@ -310,11 +348,11 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
         }else{
             sortStartTimeIncrease = true;
             rbSortTime.setCompoundDrawables(null, drawableSortStartTimeIncrease, null, null);
-        }
+        }*/
     }
 
     private void sortByPrice(){
-        Collections.sort(list, new Comparator<PlaneTicketInfoOfChina.FlightInfo>() {
+        /*Collections.sort(list, new Comparator<PlaneTicketInfoOfChina.FlightInfo>() {
             public int compare(PlaneTicketInfoOfChina.FlightInfo arg0, PlaneTicketInfoOfChina.FlightInfo arg1) {
                 //parPrice:3200
                 ArrayList<PlaneTicketInfoOfChina.SeatItemInfo> seats0 = arg0.getSeatItems();
@@ -337,8 +375,8 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
                     return -1;
                 }
             }
-        });
-        sortStartTimeIncrease = false;
+        });*/
+        /*sortStartTimeIncrease = false;
         if (sortPriceIncrease){ //如果当前是从早到晚，则改变为从晚到早
             Collections.reverse(list);
             //更换图标
@@ -347,21 +385,21 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
         }else{
             sortPriceIncrease = true;
             rbSortPrice.setCompoundDrawables(null, drawableSortPriceIncrease, null, null);
-        }
+        }*/
     }
 
     //获取国内飞机票
     private void getInternetData(){
-        LoadingIndicator.show(PlaneListInternationalActivity.this, getString(R.string.http_notice));
+
         new Thread(){
             @Override
             public void run() {
                 super.run();
                 PlaneTicketInfoInternationalRequest request = new PlaneTicketInfoInternationalRequest(traveltype, fromCity.getCode(), toCity.getCode(),
                         dateFrom.substring(0, dateFrom.indexOf(" ")), dateReturn, stoptype, carrier);
-//                {"head":{"code":"Plane_gjhb"},"field":{"boardpoint":"PEK","offPoint":"CDG","departuredate":"2016-12-02 星期五","stoptype":"A","carrier":"","returndate":""}} //填写返程日期
-//                {"head":{"code":"Plane_gjhb"},"field":{"boardpoint":"PEK","offPoint":"CDG","departuredate":"2016-12-02 星期五","traveltype":"OW","stoptype":"A","carrier":"","returndate":""}} //参数错误
-//                {"head":{"code":"Plane_gjhb"},"field":{"boardpoint":"PEK","offPoint":"BER","departuredate":"2016-12-02","traveltype":"OW","stoptype":"A","carrier":"","returndate":""}} //参数错误?
+//{"head":{"code":"Plane_gjhb"},"field":{"boardpoint":"PEK","offPoint":"CDG","departuredate":"2016-12-02 星期五","stoptype":"A","carrier":"","returndate":""}} //填写返程日期
+//{"head":{"code":"Plane_gjhb"},"field":{"boardpoint":"PEK","offPoint":"CDG","departuredate":"2016-12-02 星期五","traveltype":"OW","stoptype":"A","carrier":"","returndate":""}} //参数错误
+//{"head":{"code":"Plane_gjhb"},"field":{"boardpoint":"PEK","offPoint":"BER","departuredate":"2016-12-02","traveltype":"OW","stoptype":"A","carrier":"","returndate":""}} //参数错误?
                 planeBiz.planeTicketInfoOfInternational(request, new BizGenericCallback<PlaneTicketInternationalInfo>() {
                     @Override
                     public void onCompletion(GenericResponseModel<PlaneTicketInternationalInfo> model) {
@@ -369,12 +407,18 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
                             Message msg = new Message();
                             msg.what = -1;
                             msg.obj = model.headModel.res_arg;
-//                            handler.sendMessage(msg);
+                            handler.sendMessage(msg);
                         }else if ("0000".equals(model.headModel.res_code)){
+                            if (refresh){
+                                info = null;
+                                listData.clear();
+                                listData = null;
+                            }
                             info = model.body;
-//                            list = info.FMap;
-//                            handler.sendEmptyMessage(1);
-//                            LogUtil.e(TAG,"planeTicketInfoInternational =" + info.toString());
+                            list = new ArrayList<>(info.FMap.values());
+                            listData = list;
+                            handler.sendEmptyMessage(1);
+                            LogUtil.e(TAG,"planeTicketInfoInternational =" + info.toString());
                         }
                         LoadingIndicator.cancel();
                     }
@@ -397,6 +441,131 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
         }.start();
 
     }
+
+    private PopupWindowPlaneSortType popSortType;
+    private int sortSelection = 1;
+
+    private void showPopSort() {
+        if (popSortType == null){
+            popSortType = new PopupWindowPlaneSortType(getApplicationContext());
+            popSortType.setOnDismissListener(this);
+        }
+        if (popSortType.isShowing()){
+            popSortType.dismiss();
+        }else{
+            popSortType.showAtLocation(rbSortTime, Gravity.BOTTOM, 0, 0);
+            popSortType.refreshView(sortSelection);
+        }
+    }
+
+
+    private PopupWindowPlanePriceType popPriceType;
+    private int selection = 2; //1：含税总价；2:票价+税价； 默认票价+税价
+
+    private void showPopPrice() {
+        if (popPriceType == null){
+            popPriceType = new PopupWindowPlanePriceType(getApplicationContext());
+            popPriceType.setOnDismissListener(this);
+        }
+        if (popPriceType.isShowing()){
+            popPriceType.dismiss();
+        }else{
+            popPriceType.showAtLocation(rbSortPrice, Gravity.BOTTOM, 0, 0);
+            popPriceType.refreshView(selection);
+        }
+    }
+
+    @Override
+    public void onDismiss() {
+        if (bottomTag == 3) {
+            int newSelection = popPriceType.getSelection();
+            if (selection == newSelection) return;
+            selection = newSelection;
+            if (selection == 1) {
+                rbSortPrice.setText(getString(R.string.plane_flight_tax));
+            } else {
+                rbSortPrice.setText(getString(R.string.plane_flight_separate));
+            }
+            //TODO 重新显示
+            adapter.setPriceType(selection);
+        }else if (bottomTag == 2){
+            int newSortSelection = popSortType.getSelection();
+            if (sortSelection == newSortSelection)  return;
+            sortSelection = newSortSelection;
+            if (sortSelection == 1){ //直飞优先
+                sortDirect();
+            }else if (sortSelection == 2){ //价格 低—>高
+
+            }else if (sortSelection == 3){ //起飞 早—>晚
+
+            }else if (sortSelection == 4){ //起飞 晚—>早
+
+            }else if (sortSelection == 5){ //到达 早—>晚
+
+            }else if (sortSelection == 6){ //到达 晚—>早
+
+            }else if (sortSelection == 7){ //总时长 短—>长
+
+            }
+
+        }else if (bottomTag == 1){
+
+        }
+    }
+
+    private List<PlaneTicketInternationalInfo.PlaneTicketInternationalF> listData = new ArrayList<>();
+    private void sortDirect() { //直飞优先
+//        if (s1.stopPeriod == null || s1.stopPeriod.length() == 0) {
+//        listData =
+//        stoptype = "D"; //"A"所有，"D"直达
+        //单程/往返
+        Collections.sort(listData, new Comparator<PlaneTicketInternationalInfo.PlaneTicketInternationalF>() {
+            @Override
+            public int compare(PlaneTicketInternationalInfo.PlaneTicketInternationalF f1, PlaneTicketInternationalInfo.PlaneTicketInternationalF f2) {
+                PlaneTicketInternationalInfo.PlaneTicketInternationalFS f1s = f1.S1;
+                PlaneTicketInternationalInfo.PlaneTicketInternationalFS f2s = f2.S1;
+                LogUtil .e(TAG, "f1s.transferFrequency = " + f1s.transferFrequency +", f1s.transferFrequency = " + f1s.transferFrequency);
+
+                if (f1s.transferFrequency == null || f1s.transferFrequency.length() == 0){
+                    return -1;
+                }
+                if (f2s.transferFrequency == null || f2s.transferFrequency.length() == 0){
+                    return -1;
+                }
+
+                if (Integer.parseInt(f1s.transferFrequency) > Integer.parseInt(f2s.transferFrequency)){
+                    return 1;
+                }
+
+                return 0;
+            }
+        });
+
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        TAG = null;
+        planeBiz = null;
+        rbScreen = null;
+        rbSortTime = null;
+        rbSortPrice = null;
+//        drawableSortStartTimeIncrease = null;
+//        drawableSortStartTimeDecrease = null;
+        fromCity = null;
+        toCity = null;
+        dateFrom = null;
+        tempTime = null;
+        dateReturn = null;
+        traveltype = null;
+        stoptype = null;
+        carrier = null;
+        handler = null;
+        popPriceType = null;
+    }
+
     /**
     * 获取指定日后 后 dayAddNum 天的 日期
     * @param day  日期，格式为String："2013-9-3";
@@ -416,7 +585,6 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
         String dateOk = simpleDateFormat.format(newDate2);
         return dateOk;
     }
-
 
 
 }
