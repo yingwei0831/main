@@ -10,6 +10,7 @@ import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketCityInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketInfoOfChina;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketInternationalInfo;
+import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.ui.PlaneListActivity;
 import com.jhhy.cuiweitourism.ui.PlaneListInternationalActivity;
 import com.jhhy.cuiweitourism.utils.Utils;
@@ -24,6 +25,7 @@ import java.util.Map;
  */
 public class PlaneListAdapter extends MyBaseAdapter {
 
+    private String TAG = "PlaneListAdapter";
     private int type; //1：国内机票  2：国外机票
     private int singleType = -1; //1:单程 0:往返
     private int priceType; //2:票价+税费；1:含税票价
@@ -94,7 +96,7 @@ public class PlaneListAdapter extends MyBaseAdapter {
                 holder.tvFromAirport.setText(fromCity.getAirportname());
                 holder.tvArrivalTime.setText(s1.toTime);
                 holder.tvArrivalAirport.setText(toCity.getAirportname());
-
+                LogUtil.e(TAG, "s1.transferFrequency = " + s1.transferFrequency);
                 if (s1.transferFrequency == null || s1.transferFrequency.length() == 0) {
                     holder.tvArrivalType.setText(context.getString(R.string.plane_flight_single)); //直达
                 }else{
