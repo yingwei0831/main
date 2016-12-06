@@ -445,13 +445,13 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
     //筛选
     private PopupWindowPlaneOuterScreen popScreen;
     private boolean direct;
-    private int screen1 = 0;
-    private int screen2 = -1;
-    private int screen3 = -1;
-    private int screen4 = -1;
-    private String code2 = "";
-    private String code3 = "";
-    private String code4 = "";
+    private int screenTimePosition = 0;
+    private int screenAirportPosition = -1;
+    private int screenAirlinePosition = -1;
+    private int screenAirCompanyPosition = -1;
+    private String codeAirport = "";
+    private String codeAirline = "";
+    private String codeAirCompany = "";
 
     private void screen() {
         if (popScreen == null){
@@ -461,7 +461,7 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
         if (popScreen.isShowing()){
             popScreen.dismiss();
         }else{
-            popScreen.refreshView(direct, screen1, screen2, screen3, screen4);
+            popScreen.refreshView(direct, screenTimePosition, screenAirportPosition, screenAirlinePosition, screenAirCompanyPosition);
             popScreen.showAtLocation(rbScreen, Gravity.BOTTOM, 0, 0);
         }
 
@@ -556,20 +556,20 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
                 int newScreen2 = popScreen.getS2();
                 int newScreen3 = popScreen.getS3();
                 int newScreen4 = popScreen.getS4();
-                if (newScreen1 != screen1){
-                    screen1 = newScreen1;
+                if (newScreen1 != screenTimePosition){
+                    screenTimePosition = newScreen1;
                 }
-                if (newScreen2 != screen2){
-                    screen2 = newScreen2;
-                    code2 = popScreen.getS2Code();
+                if (newScreen2 != screenAirportPosition){
+                    screenAirportPosition = newScreen2;
+                    codeAirport = popScreen.getS2Code();
                 }
-                if (newScreen3 != screen3){
-                    screen3 = newScreen3;
-                    code3 = popScreen.getS3Code();
+                if (newScreen3 != screenAirlinePosition){
+                    screenAirlinePosition = newScreen3;
+                    codeAirline = popScreen.getS3Code();
                 }
-                if (newScreen4 != screen4){
-                    screen4 = newScreen4;
-                    code4 = popScreen.getS4Code();
+                if (newScreen4 != screenAirCompanyPosition){
+                    screenAirCompanyPosition = newScreen4;
+                    codeAirCompany = popScreen.getS4Code();
                 }
                 sortScreen();
             }
@@ -578,7 +578,27 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
 
     //筛选5个条件
     private void sortScreen() {
-        
+        List<PlaneTicketInternationalInfo.PlaneTicketInternationalF> listSortDirect = new ArrayList<>();
+        List<PlaneTicketInternationalInfo.PlaneTicketInternationalF> listSortTransfer = new ArrayList<>();
+        for (int i = 0; i < list.size(); i ++){
+            PlaneTicketInternationalInfo.PlaneTicketInternationalF item = list.get(i);
+            //直飞，中转
+            if ("0".equals(item.S1.transferFrequency)) {
+                listSortDirect.add(item);
+            } else {
+                listSortTransfer.add(item);
+            }
+            //起飞时间
+
+
+        }
+        if (direct){ //直飞
+            listSortTransfer.clear();
+            listSortTransfer = null;
+        }else{ //中转
+            listSortDirect.clear();
+            listSortDirect = null;
+        }
     }
 
     private void sortConsuming() {
