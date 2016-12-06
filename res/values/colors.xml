@@ -79,6 +79,7 @@
     <color name="colorLineGray2">#d1d1d1</color>
     <color name="colorLineGray3">#EFF2F7</color>
     <color name="colorActionBar">#28ce9d</color>
+    <color name="colorPlaneScreenLight">#D7F6ED</color>
     <color name="colorTrainOrderSuccess">#28CEC4</color>
     <color name="colorTrainOrderSuccessDark">#19b0a7</color>
     <color name="colorCircleBorder">#94E7CE</color>

@@ -332,6 +332,16 @@ public class Utils {
         }
        return 0;
     }
+    public static long getTimeHM(String hourMinute){
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+        try {
+            Date time =  format.parse(hourMinute);
+            return time.getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 
     public static long getTimeYMDH(String date){
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH");
@@ -372,16 +382,16 @@ public class Utils {
         SimpleDateFormat format = new java.text.SimpleDateFormat("yyyy-MM-dd");
         Date beginDate= null;
         Date endDate= null;
-        long minute = 0;
+        long day = 0;
         try {
             beginDate = format.parse(beginDateStr);
             endDate = format.parse(endDateStr);
-            minute = (endDate.getTime() - beginDate.getTime()) / (24*60*60*1000);
+            day = (endDate.getTime() - beginDate.getTime()) / (24*60*60*1000);
         } catch (ParseException e) {
             e.printStackTrace();
         }
 //        System.out.println("相隔的天数="+day);
-        return minute;
+        return day;
     }
 
     //起飞时间，到达时间
@@ -389,11 +399,11 @@ public class Utils {
         SimpleDateFormat format = new java.text.SimpleDateFormat("HHmm");
         Date beginDate= null;
         Date endDate= null;
-        long day = 0; //分钟数
+        long minute = 0; //分钟数
         try {
             beginDate = format.parse(beginDateStr);
             endDate = format.parse(endDateStr);
-            day = (endDate.getTime() - beginDate.getTime()) / (60*1000);
+            minute = (endDate.getTime() - beginDate.getTime()) / (60*1000);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -401,14 +411,14 @@ public class Utils {
 //        String date2 = getTimeStr(endDate.getTime());
 //        LogUtil.e(TAG, "date1 = " + date1 +", date2 = " + date2);
 //        LogUtil.e(TAG, "minute = " + day);
-        if (day < 0){
-            day = 24 * 60 + day;
+        if (minute < 0){
+            minute = 24 * 60 + minute;
         }
-        return getDuration(day);
+        return getDuration(minute);
     }
 
     /**
-     *
+     * 获取连个时间的分钟差
      * @param beginDateStr yyyy-MM-dd HH:mm
      * @param endDateStr yyyy-MM-dd HH:mm
      * @return xx时xx分
@@ -426,6 +436,22 @@ public class Utils {
             e.printStackTrace();
         }
         return getDuration(day);
+    }
+
+    /**
+     * 获取时间的毫秒
+     * @param date
+     * @return
+     */
+    public static long getTimeH(String date){
+        SimpleDateFormat format = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm");
+        try {
+            Date time =  format.parse(date);
+            return time.getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
     /**

@@ -29,7 +29,6 @@ public class PlaneListAdapter extends MyBaseAdapter {
     private int type; //1：国内机票  2：国外机票
     private int singleType = -1; //1:单程 0:往返
     private int priceType; //2:票价+税费；1:含税票价
-    private List listFKey;
 
     private PlaneTicketCityInfo fromCity;
     private PlaneTicketCityInfo toCity;
@@ -44,10 +43,6 @@ public class PlaneListAdapter extends MyBaseAdapter {
     public void setPriceType(int priceType){
         this.priceType = priceType;
         notifyDataSetChanged();
-    }
-
-    public void setOuterFKey(List listFKey){
-        this.listFKey = listFKey;
     }
 
     @Override
@@ -89,7 +84,7 @@ public class PlaneListAdapter extends MyBaseAdapter {
 //            if () //单程
             if (flight != null){
                 PlaneTicketInternationalInfo.PlaneTicketInternationalFS s1 = flight.S1;
-                String fKey = (String) listFKey.get(i);
+                String fKey = flight.F;
                 holder.tvArrivalType.setVisibility(View.VISIBLE);
                 holder.tvConsumingTime.setVisibility(View.VISIBLE);
                 holder.tvStartTime.setText(s1.fromTime);
@@ -111,7 +106,13 @@ public class PlaneListAdapter extends MyBaseAdapter {
                     holder.tvTicketPrice.setText(String.format("￥%s", hf.cabin.baseFare.faceValueTotal)); //票面价 ; 含税总价：hf.cabin.totalFare.taxTotal
                     holder.tvPlaneClass.setText(String.format("税费：￥%s", hf.cabin.passengerType.taxTypeCodeMap.get("XT").price)); //税费xxx; 含税总价；
                 }
-                holder.tvPlaneInfo.setText(String.format("%s%s | %s", s1.flightInfos.get(0).flightNumberCheck, PlaneListInternationalActivity.info.J.get(s1.flightInfos.get(0).flightTypeCheck).typeName, PlaneListInternationalActivity.info.R.get(hf.cabin.passengerType.airportCabinType))); //飞机/舱位 MU5003空客A320(J)|经济舱(R)
+                String[] cabinTypes = hf.cabin.passengerType.airportCabinType.split(",");
+                StringBuffer sb = new StringBuffer();
+                for (String cabinType1 : cabinTypes) {
+                    sb.append(PlaneListInternationalActivity.info.R.get(cabinType1)).append("|");
+                }
+                String cabinType =  sb.toString().substring(0, sb.length()-1);
+                holder.tvPlaneInfo.setText(String.format("%s%s | %s", s1.flightInfos.get(0).flightNumberCheck, PlaneListInternationalActivity.info.J.get(s1.flightInfos.get(0).flightTypeCheck).typeName, cabinType)); //飞机/舱位 MU5003空客A320(J)|经济舱(R)
             }
         }
         return view;

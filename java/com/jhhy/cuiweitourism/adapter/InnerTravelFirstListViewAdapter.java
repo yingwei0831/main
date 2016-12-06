@@ -69,6 +69,9 @@ public class InnerTravelFirstListViewAdapter extends BaseAdapter {
         mPosition = position;
     }
 
+    public int getSelection(){
+        return mPosition;
+    }
     public String getCurrentPositionItem() {
         return list.get(mPosition);
     }

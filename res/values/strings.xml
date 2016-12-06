@@ -350,11 +350,23 @@
     <string name="plane_flight_price_sort_recommend">推荐排序</string>
     <string name="plane_flight_price_sort_direct">推荐排序 (直飞优先)</string>
     <string name="plane_flight_price_sort_increase">价格 低—>高</string>
+    <string name="plane_flight_price_sort_increase_txt">价格从低到高</string>
     <string name="plane_flight_price_sort_from_increase">起飞 早—>晚</string>
+    <string name="plane_flight_price_sort_from_increase_txt">起飞从早到晚</string>
     <string name="plane_flight_price_sort_from_decrease">起飞 晚—>早</string>
+    <string name="plane_flight_price_sort_from_decrease_txt">起飞从晚到早</string>
     <string name="plane_flight_price_sort_arrival_increase">到达 早—>晚</string>
+    <string name="plane_flight_price_sort_arrival_increase_txt">到达从早到晚</string>
     <string name="plane_flight_price_sort_arrival_decrease">到达 晚—>早</string>
+    <string name="plane_flight_price_sort_arrival_decrease_txt">到达从晚到早</string>
     <string name="plane_flight_price_sort_consuming_increase">总时长 短—>长</string>
+    <string name="plane_flight_price_sort_consuming_increase_txt">总时长从短到长</string>
+    <string name="plane_flight_screen_direct">仅看直飞</string>
+    <string name="plane_flight_screen_no">不限</string>
+    <string name="plane_flight_screen_time_1">上午 (00:00~12:00)</string>
+    <string name="plane_flight_screen_time_2">中午 (12:00~14:00)</string>
+    <string name="plane_flight_screen_time_3">下午 (14:00~18:00)</string>
+    <string name="plane_flight_screen_time_4">晚上 (18:00~24:00)</string>
 
 
     <!--XScrollView-->

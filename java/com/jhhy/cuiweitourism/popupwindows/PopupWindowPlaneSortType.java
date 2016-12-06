@@ -74,6 +74,7 @@ public class PopupWindowPlaneSortType extends PopupWindow implements View.OnClic
     }
 
     public void refreshView(int tag){
+        this.selection = tag;
         if (tag == 1){
             radioButtonSortDefault.setChecked(true);
         } else if (2 == tag){
@@ -94,10 +95,10 @@ public class PopupWindowPlaneSortType extends PopupWindow implements View.OnClic
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            case R.id.rb_plane_price_type_tax_total:
+            case R.id.rb_plane_price_sort_direct:
                 selection = 1;
                 break;
-            case R.id.rb_plane_price_type_separate_price:
+            case R.id.rb_plane_price_increase:
                 selection = 2;
                 break;
             case R.id.rb_plane_price_from_increase:

@@ -1,5 +1,7 @@
 package com.jhhy.cuiweitourism.net.models.ResponseModel;
 
+import com.jhhy.cuiweitourism.moudle.Collection;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -7,7 +9,7 @@ import java.util.Map;
 /**
  * Created by birney on 2016-10-11.
  */
-public class PlaneTicketInternationalInfo {
+public class PlaneTicketInternationalInfo extends Collection{
 
     public static class AirportInfo{
         public String airportCode;      //        "机场三字码"
@@ -51,7 +53,7 @@ public class PlaneTicketInternationalInfo {
 
 
     public static class AircraftTypeInfo{
-//        public String typeCode;//    "机型代码"
+        public String typeCode;//    "机型代码"
         public String typeName;//    :"机型名称"
         public String typeNum; //    ,"型号",
         public String airframe;//    "机体",(窄体)
@@ -61,7 +63,7 @@ public class PlaneTicketInternationalInfo {
         @Override
         public String toString() {
             return "AircraftTypeInfo{" +
-//                    "typeCode='" + typeCode + '\'' +
+                    "typeCode='" + typeCode + '\'' +
                     ", typeName='" + typeName + '\'' +
                     ", typeNum='" + typeNum + '\'' +
                     ", airframe='" + airframe + '\'' +
@@ -105,21 +107,23 @@ public class PlaneTicketInternationalInfo {
                 '}';
     }
 
-    public static class PlaneTicketInternationalF{ //航段列表
+    public static class PlaneTicketInternationalF  extends Collection{ //航段列表
+        public String F;
         public PlaneTicketInternationalFS S1; //去程
         public PlaneTicketInternationalFS S2; //返程
 
         @Override
         public String toString() {
             return "PlaneTicketInternationalF{" +
-                    "S1=" + S1 +
+                    "F='" + F + '\'' +
+                    ", S1=" + S1 +
                     ", S2=" + S2 +
                     '}';
         }
     }
     public Map<String, PlaneTicketInternationalF> FMap;
 
-    public static class PlaneTicketInternationalFS{
+    public static class PlaneTicketInternationalFS  extends Collection{
         public String AVCode; // "AV编号(查询舱位时需要回传)",
         public String planeInfoNode; // "航班信息节点(查询舱位时需要回传)",
         public String fromAirportCode; // "起飞机场代码(查询舱位时需要回传)",
@@ -158,7 +162,7 @@ public class PlaneTicketInternationalInfo {
                     '}';
         }
     }
-    public static class FlightInfo{ //每趟航班信息
+    public static class FlightInfo  extends Collection{ //每趟航班信息
         public String airlineCompanyCheck; //"航司(验价时需要回传)",
         public String flightNumberCheck; //"航班号(验价时需要回传)",
         public String fromAirportCodeCheck; //"起飞机场代码(验价时需要回传)",
@@ -295,7 +299,7 @@ public class PlaneTicketInternationalInfo {
 //        }
 //    }
 
-    public static class PlaneTicketInternationalHF{
+    public static class PlaneTicketInternationalHF  extends Collection{
         public String aircraftCabin;
         public PlaneTicketInternationalHFCabin cabin;
 
@@ -309,7 +313,7 @@ public class PlaneTicketInternationalInfo {
     }
     public Map<String, PlaneTicketInternationalHF> HMap; //<F1, PlaneTicketInternationalHF>
 
-    public static class PlaneTicketInternationalHFCabin{
+    public static class PlaneTicketInternationalHFCabin  extends Collection{
         public String passengerTypeKey; //乘客类型(ADT/CHD/INF)
         public PassengerType passengerType; //乘客类型
         public BaseFare baseFare; //"票面价总计金额","货币类型"

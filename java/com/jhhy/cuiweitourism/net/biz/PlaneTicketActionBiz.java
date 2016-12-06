@@ -131,7 +131,7 @@ public class PlaneTicketActionBiz extends BasicActionBiz {
                         Map.Entry<String,ArrayList<String>> entry = (Map.Entry<String,ArrayList<String>>) iter.next();
                         ArrayList<String> value = entry.getValue();
                         PlaneTicketInternationalInfo.AircraftTypeInfo aircraft = new PlaneTicketInternationalInfo.AircraftTypeInfo();
-//                        aircraft.typeCode = entry.getKey();
+                        aircraft.typeCode = entry.getKey();
                         aircraft.typeName = value.get(0);
                         aircraft.typeNum = value.get(1);
                         aircraft.airframe = value.get(2);
@@ -145,7 +145,6 @@ public class PlaneTicketActionBiz extends BasicActionBiz {
 
                 if(map.containsKey("A")) {
                     LinkedTreeMap<String, LinkedTreeMap<String, ArrayList<String>>> content = (LinkedTreeMap<String, LinkedTreeMap<String, ArrayList<String>>>) map.get("A");
-                    ;
                     Iterator iter = content.entrySet().iterator();
                     ArrayList<PlaneTicketInternationalInfo.AirlineCompanyInfo> airlineCompanyInfos = new ArrayList<>();
                     while (iter.hasNext()) {
@@ -182,7 +181,7 @@ public class PlaneTicketActionBiz extends BasicActionBiz {
                     for (String fKey: content.keySet()){ //F1
                         PlaneTicketInternationalInfo.PlaneTicketInternationalF fn = new PlaneTicketInternationalInfo.PlaneTicketInternationalF();
                         LinkedTreeMap<String, ArrayList<Object>> fContent = content.get(fKey);
-
+                        fn.F = fKey;
                         if (fContent.containsKey("S1")){ //S1
                             ArrayList sContent = fContent.get("S1");
                             ArrayList sContent1 = (ArrayList) sContent.get(0);

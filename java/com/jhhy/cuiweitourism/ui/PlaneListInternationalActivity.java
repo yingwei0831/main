@@ -30,6 +30,7 @@ import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketInfoOfChina;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketInternationalInfo;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
+import com.jhhy.cuiweitourism.popupwindows.PopupWindowPlaneOuterScreen;
 import com.jhhy.cuiweitourism.popupwindows.PopupWindowPlanePriceType;
 import com.jhhy.cuiweitourism.popupwindows.PopupWindowPlaneSortType;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
@@ -43,7 +44,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 public class PlaneListInternationalActivity extends BaseActionBarActivity implements  AdapterView.OnItemClickListener, PopupWindow.OnDismissListener //,RadioGroup.OnCheckedChangeListener
 {
@@ -106,7 +110,6 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
                     dateFrom = tempTime;
                     tvCurrentDay.setText(dateFrom);
                     adapter.setData(listData);
-                    adapter.setOuterFKey(new ArrayList(info.FMap.keySet()));
                     adapter.notifyDataSetChanged();
                     break;
             }
@@ -193,6 +196,7 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
 //        bottomRg = (RadioGroup) findViewById(R.id.rg_train_list);
         rbSortTime = (RadioButton) findViewById(R.id.rb_plane_start_time);
         rbSortTime.setText(getString(R.string.plane_flight_price_sort_recommend));
+        rbSortTime.setTextColor(Color.WHITE);
 
         rbSortPrice = (RadioButton) findViewById(R.id.rb_plane_price);
         rbSortPrice.setText(getString(R.string.plane_flight_separate)); //默认：票价+税费
@@ -262,10 +266,6 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
     }
 
 
-    //筛选
-    private void screen() {
-
-    }
 
 //    private void setRbBg() {
 //        rbSortTime.setCompoundDrawables(null, timeDrawable, null, null);
@@ -442,6 +442,31 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
 
     }
 
+    //筛选
+    private PopupWindowPlaneOuterScreen popScreen;
+    private boolean direct;
+    private int screen1 = 0;
+    private int screen2 = -1;
+    private int screen3 = -1;
+    private int screen4 = -1;
+    private String code2 = "";
+    private String code3 = "";
+    private String code4 = "";
+
+    private void screen() {
+        if (popScreen == null){
+            popScreen = new PopupWindowPlaneOuterScreen(getApplicationContext());
+            popScreen.setOnDismissListener(this);
+        }
+        if (popScreen.isShowing()){
+            popScreen.dismiss();
+        }else{
+            popScreen.refreshView(direct, screen1, screen2, screen3, screen4);
+            popScreen.showAtLocation(rbScreen, Gravity.BOTTOM, 0, 0);
+        }
+
+    }
+
     private PopupWindowPlaneSortType popSortType;
     private int sortSelection = 1;
 
@@ -477,9 +502,11 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
 
     @Override
     public void onDismiss() {
+        LogUtil.e(TAG, "bottomTag = " + bottomTag);
         if (bottomTag == 3) {
             int newSelection = popPriceType.getSelection();
-            if (selection == newSelection) return;
+            LogUtil.e(TAG, "selection" + selection + ", newSelection = " + newSelection);
+//            if (selection == newSelection) return;
             selection = newSelection;
             if (selection == 1) {
                 rbSortPrice.setText(getString(R.string.plane_flight_tax));
@@ -490,27 +517,152 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
             adapter.setPriceType(selection);
         }else if (bottomTag == 2){
             int newSortSelection = popSortType.getSelection();
-            if (sortSelection == newSortSelection)  return;
+            LogUtil.e(TAG, "sortSelection = " + sortSelection + ", newSortSelection = " + newSortSelection);
+//            if (sortSelection == newSortSelection)  return;
             sortSelection = newSortSelection;
             if (sortSelection == 1){ //直飞优先
                 sortDirect();
+                rbSortTime.setText(getString(R.string.plane_flight_price_sort_recommend));
             }else if (sortSelection == 2){ //价格 低—>高
-
+                sortPrice();
+                rbSortTime.setText(getString(R.string.plane_flight_price_sort_increase_txt));
             }else if (sortSelection == 3){ //起飞 早—>晚
-
+                sortFromTimeIncrease = 1;
+                sortFromTime();
+                rbSortTime.setText(getString(R.string.plane_flight_price_sort_from_increase_txt));
             }else if (sortSelection == 4){ //起飞 晚—>早
-
+                sortFromTimeIncrease = -1;
+                sortFromTime();
+                rbSortTime.setText(getString(R.string.plane_flight_price_sort_from_decrease_txt));
             }else if (sortSelection == 5){ //到达 早—>晚
-
+                sortArrivalTimeIncrease = 1;
+                sortArrivalTime();
+                rbSortTime.setText(getString(R.string.plane_flight_price_sort_arrival_increase_txt));
             }else if (sortSelection == 6){ //到达 晚—>早
-
+                sortArrivalTimeIncrease = -1;
+                sortArrivalTime();
+                rbSortTime.setText(getString(R.string.plane_flight_price_sort_arrival_decrease_txt));
             }else if (sortSelection == 7){ //总时长 短—>长
-
+                sortConsuming();
+                rbSortTime.setText(getString(R.string.plane_flight_price_sort_consuming_increase_txt));
             }
-
+            adapter.setData(listData);
+            adapter.notifyDataSetChanged();
         }else if (bottomTag == 1){
-
+            boolean commit = popScreen.isCommit();
+            if (commit){
+                direct = popScreen.isDirect();
+                int newScreen1 = popScreen.getS1();
+                int newScreen2 = popScreen.getS2();
+                int newScreen3 = popScreen.getS3();
+                int newScreen4 = popScreen.getS4();
+                if (newScreen1 != screen1){
+                    screen1 = newScreen1;
+                }
+                if (newScreen2 != screen2){
+                    screen2 = newScreen2;
+                    code2 = popScreen.getS2Code();
+                }
+                if (newScreen3 != screen3){
+                    screen3 = newScreen3;
+                    code3 = popScreen.getS3Code();
+                }
+                if (newScreen4 != screen4){
+                    screen4 = newScreen4;
+                    code4 = popScreen.getS4Code();
+                }
+                sortScreen();
+            }
         }
+    }
+
+    //筛选5个条件
+    private void sortScreen() {
+        
+    }
+
+    private void sortConsuming() {
+        Collections.sort(listData, new Comparator<PlaneTicketInternationalInfo.PlaneTicketInternationalF>() {
+            @Override
+            public int compare(PlaneTicketInternationalInfo.PlaneTicketInternationalF f1, PlaneTicketInternationalInfo.PlaneTicketInternationalF f2) {
+                PlaneTicketInternationalInfo.PlaneTicketInternationalFS f1s = f1.S1;
+                PlaneTicketInternationalInfo.PlaneTicketInternationalFS f2s = f2.S1;
+
+                if(Utils.getTimeH(String.format(Locale.getDefault(), "%s %s", f1s.toDate, f1s.toTime)) > Utils.getTimeH(String.format(Locale.getDefault(), "%s %s", f2s.toDate, f2s.toTime))) {
+                    return 1;
+                } else if (Utils.getTimeH(String.format(Locale.getDefault(), "%s %s", f1s.toDate, f1s.toTime)) < Utils.getTimeH(String.format(Locale.getDefault(), "%s %s", f2s.toDate, f2s.toTime))) {
+                    return -1;
+                }
+                return 0;
+            }
+        });
+    }
+
+    private int sortArrivalTimeIncrease = 0;
+    private void sortArrivalTime() {
+        Collections.sort(listData, new Comparator<PlaneTicketInternationalInfo.PlaneTicketInternationalF>() {
+            @Override
+            public int compare(PlaneTicketInternationalInfo.PlaneTicketInternationalF f1, PlaneTicketInternationalInfo.PlaneTicketInternationalF f2) {
+                PlaneTicketInternationalInfo.PlaneTicketInternationalFS f1s = f1.S1;
+                PlaneTicketInternationalInfo.PlaneTicketInternationalFS f2s = f2.S1;
+
+                if(Utils.getTimeHM(f1s.toTime) > Utils.getTimeHM(f2s.toTime)) {
+                    return 1;
+                } else if (Utils.getTimeHM(f1s.toTime) < Utils.getTimeHM(f2s.toTime)) {
+                    return -1;
+                }
+                return 0;
+            }
+        });
+        if (sortArrivalTimeIncrease == -1){
+            Collections.reverse(listData);
+        }
+    }
+
+    private int sortFromTimeIncrease = 0;
+    private void sortFromTime() {
+        Collections.sort(listData, new Comparator<PlaneTicketInternationalInfo.PlaneTicketInternationalF>() {
+            @Override
+            public int compare(PlaneTicketInternationalInfo.PlaneTicketInternationalF f1, PlaneTicketInternationalInfo.PlaneTicketInternationalF f2) {
+                PlaneTicketInternationalInfo.PlaneTicketInternationalFS f1s = f1.S1;
+                PlaneTicketInternationalInfo.PlaneTicketInternationalFS f2s = f2.S1;
+
+                if (Utils.getTimeHM(f1s.fromTime) > Utils.getTimeHM(f2s.fromTime)) {
+                    return 1;
+                } else if (Utils.getTimeHM(f1s.fromTime) < Utils.getTimeHM(f2s.fromTime)) {
+                    return -1;
+                }
+                return 0;
+            }
+        });
+        if (sortFromTimeIncrease == -1){
+            Collections.reverse(listData);
+        }
+    }
+
+    private void sortPrice() {
+        Collections.sort(listData, new Comparator<PlaneTicketInternationalInfo.PlaneTicketInternationalF>() {
+            @Override
+            public int compare(PlaneTicketInternationalInfo.PlaneTicketInternationalF f1, PlaneTicketInternationalInfo.PlaneTicketInternationalF f2) {
+                PlaneTicketInternationalInfo.PlaneTicketInternationalHF hf1 = info.HMap.get(f1.F);
+                PlaneTicketInternationalInfo.PlaneTicketInternationalHF hf2 = info.HMap.get(f2.F);
+                if (selection == 1){ //含税总价排序
+                    if (Integer.parseInt(hf1.cabin.totalFare.taxTotal) > Integer.parseInt(hf2.cabin.totalFare.taxTotal)){
+                        return 1;
+                    }else if(Integer.parseInt(hf1.cabin.totalFare.taxTotal) < Integer.parseInt(hf2.cabin.totalFare.taxTotal)){
+                        return -1;
+                    }
+                }else{ //票价排序
+                    if (Integer.parseInt(hf1.cabin.baseFare.faceValueTotal) > Integer.parseInt(hf2.cabin.baseFare.faceValueTotal)){
+                        return 1;
+                    }else if(Integer.parseInt(hf1.cabin.baseFare.faceValueTotal) < Integer.parseInt(hf2.cabin.baseFare.faceValueTotal)){
+                        return -1;
+                    }
+                }
+                return 0;
+            }
+        });
+
     }
 
     private List<PlaneTicketInternationalInfo.PlaneTicketInternationalF> listData = new ArrayList<>();
@@ -524,23 +676,15 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
             public int compare(PlaneTicketInternationalInfo.PlaneTicketInternationalF f1, PlaneTicketInternationalInfo.PlaneTicketInternationalF f2) {
                 PlaneTicketInternationalInfo.PlaneTicketInternationalFS f1s = f1.S1;
                 PlaneTicketInternationalInfo.PlaneTicketInternationalFS f2s = f2.S1;
-                LogUtil .e(TAG, "f1s.transferFrequency = " + f1s.transferFrequency +", f1s.transferFrequency = " + f1s.transferFrequency);
-
-                if (f1s.transferFrequency == null || f1s.transferFrequency.length() == 0){
-                    return -1;
-                }
-                if (f2s.transferFrequency == null || f2s.transferFrequency.length() == 0){
-                    return -1;
-                }
 
                 if (Integer.parseInt(f1s.transferFrequency) > Integer.parseInt(f2s.transferFrequency)){
                     return 1;
+                }else if (Integer.parseInt(f1s.transferFrequency) < Integer.parseInt(f2s.transferFrequency)){
+                    return -1;
                 }
-
                 return 0;
             }
         });
-
 
     }
 
