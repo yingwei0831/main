@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
@@ -136,6 +137,8 @@ public class TrainCitySelectionActivity extends BaseActivity implements View.OnC
         letterIndexView = (LetterIndexView) findViewById(R.id.phone_LetterIndexView);
         txt_center = (TextView) findViewById(R.id.phone_txt_center);
 
+        RadioGroup radioGroup = (RadioGroup) findViewById(R.id.radio_group_airport);
+        radioGroup.setVisibility(View.GONE);
         //头部
         headerView = View.inflate(this, R.layout.header_city_selection, null);
         //当前城市
@@ -191,6 +194,8 @@ public class TrainCitySelectionActivity extends BaseActivity implements View.OnC
                 if (selectCity == null){
                     setResult(RESULT_CANCELED);
                 }else {
+                    CityRecordDao dao = new CityRecordDao(getApplicationContext());
+                    dao.addTrainCityRecord(selectCity);
                     Intent intent = new Intent();
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("selectCity", selectCity);
@@ -239,7 +244,7 @@ public class TrainCitySelectionActivity extends BaseActivity implements View.OnC
             if (city == null) {
                 city = "北京市";
             }
-            currentCity.setName(city.substring(0, city.indexOf("市")-1));
+            currentCity.setName(city.substring(0, city.indexOf("市")));
         }
         list_all = TrainMainActivity.stations;
     }

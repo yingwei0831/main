@@ -1,28 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/view_parent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.jhhy.cuiweitourism.ui.TrainMainActivity"
-    android:orientation="vertical"
     android:background="@android:color/white"
-    android:id="@+id/view_parent">
+    android:orientation="vertical"
+    tools:context="com.jhhy.cuiweitourism.ui.TrainMainActivity">
 
-    <LinearLayout
+
+    <com.jhhy.cuiweitourism.view.MyScrollView
+        android:id="@+id/viewflipper_myScrollview"
         android:layout_width="match_parent"
-        android:layout_height="120dp">
-        <ImageView
+        android:layout_height="120dp"
+        android:visibility="visible">
+
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@mipmap/travel_icon"
-            android:scaleType="centerCrop"/>
-    </LinearLayout>
+            android:layout_height="120dp">
+
+            <ViewFlipper
+                android:id="@+id/viewflipper"
+                android:layout_width="match_parent"
+                android:layout_height="120dp">
+
+            </ViewFlipper>
+
+            <LinearLayout
+                android:id="@+id/layout_indicator_point"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingBottom="2dp" />
+
+        </FrameLayout>
+    </com.jhhy.cuiweitourism.view.MyScrollView>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:scrollbars="none">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -31,173 +52,193 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="12dp">
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_toLeftOf="@+id/iv_train_exchange"
                     android:orientation="vertical">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:drawableLeft="@mipmap/icon_train_light"
-                        android:text="出发城市"
                         android:drawablePadding="8dp"
-                        android:textSize="16sp"
-                        />
+                        android:text="出发城市"
+                        android:textSize="16sp" />
+
                     <TextView
                         android:id="@+id/tv_train_from_city"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
-                        android:paddingTop="16dp"
-                        android:textSize="24sp"
+                        android:paddingTop="10dp"
                         android:textColor="@android:color/black"
-                        />
+                        android:textSize="22sp" />
                 </LinearLayout>
+
                 <ImageView
                     android:id="@+id/iv_train_exchange"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:padding="16dp"
-                    android:src="@mipmap/icon_exchange"
-                    />
+                    android:padding="10dp"
+                    android:src="@mipmap/icon_exchange" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/iv_train_exchange"
-                    android:orientation="vertical"
-                    android:gravity="right">
+                    android:gravity="right"
+                    android:orientation="vertical">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:drawableLeft="@mipmap/icon_train_light"
-                        android:text="到达城市"
                         android:drawablePadding="8dp"
-                        android:textSize="16sp"
-                        />
+                        android:text="到达城市"
+                        android:textSize="16sp" />
+
                     <TextView
                         android:id="@+id/tv_train_to_city"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_gravity="right"
-                        android:textSize="24sp"
+                        android:paddingTop="10dp"
                         android:textColor="@android:color/black"
-                        android:paddingTop="16dp"
-                        />
+                        android:textSize="22sp" />
                 </LinearLayout>
             </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/colorLineGray2"
                 android:layout_marginLeft="12dp"
-                android:layout_marginRight="12dp"/>
+                android:layout_marginRight="12dp"
+                android:background="@color/colorLineGray2" />
             <!--出发时间-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="12dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@mipmap/icon_train_calendar"
-                    android:text="出发时间"
                     android:drawablePadding="8dp"
-                    android:textSize="16sp"
-                    />
+                    android:text="出发时间"
+                    android:textSize="16sp" />
+
                 <TextView
                     android:id="@+id/tv_train_from_time"
-                    android:layout_marginTop="16dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:drawablePadding="8dp"
-                    android:textSize="24sp"
                     android:textColor="@android:color/black"
-                    />
+                    android:textSize="22sp" />
             </LinearLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/colorLineGray2"
                 android:layout_marginLeft="12dp"
-                android:layout_marginRight="12dp"/>
+                android:layout_marginRight="12dp"
+                android:background="@color/colorLineGray2" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="12dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                >
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@mipmap/icon_train_light"
-                    android:text="车次类型"
                     android:drawablePadding="8dp"
-                    android:textSize="16sp"
-                    />
+                    android:text="车次类型"
+                    android:textSize="16sp" />
+
                 <TextView
                     android:id="@+id/tv_train_type"
-                    android:layout_marginTop="16dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:drawablePadding="8dp"
-                    android:textSize="24sp"
                     android:textColor="@android:color/black"
-                    />
+                    android:textSize="22sp" />
             </LinearLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/colorLineGray2"
                 android:layout_marginLeft="12dp"
-                android:layout_marginRight="12dp"/>
+                android:layout_marginRight="12dp"
+                android:background="@color/colorLineGray2" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="12dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                >
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@mipmap/icon_train_light"
-                    android:text="席别类型"
                     android:drawablePadding="8dp"
-                    android:textSize="16sp"
-                    />
+                    android:text="席别类型"
+                    android:textSize="16sp" />
+
                 <TextView
                     android:id="@+id/tv_train_seat_type"
-                    android:layout_marginTop="16dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:drawablePadding="8dp"
-                    android:textSize="24sp"
                     android:textColor="@android:color/black"
-                    />
+                    android:textSize="22sp" />
             </LinearLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/colorLineGray2"
                 android:layout_marginLeft="12dp"
-                android:layout_marginRight="12dp"/>
+                android:layout_marginRight="12dp"
+                android:background="@color/colorLineGray2" />
         </LinearLayout>
     </ScrollView>
+
     <Button
         android:id="@+id/btn_train_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="12dp"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
         android:layout_marginTop="12dp"
-        android:layout_marginBottom="12dp"
         android:background="@drawable/bg_btn_regist_border_selector"
         android:text="@string/hotel_hotel_search"
         android:textColor="@android:color/white"
-        android:textSize="16sp"
-        android:layout_gravity="bottom"
-        />
+        android:textSize="16sp" />
 </LinearLayout>

@@ -2,6 +2,7 @@ package com.jhhy.cuiweitourism.net.models.ResponseModel;
 
 import com.jhhy.cuiweitourism.moudle.Collection;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +30,7 @@ public class PlaneTicketInternationalInfo extends Collection{
                     '}';
         }
     }
-    public ArrayList<AirportInfo> P; //机场信息列表
+    public Map<String, AirportInfo> P; //机场信息列表
 
 
     public static class AirlineCompanyInfo{
@@ -107,7 +108,7 @@ public class PlaneTicketInternationalInfo extends Collection{
                 '}';
     }
 
-    public static class PlaneTicketInternationalF  extends Collection{ //航段列表
+    public static class PlaneTicketInternationalF  extends Collection implements Serializable{ //航段列表
         public String F;
         public PlaneTicketInternationalFS S1; //去程
         public PlaneTicketInternationalFS S2; //返程
@@ -123,7 +124,7 @@ public class PlaneTicketInternationalInfo extends Collection{
     }
     public Map<String, PlaneTicketInternationalF> FMap;
 
-    public static class PlaneTicketInternationalFS  extends Collection{
+    public static class PlaneTicketInternationalFS  extends Collection implements Serializable{
         public String AVCode; // "AV编号(查询舱位时需要回传)",
         public String planeInfoNode; // "航班信息节点(查询舱位时需要回传)",
         public String fromAirportCode; // "起飞机场代码(查询舱位时需要回传)",
@@ -139,7 +140,7 @@ public class PlaneTicketInternationalInfo extends Collection{
         public String stopPeriod; // "经停时间",
         public ArrayList<Frequency> frequencys; //中转
 
-       public ArrayList<FlightInfo> flightInfos; //可能有多趟航班
+        public ArrayList<FlightInfo> flightInfos; //可能有多趟航班
 
         @Override
         public String toString() {
@@ -162,7 +163,7 @@ public class PlaneTicketInternationalInfo extends Collection{
                     '}';
         }
     }
-    public static class FlightInfo  extends Collection{ //每趟航班信息
+    public static class FlightInfo  extends Collection implements Serializable{ //每趟航班信息
         public String airlineCompanyCheck; //"航司(验价时需要回传)",
         public String flightNumberCheck; //"航班号(验价时需要回传)",
         public String fromAirportCodeCheck; //"起飞机场代码(验价时需要回传)",
@@ -210,7 +211,7 @@ public class PlaneTicketInternationalInfo extends Collection{
                     '}';
         }
     }
-    public static class Frequency{ //中转
+    public static class Frequency implements Serializable{ //中转
         public String frequencyAirport; //"中转机场",
         public String frequencyTerminal; //"中转航站楼"
 
@@ -231,7 +232,7 @@ public class PlaneTicketInternationalInfo extends Collection{
         }
     }
 
-    public static class Stopped{ //经停
+    public static class Stopped implements Serializable{ //经停
         public String stoppedTimes; //"经停次数",
         public String stoppedAirport; //"经停机场",
         public String stoppedPeriod; //"经停时间",

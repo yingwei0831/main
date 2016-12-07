@@ -2,6 +2,7 @@
     <string name="app_name">翠微旅游</string>
 
     <string name="http_notice">网络请求中，请稍后...</string>
+    <string name="logged_notice">请登录后再试</string>
     <string name="developing_notice">正在开发中，敬请期待</string>
     <string name="empty_input">输入不能为空</string>
     <string name="start_activity">开启我的旅程</string>

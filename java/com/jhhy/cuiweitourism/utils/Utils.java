@@ -416,7 +416,21 @@ public class Utils {
         }
         return getDuration(minute);
     }
-
+    //起飞时间，到达时间
+    public static boolean getEqualMinute(String beginDateStr, String endDateStr){
+        SimpleDateFormat format = new java.text.SimpleDateFormat("HH:mm");
+        Date beginDate= null;
+        Date endDate= null;
+        long minute = 0; //分钟数
+        try {
+            beginDate = format.parse(beginDateStr);
+            endDate = format.parse(endDateStr);
+            minute = (endDate.getTime() - beginDate.getTime()) / (60*1000);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return minute > 0;
+    }
     /**
      * 获取连个时间的分钟差
      * @param beginDateStr yyyy-MM-dd HH:mm
@@ -465,7 +479,6 @@ public class Utils {
         LogUtil.e(TAG, "dateStringCurrent = " + dateString);
         return dateString;
     }
-
 
     public static String getTimeFormatHMS(long time){
         StringBuffer sb = new StringBuffer();
@@ -516,48 +529,6 @@ public class Utils {
      * @param t  时间戳
      * @return
      */
-    public static String getStandardDate(long t) {
-        StringBuffer sb = new StringBuffer();
-
-        long time = (System.currentTimeMillis())/1000 - t;
-        long mill = (long) Math.ceil(time /1000);//秒前
-
-        long minute = (long) Math.ceil(time/60/1000.0f);// 分钟前
-
-        long hour = (long) Math.ceil(time/60/60/1000.0f);// 小时
-
-        long day = (long) Math.ceil(time/24/60/60/1000.0f);// 天前
-//        LogUtil.i(TAG, "time = "+time+", mill = " + mill +", minute = "+minute +", hour = "+hour+", day = "+day);
-        if (day - 1 > 0) {
-            sb.append(day + "天");
-        } else if (hour - 1 > 0) {
-            if (hour >= 24) {
-                sb.append("1天");
-            } else {
-                sb.append(hour + "小时");
-            }
-        } else if (minute - 1 > 0) {
-            if (minute == 60) {
-                sb.append("1小时");
-            } else {
-                sb.append(minute + "分钟");
-            }
-        } else if (mill - 1 > 0) {
-            if (mill == 60) {
-                sb.append("1分钟");
-            } else {
-                sb.append(mill + "秒");
-            }
-        } else {
-            sb.append("刚刚");
-        }
-        if (!sb.toString().equals("刚刚")) {
-            sb.append("前");
-        }
-//        LogUtil.i(TAG, sb.toString());
-        return sb.toString();
-    }
-
 
     private static final long ONE_MINUTE = 60000L;
     private static final long ONE_HOUR = 3600000L;
@@ -570,12 +541,6 @@ public class Utils {
     private static final String ONE_DAY_AGO = "天前";
     private static final String ONE_MONTH_AGO = "月前";
     private static final String ONE_YEAR_AGO = "年前";
-
-    /*public static void main(String[] args) throws ParseException {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:m:s");
-        Date date = format.parse("2013-11-11 18:35:35");
-        System.out.println(format(date));
-    }*/
 
     public static String format(Date date) {
         long delta = new Date().getTime() - date.getTime();

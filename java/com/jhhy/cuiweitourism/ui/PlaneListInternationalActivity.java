@@ -287,16 +287,16 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        ToastUtil.show(getApplicationContext(), "查看某各航班 " + l);
-//        Intent intent = new Intent(getApplicationContext(), PlaneItemInfoActivity.class);
-//        Bundle bundle = new Bundle();
-//        PlaneTicketInfoOfChina.FlightInfo flight = list.get((int) l);
+        ToastUtil.show(getApplicationContext(), "查看某各航班 l = " + l + ", i = " + i);
+        Intent intent = new Intent(getApplicationContext(), PlaneItemInfoInternationalActivity.class);
+        Bundle bundle = new Bundle();
+        PlaneTicketInternationalInfo.PlaneTicketInternationalF flight = list.get((int) l);
 //        bundle.putSerializable("flight", flight);
-//        bundle.putString("dateFrom", dateFrom);
-//        bundle.putSerializable("fromCity", fromCity);
-//        bundle.putSerializable("toCity", toCity);
-//        intent.putExtras(bundle);
-//        startActivityForResult(intent, VIEW_TRAIN_ITEM); //查看某趟列车
+        bundle.putString("dateFrom", dateFrom);
+        bundle.putSerializable("fromCity", fromCity);
+        bundle.putSerializable("toCity", toCity);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, VIEW_TRAIN_ITEM); //查看某趟航班
     }
 
     private int VIEW_TRAIN_ITEM = 7546; //查看某趟列车
@@ -309,83 +309,6 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
 
             }
         }
-    }
-
-    private boolean sortStartTimeIncrease = true; //从早到晚,出发时间（默认从早到晚）
-    private boolean sortPriceIncrease = false; //价格从低到高
-
-    //按出发时间排序
-    private void sortByStartTime() {
-        //默认从早到晚排序
-        /*Collections.sort(list, new Comparator<PlaneTicketInfoOfChina.FlightInfo>() {
-            public int compare(PlaneTicketInfoOfChina.FlightInfo arg0, PlaneTicketInfoOfChina.FlightInfo arg1) {
-                //1400
-                int hour1 = Integer.parseInt(arg0.depTime.substring(0, 2));
-                int hour2 = Integer.parseInt(arg1.depTime.substring(0, 2));
-                if (hour1 > hour2) {
-                    return 1;
-                } else if (hour1 == hour2) {
-                    int minute1 = Integer.parseInt(arg0.depTime.substring(2));
-                    int minute2 = Integer.parseInt(arg1.depTime.substring(2));
-                    if (minute1 > minute2) {
-                        return 1;
-                    } else if (minute1 == minute2) {
-                        return 0;
-                    } else {
-                        return -1;
-                    }
-                } else {
-                    return -1;
-                }
-            }
-        });
-        sortPriceIncrease = false;
-        if (sortStartTimeIncrease){ //如果当前是从早到晚，则改变为从晚到早
-            Collections.reverse(list);
-            //更换图标
-            sortStartTimeIncrease = false; //任何一个顺序改变，都变为false
-            rbSortTime.setCompoundDrawables(null, drawableSortStartTimeDecrease, null, null);
-        }else{
-            sortStartTimeIncrease = true;
-            rbSortTime.setCompoundDrawables(null, drawableSortStartTimeIncrease, null, null);
-        }*/
-    }
-
-    private void sortByPrice(){
-        /*Collections.sort(list, new Comparator<PlaneTicketInfoOfChina.FlightInfo>() {
-            public int compare(PlaneTicketInfoOfChina.FlightInfo arg0, PlaneTicketInfoOfChina.FlightInfo arg1) {
-                //parPrice:3200
-                ArrayList<PlaneTicketInfoOfChina.SeatItemInfo> seats0 = arg0.getSeatItems();
-                ArrayList<PlaneTicketInfoOfChina.SeatItemInfo> seats1 = arg1.getSeatItems();
-
-                Collections.sort(seats0);
-                Collections.sort(seats1);
-
-                PlaneTicketInfoOfChina.SeatItemInfo seat0 = seats0.get(0);
-                PlaneTicketInfoOfChina.SeatItemInfo seat1 = seats1.get(0);
-
-                int price0 = Integer.parseInt(seat0.parPrice);
-                int price1 = Integer.parseInt(seat1.parPrice);
-
-                if (price0 > price1) {
-                    return 1;
-                } else if (price0 == price1) {
-                    return 0;
-                } else {
-                    return -1;
-                }
-            }
-        });*/
-        /*sortStartTimeIncrease = false;
-        if (sortPriceIncrease){ //如果当前是从早到晚，则改变为从晚到早
-            Collections.reverse(list);
-            //更换图标
-            sortPriceIncrease = false; //任何一个顺序改变，都变为false
-            rbSortPrice.setCompoundDrawables(null, drawableSortPriceDecrease, null, null);
-        }else{
-            sortPriceIncrease = true;
-            rbSortPrice.setCompoundDrawables(null, drawableSortPriceIncrease, null, null);
-        }*/
     }
 
     //获取国内飞机票
@@ -504,101 +427,206 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
     public void onDismiss() {
         LogUtil.e(TAG, "bottomTag = " + bottomTag);
         if (bottomTag == 3) {
-            int newSelection = popPriceType.getSelection();
-            LogUtil.e(TAG, "selection" + selection + ", newSelection = " + newSelection);
-//            if (selection == newSelection) return;
-            selection = newSelection;
+            selection = popPriceType.getSelection();
             if (selection == 1) {
                 rbSortPrice.setText(getString(R.string.plane_flight_tax));
             } else {
                 rbSortPrice.setText(getString(R.string.plane_flight_separate));
             }
-            //TODO 重新显示
             adapter.setPriceType(selection);
-        }else if (bottomTag == 2){
-            int newSortSelection = popSortType.getSelection();
-            LogUtil.e(TAG, "sortSelection = " + sortSelection + ", newSortSelection = " + newSortSelection);
-//            if (sortSelection == newSortSelection)  return;
-            sortSelection = newSortSelection;
-            if (sortSelection == 1){ //直飞优先
-                sortDirect();
-                rbSortTime.setText(getString(R.string.plane_flight_price_sort_recommend));
-            }else if (sortSelection == 2){ //价格 低—>高
-                sortPrice();
-                rbSortTime.setText(getString(R.string.plane_flight_price_sort_increase_txt));
-            }else if (sortSelection == 3){ //起飞 早—>晚
-                sortFromTimeIncrease = 1;
-                sortFromTime();
-                rbSortTime.setText(getString(R.string.plane_flight_price_sort_from_increase_txt));
-            }else if (sortSelection == 4){ //起飞 晚—>早
-                sortFromTimeIncrease = -1;
-                sortFromTime();
-                rbSortTime.setText(getString(R.string.plane_flight_price_sort_from_decrease_txt));
-            }else if (sortSelection == 5){ //到达 早—>晚
-                sortArrivalTimeIncrease = 1;
-                sortArrivalTime();
-                rbSortTime.setText(getString(R.string.plane_flight_price_sort_arrival_increase_txt));
-            }else if (sortSelection == 6){ //到达 晚—>早
-                sortArrivalTimeIncrease = -1;
-                sortArrivalTime();
-                rbSortTime.setText(getString(R.string.plane_flight_price_sort_arrival_decrease_txt));
-            }else if (sortSelection == 7){ //总时长 短—>长
-                sortConsuming();
-                rbSortTime.setText(getString(R.string.plane_flight_price_sort_consuming_increase_txt));
+        } else {
+            if (bottomTag == 2){ //排序
+                sortSelection = popSortType.getSelection();
             }
+
+            if (bottomTag == 1) { //筛选
+                boolean commit = popScreen.isCommit();
+                if (commit) {
+                    direct = popScreen.isDirect();
+                    int newScreenTimePosition = popScreen.getS1();
+                    int newScreenAirportPosition = popScreen.getS2();
+                    int newScreenAirlinePosition = popScreen.getS3();
+                    int newScreenAirCompanyPosition = popScreen.getS4();
+                    if (newScreenTimePosition != screenTimePosition) {
+                        screenTimePosition = newScreenTimePosition;
+                    }
+                    if (newScreenAirportPosition != screenAirportPosition) {
+                        screenAirportPosition = newScreenAirportPosition;
+                        if (screenAirportPosition == -1) {
+                            codeAirport = "";
+                        } else {
+                            codeAirport = popScreen.getS2Code();
+                        }
+                    }
+                    if (newScreenAirlinePosition != screenAirlinePosition) {
+                        screenAirlinePosition = newScreenAirlinePosition;
+                        if (screenAirlinePosition == -1) {
+                            codeAirline = "";
+                        } else {
+                            codeAirline = popScreen.getS3Code();
+                        }
+                    }
+                    if (newScreenAirCompanyPosition != screenAirCompanyPosition) {
+                        screenAirCompanyPosition = newScreenAirCompanyPosition;
+                        if (screenAirCompanyPosition == -1) {
+                            codeAirCompany = "";
+                        } else {
+                            codeAirCompany = popScreen.getS4Code();
+                        }
+                    }
+                }
+            }
+            LogUtil.e(TAG, "direct = " + direct + "codeAirport = " + codeAirport + ", codeAirline = " + codeAirline + ", codeAirCompany = " + codeAirCompany);
+            //筛选
+            listData = sortScreen();
+            //排序
+            checkSort();
             adapter.setData(listData);
             adapter.notifyDataSetChanged();
-        }else if (bottomTag == 1){
-            boolean commit = popScreen.isCommit();
-            if (commit){
-                direct = popScreen.isDirect();
-                int newScreen1 = popScreen.getS1();
-                int newScreen2 = popScreen.getS2();
-                int newScreen3 = popScreen.getS3();
-                int newScreen4 = popScreen.getS4();
-                if (newScreen1 != screenTimePosition){
-                    screenTimePosition = newScreen1;
-                }
-                if (newScreen2 != screenAirportPosition){
-                    screenAirportPosition = newScreen2;
-                    codeAirport = popScreen.getS2Code();
-                }
-                if (newScreen3 != screenAirlinePosition){
-                    screenAirlinePosition = newScreen3;
-                    codeAirline = popScreen.getS3Code();
-                }
-                if (newScreen4 != screenAirCompanyPosition){
-                    screenAirCompanyPosition = newScreen4;
-                    codeAirCompany = popScreen.getS4Code();
-                }
-                sortScreen();
-            }
+        }
+    }
+
+    private void checkSort() {
+        if (sortSelection == 1){ //直飞优先
+            sortDirect();
+            rbSortTime.setText(getString(R.string.plane_flight_price_sort_recommend));
+        }else if (sortSelection == 2){ //价格 低—>高
+            sortPrice();
+            rbSortTime.setText(getString(R.string.plane_flight_price_sort_increase_txt));
+        }else if (sortSelection == 3){ //起飞 早—>晚
+            sortFromTimeIncrease = 1;
+            sortFromTime();
+            rbSortTime.setText(getString(R.string.plane_flight_price_sort_from_increase_txt));
+        }else if (sortSelection == 4){ //起飞 晚—>早
+            sortFromTimeIncrease = -1;
+            sortFromTime();
+            rbSortTime.setText(getString(R.string.plane_flight_price_sort_from_decrease_txt));
+        }else if (sortSelection == 5){ //到达 早—>晚
+            sortArrivalTimeIncrease = 1;
+            sortArrivalTime();
+            rbSortTime.setText(getString(R.string.plane_flight_price_sort_arrival_increase_txt));
+        }else if (sortSelection == 6){ //到达 晚—>早
+            sortArrivalTimeIncrease = -1;
+            sortArrivalTime();
+            rbSortTime.setText(getString(R.string.plane_flight_price_sort_arrival_decrease_txt));
+        }else if (sortSelection == 7){ //总时长 短—>长
+            sortConsuming();
+            rbSortTime.setText(getString(R.string.plane_flight_price_sort_consuming_increase_txt));
         }
     }
 
     //筛选5个条件
-    private void sortScreen() {
-        List<PlaneTicketInternationalInfo.PlaneTicketInternationalF> listSortDirect = new ArrayList<>();
-        List<PlaneTicketInternationalInfo.PlaneTicketInternationalF> listSortTransfer = new ArrayList<>();
+    private List<PlaneTicketInternationalInfo.PlaneTicketInternationalF> sortScreen() {
+        List<PlaneTicketInternationalInfo.PlaneTicketInternationalF> listDirect = new ArrayList<>();
         for (int i = 0; i < list.size(); i ++){
             PlaneTicketInternationalInfo.PlaneTicketInternationalF item = list.get(i);
             //直飞，中转
-            if ("0".equals(item.S1.transferFrequency)) {
-                listSortDirect.add(item);
-            } else {
-                listSortTransfer.add(item);
+            if (direct && "0".equals(item.S1.transferFrequency)) { //直飞
+                listDirect.add(item);
+            } else { //中转
+                listDirect.add(item);
             }
-            //起飞时间
-
-
         }
-        if (direct){ //直飞
-            listSortTransfer.clear();
-            listSortTransfer = null;
-        }else{ //中转
-            listSortDirect.clear();
-            listSortDirect = null;
+        //出发时间
+        listDirect = screenTime(listDirect);
+        //机场
+        if (codeAirport != null && codeAirport.length() != 0){
+            listDirect = screenAirport(listDirect);
         }
+        //机型
+        if (codeAirline != null && codeAirline.length() != 0){
+            listDirect = screenAirline(listDirect);
+        }
+        //航空公司
+        if (codeAirCompany != null && codeAirCompany.length() != 0){
+            listDirect = screenAirCompany(listDirect);
+        }
+        return listDirect;
+    }
+
+    /**
+     * 航空公司
+     * @param listDirect
+     * @return
+     */
+    private List<PlaneTicketInternationalInfo.PlaneTicketInternationalF> screenAirCompany(List<PlaneTicketInternationalInfo.PlaneTicketInternationalF> listDirect) {
+        List<PlaneTicketInternationalInfo.PlaneTicketInternationalF> listAirCompany = new ArrayList<>();
+        for (int i = 0; i < listDirect.size(); i++){
+            PlaneTicketInternationalInfo.PlaneTicketInternationalF itemF = listDirect.get(i);
+            if (codeAirCompany.equals(itemF.S1.flightInfos.get(0).airlineCompanyCheck)){
+                listAirCompany.add(itemF);
+            }
+        }
+        return listAirCompany;
+    }
+
+    /**
+     * 机型
+     * @param listDirect
+     * @return
+     */
+    private List<PlaneTicketInternationalInfo.PlaneTicketInternationalF> screenAirline(List<PlaneTicketInternationalInfo.PlaneTicketInternationalF> listDirect) {
+        List<PlaneTicketInternationalInfo.PlaneTicketInternationalF> listAirline = new ArrayList<>();
+        for (int i = 0; i < listDirect.size(); i++){
+            PlaneTicketInternationalInfo.PlaneTicketInternationalF itemF = listDirect.get(i);
+            if (codeAirline.equals(itemF.S1.flightInfos.get(0).flightTypeCheck)){
+                listAirline.add(itemF);
+            }
+        }
+        return listAirline;
+    }
+
+    /**
+     * 机场
+     * @param listDirect
+     * @return
+     */
+    private List<PlaneTicketInternationalInfo.PlaneTicketInternationalF> screenAirport(List<PlaneTicketInternationalInfo.PlaneTicketInternationalF> listDirect) {
+        List<PlaneTicketInternationalInfo.PlaneTicketInternationalF> listAirport = new ArrayList<>();
+        for (int i = 0; i < listDirect.size(); i++){
+            PlaneTicketInternationalInfo.PlaneTicketInternationalF itemF = listDirect.get(i);
+            if (codeAirport.equals(itemF.S1.fromAirportCode)){
+                listAirport.add(itemF);
+            }
+        }
+        return listAirport;
+    }
+
+    /**
+     * 出发时间筛选
+     * @param listDirect
+     * @return
+     */
+    private List<PlaneTicketInternationalInfo.PlaneTicketInternationalF> screenTime(List<PlaneTicketInternationalInfo.PlaneTicketInternationalF> listDirect) {
+        //起飞时间0,1,2,3,4
+        if (screenTimePosition == 0){
+            return listDirect;
+        } else {
+            return screenTimeItem(listDirect);
+        }
+    }
+
+    private List<PlaneTicketInternationalInfo.PlaneTicketInternationalF> screenTimeItem(List<PlaneTicketInternationalInfo.PlaneTicketInternationalF> listDirect) {
+        List<PlaneTicketInternationalInfo.PlaneTicketInternationalF> listTime = new ArrayList<>();
+        for(int i = 0; i < listDirect.size(); i++) {
+            PlaneTicketInternationalInfo.PlaneTicketInternationalF itemF = listDirect.get(i);
+            String fromTime = itemF.S1.fromTime;
+            LogUtil.e(TAG, "fromTime = " + fromTime);
+            if (screenTimePosition == 1 && Utils.getEqualMinute(itemF.S1.fromTime, "12:00")){ //00:00~12:00
+                LogUtil.e(TAG, "screenTimePosition = " + screenTimePosition +"，fromTime = " + fromTime);
+                listTime.add(itemF);
+            } else if (screenTimePosition == 2 && Utils.getEqualMinute(itemF.S1.fromTime, "14:00") && !Utils.getEqualMinute(itemF.S1.fromTime, "12:00")) { //12:00~14:00
+                LogUtil.e(TAG, "screenTimePosition = " + screenTimePosition +"，fromTime = " + fromTime);
+                listTime.add(itemF);
+            } else if (screenTimePosition == 3 && !Utils.getEqualMinute(itemF.S1.fromTime, "14:00") && Utils.getEqualMinute(itemF.S1.fromTime, "18:00")) { //14:00~18:00
+                LogUtil.e(TAG, "screenTimePosition = " + screenTimePosition +"，fromTime = " + fromTime);
+                listTime.add(itemF);
+            } else if (screenTimePosition == 4 && !Utils.getEqualMinute(itemF.S1.fromTime, "18:00") && Utils.getEqualMinute(itemF.S1.fromTime, "24:00")) { //18:00~24:00
+                LogUtil.e(TAG, "screenTimePosition = " + screenTimePosition +"，fromTime = " + fromTime);
+                listTime.add(itemF);
+            }
+        }
+        return listTime;
     }
 
     private void sortConsuming() {

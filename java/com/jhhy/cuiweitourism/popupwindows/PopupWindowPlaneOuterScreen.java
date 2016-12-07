@@ -203,7 +203,7 @@ public class PopupWindowPlaneOuterScreen extends PopupWindow implements OnClickL
         secondListFromTime.add(context.getString(R.string.plane_flight_screen_time_4));
 
         secondListAirport = new ArrayList<>();
-        secondListAirport.addAll(PlaneListInternationalActivity.info.P);
+        secondListAirport.addAll(PlaneListInternationalActivity.info.P.values());
 
         secondListAirplane = new ArrayList<>();
         secondListAirplane.addAll(PlaneListInternationalActivity.info.J.values());
@@ -311,4 +311,6 @@ public class PopupWindowPlaneOuterScreen extends PopupWindow implements OnClickL
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         direct = b;
     }
+
+
 }

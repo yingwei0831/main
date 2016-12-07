@@ -16,6 +16,7 @@
             android:layout_height="wrap_content"
             android:text="@string/tab1_city_selection_recommend"
             android:textSize="16sp"
+            android:textColor="@android:color/black"
             />
 
         <LinearLayout
@@ -53,6 +54,7 @@
             android:layout_height="wrap_content"
             android:text="@string/tab1_city_selection_record"
             android:textSize="16sp"
+            android:textColor="@android:color/black"
             />
 
         <LinearLayout
@@ -86,6 +88,7 @@
             android:layout_height="wrap_content"
             android:text="@string/tab1_city_selection_hot"
             android:textSize="16sp"
+            android:textColor="@android:color/black"
             />
 
         <com.jhhy.cuiweitourism.view.MyGridView

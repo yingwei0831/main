@@ -56,7 +56,5 @@ public abstract class TrainContactsItem extends RelativeLayout implements View.O
         ivTrash.setOnClickListener(this);
     }
 
-    public interface CallBack{
-        public void onTrashClick(int position);
-    }
+
 }

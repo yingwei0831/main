@@ -108,7 +108,7 @@ public class PlaneTicketActionBiz extends BasicActionBiz {
                 if (map.containsKey("P")){
                     LinkedTreeMap<String,LinkedTreeMap<String,ArrayList<String>>> content =  (LinkedTreeMap<String,LinkedTreeMap<String,ArrayList<String>>>)map.get("P");;
                     Iterator iter = content.entrySet().iterator();
-                    ArrayList<PlaneTicketInternationalInfo.AirportInfo> aiports = new ArrayList<>();
+                    Map<String, PlaneTicketInternationalInfo.AirportInfo> aiports = new HashMap<>();
                     while (iter.hasNext()) {
                         Map.Entry<String,ArrayList<String>> entry = (Map.Entry<String,ArrayList<String>>) iter.next();
                         ArrayList<String> value = entry.getValue();
@@ -118,7 +118,7 @@ public class PlaneTicketActionBiz extends BasicActionBiz {
                         airportInfo.fullName = value.get(1);
                         airportInfo.city = value.get(2);
                         airportInfo.cityCode = value.get(3);
-                        aiports.add(airportInfo);
+                        aiports.put(entry.getKey(), airportInfo);
                     }
                     info.P = aiports;
                 }

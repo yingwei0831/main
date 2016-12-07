@@ -210,17 +210,22 @@ public class TrainEditOrderActivity extends AppCompatActivity implements View.On
                 selectSeatType();
                 break;
             case R.id.tv_train_add_passenger: //添加乘客
-                Intent intent = new Intent(getApplicationContext(), SelectCustomActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putInt("type", 13);
+                if (MainActivity.logged) {
+                    Intent intent = new Intent(getApplicationContext(), SelectCustomActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("type", 13);
 //                if (listContact.size()== 0 && Integer.parseInt(seatInfo.seatCount))
-                if (listContact.size() == 0){
-                    bundle.putInt("number", 10);
-                }else{
-                    bundle.putInt("number", 10 - listContact.size());
+                    if (listContact.size() == 0) {
+                        bundle.putInt("number", 10);
+                    } else {
+                        bundle.putInt("number", 10 - listContact.size());
+                    }
+                    intent.putExtras(bundle);
+                    startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_SELECT_CONTACT);
+                } else {
+                    ToastUtil.show(getApplicationContext(), getString(R.string.logged_notice));
+
                 }
-                intent.putExtras(bundle);
-                startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_SELECT_CONTACT);
                 break;
             case R.id.btn_edit_order_pay: //立即支付
                 goToPay();

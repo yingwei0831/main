@@ -88,15 +88,15 @@ public class PlaneListAdapter extends MyBaseAdapter {
                 holder.tvArrivalType.setVisibility(View.VISIBLE);
                 holder.tvConsumingTime.setVisibility(View.VISIBLE);
                 holder.tvStartTime.setText(s1.fromTime);
-                holder.tvFromAirport.setText(fromCity.getAirportname());
                 holder.tvArrivalTime.setText(s1.toTime);
-                holder.tvArrivalAirport.setText(toCity.getAirportname());
                 if ("0".equals(s1.transferFrequency)) {
                     holder.tvArrivalType.setText(context.getString(R.string.plane_flight_single)); //直达
                 }else{
                     holder.tvArrivalType.setText(context.getString(R.string.plane_flight_unsingle)); //中转
                 }
                 holder.tvConsumingTime.setText(Utils.getDiffMinuteStr(String.format("%s %s", s1.fromDate, s1.fromTime), String.format("%s %s", s1.toDate, s1.toTime))); //TODO 耗时
+                holder.tvFromAirport.setText(String.format("%s%s", PlaneListInternationalActivity.info.P.get(s1.fromAirportCode).fullName, s1.fromAirportName)); //起飞机场/航站楼
+                holder.tvArrivalAirport.setText(String.format("%s%s", PlaneListInternationalActivity.info.P.get(s1.toAirportCode).fullName, s1.toAirportName)); //起飞机场/航站楼
 
                 PlaneTicketInternationalInfo.PlaneTicketInternationalHF hf = PlaneListInternationalActivity.info.HMap.get(fKey);
                 if (priceType == 1){ //含税总价

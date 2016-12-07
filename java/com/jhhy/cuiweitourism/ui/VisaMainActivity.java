@@ -141,7 +141,7 @@ public class VisaMainActivity extends BaseActivity implements XScrollView.IXScro
     private Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            if (VisaMainActivity.this != null && !VisaMainActivity.this.isFinishing()) {
+            if (!VisaMainActivity.this.isFinishing()) {
                 long now = System.currentTimeMillis();
                 // 检测上一次滑动时间与本次之间是否有触击(手滑动)操作，有的话等待下次轮播
                 if (now - releaseTime > Consts.TIME_PERIOD - 500) {
@@ -175,6 +175,7 @@ public class VisaMainActivity extends BaseActivity implements XScrollView.IXScro
         handler.removeCallbacks(runnable);
         runnable = null;
         handler = null;
+
     }
 
     private void getInternetData() {
@@ -269,6 +270,7 @@ public class VisaMainActivity extends BaseActivity implements XScrollView.IXScro
                 }else{
                     ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);
                 }
+                LoadingIndicator.cancel();
             }
 
             @Override
@@ -279,6 +281,7 @@ public class VisaMainActivity extends BaseActivity implements XScrollView.IXScro
                     ToastCommon.toastShortShow(getApplicationContext(), null, "热门签证数据出错");
                 }
                 LogUtil.e(TAG, "visaHotInfo: " + error.toString());
+                LoadingIndicator.cancel();
             }
         });
     }
@@ -299,6 +302,7 @@ public class VisaMainActivity extends BaseActivity implements XScrollView.IXScro
                 }else{
                     ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);
                 }
+                LoadingIndicator.cancel();
             }
 
             @Override
@@ -308,6 +312,7 @@ public class VisaMainActivity extends BaseActivity implements XScrollView.IXScro
                 }else{
                     ToastCommon.toastShortShow(getApplicationContext(), null, "热门签证国家数据出错");
                 }
+                LoadingIndicator.cancel();
                 LogUtil.e(TAG, "visaCountryInfo: " + error.toString());
             }
         });
@@ -405,6 +410,9 @@ public class VisaMainActivity extends BaseActivity implements XScrollView.IXScro
         }
         addIndicator(infos.size());
         setIndicator(0);
+        if (infos.size() < 2){
+            return;
+        }
         handler.postDelayed(runnable, Consts.TIME_PERIOD);
     }
 
@@ -458,6 +466,9 @@ public class VisaMainActivity extends BaseActivity implements XScrollView.IXScro
 
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        if (infos.size() < 2){
+            return true;
+        }
         if(e1.getX() - e2.getX() > FLING_MIN_DISTANCE &&
                 Math.abs(velocityX) > FLING_MIN_VELOCITY){
 //            Log.i(TAG, "==============开始向左滑动了================");

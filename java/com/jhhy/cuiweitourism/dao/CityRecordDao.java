@@ -9,6 +9,7 @@ import com.jhhy.cuiweitourism.moudle.CityRecordTrain;
 import com.jhhy.cuiweitourism.moudle.PhoneBean;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainStationInfo;
 import com.jhhy.cuiweitourism.net.utils.Consts;
+import com.jhhy.cuiweitourism.net.utils.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,12 +40,13 @@ public class CityRecordDao {
             list = new ArrayList<>();
             listName = new ArrayList<>();
             while (c.moveToNext()){
-                if (!listName.contains(c.getString(c.getColumnIndex(CityRecord.CITY_NAME)))){
+                String name = c.getString(c.getColumnIndex(CityRecord.CITY_NAME));
+                LogUtil.e("CityRecordDao", "name = " + name);
+                if (!listName.contains(name)){
+                    listName.add(name);
                     TrainStationInfo record = new TrainStationInfo();
                     record.setId(c.getString(c.getColumnIndex(CityRecord.CITY_ID)));
-                    String name = c.getString(c.getColumnIndex(CityRecord.CITY_NAME));
                     record.setName(name);
-                    listName.add(name);
                     record.setFullPY(c.getString(c.getColumnIndex(CityRecord.CITY_FULL_PINYIN)));
                     record.setShortPY(c.getString(c.getColumnIndex(CityRecord.CITY_JIAN_PINYIN)));
                     record.setHot( "1".equals(c.getString(c.getColumnIndex(CityRecord.CITY_HOT))));
@@ -73,6 +75,7 @@ public class CityRecordDao {
         values.put(CityRecord.CITY_HOT, record.isHot());
         values.put(CityRecord.CITY_RECORD_TYPE, "1");
         long result = db.insert(Consts.TABLE_CITY_RECORD, null, values);
+        LogUtil.e("CityRecordDao", "result = " + result);
         db.close();
         helper.close();
     }

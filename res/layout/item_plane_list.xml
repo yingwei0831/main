@@ -15,34 +15,28 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1">
-            <!--出发机场-->
-            <!--<LinearLayout-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_alignParentLeft="true"-->
-                <!--android:layout_toLeftOf="@+id/iv_arrow_plane"-->
-                <!--android:orientation="vertical">-->
 
-                <TextView
-                    android:id="@+id/tv_plane_start_time"
-                    android:layout_toLeftOf="@+id/layout_arrow_plane"
-                    android:layout_width="match_parent"
-                    android:gravity="center"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="6dp"
-                    android:paddingTop="6dp"
-                    android:text="18:00"
-                    android:textColor="@android:color/black"
-                    android:textSize="18sp" />
+            <TextView
+                android:id="@+id/tv_plane_start_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/layout_arrow_plane"
+                android:gravity="center"
+                android:paddingBottom="6dp"
+                android:paddingTop="6dp"
+                android:text="18:00"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
 
-                <TextView
-                    android:id="@+id/tv_plane_from_airport"
-                    android:layout_toLeftOf="@+id/layout_arrow_plane"
-                    android:layout_alignParentLeft="true"
-                    android:layout_below="@+id/tv_plane_start_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="大连周水子国际机场" />
+            <TextView
+                android:id="@+id/tv_plane_from_airport"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/tv_plane_start_time"
+                android:layout_toLeftOf="@+id/layout_arrow_plane"
+                android:text="大连周水子国际机场"
+                android:textColor="@color/colorGrayDark" />
             <!--</LinearLayout>-->
 
 
@@ -50,19 +44,19 @@
                 android:id="@+id/layout_arrow_plane"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:layout_centerInParent="true"
+                android:orientation="vertical"
                 android:paddingLeft="3dp"
                 android:paddingRight="3dp">
+
                 <TextView
                     android:id="@+id/tv_plane_arrival_type"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
                     android:text="@string/plane_flight_single"
                     android:textColor="@android:color/black"
-                    android:layout_gravity="center_horizontal"
-                    android:visibility="gone"
-                    />
+                    android:visibility="gone" />
 
                 <ImageView
                     android:id="@+id/iv_arrow_plane"
@@ -74,48 +68,37 @@
                     android:id="@+id/tv_plane_consuming_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingTop="6dp"
                     android:text="耗时"
-                    android:layout_gravity="center_horizontal"
                     android:textColor="@color/colorActionBar"
-                    android:paddingTop="6dp"
-                    android:visibility="gone"
-                    />
+                    android:visibility="gone" />
             </LinearLayout>
-            <!--android:src="@mipmap/"-->
-            <!--到达机场-->
-            <!--<LinearLayout-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_alignParentRight="true"-->
-                <!--android:layout_toRightOf="@+id/iv_arrow_plane"-->
-                <!--android:gravity="right"-->
-                <!--android:orientation="vertical">-->
 
-                <TextView
-                    android:id="@+id/tv_plane_arrival_time"
-                    android:layout_toRightOf="@+id/layout_arrow_plane"
-                    android:gravity="center"
-                    android:layout_alignParentRight="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:paddingBottom="6dp"
-                    android:paddingTop="6dp"
-                    android:text="18:00"
-                    android:textColor="@android:color/black"
-                    android:textSize="18sp" />
+            <TextView
+                android:id="@+id/tv_plane_arrival_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_toRightOf="@+id/layout_arrow_plane"
+                android:gravity="center"
+                android:paddingBottom="6dp"
+                android:paddingTop="6dp"
+                android:text="18:00"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
 
-                <TextView
-                    android:id="@+id/tv_plane_arrival_airport"
-                    android:layout_toRightOf="@+id/layout_arrow_plane"
-                    android:layout_below="@+id/tv_plane_arrival_time"
-                    android:layout_alignParentRight="true"
-
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:text="大连周水子国际机场北京首都国际机场" />
-            <!--</LinearLayout>-->
+            <TextView
+                android:id="@+id/tv_plane_arrival_airport"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/tv_plane_arrival_time"
+                android:layout_gravity="center_horizontal"
+                android:layout_toRightOf="@+id/layout_arrow_plane"
+                android:text="大连周水子国际机场北京首都国际机场"
+                android:textColor="@color/colorGrayDark" />
         </RelativeLayout>
 
         <!--价格和舱位-->
@@ -140,7 +123,8 @@
                 android:id="@+id/tv_plane_ticket_class"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="经济舱" />
+                android:text="经济舱"
+                android:textColor="@color/colorGrayDark" />
 
         </LinearLayout>
     </LinearLayout>
@@ -156,14 +140,16 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="MU5003空客A320" />
+            android:text="MU5003空客A320"
+            android:textColor="@color/colorGrayDark" />
 
         <TextView
             android:id="@+id/tv_plane_ticket_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="1张"
-            android:visibility="gone"
-            android:textColor="@android:color/holo_red_light" />
+            android:textColor="@android:color/holo_red_light"
+            android:visibility="gone" />
     </LinearLayout>
+
 </LinearLayout>
