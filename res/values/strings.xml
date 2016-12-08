@@ -364,10 +364,15 @@
     <string name="plane_flight_price_sort_consuming_increase_txt">总时长从短到长</string>
     <string name="plane_flight_screen_direct">仅看直飞</string>
     <string name="plane_flight_screen_no">不限</string>
+    <string name="plane_flight_cabin_level">舱位等级</string>
     <string name="plane_flight_screen_time_1">上午 (00:00~12:00)</string>
     <string name="plane_flight_screen_time_2">中午 (12:00~14:00)</string>
     <string name="plane_flight_screen_time_3">下午 (14:00~18:00)</string>
     <string name="plane_flight_screen_time_4">晚上 (18:00~24:00)</string>
+    <string name="plane_flight_inquiry_remark">其他要求</string>
+    <string name="plane_flight_inquiry_notice">提交订单后，我们会尽快电话联系您确认行程</string>
+    <string name="plane_flight_inquiry_commit">提交订单</string>
+    <string name="plane_flight_inquiry_title">询价</string>
 
 
     <!--XScrollView-->

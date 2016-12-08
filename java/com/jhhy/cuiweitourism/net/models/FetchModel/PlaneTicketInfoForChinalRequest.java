@@ -6,8 +6,8 @@ package com.jhhy.cuiweitourism.net.models.FetchModel;
 public class PlaneTicketInfoForChinalRequest extends BasicFetchModel {
 //    {
 //        "startcity": "PEK",
-//            "endcity": "DLC",
-//            "flydate": "2016-10-17"
+//        "endcity": "DLC",
+//        "flydate": "2016-10-17"
 //    }
 
     public String startcity;

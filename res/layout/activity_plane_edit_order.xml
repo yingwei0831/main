@@ -269,14 +269,14 @@
                         android:textSize="16sp" />
                 </RelativeLayout>
                 <!--此处是动态添加乘车人-->
-                <LinearLayout
-                    android:id="@+id/layout_plane_contacts"
+                <com.jhhy.cuiweitourism.view.MyListView
+                    android:id="@+id/list_plane_contacts"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:background="@android:color/white">
 
-                </LinearLayout>
+                </com.jhhy.cuiweitourism.view.MyListView>
             </LinearLayout>
             <!--联系人-->
             <LinearLayout

@@ -10,11 +10,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.OnItemTextViewClick;
 import com.jhhy.cuiweitourism.R;
+import com.jhhy.cuiweitourism.adapter.PlaneInquiryAdapter;
 import com.jhhy.cuiweitourism.dialog.DatePickerActivity;
 import com.jhhy.cuiweitourism.model.PlaneInquiry;
 import com.jhhy.cuiweitourism.net.biz.PlaneTicketActionBiz;
@@ -27,6 +29,7 @@ import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.jhhy.cuiweitourism.utils.Utils;
+import com.jhhy.cuiweitourism.view.MyListView;
 
 import java.util.ArrayList;
 
@@ -54,22 +57,21 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
     public static ArrayList<PlaneTicketCityInfo> airportOuter; //国际飞机场
 
     private View layoutPlaneSearch; //询价整体布局
-    private LinearLayout layoutPlaneInquiryParent; //询价包裹行程布局
+    private MyListView layoutPlaneInquiryParent; //询价包裹行程布局
     private LinearLayout layoutBtn; //询价btn
+    private Button btnInquiry; //询价btn
     private LinearLayout tvAddInquiry; //增加一程询价
     private LinearLayout layoutInquiryType; //形成类型
-    private int positionAtView; //当前询价行程的个数
-    private ArrayList<PlaneInquiry> listInquiry; //出发城市，目的城市，出发时间
+
+    private ArrayList<PlaneInquiry> listInquiry = new ArrayList<>(); //出发城市，目的城市，出发时间
 
     private int bottomSelectionPosition; //底部点击位置
-
-//    private int countInquiry = 1; //询价数量
+    private PlaneInquiryAdapter adapter;
 
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            LogUtil.e(TAG, "----------------handleMessage------------- " + msg.what);
             switch (msg.what){
                 case -1:
                     ToastUtil.show(getApplicationContext(), String.valueOf(msg.obj));
@@ -110,12 +112,18 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
 
         layoutPlaneSearch = findViewById(R.id.layout_plane_search); //搜索航班线路
         layoutBtn = (LinearLayout) findViewById(R.id.layout_inquiry_btn); //查询下一步
+        btnInquiry = (Button) findViewById(R.id.btn_train_next_step); //查询下一步
         tvAddInquiry = (LinearLayout) findViewById(R.id.layout_add_one_query); //增加
         layoutInquiryType = (LinearLayout) findViewById(R.id.layout_inquiry_type); //类型
-        layoutPlaneInquiryParent = (LinearLayout) findViewById(R.id.layout_query_lines); //查询线路列表
+        layoutPlaneInquiryParent = (MyListView) findViewById(R.id.layout_query_lines); //查询线路列表
         tvAddInquiry.setVisibility(View.GONE);
         layoutInquiryType.setVisibility(View.GONE);
         layoutBtn.setVisibility(View.GONE);
+        layoutPlaneInquiryParent.setVisibility(View.GONE);
+
+        listInquiry.add(new PlaneInquiry());
+        adapter = new PlaneInquiryAdapter(getApplicationContext(), listInquiry, this);
+        layoutPlaneInquiryParent.setAdapter(adapter);
 
         tvFromCity.setText("北京");
         tvToCity.setText("大连");
@@ -145,6 +153,7 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
         tvReturnDate.setOnClickListener(this);
         btnSearch.setOnClickListener(this);
         tvAddInquiry.setOnClickListener(this);
+        btnInquiry.setOnClickListener(this);
     }
 
     @Override
@@ -170,9 +179,17 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
                 search();
                 break;
             case R.id.layout_add_one_query:
-                addView(positionAtView + 1);
+                addView();
                 break;
+            case R.id.btn_train_next_step: //询价
+                inquiry();
+                break;
+
         }
+    }
+
+    private void inquiry() {
+        PlaneInquiryEditOrderActivity.actionStart(getApplicationContext(), null);
     }
 
     //搜索
@@ -180,8 +197,6 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
         if (type == 1){ //单程，目前设计是单程的样式
 
         }else if(type == 2){ //往返，添加返程时间
-
-        }else if (type == 3){ //询价，不同订单类型
 
         }
 
@@ -346,9 +361,6 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
                 layoutPlaneInquiryParent.setVisibility(View.VISIBLE);
                 tvAddInquiry.setVisibility(View.VISIBLE);
                 layoutInquiryType.setVisibility(View.VISIBLE);
-//                tvFromCity.setText("请选择");
-//                tvToCity.setText("请选择");
-                addView(1);
                 type = 3;
                 traveltype = "";
                 break;
@@ -358,78 +370,32 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
     /**
      * 增加询价行程
      */
-    private void addView(int size) { //默认当前询价行程的个数
-        final int position = positionAtView;
-        if (size <= position){
-            return;
-        }
-        View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.item_plane_inquery, null);
-        final TextView tvInquiryNo = (TextView) view.findViewById(R.id.tv_plane_inquiry_no);
-        final ImageView ivTrash = (ImageView) view.findViewById(R.id.iv_delete_one_query);
-        final TextView tvFromCity = (TextView) view.findViewById(R.id.tv_plane_from_city);
-        final TextView tvArrivalCity = (TextView) view.findViewById(R.id.tv_plane_to_city);
-        final ImageView ivExchange = (ImageView) view.findViewById(R.id.iv_train_exchange);
-        final TextView tvFromTime = (TextView) view.findViewById(R.id.tv_plane_from_time);
-        LogUtil.e(TAG, "viewParent position = " + position);
-        tvInquiryNo.setText(String.valueOf(position + 1));
-        ivTrash.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onItemTextViewClick(position, ivTrash, ivTrash.getId());
-            }
-        });
-        tvFromCity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onItemTextViewClick(position, tvFromCity, tvFromCity.getId());
-            }
-        });
-        tvArrivalCity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onItemTextViewClick(position, tvArrivalCity, tvArrivalCity.getId());
-            }
-        });
-        ivExchange.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onItemTextViewClick(position, ivExchange, ivExchange.getId());
-            }
-        });
-        tvFromTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onItemTextViewClick(position, tvFromTime, tvFromTime.getId());
-            }
-        });
-        layoutPlaneInquiryParent.addView(view);
+    private void addView() { //默认当前询价行程的个数
         PlaneInquiry planeInquiry = new PlaneInquiry();
         if (listInquiry == null){
             listInquiry = new ArrayList<>();
         }
-        listInquiry.add(position, planeInquiry);
-        positionAtView ++;
-        view.setTag(position);
+        listInquiry.add(planeInquiry);
+        adapter.setData(listInquiry);
+        adapter.notifyDataSetChanged();
     }
 
     /**
      * @param position 点击的联系人位置
      * @param textView 控件
-     * @param id       textView 的id
      */
     @Override
-    public void onItemTextViewClick(int position, View textView, int id) {
-        LogUtil.e(TAG, "position = " + position + ", layoutPlaneInquiryParent.size = " + layoutPlaneInquiryParent.getChildCount());
-        int childAtPosition = getChildAtPosition(position);
-        View view = layoutPlaneInquiryParent.getChildAt(childAtPosition);
-//        TextView viewTv = (TextView) view.findViewById(id);
-//        viewTv.setText("惦记惦记");
-
-        LogUtil.e(TAG, "childAtPosition = " + childAtPosition +", position = " + position);
-        switch (id){
+    public void onItemTextViewClick(int position, View textView, int idNoUse) {
+        LogUtil.e(TAG, "position = " + position );
+        switch (textView.getId()){
             case R.id.iv_delete_one_query: //删除某个查询路线
-                layoutPlaneInquiryParent.removeViewAt(childAtPosition);
+                if (listInquiry.size() == 1){
+                    ToastUtil.show(getApplicationContext(), "至少查询一条航线");
+                    return;
+                }
                 listInquiry.remove(position);
+                adapter.setData(listInquiry);
+                adapter.notifyDataSetChanged();
                 break;
             case R.id.tv_plane_from_city: //出发城市
                 bottomSelectionPosition = position;
@@ -440,7 +406,7 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
                 selectToCity();
                 break;
             case R.id.iv_train_exchange: //交换出发城市/目的城市
-                exchangeCity((TextView) view.findViewById(R.id.tv_plane_from_city), (TextView) view.findViewById(R.id.tv_plane_to_city), position);
+                exchangeCity(position);
                 break;
             case R.id.tv_plane_from_time: //出发时间
                 bottomSelectionPosition = position;
@@ -449,52 +415,36 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
         }
     }
 
-    private void setNo() {
-
-    }
-
-    private int getChildAtPosition(int position) {
-        int childAtPosition = -1;
-        for (int i = 0; i < layoutPlaneInquiryParent.getChildCount(); i++) {
-            View view = layoutPlaneInquiryParent.getChildAt(i);
-            int tag = (int) view.getTag();
-            if (tag == position){
-                childAtPosition = i;
-                break;
-            }
-        }
-        return childAtPosition;
-    }
 
     private void setFromTime(String selectDate) {
         String date = selectDate.substring(0, selectDate.indexOf(" "));
-        int childAtPosition = getChildAtPosition(bottomSelectionPosition);
-        View view = layoutPlaneInquiryParent.getChildAt(childAtPosition);
-        ((TextView)view.findViewById(R.id.tv_plane_from_time)).setText(date);
-        listInquiry.get(bottomSelectionPosition).fromDate = date;
+        PlaneInquiry item = listInquiry.get(bottomSelectionPosition);
+        item.fromDate = date;
+        adapter.setData(listInquiry);
+        adapter.notifyDataSetChanged();
     }
 
     private void setArrivalCity(PlaneTicketCityInfo city) {
-        int childAtPosition = getChildAtPosition(bottomSelectionPosition);
-        View view = layoutPlaneInquiryParent.getChildAt(childAtPosition);
-        ((TextView)view.findViewById(R.id.tv_plane_to_city)).setText(city.getName());
-        listInquiry.get(bottomSelectionPosition).arrivalCity = city;
+        PlaneInquiry item = listInquiry.get(bottomSelectionPosition);
+        item.arrivalCity = city;
+        adapter.setData(listInquiry);
+        adapter.notifyDataSetChanged();
     }
 
     private void setFromCity(PlaneTicketCityInfo city) {
-        int childAtPosition = getChildAtPosition(bottomSelectionPosition);
-        View view = layoutPlaneInquiryParent.getChildAt(childAtPosition);
-        ((TextView)view.findViewById(R.id.tv_plane_from_city)).setText(city.getName());
-        listInquiry.get(bottomSelectionPosition).fromCity = city;
+        PlaneInquiry item = listInquiry.get(bottomSelectionPosition);
+        item.fromCity = city;
+        adapter.setData(listInquiry);
+        adapter.notifyDataSetChanged();
     }
 
-    private void exchangeCity(TextView fromTextView, TextView arrivalTextView, int position) {
+    private void exchangeCity(int position) {
         PlaneInquiry temp = listInquiry.get(position);
         PlaneTicketCityInfo tempCity = temp.arrivalCity;
         temp.arrivalCity = temp.fromCity;
         temp.fromCity = tempCity;
-        fromTextView.setText(temp.fromCity.getName());
-        arrivalTextView.setText(temp.arrivalCity.getName());
+        adapter.setData(listInquiry);
+        adapter.notifyDataSetChanged();
     }
 
     //交换出发城市和目的城市
@@ -620,6 +570,10 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
         if (airportOuter != null){
             airportOuter.clear();
             airportOuter = null;
+        }
+        if (listInquiry != null){
+            listInquiry.clear();
+            listInquiry = null;
         }
         planeBiz = null;
         fromCity = null;

@@ -6,12 +6,14 @@ import android.os.Handler;
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
+import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneOrderOfChinaRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketCityFetch;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketInfoForChinalRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketInfoInternationalRequest;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneOrderOfChinaResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketCityInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketInternationalInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketInfoOfChina;
@@ -71,9 +73,8 @@ public class PlaneTicketActionBiz extends BasicActionBiz {
     }
 
     /**
-     *  国内机票
+     *  国内机票查询
      */
-
     public void planeTicketInfoInChina(PlaneTicketInfoForChinalRequest request, BizGenericCallback<PlaneTicketInfoOfChina> callback) {
         request.code = "Fly_index";
         FetchGenericResponse<PlaneTicketInfoOfChina> fetchResponse = new FetchGenericResponse<PlaneTicketInfoOfChina>(callback) {
@@ -89,7 +90,27 @@ public class PlaneTicketActionBiz extends BasicActionBiz {
                 this.bizCallback.onError(error);
             }
         };
+        HttpUtils.executeXutils(request, new FetchGenericCallback<>(fetchResponse));
+    }
 
+    /**
+     * 国内机票下单
+     */
+    public void planeTicketOrderOfChina(PlaneOrderOfChinaRequest request, BizGenericCallback<PlaneOrderOfChinaResponse> callback){
+        request.code = "Fly_order";
+        FetchGenericResponse<PlaneOrderOfChinaResponse> fetchResponse = new FetchGenericResponse<PlaneOrderOfChinaResponse>(callback) {
+            @Override
+            public void onCompletion(FetchResponseModel response) {
+                PlaneOrderOfChinaResponse info = parseJsonToObject(response, PlaneOrderOfChinaResponse.class);
+                GenericResponseModel<PlaneOrderOfChinaResponse> returnModel = new GenericResponseModel<PlaneOrderOfChinaResponse>(response.head, info);
+                this.bizCallback.onCompletion(returnModel);
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                this.bizCallback.onError(error);
+            }
+        };
         HttpUtils.executeXutils(request, new FetchGenericCallback<>(fetchResponse));
     }
 
@@ -428,6 +449,7 @@ public class PlaneTicketActionBiz extends BasicActionBiz {
      * 国际机票下单
      */
     public void planeTicketOrderInternational(){
+
 
     }
 }
