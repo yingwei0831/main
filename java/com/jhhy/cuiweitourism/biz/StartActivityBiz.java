@@ -6,7 +6,7 @@ import android.os.Handler;
 import android.os.Message;
 
 import com.jhhy.cuiweitourism.http.ResponseResult;
-import com.jhhy.cuiweitourism.moudle.CustomActivity;
+import com.jhhy.cuiweitourism.model.CustomActivity;
 import com.jhhy.cuiweitourism.ui.MainActivity;
 import com.jhhy.cuiweitourism.utils.BitmapUtil;
 import com.jhhy.cuiweitourism.net.utils.Consts;

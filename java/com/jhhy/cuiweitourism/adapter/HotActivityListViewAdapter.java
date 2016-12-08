@@ -9,15 +9,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
-import com.jhhy.cuiweitourism.moudle.Travel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.ActivityHotInfo;
 import com.jhhy.cuiweitourism.utils.ImageLoaderUtil;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.Inflater;
 
 /**
  * Created by jiahe008 on 2016/8/29.

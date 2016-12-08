@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.ArgumentOnClick;
 import com.jhhy.cuiweitourism.R;
-import com.jhhy.cuiweitourism.moudle.Travel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.ForceEndSearchInfo;
 import com.jhhy.cuiweitourism.utils.ImageLoaderUtil;
 

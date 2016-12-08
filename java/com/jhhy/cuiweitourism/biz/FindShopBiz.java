@@ -7,8 +7,8 @@ import android.os.Message;
 import com.jhhy.cuiweitourism.http.NetworkUtil;
 import com.jhhy.cuiweitourism.net.netcallback.HttpUtils;
 import com.jhhy.cuiweitourism.http.ResponseResult;
-import com.jhhy.cuiweitourism.moudle.Line;
-import com.jhhy.cuiweitourism.moudle.ShopRecommend;
+import com.jhhy.cuiweitourism.model.Line;
+import com.jhhy.cuiweitourism.model.ShopRecommend;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 
 import org.json.JSONArray;

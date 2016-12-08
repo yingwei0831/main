@@ -7,7 +7,7 @@ import android.os.Message;
 import com.jhhy.cuiweitourism.http.NetworkUtil;
 import com.jhhy.cuiweitourism.net.netcallback.HttpUtils;
 import com.jhhy.cuiweitourism.http.ResponseResult;
-import com.jhhy.cuiweitourism.moudle.Collection;
+import com.jhhy.cuiweitourism.model.Collection;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.utils.Utils;

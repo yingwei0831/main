@@ -2,7 +2,6 @@ package com.jhhy.cuiweitourism.fragment;
 
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -21,12 +20,10 @@ import com.jhhy.cuiweitourism.ISlideCallback;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.Tab1GridViewAdapter;
 import com.jhhy.cuiweitourism.biz.InnerTravelMainBiz;
-import com.jhhy.cuiweitourism.moudle.Travel;
+import com.jhhy.cuiweitourism.model.Travel;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.ui.InnerTravelDetailActivity;
-import com.jhhy.cuiweitourism.ui.MainActivity;
-import com.jhhy.cuiweitourism.ui.easemob.EasemobLoginActivity;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
 
 import java.util.ArrayList;

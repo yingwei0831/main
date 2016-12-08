@@ -22,7 +22,7 @@ import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.InnerTravelFirstListViewAdapter;
 import com.jhhy.cuiweitourism.adapter.InnerTravelTripDaysListViewAdapter;
 import com.jhhy.cuiweitourism.dialog.DatePickerActivity;
-import com.jhhy.cuiweitourism.moudle.PriceArea;
+import com.jhhy.cuiweitourism.model.PriceArea;
 import com.jhhy.cuiweitourism.ui.InnerTravelCityActivity;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;

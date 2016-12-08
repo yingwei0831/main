@@ -1,16 +1,13 @@
 package com.jhhy.cuiweitourism.ui;
 
-import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.KeyEvent;
 import android.view.View;
@@ -21,7 +18,6 @@ import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.biz.UserInformationBiz;
-import com.jhhy.cuiweitourism.moudle.User;
 import com.jhhy.cuiweitourism.picture.Bimp;
 import com.jhhy.cuiweitourism.popupwindows.PopupWindowImage;
 import com.jhhy.cuiweitourism.net.utils.Consts;
@@ -33,7 +29,6 @@ import com.jhhy.cuiweitourism.utils.SharedPreferencesUtils;
 import com.jhhy.cuiweitourism.utils.Utils;
 import com.jhhy.cuiweitourism.view.CircleImageView;
 import com.just.sun.pricecalendar.ToastCommon;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.File;
 import java.io.IOException;

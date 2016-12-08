@@ -18,7 +18,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.UserIconListAdapter;
 import com.jhhy.cuiweitourism.biz.UserInformationBiz;
-import com.jhhy.cuiweitourism.moudle.UserIcon;
+import com.jhhy.cuiweitourism.model.UserIcon;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.just.sun.pricecalendar.ToastCommon;
 

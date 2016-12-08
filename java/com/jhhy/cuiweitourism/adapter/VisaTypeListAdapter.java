@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
-import com.jhhy.cuiweitourism.moudle.VisaType;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.jhhy.cuiweitourism.moudle;
+package com.jhhy.cuiweitourism.model;
 
 /**
  * Created by jiahe008 on 2016/8/24.

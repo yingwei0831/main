@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.GestureDetector;
@@ -23,12 +22,10 @@ import android.widget.ViewFlipper;
 
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.circleviewpager.ViewFactory;
-import com.jhhy.cuiweitourism.dialog.DatePickerActivity;
-import com.jhhy.cuiweitourism.moudle.ADInfo;
-import com.jhhy.cuiweitourism.moudle.PhoneBean;
+import com.jhhy.cuiweitourism.model.ADInfo;
+import com.jhhy.cuiweitourism.model.PhoneBean;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.utils.Utils;
-import com.jhhy.cuiweitourism.view.MyScrollView;
 import com.just.sun.pricecalendar.ToastCommon;
 
 import java.util.ArrayList;

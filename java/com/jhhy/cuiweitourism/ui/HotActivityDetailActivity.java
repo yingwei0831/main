@@ -27,7 +27,7 @@ import android.widget.ViewFlipper;
 
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.circleviewpager.ViewFactory;
-import com.jhhy.cuiweitourism.moudle.ADInfo;
+import com.jhhy.cuiweitourism.model.ADInfo;
 import com.jhhy.cuiweitourism.net.biz.ActivityActionBiz;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HomePageCustonDetail;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.ActivityComment;
@@ -43,7 +43,6 @@ import com.jhhy.cuiweitourism.utils.MyFileUtils;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.jhhy.cuiweitourism.utils.Utils;
 import com.jhhy.cuiweitourism.view.CircleImageView;
-import com.jhhy.cuiweitourism.view.InnerTravelDetailDescribeView;
 import com.jhhy.cuiweitourism.view.MyGridView;
 import com.jhhy.cuiweitourism.view.MyScrollView;
 import com.just.sun.pricecalendar.ToastCommon;

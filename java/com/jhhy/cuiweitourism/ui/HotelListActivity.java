@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,32 +16,21 @@ import android.widget.TextView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.jhhy.cuiweitourism.R;
-import com.jhhy.cuiweitourism.adapter.HotActivityListViewAdapter;
 import com.jhhy.cuiweitourism.adapter.HotelListAdapter;
-import com.jhhy.cuiweitourism.biz.ScreenBiz;
-import com.jhhy.cuiweitourism.moudle.PhoneBean;
-import com.jhhy.cuiweitourism.moudle.PriceArea;
-import com.jhhy.cuiweitourism.net.biz.ActivityActionBiz;
+import com.jhhy.cuiweitourism.model.PhoneBean;
 import com.jhhy.cuiweitourism.net.biz.HotelActionBiz;
-import com.jhhy.cuiweitourism.net.models.FetchModel.ActivityHot;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelListFetchRequest;
-import com.jhhy.cuiweitourism.net.models.ResponseModel.ActivityHotInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelListInfo;
-import com.jhhy.cuiweitourism.net.models.ResponseModel.HoutelPropertiesInfo;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
-import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.popupwindows.PopupWindowHotelLevel;
 import com.jhhy.cuiweitourism.popupwindows.PopupWindowHotelSort;
-import com.jhhy.cuiweitourism.popupwindows.PopupWindowSearchLine;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
-import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.just.sun.pricecalendar.ToastCommon;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class HotelListActivity extends BaseActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
 

@@ -3,16 +3,11 @@ package com.jhhy.cuiweitourism.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.HotDestinationGridViewAdapter;
 import com.jhhy.cuiweitourism.adapter.HotRecommendGridViewAdapter;
-import com.jhhy.cuiweitourism.adapter.InnerTravelMainPagerAdapter;
-import com.jhhy.cuiweitourism.fragment.InnerTravelFollowFragment;
-import com.jhhy.cuiweitourism.moudle.CityRecommend;
+import com.jhhy.cuiweitourism.model.CityRecommend;
 import com.jhhy.cuiweitourism.view.MyGridView;
 
 import java.util.ArrayList;

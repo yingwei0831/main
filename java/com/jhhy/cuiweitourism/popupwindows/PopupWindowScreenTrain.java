@@ -2,7 +2,6 @@ package com.jhhy.cuiweitourism.popupwindows;
 
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.view.Gravity;
 import android.view.View;
@@ -19,16 +18,11 @@ import android.widget.TextView;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.InnerTravelFirstListViewAdapter;
 import com.jhhy.cuiweitourism.adapter.InnerTravelTripDaysListViewAdapter;
-import com.jhhy.cuiweitourism.dialog.DatePickerActivity;
-import com.jhhy.cuiweitourism.moudle.PriceArea;
-import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import cn.jeesoft.ArrayDataDemo;

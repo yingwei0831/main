@@ -1,10 +1,8 @@
 package com.jhhy.cuiweitourism.ui;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,8 +11,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
-import com.jhhy.cuiweitourism.moudle.Invoice;
-import com.jhhy.cuiweitourism.net.utils.LogUtil;
+import com.jhhy.cuiweitourism.model.Invoice;
 import com.just.sun.pricecalendar.ToastCommon;
 
 public class SettingInvoiceActivity extends BaseActionBarActivity implements RadioGroup.OnCheckedChangeListener, View.OnClickListener {

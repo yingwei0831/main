@@ -22,9 +22,6 @@ public class PlaneInquiryView extends LinearLayout {
     private TextView tvArrivalCity; //到达城市
     private ImageView ivExchange; //交换出发地和目的地
     private TextView tvFromTime; //出发时间
-    private View layoutAdd; //再加一程
-    private TextView tvInquiryType; //查询类型
-
 
     public PlaneInquiryView(Context context) {
         super(context);
@@ -54,8 +51,6 @@ public class PlaneInquiryView extends LinearLayout {
         tvArrivalCity = (TextView) view.findViewById(R.id.tv_plane_to_city);
         ivExchange = (ImageView) view.findViewById(R.id.iv_train_exchange);
         tvFromTime = (TextView) view.findViewById(R.id.tv_plane_from_time);
-        layoutAdd = view.findViewById(R.id.layout_add_one_query);
-        tvInquiryType = (TextView) view.findViewById(R.id.tv_select_query_type);
         addListener();
     }
 
@@ -65,8 +60,6 @@ public class PlaneInquiryView extends LinearLayout {
 //        tvArrivalCity.setOnClickListener(this);
 //        ivExchange.setOnClickListener(this);
 //        tvFromTime.setOnClickListener(this);
-//        layoutAdd.setOnClickListener(this);
-//        tvInquiryType.setOnClickListener(this);
     }
 
 }

@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.ArgumentOnClick;
 import com.jhhy.cuiweitourism.R;
-import com.jhhy.cuiweitourism.moudle.Travel;
+import com.jhhy.cuiweitourism.model.Travel;
 import com.jhhy.cuiweitourism.utils.ImageLoaderUtil;
 
 import java.util.List;

@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.biz.LoginBiz;
-import com.jhhy.cuiweitourism.moudle.User;
+import com.jhhy.cuiweitourism.model.User;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;

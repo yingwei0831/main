@@ -1,4 +1,4 @@
-package com.jhhy.cuiweitourism.moudle;
+package com.jhhy.cuiweitourism.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;

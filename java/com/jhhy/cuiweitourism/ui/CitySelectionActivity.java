@@ -22,7 +22,7 @@ import com.jhhy.cuiweitourism.adapter.CitySelectionGridViewAdapter;
 import com.jhhy.cuiweitourism.adapter.PhoneAdapter;
 import com.jhhy.cuiweitourism.biz.CityBiz;
 import com.jhhy.cuiweitourism.dao.CityRecordDao;
-import com.jhhy.cuiweitourism.moudle.PhoneBean;
+import com.jhhy.cuiweitourism.model.PhoneBean;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;

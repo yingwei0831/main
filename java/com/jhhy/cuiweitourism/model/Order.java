@@ -1,4 +1,4 @@
-package com.jhhy.cuiweitourism.moudle;
+package com.jhhy.cuiweitourism.model;
 
 import java.io.Serializable;
 import java.util.List;

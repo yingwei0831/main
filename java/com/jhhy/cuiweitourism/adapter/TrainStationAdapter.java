@@ -8,8 +8,6 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
-import com.jhhy.cuiweitourism.moudle.CityRecordTrain;
-import com.jhhy.cuiweitourism.moudle.PhoneBean;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainStationInfo;
 import com.jhhy.cuiweitourism.ui.CitySelectionActivity;
 import com.jhhy.cuiweitourism.view.PinnedSectionListView;

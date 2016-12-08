@@ -9,7 +9,7 @@ import com.easemob.chat.EMChatManager;
 import com.jhhy.cuiweitourism.http.NetworkUtil;
 import com.jhhy.cuiweitourism.net.netcallback.HttpUtils;
 import com.jhhy.cuiweitourism.http.ResponseResult;
-import com.jhhy.cuiweitourism.moudle.User;
+import com.jhhy.cuiweitourism.model.User;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.ui.easemob.DemoHelper;
 import com.jhhy.cuiweitourism.net.utils.Consts;

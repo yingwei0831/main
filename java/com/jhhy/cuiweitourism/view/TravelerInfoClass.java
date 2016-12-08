@@ -8,7 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
-import com.jhhy.cuiweitourism.moudle.UserContacts;
+import com.jhhy.cuiweitourism.model.UserContacts;
 
 /**
  * Created by jiahe008 on 2016/9/23.

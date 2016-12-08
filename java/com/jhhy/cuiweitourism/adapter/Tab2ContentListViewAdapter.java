@@ -1,7 +1,6 @@
 package com.jhhy.cuiweitourism.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
-import com.jhhy.cuiweitourism.moudle.ClassifyArea;
+import com.jhhy.cuiweitourism.model.ClassifyArea;
 import com.jhhy.cuiweitourism.utils.ImageLoaderUtil;
 
 import java.util.List;

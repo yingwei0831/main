@@ -2,10 +2,7 @@ package com.jhhy.cuiweitourism.fragment;
 
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -23,8 +20,7 @@ import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.OrderXListViewAdapter;
 import com.jhhy.cuiweitourism.biz.OrderActionBiz;
 import com.jhhy.cuiweitourism.biz.OrdersAllBiz;
-import com.jhhy.cuiweitourism.moudle.Order;
-import com.jhhy.cuiweitourism.ui.LoginActivity;
+import com.jhhy.cuiweitourism.model.Order;
 import com.jhhy.cuiweitourism.ui.MainActivity;
 import com.jhhy.cuiweitourism.ui.RequestRefundActivity;
 import com.jhhy.cuiweitourism.ui.SelectPaymentActivity;

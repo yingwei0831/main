@@ -10,7 +10,6 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -20,8 +19,7 @@ import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.OnItemTextViewClick;
 import com.jhhy.cuiweitourism.R;
-import com.jhhy.cuiweitourism.biz.VisaBiz;
-import com.jhhy.cuiweitourism.moudle.UserContacts;
+import com.jhhy.cuiweitourism.model.UserContacts;
 import com.jhhy.cuiweitourism.net.biz.TrainTicketActionBiz;
 import com.jhhy.cuiweitourism.net.models.FetchModel.TrainTicketOrderFetch;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
@@ -38,10 +36,6 @@ import com.jhhy.cuiweitourism.utils.Utils;
 import com.just.sun.pricecalendar.ToastCommon;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import cn.jeesoft.OptionsWindowHelper;
-import cn.jeesoft.widget.pickerview.CharacterPickerWindow;
 
 public class TrainEditOrderActivity extends AppCompatActivity implements View.OnClickListener, OnItemTextViewClick {
 

@@ -19,7 +19,7 @@ import com.jhhy.cuiweitourism.ArgumentOnClick;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.OrderXListViewAdapter;
 import com.jhhy.cuiweitourism.biz.OrdersAllBiz;
-import com.jhhy.cuiweitourism.moudle.Order;
+import com.jhhy.cuiweitourism.model.Order;
 import com.jhhy.cuiweitourism.ui.MainActivity;
 import com.jhhy.cuiweitourism.ui.RequestRefundActivity;
 import com.jhhy.cuiweitourism.ui.Tab4OrderDetailsActivity;

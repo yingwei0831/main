@@ -11,7 +11,7 @@ import android.widget.EditText;
 
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.biz.ContactsBiz;
-import com.jhhy.cuiweitourism.moudle.UserContacts;
+import com.jhhy.cuiweitourism.model.UserContacts;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.utils.ToastUtil;

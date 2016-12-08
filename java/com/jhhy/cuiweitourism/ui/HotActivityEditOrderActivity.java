@@ -22,13 +22,10 @@ import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.OnItemTextViewClick;
 import com.jhhy.cuiweitourism.R;
-import com.jhhy.cuiweitourism.biz.OrdersAllBiz;
-import com.jhhy.cuiweitourism.dialog.TourismCoinActivity;
-import com.jhhy.cuiweitourism.moudle.Invoice;
-import com.jhhy.cuiweitourism.moudle.Order;
-import com.jhhy.cuiweitourism.moudle.TravelDetail;
-import com.jhhy.cuiweitourism.moudle.User;
-import com.jhhy.cuiweitourism.moudle.UserContacts;
+import com.jhhy.cuiweitourism.model.Invoice;
+import com.jhhy.cuiweitourism.model.Order;
+import com.jhhy.cuiweitourism.model.User;
+import com.jhhy.cuiweitourism.model.UserContacts;
 import com.jhhy.cuiweitourism.net.biz.ActivityActionBiz;
 import com.jhhy.cuiweitourism.net.models.FetchModel.ActivityOrder;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.ActivityHotDetailInfo;
@@ -42,12 +39,10 @@ import com.jhhy.cuiweitourism.utils.LinkSpanWrapper;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.utils.SharedPreferencesUtils;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
-import com.just.sun.pricecalendar.GroupDeadline;
 import com.just.sun.pricecalendar.ToastCommon;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class HotActivityEditOrderActivity extends BaseActivity implements View.OnClickListener, OnItemTextViewClick {
 

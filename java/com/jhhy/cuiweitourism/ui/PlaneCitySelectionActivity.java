@@ -193,12 +193,14 @@ public class PlaneCitySelectionActivity extends BaseActivity implements View.OnC
         if (bundle != null){
             type = bundle.getInt("type");
         }
-        if (type == 1) {
+        if (type == 1 || type == 3) {
             list_all = PlaneMainActivity.airportInner;
             cityType = 1;
-        }else if (type == 2){
+            radioButtonInner.setChecked(true);
+        } else if (type == 2) {
             list_all = PlaneMainActivity.airportOuter;
             cityType = 2;
+            radioButtonOuter.setChecked(true);
         }
     }
 

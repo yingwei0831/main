@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
-import com.jhhy.cuiweitourism.moudle.PhoneBean;
+import com.jhhy.cuiweitourism.model.PhoneBean;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainStationInfo;
 
 import java.util.List;

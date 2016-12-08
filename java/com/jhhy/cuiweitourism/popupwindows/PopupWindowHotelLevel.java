@@ -2,34 +2,20 @@ package com.jhhy.cuiweitourism.popupwindows;
 
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
-import com.jhhy.cuiweitourism.adapter.InnerTravelFirstListViewAdapter;
-import com.jhhy.cuiweitourism.adapter.InnerTravelTripDaysListViewAdapter;
-import com.jhhy.cuiweitourism.dialog.DatePickerActivity;
-import com.jhhy.cuiweitourism.moudle.PriceArea;
-import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.yingwei.view.rangebar.RangeBar;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class PopupWindowHotelLevel extends PopupWindow implements OnClickListener {

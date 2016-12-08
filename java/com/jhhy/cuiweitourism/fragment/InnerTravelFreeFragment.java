@@ -19,7 +19,7 @@ import com.jhhy.cuiweitourism.ISlideCallback;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.Tab1GridViewAdapter;
 import com.jhhy.cuiweitourism.biz.InnerTravelMainBiz;
-import com.jhhy.cuiweitourism.moudle.Travel;
+import com.jhhy.cuiweitourism.model.Travel;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.ui.InnerTravelDetailActivity;

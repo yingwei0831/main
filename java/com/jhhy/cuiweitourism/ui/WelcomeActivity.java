@@ -1,33 +1,27 @@
 package com.jhhy.cuiweitourism.ui;
 
-import android.Manifest;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 
 import com.amap.api.location.AMapLocation;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.biz.LoginBiz;
 import com.jhhy.cuiweitourism.http.NetworkUtil;
-import com.jhhy.cuiweitourism.moudle.User;
+import com.jhhy.cuiweitourism.model.User;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.utils.LocationUtil;
 import com.jhhy.cuiweitourism.utils.SharedPreferencesUtils;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
-import com.jhhy.cuiweitourism.utils.Utils;
-import com.just.sun.pricecalendar.ToastCommon;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.security.Permission;
 
 public class WelcomeActivity extends BaseActivity {
 

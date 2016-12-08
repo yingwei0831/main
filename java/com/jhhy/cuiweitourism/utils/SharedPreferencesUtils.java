@@ -3,7 +3,7 @@ package com.jhhy.cuiweitourism.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.jhhy.cuiweitourism.moudle.PhoneBean;
+import com.jhhy.cuiweitourism.model.PhoneBean;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 
 

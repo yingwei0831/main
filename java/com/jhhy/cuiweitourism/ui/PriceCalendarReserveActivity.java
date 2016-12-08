@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.biz.CalendarLineBiz;
-import com.jhhy.cuiweitourism.moudle.TravelDetail;
+import com.jhhy.cuiweitourism.model.TravelDetail;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.ActivityHotDetailInfo;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;

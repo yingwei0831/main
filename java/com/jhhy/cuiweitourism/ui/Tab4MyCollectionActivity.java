@@ -17,7 +17,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.UserCollectionListAdapter;
 import com.jhhy.cuiweitourism.biz.UserCollectionBiz;
-import com.jhhy.cuiweitourism.moudle.Collection;
+import com.jhhy.cuiweitourism.model.Collection;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.utils.ToastUtil;

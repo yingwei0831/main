@@ -18,7 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.jhhy.cuiweitourism.R;
-import com.jhhy.cuiweitourism.moudle.ADInfo;
+import com.jhhy.cuiweitourism.model.ADInfo;
 
 import java.util.ArrayList;
 import java.util.List;

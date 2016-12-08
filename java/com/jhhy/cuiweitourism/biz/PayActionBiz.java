@@ -6,17 +6,14 @@ import android.os.Message;
 
 import com.jhhy.cuiweitourism.http.NetworkUtil;
 import com.jhhy.cuiweitourism.http.ResponseResult;
-import com.jhhy.cuiweitourism.moudle.Collection;
 import com.jhhy.cuiweitourism.net.netcallback.HttpUtils;
 import com.jhhy.cuiweitourism.net.utils.Consts;
-import com.jhhy.cuiweitourism.utils.Utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.SocketTimeoutException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 

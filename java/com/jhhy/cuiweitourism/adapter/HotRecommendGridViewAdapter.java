@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
-import com.jhhy.cuiweitourism.moudle.CityRecommend;
+import com.jhhy.cuiweitourism.model.CityRecommend;
 import com.jhhy.cuiweitourism.utils.ImageLoaderUtil;
 
 import java.util.List;

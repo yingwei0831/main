@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
-import com.jhhy.cuiweitourism.moudle.UserContacts;
+import com.jhhy.cuiweitourism.model.UserContacts;
 
 import java.util.List;
 

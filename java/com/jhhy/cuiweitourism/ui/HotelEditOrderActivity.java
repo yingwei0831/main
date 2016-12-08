@@ -2,7 +2,6 @@ package com.jhhy.cuiweitourism.ui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -15,7 +14,7 @@ import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.dialog.NumberPickerActivity;
-import com.jhhy.cuiweitourism.moudle.PhoneBean;
+import com.jhhy.cuiweitourism.model.PhoneBean;
 import com.jhhy.cuiweitourism.net.biz.HotelActionBiz;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelOrderFetch;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
@@ -23,7 +22,6 @@ import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelDetailInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelOrderInfo;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
-import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.popupwindows.PopupWindowNumberPicker;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;

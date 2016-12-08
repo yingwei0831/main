@@ -13,7 +13,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.SearchShopListAdapter;
 import com.jhhy.cuiweitourism.biz.FindShopBiz;
-import com.jhhy.cuiweitourism.moudle.Line;
+import com.jhhy.cuiweitourism.model.Line;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.utils.ToastUtil;

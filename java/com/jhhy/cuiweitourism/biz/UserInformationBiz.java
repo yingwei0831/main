@@ -7,7 +7,7 @@ import android.os.Message;
 
 import com.jhhy.cuiweitourism.net.netcallback.HttpUtils;
 import com.jhhy.cuiweitourism.http.ResponseResult;
-import com.jhhy.cuiweitourism.moudle.UserIcon;
+import com.jhhy.cuiweitourism.model.UserIcon;
 import com.jhhy.cuiweitourism.utils.BitmapUtil;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.utils.Utils;

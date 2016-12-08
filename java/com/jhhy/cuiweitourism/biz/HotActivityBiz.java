@@ -6,7 +6,6 @@ import android.os.Message;
 
 import com.jhhy.cuiweitourism.http.NetworkUtil;
 import com.jhhy.cuiweitourism.http.ResponseResult;
-import com.jhhy.cuiweitourism.moudle.Travel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.ActivityComment;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.ActivityHotDetailInfo;
 import com.jhhy.cuiweitourism.net.netcallback.HttpUtils;

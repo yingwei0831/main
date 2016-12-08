@@ -20,7 +20,7 @@ import android.widget.TextView;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.biz.CheckCodeBiz;
 import com.jhhy.cuiweitourism.biz.RegisterBiz;
-import com.jhhy.cuiweitourism.moudle.User;
+import com.jhhy.cuiweitourism.model.User;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.utils.LinkSpanWrapper;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;

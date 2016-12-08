@@ -1,4 +1,4 @@
-package com.jhhy.cuiweitourism.moudle;
+package com.jhhy.cuiweitourism.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -6,7 +6,6 @@ import android.text.TextUtils;
 
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 /**
  * Created by jiahe008 on 2016/10/20.

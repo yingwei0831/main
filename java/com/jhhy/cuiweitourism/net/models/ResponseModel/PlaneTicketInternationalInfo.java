@@ -1,10 +1,9 @@
 package com.jhhy.cuiweitourism.net.models.ResponseModel;
 
-import com.jhhy.cuiweitourism.moudle.Collection;
+import com.jhhy.cuiweitourism.model.Collection;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**

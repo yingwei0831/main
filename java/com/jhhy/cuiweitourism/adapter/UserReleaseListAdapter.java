@@ -10,8 +10,7 @@ import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.ArgumentOnClick;
 import com.jhhy.cuiweitourism.R;
-import com.jhhy.cuiweitourism.moudle.Collection;
-import com.jhhy.cuiweitourism.moudle.CustomActivity;
+import com.jhhy.cuiweitourism.model.CustomActivity;
 import com.jhhy.cuiweitourism.utils.ImageLoaderUtil;
 
 import java.util.List;

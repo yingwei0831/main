@@ -2,7 +2,6 @@ package com.jhhy.cuiweitourism.ui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,12 +11,9 @@ import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.dialog.DatePickerActivity;
-import com.jhhy.cuiweitourism.moudle.PhoneBean;
-import com.jhhy.cuiweitourism.net.biz.ActivityActionBiz;
+import com.jhhy.cuiweitourism.model.PhoneBean;
 import com.jhhy.cuiweitourism.net.biz.HomePageActionBiz;
-import com.jhhy.cuiweitourism.net.models.FetchModel.ActivityOrder;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HomePageCustomAdd;
-import com.jhhy.cuiweitourism.net.models.ResponseModel.ActivityOrderInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;

@@ -5,12 +5,11 @@ import android.os.Handler;
 import android.os.Message;
 
 import com.jhhy.cuiweitourism.http.NetworkUtil;
-import com.jhhy.cuiweitourism.net.models.ResponseModel.MemberCenterMsgInfo;
 import com.jhhy.cuiweitourism.net.netcallback.HttpUtils;
 import com.jhhy.cuiweitourism.http.ResponseResult;
-import com.jhhy.cuiweitourism.moudle.TravelDetail;
-import com.jhhy.cuiweitourism.moudle.TravelDetailDay;
-import com.jhhy.cuiweitourism.moudle.UserComment;
+import com.jhhy.cuiweitourism.model.TravelDetail;
+import com.jhhy.cuiweitourism.model.TravelDetailDay;
+import com.jhhy.cuiweitourism.model.UserComment;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 
 import org.json.JSONArray;

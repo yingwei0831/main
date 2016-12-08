@@ -8,22 +8,15 @@ import android.os.Message;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.InnerTravelPagerAdapter;
-import com.jhhy.cuiweitourism.biz.ScreenBiz;
 import com.jhhy.cuiweitourism.fragment.InnerTravelCityFollowFragment;
 import com.jhhy.cuiweitourism.fragment.InnerTravelCityFreedomFragment;
-import com.jhhy.cuiweitourism.moudle.PriceArea;
-import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
-import com.jhhy.cuiweitourism.popupwindows.PopupWindowSearchLine;
-import com.jhhy.cuiweitourism.utils.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;

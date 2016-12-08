@@ -3,7 +3,6 @@ package com.jhhy.cuiweitourism.ui;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -11,7 +10,7 @@ import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.biz.ContactsBiz;
-import com.jhhy.cuiweitourism.moudle.UserContacts;
+import com.jhhy.cuiweitourism.model.UserContacts;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.just.sun.pricecalendar.ToastCommon;

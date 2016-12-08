@@ -2,27 +2,17 @@ package com.jhhy.cuiweitourism.popupwindows;
 
 import android.app.Activity;
 import android.graphics.drawable.BitmapDrawable;
-import android.os.Handler;
-import android.support.v4.content.ContextCompat;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.PopupWindow;
-import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.VisaTypeListAdapter;
-import com.jhhy.cuiweitourism.biz.VisaBiz;
-import com.jhhy.cuiweitourism.moudle.VisaType;
-import com.jhhy.cuiweitourism.ui.MainActivity;
 import com.jhhy.cuiweitourism.utils.Utils;
-import com.just.sun.pricecalendar.ToastCommon;
 
 import java.util.List;
 

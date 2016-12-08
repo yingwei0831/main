@@ -34,12 +34,11 @@ import com.jhhy.cuiweitourism.fragment.Tab2Fragment_2;
 import com.jhhy.cuiweitourism.fragment.Tab3Fragment;
 import com.jhhy.cuiweitourism.fragment.Tab4Fragment2;
 import com.jhhy.cuiweitourism.http.NetworkUtil;
-import com.jhhy.cuiweitourism.moudle.User;
+import com.jhhy.cuiweitourism.model.User;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.utils.SharedPreferencesUtils;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
-import com.jhhy.cuiweitourism.utils.Utils;
 import com.just.sun.pricecalendar.ToastCommon;
 
 import java.io.File;
@@ -49,7 +48,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 
 public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedChangeListener

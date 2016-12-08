@@ -17,10 +17,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.util.Util;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.biz.UserInformationBiz;
-import com.jhhy.cuiweitourism.moudle.User;
 import com.jhhy.cuiweitourism.picture.Bimp;
 import com.jhhy.cuiweitourism.popupwindows.PopupWindowImage;
 import com.jhhy.cuiweitourism.net.utils.Consts;

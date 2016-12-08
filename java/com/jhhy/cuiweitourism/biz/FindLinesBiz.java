@@ -1,14 +1,13 @@
 package com.jhhy.cuiweitourism.biz;
 
 import android.content.Context;
-import android.nfc.Tag;
 import android.os.Handler;
 import android.os.Message;
 
 import com.jhhy.cuiweitourism.http.NetworkUtil;
 import com.jhhy.cuiweitourism.net.netcallback.HttpUtils;
 import com.jhhy.cuiweitourism.http.ResponseResult;
-import com.jhhy.cuiweitourism.moudle.Travel;
+import com.jhhy.cuiweitourism.model.Travel;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 

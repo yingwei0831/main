@@ -20,7 +20,7 @@ import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.OrderXListViewAdapter;
 import com.jhhy.cuiweitourism.biz.OrderActionBiz;
 import com.jhhy.cuiweitourism.biz.OrdersAllBiz;
-import com.jhhy.cuiweitourism.moudle.Order;
+import com.jhhy.cuiweitourism.model.Order;
 import com.jhhy.cuiweitourism.ui.MainActivity;
 import com.jhhy.cuiweitourism.ui.Tab4OrderDetailsActivity;
 import com.jhhy.cuiweitourism.net.utils.Consts;

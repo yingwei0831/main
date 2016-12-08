@@ -17,7 +17,7 @@ import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.OrdersPagerAdapter;
 import com.jhhy.cuiweitourism.biz.UserCollectionBiz;
 import com.jhhy.cuiweitourism.fragment.VisaMaterialFragment;
-import com.jhhy.cuiweitourism.moudle.VisaDetail;
+import com.jhhy.cuiweitourism.model.VisaDetail;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.just.sun.pricecalendar.ToastCommon;

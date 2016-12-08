@@ -9,10 +9,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.jhhy.cuiweitourism.ArgumentOnClick;
 import com.jhhy.cuiweitourism.IContactsOperation;
 import com.jhhy.cuiweitourism.R;
-import com.jhhy.cuiweitourism.moudle.UserContacts;
+import com.jhhy.cuiweitourism.model.UserContacts;
 
 import java.util.ArrayList;
 import java.util.List;

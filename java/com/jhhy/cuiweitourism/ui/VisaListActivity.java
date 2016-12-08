@@ -16,15 +16,11 @@ import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.VisaListAdapter;
-import com.jhhy.cuiweitourism.biz.VisaBiz;
-import com.jhhy.cuiweitourism.moudle.PhoneBean;
-import com.jhhy.cuiweitourism.moudle.VisaHotCountryCity;
-import com.jhhy.cuiweitourism.moudle.VisaType;
+import com.jhhy.cuiweitourism.model.PhoneBean;
 import com.jhhy.cuiweitourism.net.biz.VisaActionBiz;
 import com.jhhy.cuiweitourism.net.models.FetchModel.VisaHot;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
-import com.jhhy.cuiweitourism.net.models.ResponseModel.VisaCountryInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.VisaHotInfo;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
@@ -34,7 +30,6 @@ import com.jhhy.cuiweitourism.utils.Utils;
 import com.just.sun.pricecalendar.ToastCommon;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 

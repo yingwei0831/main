@@ -1,7 +1,5 @@
 package com.jhhy.cuiweitourism.ui;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -13,14 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.VisaDetailMaterialAdapter;
-import com.jhhy.cuiweitourism.biz.UserCollectionBiz;
-import com.jhhy.cuiweitourism.moudle.VisaDetail;
+import com.jhhy.cuiweitourism.model.VisaDetail;
 import com.jhhy.cuiweitourism.net.biz.VisaActionBiz;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;

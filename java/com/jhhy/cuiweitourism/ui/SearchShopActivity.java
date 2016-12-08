@@ -19,7 +19,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshGridView;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.SearchShopGridAdapter;
 import com.jhhy.cuiweitourism.biz.FindShopBiz;
-import com.jhhy.cuiweitourism.moudle.ShopRecommend;
+import com.jhhy.cuiweitourism.model.ShopRecommend;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
@@ -28,7 +28,6 @@ import com.jhhy.cuiweitourism.utils.Utils;
 import com.just.sun.pricecalendar.ToastCommon;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class SearchShopActivity extends BaseActivity implements View.OnClickListener {

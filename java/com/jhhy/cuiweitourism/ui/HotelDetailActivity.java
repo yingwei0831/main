@@ -3,7 +3,6 @@ package com.jhhy.cuiweitourism.ui;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,13 +17,12 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.HotelDetailInnerListAdapter;
 import com.jhhy.cuiweitourism.biz.UserCollectionBiz;
-import com.jhhy.cuiweitourism.moudle.PhoneBean;
+import com.jhhy.cuiweitourism.model.PhoneBean;
 import com.jhhy.cuiweitourism.net.biz.HotelActionBiz;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelDetailRequest;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelDetailInfo;
-import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelListInfo;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
@@ -32,8 +30,6 @@ import com.jhhy.cuiweitourism.utils.ImageLoaderUtil;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.utils.Utils;
 import com.just.sun.pricecalendar.ToastCommon;
-
-import java.util.ArrayList;
 
 
 public class HotelDetailActivity extends BaseActionBarActivity implements AdapterView.OnItemClickListener {

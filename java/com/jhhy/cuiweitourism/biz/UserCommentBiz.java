@@ -6,7 +6,7 @@ import android.os.Message;
 
 import com.jhhy.cuiweitourism.net.netcallback.HttpUtils;
 import com.jhhy.cuiweitourism.http.ResponseResult;
-import com.jhhy.cuiweitourism.moudle.MyComment;
+import com.jhhy.cuiweitourism.model.MyComment;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.utils.Utils;
 

@@ -3,56 +3,30 @@ package com.jhhy.cuiweitourism.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
-import android.view.Gravity;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
-import com.jhhy.cuiweitourism.adapter.InnerTravelFirstListViewAdapter;
-import com.jhhy.cuiweitourism.adapter.InnerTravelPagerAdapter;
-import com.jhhy.cuiweitourism.adapter.InnerTravelTripDaysListViewAdapter;
-import com.jhhy.cuiweitourism.biz.ScreenBiz;
 import com.jhhy.cuiweitourism.dialog.CarRentTimeSelectActivity;
-import com.jhhy.cuiweitourism.dialog.DatePickerActivity;
-import com.jhhy.cuiweitourism.fragment.InnerTravelCityFollowFragment;
-import com.jhhy.cuiweitourism.fragment.InnerTravelCityFreedomFragment;
-import com.jhhy.cuiweitourism.moudle.PriceArea;
-import com.jhhy.cuiweitourism.moudle.UserContacts;
+import com.jhhy.cuiweitourism.model.UserContacts;
 import com.jhhy.cuiweitourism.net.biz.CarRentActionBiz;
 import com.jhhy.cuiweitourism.net.models.FetchModel.CarSmallOrder;
-import com.jhhy.cuiweitourism.net.models.ResponseModel.BasicResponseModel;
-import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
-import com.jhhy.cuiweitourism.net.models.ResponseModel.SmallCarOrderResponse;
-import com.jhhy.cuiweitourism.net.netcallback.BizCallback;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
-import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.jhhy.cuiweitourism.utils.Utils;
 import com.just.sun.pricecalendar.ToastCommon;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class CarRentSmallActivity extends BaseActivity implements View.OnClickListener, RadioGroup.OnCheckedChangeListener {
 

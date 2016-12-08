@@ -3,34 +3,21 @@ package com.jhhy.cuiweitourism.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.content.ContextCompat;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
-import com.jhhy.cuiweitourism.biz.CalendarLineBiz;
-import com.jhhy.cuiweitourism.moudle.TravelDetail;
-import com.jhhy.cuiweitourism.net.models.ResponseModel.ActivityHotDetailInfo;
-import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
-import com.jhhy.cuiweitourism.utils.LoadingIndicator;
-import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.jhhy.cuiweitourism.utils.Utils;
-import com.just.sun.pricecalendar.GroupDeadline;
 import com.just.sun.pricecalendar.KCalendar;
 import com.just.sun.pricecalendar.KCalendarDate;
 import com.just.sun.pricecalendar.ToastCommon;
 
-import java.sql.RowIdLifetime;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class HotelCalendarActivity extends BaseActivity implements View.OnClickListener {

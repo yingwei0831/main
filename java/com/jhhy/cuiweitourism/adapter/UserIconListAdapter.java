@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
-import com.jhhy.cuiweitourism.moudle.UserIcon;
+import com.jhhy.cuiweitourism.model.UserIcon;
 
 import java.util.List;
 

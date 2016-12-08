@@ -30,7 +30,7 @@ import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.biz.OrderActionBiz;
-import com.jhhy.cuiweitourism.moudle.Order;
+import com.jhhy.cuiweitourism.model.Order;
 import com.jhhy.cuiweitourism.picture.Bimp;
 import com.jhhy.cuiweitourism.picture.PhotoActivity;
 import com.jhhy.cuiweitourism.picture.TestPicActivity;

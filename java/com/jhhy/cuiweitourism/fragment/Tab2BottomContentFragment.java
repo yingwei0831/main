@@ -20,7 +20,7 @@ import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.Tab2ContentListViewAdapter;
 import com.jhhy.cuiweitourism.adapter.Tab2LeftListViewAdapter;
 import com.jhhy.cuiweitourism.biz.ClassifyBiz;
-import com.jhhy.cuiweitourism.moudle.ClassifyArea;
+import com.jhhy.cuiweitourism.model.ClassifyArea;
 import com.jhhy.cuiweitourism.ui.InnerTravelCityActivity;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;

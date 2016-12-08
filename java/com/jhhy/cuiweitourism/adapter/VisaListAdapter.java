@@ -7,8 +7,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
-import com.jhhy.cuiweitourism.moudle.VisaHotCountry;
-import com.jhhy.cuiweitourism.moudle.VisaHotCountryCity;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.VisaHotInfo;
 
 import java.util.List;
