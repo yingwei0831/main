@@ -139,7 +139,7 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
                 btnAction.setText("去评价");
                 break;
         }
-        if ("3".equals(typeId)){ //游客信息隐藏
+        if ("3".equals(typeId)) { //游客信息隐藏
             layoutTravel.setVisibility(View.GONE);
         }
     }
@@ -148,13 +148,19 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
         tvOrderTitle.setText(order.getProductName());
         tvOrderSN.setText(order.getOrderSN());
         tvOrderTime.setText(order.getAddTime());
-        int adult = Integer.parseInt(order.getAdultNum());
-        int child = Integer.parseInt(order.getChildNum());
-        StringBuffer count = new StringBuffer().append(adult).append("成人");
-        if (child != 0) {
-            count.append(" ").append(child).append("儿童");
+        int people = 0;
+        if ("null".equals(order.getAdultNum()) || "null".equals(order.getChildNum())) {
+
+        } else {
+            int adult = Integer.parseInt(order.getAdultNum());
+            int child = Integer.parseInt(order.getChildNum());
+            StringBuffer count = new StringBuffer().append(adult).append("成人");
+            if (child != 0) {
+                count.append(" ").append(child).append("儿童");
+            }
+            tvOrderCount.setText(count.toString());
+            people = adult + child;
         }
-        tvOrderCount.setText(count.toString());
         if ("0".equals(order.getStatus())) {
             tvOrderStatus.setText("正在退款");
 
@@ -182,16 +188,21 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
         tvOrderLinkName.setText(order.getLinkMan());
         tvOrderLinkMobile.setText(order.getLinkMobile());
         List<UserContacts> travelers = order.getTravelers();
-        if (travelers != null && travelers.size() != 0) {
-            for (int i = 0; i < adult + child; i++) {
-                TravelerInfoClass traveler = new TravelerInfoClass(getApplicationContext());
-                traveler.setShowView(travelers.get(i));
-                LogUtil.e(TAG, travelers.get(i).toString());
-                layoutTravelers.addView(traveler);
+        if (people == 0){
+            layoutTravelers.setVisibility(View.GONE);
+        } else {
+            if (travelers != null && travelers.size() != 0) {
+                for (int i = 0; i < people; i++) {
+                    TravelerInfoClass traveler = new TravelerInfoClass(getApplicationContext());
+                    traveler.setShowView(travelers.get(i));
+                    LogUtil.e(TAG, travelers.get(i).toString());
+                    layoutTravelers.addView(traveler);
+                }
             }
         }
         if (order.getInvoice() == null) {
             layoutInvoice.setVisibility(View.GONE);
+            layoutTravel.setVisibility(View.GONE);
         } else {
             tvInvoiceTitle.setText(order.getInvoice().getTitle());
             tvInvoiceReceiver.setText(order.getInvoice().getReceiver());

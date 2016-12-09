@@ -25,8 +25,8 @@
                 android:background="@color/colorActionBar"
                 android:orientation="vertical"
                 android:paddingBottom="16dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
                 android:paddingTop="16dp">
                 <!--始发车站，时间，终点车站，时间，耗时-->
                 <RelativeLayout
@@ -37,10 +37,9 @@
                         android:id="@+id/tv_plane_start_station"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
                         android:layout_toLeftOf="@+id/tv_plane_order_time_consuming_second"
-                        android:gravity="right"
                         android:text="北京首都国际机场T3"
+                        android:gravity="right"
                         android:textColor="@android:color/white" />
 
                     <TextView
@@ -57,9 +56,8 @@
 
                     <TextView
                         android:id="@+id/tv_plane_end_station"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
                         android:layout_toRightOf="@+id/tv_plane_order_time_consuming_second"
                         android:text="上海虹桥机场T2"
                         android:textColor="@android:color/white" />
@@ -274,7 +272,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:background="@android:color/white">
+                    android:background="@android:color/white"
+                    >
 
                 </com.jhhy.cuiweitourism.view.MyListView>
             </LinearLayout>
@@ -376,7 +375,8 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:background="@android:color/white"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
                 <!--联系人-->
                 <LinearLayout
                     android:layout_width="match_parent"

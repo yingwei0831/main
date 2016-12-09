@@ -1,6 +1,7 @@
 package com.jhhy.cuiweitourism.ui;
 
 import android.content.Intent;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Spannable;
@@ -15,16 +16,27 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.PlaneItemInfoListAdapter;
 import com.jhhy.cuiweitourism.adapter.PlaneListAdapter;
+import com.jhhy.cuiweitourism.net.biz.PlaneTicketActionBiz;
+import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketOfChinaChangeBack;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketCityInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketInfoOfChina;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketOfChinaChangeBackRespond;
+import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
+import com.jhhy.cuiweitourism.net.utils.LogUtil;
+import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.jhhy.cuiweitourism.utils.Utils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class PlaneItemInfoActivity extends BaseActionBarActivity {
+
+    private String TAG = "PlaneItemInfoActivity";
 
     private TextView tvFromAirport; //起飞机场
     private TextView tvToAirport;   //降落机场
@@ -80,8 +92,9 @@ public class PlaneItemInfoActivity extends BaseActionBarActivity {
         tvTimeConsuming = (TextView) findViewById(R.id.tv_plane_order_time_consuming);
         tvPlaneInfo = (TextView) findViewById(R.id.tv_plane_order_plane_date);
 
-        tvFromAirport.setText(fromCity.getAirportname());
-        tvToAirport.setText(toCity.getAirportname());
+        tvFromAirport.setText(String.format(Locale.getDefault(), "%s%s", fromCity.getAirportname(), "--".equals(flight.orgJetquay)?"":flight.orgJetquay));
+        tvToAirport.setText(String.format(Locale.getDefault(), "%s%s", toCity.getAirportname(), "--".equals(flight.dstJetquay)?"":flight.dstJetquay));
+        LogUtil.e(TAG, "flight.orgJetquay = " + flight.orgJetquay +", flight.dstJetquay = " + flight.dstJetquay);
         tvStartTime.setText(String.format("%s:%s", flight.depTime.substring(0, 2), flight.depTime.substring(2)));
         tvArrivalTime.setText(String.format("%s:%s", flight.arriTime.substring(0, 2), flight.arriTime.substring(2)));
         tvStartDate.setText(dateFrom);
@@ -135,12 +148,45 @@ public class PlaneItemInfoActivity extends BaseActionBarActivity {
     private void itemViewClick(int position, int id) {
         switch (id){
             case R.id.tv_plane_ticket_refund: //退改签说明
-
+                changeBack(position);
                 break;
             case R.id.btn_plane_ticket_reserve: //预定
                 reserveTicker(position);
                 break;
         }
+    }
+
+    private void changeBack(int position) {
+        LoadingIndicator.show(PlaneItemInfoActivity.this, getString(R.string.http_notice));
+        PlaneTicketOfChinaChangeBack changeBack = new PlaneTicketOfChinaChangeBack(flight.flightNo, flight.getSeatItems().get(position).seatCode, dateFrom.substring(0, dateFrom.indexOf(" ")), flight.param1, flight.dstCity);
+        PlaneTicketActionBiz biz = new PlaneTicketActionBiz();
+        biz.planeTicketOfChinaChangeBack(changeBack, new BizGenericCallback<PlaneTicketOfChinaChangeBackRespond>() {
+            @Override
+            public void onCompletion(GenericResponseModel<PlaneTicketOfChinaChangeBackRespond> model) {
+                if ("0000".equals(model.headModel.res_code)){
+                    Intent intent = new Intent(getApplicationContext(), PlaneChangeBackActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("refund", model.body.getReturnX().getModifyAndRefundStipulateList().getRefundStipulate()); //退
+                    bundle.putString("change", model.body.getReturnX().getModifyAndRefundStipulateList().getChangeStipulate()); //改qian
+                    bundle.putString("notice", model.body.getReturnX().getModifyAndRefundStipulateList().getModifyStipulate());  //注意
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }else if ("0001".equals(model.headModel.res_code)){
+                    ToastUtil.show(getApplicationContext(), model.headModel.res_arg);
+                }
+                LoadingIndicator.cancel();
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                if (error.localReason != null){
+                    ToastUtil.show(getApplicationContext(), error.localReason);
+                }else{
+                    ToastUtil.show(getApplicationContext(), "获取退改签政策失败，请重试");
+                }
+                LoadingIndicator.cancel();
+            }
+        });
     }
 
     private void reserveTicker(int position) {

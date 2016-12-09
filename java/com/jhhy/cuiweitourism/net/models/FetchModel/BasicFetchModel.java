@@ -83,11 +83,13 @@ import java.util.Map;
                         jsonArray.put(modelJsonObj);
                     }
                     fieldObj.put(key, jsonArray);
-                }
-                else{
+                }else if (obj instanceof BasicFetchModel ){
+                    BasicFetchModel model = (BasicFetchModel) obj;
+                    JSONObject modelObj = toFieldJsonObject(model.toMapObject());
+                    fieldObj.put(key, modelObj);
+                } else {
                     fieldObj.put(key, obj);
                 }
-
             }
         } catch (JSONException e) {
             e.printStackTrace();

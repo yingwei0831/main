@@ -26,30 +26,35 @@ import android.widget.TextView;
 import com.jhhy.cuiweitourism.OnItemTextViewClick;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.OrderEditContactsAdapter;
+import com.jhhy.cuiweitourism.model.User;
 import com.jhhy.cuiweitourism.model.UserContacts;
 import com.jhhy.cuiweitourism.net.biz.PlaneTicketActionBiz;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneOrderOfChinaRequest;
+import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketOfChinaChangeBack;
 import com.jhhy.cuiweitourism.net.models.FetchModel.TrainTicketOrderFetch;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneOrderOfChinaResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketCityInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketInfoOfChina;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketOfChinaChangeBackRespond;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
+import com.jhhy.cuiweitourism.utils.SharedPreferencesUtils;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.jhhy.cuiweitourism.utils.Utils;
 import com.jhhy.cuiweitourism.view.MyListView;
 import com.just.sun.pricecalendar.ToastCommon;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class PlaneEditOrderActivity extends AppCompatActivity implements View.OnClickListener, OnItemTextViewClick, CompoundButton.OnCheckedChangeListener {
 
-    private String TAG = PlaneEditOrderActivity.class.getSimpleName();
+    private String TAG = "PlaneEditOrderActivity";
 
     private TextView tvTitleLeft;
     private ActionBar actionBar;
@@ -81,6 +86,7 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
     private int priceDelayCost; //航班延误险价格
     private int priceAccidentCost; //航空意外险价格
 
+    private PlaneOrderOfChinaResponse info;
 
     private Handler handler = new Handler(){
         @Override
@@ -94,14 +100,15 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
                     ToastCommon.toastShortShow(getApplicationContext(), null, "提交订单出错，请重试");
                     break;
                 case 1: //订单生成成功，进入支付页面
-//                    Intent intent = new Intent(getApplicationContext(), SelectPaymentActivity.class);
-//                    Bundle bundle = new Bundle();
-//                    bundle.putSerializable("order", info);
-//                    bundle.putInt("type",14);
-//                    intent.putExtras(bundle);
-//                    startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_PAY); //订单生成成功，去支付
+                    Intent intent = new Intent(getApplicationContext(), SelectPaymentActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("order", info);
+                    bundle.putInt("type",15);
+                    intent.putExtras(bundle);
+                    startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_PAY); //订单生成成功，去支付
                     break;
             }
+            LoadingIndicator.cancel();
         }
     };
 
@@ -161,8 +168,8 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
         adapter = new OrderEditContactsAdapter(getApplicationContext(), listContact, this);
         listViewContacts.setAdapter(adapter);
 
-        tvFromAirport.setText(fromCity.getAirportname());
-        tvToAirport.setText(toCity.getAirportname());
+        tvFromAirport.setText(String.format(Locale.getDefault(), "%s%s", fromCity.getAirportname(), "--".equals(flight.orgJetquay)?"":flight.orgJetquay));
+        tvToAirport.setText(String.format(Locale.getDefault(), "%s%s", toCity.getAirportname(), "--".equals(flight.dstJetquay)?"":flight.dstJetquay));
         tvStartTime.setText(String.format("%s:%s", flight.depTime.substring(0, 2), flight.depTime.substring(2)));
         tvArrivalTime.setText(String.format("%s:%s", flight.arriTime.substring(0, 2), flight.arriTime.substring(2)));
         tvStartDate.setText(dateFrom);
@@ -174,7 +181,7 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
         sb.setSpan(mealSpan, info.lastIndexOf(" ") + 1, info.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
         tvPlaneInfo.setText(sb);
 
-        tvTicketPrice.setText(String.format(Locale.getDefault(), "￥%.2f", Float.parseFloat(seatInfo.parPrice)));
+        tvTicketPrice.setText(String.format(Locale.getDefault(), "￥%.2f", Float.parseFloat(seatInfo.parPrice))); //parPrice,settlePrice
         tvConstructionFuel.setText(String.format("￥%s/￥%s", flight.airportTax, flight.fuelTax)); //机建燃油费
 
         planeBiz = new PlaneTicketActionBiz();
@@ -208,20 +215,28 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
             case R.id.tv_title_simple_title_left:
                 finish();
                 break;
-            case R.id.tv_plane_refund_notice: //TODO 退改签说明
-                ToastUtil.show(getApplicationContext(), "退改签说明");
+            case R.id.tv_plane_refund_notice: //退改签说明
+                changeBack();
                 break;
             case R.id.tv_plane_add_passenger: //添加乘客
-                Intent intent = new Intent(getApplicationContext(), SelectCustomActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putInt("type", 13);
-                if (listContact.size() == 0){
-                    bundle.putInt("number", 10);
+                if (MainActivity.logged) {
+                    Intent intent = new Intent(getApplicationContext(), SelectCustomActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("type", 13);
+                    if (listContact.size() == 0) {
+                        bundle.putInt("number", 10);
+                    } else {
+                        bundle.putInt("number", 10 - listContact.size());
+                    }
+                    intent.putExtras(bundle);
+                    startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_SELECT_CONTACT);
                 }else{
-                    bundle.putInt("number", 10 - listContact.size());
+                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("type", 2);
+                    intent.putExtras(bundle);
+                    startActivityForResult(intent, REQUEST_LOGIN);
                 }
-                intent.putExtras(bundle);
-                startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_SELECT_CONTACT);
                 break;
             case R.id.iv_edit_order_arrow_top: //订单金额详情
                 viewOrderDetail();
@@ -291,9 +306,12 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
         tvPopNumberPassenger = (TextView) view.findViewById(R.id.tv_plane_number_passenger);
     }
 
+    private int REQUEST_LOGIN = 2913; //请求登录
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (resultCode == RESULT_OK){
             if (requestCode == Consts.REQUEST_CODE_RESERVE_SELECT_CONTACT){ //选择常用联系人
                 Bundle bundle = data.getExtras();
@@ -316,6 +334,18 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
                 tvPriceTotal.setText(String.format(Locale.getDefault(), "%.2f", listContact.size() * (Float.parseFloat(seatInfo.parPrice) + acPrice + dcPrice + Float.parseFloat(flight.airportTax) + Float.parseFloat(flight.fuelTax))));
             }else if (requestCode == Consts.REQUEST_CODE_RESERVE_PAY){ //去支付，支付成功
                 LogUtil.e(TAG, "订单支付成功");
+            }else if (requestCode == REQUEST_LOGIN) { //登录成功
+                User user = (User) data.getExtras().getSerializable(Consts.KEY_REQUEST);
+                if (user != null) {
+                    MainActivity.logged = true;
+                    MainActivity.user = user;
+                    SharedPreferencesUtils sp = SharedPreferencesUtils.getInstance(getApplicationContext());
+                    sp.saveUserId(user.getUserId());
+                }
+            }
+        }else{
+            if (requestCode == REQUEST_LOGIN) { //登录
+                ToastUtil.show(getApplicationContext(), "登录失败");
             }
         }
     }
@@ -343,8 +373,7 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
         if (cbDelayCost.isChecked()){
             dcPrice = priceDelayCost * listContact.size();
         }
-//        tvPriceTotal.setText(String.format(Locale.getDefault(), "%.2f", (Float.parseFloat(seatInfo.parPrice) * listContact.size() + acPrice + dcPrice)));
-        tvPriceTotal.setText(String.format(Locale.getDefault(), "%.2f", listContact.size() * (Float.parseFloat(seatInfo.parPrice) + Float.parseFloat(flight.airportTax) + Float.parseFloat(flight.fuelTax))));
+        tvPriceTotal.setText(String.format(Locale.getDefault(), "%.2f", listContact.size() * (Float.parseFloat(seatInfo.parPrice) + Float.parseFloat(flight.airportTax) + Float.parseFloat(flight.fuelTax) + acPrice + dcPrice)));
     }
 
     /**
@@ -352,8 +381,8 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
      */
     private void goToPay() {
         LoadingIndicator.show(PlaneEditOrderActivity.this, getString(R.string.http_notice));
-        String name = etLinkName.getText().toString();
-        String mobile = etLinkMobile.getText().toString();
+        final String name = etLinkName.getText().toString();
+        final String mobile = etLinkMobile.getText().toString();
 
         if (TextUtils.isEmpty(name)) {
             ToastUtil.show(getApplicationContext(), "联系人不能为空");
@@ -361,7 +390,7 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
             LoadingIndicator.cancel();
             return;
         }
-        if(TextUtils.isEmpty(mobile) ){
+        if(TextUtils.isEmpty(mobile)){
             ToastUtil.show(getApplicationContext(), "联系人手机号码不能为空");
             etLinkMobile.requestFocus();
             LoadingIndicator.cancel();
@@ -377,36 +406,95 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
             return;
         }
 
-        //提交订单，进入支付页面
-        PlaneOrderOfChinaRequest request = new PlaneOrderOfChinaRequest();
-        planeBiz.planeTicketOrderOfChina(request, new BizGenericCallback<PlaneOrderOfChinaResponse>() {
+        LoadingIndicator.show(PlaneEditOrderActivity.this, getString(R.string.http_notice));
+        //国内机票，提交订单，进入支付页面
+        new Thread(){
             @Override
-            public void onCompletion(GenericResponseModel<PlaneOrderOfChinaResponse> model) {
-//                if ("0001".equals(model.headModel.res_code)){
-//                    Message msg = new Message();
-//                    msg.what = -1;
-//                    msg.obj = model.headModel.res_arg;
-//                    handler.sendMessage(msg);
-//                }else if ("0000".equals(model.headModel.res_code)){
-//                    info = model.body;
-//                    LogUtil.e(TAG,"trainTicketOrderSubmit =" + info.toString());
-//                    handler.sendEmptyMessage(1);
-//                }
-//                LoadingIndicator.cancel();
+            public void run() {
+                super.run();
+                List<PlaneOrderOfChinaRequest.PassengersBean> passengers = new ArrayList<>();
+                for (int i = 0; i < listContact.size(); i++) {
+                    TrainTicketOrderFetch.TicketInfo contact = listContact.get(i);
+                    String pType = "6";
+                    if ("1".equals(contact.CardType) || "2".equals(contact.CardType)){
+                        pType = "1";
+                    }else if ("4".equals(contact.CardType)){
+                        pType = "5";
+                    }else if ("5".equals(contact.CardType)){
+                        pType = "2";
+                    } else { // if ("3".equals(contact.CardType)){
+                        pType = "6";
+                    }
+                    PlaneOrderOfChinaRequest.PassengersBean passengersBean = new PlaneOrderOfChinaRequest.PassengersBean("", contact.CardNo, pType, contact.PsgName, "0", "");
+                    passengers.add(passengersBean);
+                }
+                List<PlaneOrderOfChinaRequest.SegmentsBean> segments = new ArrayList<>();
+                PlaneOrderOfChinaRequest.SegmentsBean segmentsBean = new PlaneOrderOfChinaRequest.SegmentsBean(flight.dstCity, flight.arriTime, flight.orgCity, dateFrom.substring(0, dateFrom.indexOf(" ")), flight.depTime, flight.flightNo, flight.planeType, seatInfo.seatCode);
+                segments.add(segmentsBean);
+
+                PlaneOrderOfChinaRequest.PnrInfoBean pnrInfoBean = new PlaneOrderOfChinaRequest.PnrInfoBean(flight.airportTax, flight.fuelTax, seatInfo.parPrice, passengers, segments);
+                PlaneOrderOfChinaRequest request = new PlaneOrderOfChinaRequest(seatInfo.policyData.policyId, name, mobile, pnrInfoBean, MainActivity.user.getUserId(), seatInfo.policyData.commisionPoint, seatInfo.policyData.commisionMoney, seatInfo.settlePrice);
+                planeBiz.planeTicketOrderOfChina(request, new BizGenericCallback<PlaneOrderOfChinaResponse>() {
+                    @Override
+                    public void onCompletion(GenericResponseModel<PlaneOrderOfChinaResponse> model) {
+                        if ("0001".equals(model.headModel.res_code)){
+                            Message msg = new Message();
+                            msg.what = -1;
+                            msg.obj = model.headModel.res_arg;
+                            handler.sendMessage(msg);
+                        }else if ("0000".equals(model.headModel.res_code)){
+                            info = model.body;
+                            handler.sendEmptyMessage(1);
+                        }
+                        LogUtil.e(TAG,"planeTicketOfChinaOrderSubmit: " + model.body.toString());
+                    }
+
+                    @Override
+                    public void onError(FetchError error) {
+                        if (error.localReason != null){
+                            Message msg = new Message();
+                            msg.what = -1;
+                            msg.obj = error.localReason;
+                            handler.sendMessage(msg);
+                        }else{
+                            handler.sendEmptyMessage(-2);
+                        }
+                        LogUtil.e(TAG, "planeTicketOfChinaOrderSubmit: " + error.toString());
+                    }
+                });
+            }
+        }.start();
+    }
+
+    private void changeBack() {
+        LoadingIndicator.show(PlaneEditOrderActivity.this, getString(R.string.http_notice));
+        PlaneTicketOfChinaChangeBack changeBack = new PlaneTicketOfChinaChangeBack(flight.flightNo, seatInfo.seatCode, dateFrom.substring(0, dateFrom.indexOf(" ")), flight.param1, flight.dstCity);
+        PlaneTicketActionBiz biz = new PlaneTicketActionBiz();
+        biz.planeTicketOfChinaChangeBack(changeBack, new BizGenericCallback<PlaneTicketOfChinaChangeBackRespond>() {
+            @Override
+            public void onCompletion(GenericResponseModel<PlaneTicketOfChinaChangeBackRespond> model) {
+                if ("0000".equals(model.headModel.res_code)){
+                    Intent intent = new Intent(getApplicationContext(), PlaneChangeBackActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("refund", model.body.getReturnX().getModifyAndRefundStipulateList().getRefundStipulate()); //退
+                    bundle.putString("change", model.body.getReturnX().getModifyAndRefundStipulateList().getChangeStipulate()); //改qian
+                    bundle.putString("notice", model.body.getReturnX().getModifyAndRefundStipulateList().getModifyStipulate());  //注意
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }else if ("0001".equals(model.headModel.res_code)){
+                    ToastUtil.show(getApplicationContext(), model.headModel.res_arg);
+                }
+                LoadingIndicator.cancel();
             }
 
             @Override
             public void onError(FetchError error) {
-//                if (error.localReason != null){
-//                    Message msg = new Message();
-//                    msg.what = -1;
-//                    msg.obj = error.localReason;
-//                    handler.sendMessage(msg);
-//                }else{
-//                    handler.sendEmptyMessage(-2);
-//                }
-//                LogUtil.e(TAG, "trainTicketOrderSubmit: " + error.toString());
-//                LoadingIndicator.cancel();
+                if (error.localReason != null){
+                    ToastUtil.show(getApplicationContext(), error.localReason);
+                }else{
+                    ToastUtil.show(getApplicationContext(), "获取退改签政策失败，请重试");
+                }
+                LoadingIndicator.cancel();
             }
         });
     }
@@ -436,5 +524,17 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
         ToastCommon.toastShortShow(getApplicationContext(), null, "预定须知");
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        popupWindow = null;
+        tvPopPlaneInfo = null;
+        tvPopPriceAdult = null;
+        tvPopNumberAdult = null;
+        tvPopPriceAdditional = null;
+        tvPopNumberAdditional = null;
+        tvPopPriceEnsurance = null;
+        tvPopNumberEnsurance = null;
+        tvPopNumberPassenger = null;
+    }
 }

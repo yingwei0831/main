@@ -1,5 +1,7 @@
 package com.jhhy.cuiweitourism.net.models.FetchModel;
 
+import com.google.gson.Gson;
+
 import java.util.List;
 
 /**
@@ -27,6 +29,7 @@ public class PlaneOrderOfChinaRequest extends BasicFetchModel {
      * memberid : 52
      * commisionPoint : 0.0
      * commisionMoney : 14
+     * settlePrice : 386
      */
 
     public String policyId;
@@ -38,6 +41,26 @@ public class PlaneOrderOfChinaRequest extends BasicFetchModel {
     public String memberid;
     public String commisionPoint;
     public String commisionMoney;
+    public String settlePrice;
+
+    public PlaneOrderOfChinaRequest(String policyId, String linkMan, String linkPhone, PnrInfoBean pnrInfo, String memberid, String commisionPoint, String commisionMoney, String settlePrice) {
+        this.policyId = policyId;
+        this.linkMan = linkMan;
+        this.linkPhone = linkPhone;
+        this.pnrInfo = pnrInfo;
+        this.memberid = memberid;
+        this.commisionPoint = commisionPoint;
+        this.commisionMoney = commisionMoney;
+        this.settlePrice = settlePrice;
+    }
+
+    public String getSettlePrice() {
+        return settlePrice;
+    }
+
+    public void setSettlePrice(String settlePrice) {
+        this.settlePrice = settlePrice;
+    }
 
     public String getPolicyId() {
         return policyId;
@@ -95,7 +118,7 @@ public class PlaneOrderOfChinaRequest extends BasicFetchModel {
         this.commisionMoney = commisionMoney;
     }
 
-    public static class PnrInfoBean {
+    public static class PnrInfoBean extends BasicFetchModel{
 //"pnrInfo":{"airportTax":"50","fuelTax":"0","parPrice":"360",
 //         "passengers":[
 //              {"birthday":"","identityNo":"211389598745869587","identityType":"1","name":"秦绍名","type":"0","param1":"15210656911"}
@@ -118,6 +141,17 @@ public class PlaneOrderOfChinaRequest extends BasicFetchModel {
 
         public List<PassengersBean> passengers;
         public List<SegmentsBean> segments;
+
+        public PnrInfoBean(String airportTax, String fuelTax, String parPrice, List<PassengersBean> passengers, List<SegmentsBean> segments) {
+            this.airportTax = airportTax;
+            this.fuelTax = fuelTax;
+            this.parPrice = parPrice;
+            this.passengers = passengers;
+            this.segments = segments;
+        }
+
+        public PnrInfoBean() {
+        }
 
         public String getAirportTax() {
             return airportTax;
@@ -159,36 +193,38 @@ public class PlaneOrderOfChinaRequest extends BasicFetchModel {
             this.segments = segments;
         }
 
-        @Override
-        public String toString() {
-            return "PnrInfoBean{" +
-                    "airportTax='" + airportTax + '\'' +
-                    ", fuelTax='" + fuelTax + '\'' +
-                    ", parPrice='" + parPrice + '\'' +
-                    ", passengers=" + passengers +
-                    ", segments=" + segments +
-                    '}';
-        }
     }
-    public static class PassengersBean {
+    public static class PassengersBean extends BasicFetchModel{
 //         "passengers":[
 //              {"birthday":"","identityNo":"211389598745869587","identityType":"1","name":"秦绍名","type":"0","param1":"15210656911"}
 //         ],
         /**
          * birthday :
          * identityNo : 211389598745869587
-         * identityType : 1
+         * identityType : 1     //=1 身份证； =2 护照； =3 军官证；  =4 士兵证； =5 台胞证； =6 其他. （支持港澳通行证，需在登机时出示可证明其身份的证明即可）
          * name : 秦绍名
-         * type : 0
+         * type : 0             //=0 成人; =1儿童；
          * param1 : 15210656911
          */
-
+//  XX  1:1代身份证 2:2代身份证 3：港澳通信证 4：台湾通行证 5：护照
         public String birthday;
         public String identityNo;
         public String identityType;
         public String name;
         public String type;
         public String param1;
+
+        public PassengersBean() {
+        }
+
+        public PassengersBean(String birthday, String identityNo, String identityType, String name, String type, String param1) {
+            this.birthday = birthday;
+            this.identityNo = identityNo;
+            this.identityType = identityType;
+            this.name = name;
+            this.type = type;
+            this.param1 = param1;
+        }
 
         public String getBirthday() {
             return birthday;
@@ -238,32 +274,21 @@ public class PlaneOrderOfChinaRequest extends BasicFetchModel {
             this.param1 = param1;
         }
 
-        @Override
-        public String toString() {
-            return "PassengersBean{" +
-                    "birthday='" + birthday + '\'' +
-                    ", identityNo='" + identityNo + '\'' +
-                    ", identityType='" + identityType + '\'' +
-                    ", name='" + name + '\'' +
-                    ", type='" + type + '\'' +
-                    ", param1='" + param1 + '\'' +
-                    '}';
-        }
     }
 
-    public static class SegmentsBean {
+    public static class SegmentsBean extends BasicFetchModel{
 //          "segments":[
 //              {"arrCode":"DLC","arrTime":"0930","depCode":"PEK","depDate":"2016-12-17","depTime":"0805","flightNo":"CZ6132","planeModel":"321","seatClass":"V"}
 //          ]
         /**
-         * arrCode : DLC
-         * arrTime : 0930
-         * depCode : PEK
-         * depDate : 2016-12-17
-         * depTime : 0805
-         * flightNo : CZ6132
-         * planeModel : 321
-         * seatClass : V
+         * arrCode : DLC        抵达地
+         * arrTime : 0930       抵达时间
+         * depCode : PEK        出发地
+         * depDate : 2016-12-17 出发日期
+         * depTime : 0805       出发时间
+         * flightNo : CZ6132    航班号
+         * planeModel : 321     飞机型号
+         * seatClass : V        舱位
          */
 
         public String arrCode;
@@ -274,6 +299,20 @@ public class PlaneOrderOfChinaRequest extends BasicFetchModel {
         public String flightNo;
         public String planeModel;
         public String seatClass;
+
+        public SegmentsBean() {
+        }
+
+        public SegmentsBean(String arrCode, String arrTime, String depCode, String depDate, String depTime, String flightNo, String planeModel, String seatClass) {
+            this.arrCode = arrCode;
+            this.arrTime = arrTime;
+            this.depCode = depCode;
+            this.depDate = depDate;
+            this.depTime = depTime;
+            this.flightNo = flightNo;
+            this.planeModel = planeModel;
+            this.seatClass = seatClass;
+        }
 
         public String getArrCode() {
             return arrCode;
@@ -339,30 +378,7 @@ public class PlaneOrderOfChinaRequest extends BasicFetchModel {
             this.seatClass = seatClass;
         }
 
-        @Override
-        public String toString() {
-            return "SegmentsBean{" +
-                    "arrCode='" + arrCode + '\'' +
-                    ", arrTime='" + arrTime + '\'' +
-                    ", depCode='" + depCode + '\'' +
-                    ", depDate='" + depDate + '\'' +
-                    ", depTime='" + depTime + '\'' +
-                    ", flightNo='" + flightNo + '\'' +
-                    ", planeModel='" + planeModel + '\'' +
-                    ", seatClass='" + seatClass + '\'' +
-                    '}';
-        }
+
     }
-    @Override
-    public String toString() {
-        return "PlaneOrderOfChinaRequest{" +
-                "policyId='" + policyId + '\'' +
-                ", linkMan='" + linkMan + '\'' +
-                ", linkPhone='" + linkPhone + '\'' +
-                ", pnrInfo=" + pnrInfo +
-                ", memberid='" + memberid + '\'' +
-                ", commisionPoint='" + commisionPoint + '\'' +
-                ", commisionMoney='" + commisionMoney + '\'' +
-                '}';
-    }
+
 }

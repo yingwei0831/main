@@ -373,6 +373,9 @@
     <string name="plane_flight_inquiry_notice">提交订单后，我们会尽快电话联系您确认行程</string>
     <string name="plane_flight_inquiry_commit">提交订单</string>
     <string name="plane_flight_inquiry_title">询价</string>
+    <string name="plane_flight_refund_ticket">退票条件</string>
+    <string name="plane_flight_change_ticket">改签条件</string>
+    <string name="plane_flight_change_ticket_title">退改签说明</string>
 
 
     <!--XScrollView-->

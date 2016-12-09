@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
@@ -149,6 +150,8 @@ public class CitySelectionActivity extends BaseActivity implements View.OnClickL
         letterIndexView = (LetterIndexView) findViewById(R.id.phone_LetterIndexView);
         txt_center = (TextView) findViewById(R.id.phone_txt_center);
 
+        RadioGroup radioGroup = (RadioGroup) findViewById(R.id.radio_group_airport);
+        radioGroup.setVisibility(View.GONE);
         //头部
         headerView = View.inflate(this, R.layout.header_city_selection, null);
 //        mGridView = (GridView) headerView.findViewById(R.id.gv_header_city_selection_hot);

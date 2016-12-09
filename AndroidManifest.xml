@@ -110,22 +110,24 @@
             android:name="com.easemob.chat.EMChatService"
             android:exported="true" />
 
-        <!--问题添加 start-->
-        <!--<service android:name="com.easemob.chat.EMGCMListenerService"-->
-            <!--android:exported="false" >-->
-        <!--</service>-->
-        <!--&lt;!&ndash; 这里需要android:name="你的包名.receiver.GCMPushBroadCast" &ndash;&gt;-->
-        <!--<receiver-->
-            <!--android:name="com.easemob.chat.receiver.GCMPushBroadCast"-->
-            <!--android:exported="false">-->
-            <!--<intent-filter >-->
-                <!--<action android:name="com.easemob.sdk.push"/>-->
-                <!--&lt;!&ndash; 这里需要修改category 的android:name="你的包名" &ndash;&gt;-->
-                <!--<category android:name="com.easemob.helpdeskdemo"/>-->
-            <!--</intent-filter>-->
-        <!--</receiver>-->
+        <!-- 问题添加 start -->
+        <!-- <service android:name="com.easemob.chat.EMGCMListenerService" -->
+        <!-- android:exported="false" > -->
+        <!-- </service> -->
+        <!-- &lt;!&ndash; 这里需要android:name="你的包名.receiver.GCMPushBroadCast" &ndash;&gt; -->
+        <!-- <receiver -->
+        <!-- android:name="com.easemob.chat.receiver.GCMPushBroadCast" -->
+        <!-- android:exported="false"> -->
+        <!-- <intent-filter > -->
+        <!-- <action android:name="com.easemob.sdk.push"/> -->
+        <!-- &lt;!&ndash; 这里需要修改category 的android:name="你的包名" &ndash;&gt; -->
+        <!-- <category android:name="com.easemob.helpdeskdemo"/> -->
+        <!-- </intent-filter> -->
+        <!-- </receiver> -->
 
-        <!--问题添加 end-->
+
+        <!-- 问题添加 end -->
+
 
         <!-- 声明SDK所需的receiver -->
         <receiver android:name="com.easemob.chat.EMMonitorReceiver">
@@ -146,7 +148,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden" />
-            <!--android:theme="@style/Theme.AppCompat.NoActionBar"-->
+        <!-- android:theme="@style/Theme.AppCompat.NoActionBar" -->
         <!-- android:theme="@style/MyCustomWindowTitle" -->
 
         <activity
@@ -518,8 +520,7 @@
             android:name=".ui.HotelMainActivity"
             android:launchMode="singleTop"
             android:theme="@style/ActionBarTheme"
-            android:windowSoftInputMode="stateHidden|adjustPan"
-            />
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".ui.HotelListActivity"
             android:launchMode="singleTop"
@@ -563,12 +564,11 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/ActionBarTheme" />
-         <activity
+        <activity
             android:name=".ui.PlaneListInternationalActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/ActionBarTheme" />
-
         <activity
             android:name=".ui.TrainEditOrderActivity"
             android:launchMode="singleTop"
@@ -587,7 +587,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/ActionBarTheme"
             android:windowSoftInputMode="adjustPan|stateHidden" />
-
         <activity android:name=".ui.BaseTitleActivity" />
         <activity
             android:name=".ui.TrainListItemInfoActivity"
@@ -599,12 +598,11 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/ActionBarTheme" />
-         <activity
+        <activity
             android:name=".ui.PlaneItemInfoInternationalActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/ActionBarTheme" />
-
         <activity
             android:name=".ui.PlaneMainActivity"
             android:launchMode="singleTop"
@@ -635,12 +633,17 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/ActionBarTheme" />
-        <activity android:name=".ui.WebViewActivity"
+        <activity
+            android:name=".ui.WebViewActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/ActionBarTheme" />
+
+        <activity android:name=".ui.PlaneChangeBackActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/ActionBarTheme"
             />
-
         <!-- ShareSDK 2、注意： tencent后面的appid要保持和您配置的QQ的appid一致 -->
         <activity
             android:name="com.mob.tools.MobUIShell"
@@ -720,6 +723,8 @@
         <!-- 高德定位 -->
         <!-- 定位需要的服务 使用2.0的定位需要加上这个 -->
         <service android:name="com.amap.api.location.APSService" />
+
+
     </application>
 
 </manifest>

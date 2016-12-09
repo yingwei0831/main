@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -194,10 +195,12 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
 
     //搜索
     private void search() {
-        if (type == 1){ //单程，目前设计是单程的样式
-
-        }else if(type == 2){ //往返，添加返程时间
-
+        if(type == 2){ //往返，添加返程时间
+            if (TextUtils.isEmpty(dateReturn)){
+                ToastUtil.show(getApplicationContext(), "返程日期不能为空");
+                return;
+            }
+            LogUtil.e(TAG, "dateReturn = " + dateReturn);
         }
 
         if (typeSearchFrom == 1 && typeSearchTo == 1) { //国内机票
@@ -207,9 +210,6 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
             bundle.putSerializable("toCity", toCity);
             bundle.putString("dateFrom", dateFrom);
             bundle.putString("traveltype", traveltype);
-            if (type == 2) { //往返，询价
-                bundle.putString("dateReturn", dateReturn);
-            }
             intent.putExtras(bundle);
             startActivityForResult(intent, VIEW_PLANE_LIST);
         } else { //国际机票

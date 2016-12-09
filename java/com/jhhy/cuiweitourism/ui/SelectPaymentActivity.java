@@ -17,6 +17,7 @@ import com.jhhy.cuiweitourism.model.Order;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.ActivityOrderInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.CarRentOrderResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelOrderInfo;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneOrderOfChinaResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainTicketOrderInfo;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
@@ -26,15 +27,15 @@ import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
+import java.util.Locale;
+
 public class SelectPaymentActivity extends BaseActivity implements View.OnClickListener {
 
     private String TAG = SelectPaymentActivity.class.getSimpleName();
 
     private static final int SDK_PAY_FLAG = 8881; //阿里支付
-    private TextView tvTitleTop;
     private ImageView ivTitleLeft;
 
-    private TextView tvOrderPrice;
     private Order order;
 
     private String ordersn = null;
@@ -42,11 +43,11 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
     private Button tvAliPay;
     private Button tvWeChatPay;
 
-    private int type; //11:热门活动支付,21:酒店支付, 16:租车订单
+    private int type; //11:热门活动支付,21:酒店支付, 16:租车订单, 14:国内火车票订单； 15：国内飞机票订单
     private ActivityOrderInfo hotInfo; //热门活动订单
     private HotelOrderInfo hotelInfo; //酒店订单
     private TrainTicketOrderInfo trainInfo; //火车票订单
-    private CarRentOrderResponse carRentOrderResponse;
+    private PlaneOrderOfChinaResponse planeOfChinaInfo; //飞机票订单
 
     private Handler handler = new Handler(){
         @Override
@@ -70,6 +71,7 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
                     break;
                 case Consts.NET_ERROR_SOCKET_TIMEOUT:
                     ToastUtil.show(getApplicationContext(), "与服务器链接超时，请重试");
+                    LoadingIndicator.cancel();
                     break;
                 case -1:
                     ToastUtil.show(getApplicationContext(), "数据解析异常，请重试");
@@ -158,8 +160,15 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
                     ordersn = trainInfo.getOrdersn();
                     orderPrice = trainInfo.getPrice();
                 }
-            }else if (type == 16){
-                carRentOrderResponse = (CarRentOrderResponse) bundle.getSerializable("order");
+            }else if (type == 15){ //国内机票
+                planeOfChinaInfo = (PlaneOrderOfChinaResponse)bundle.getSerializable("order");
+                if (planeOfChinaInfo != null){
+                    ordersn = planeOfChinaInfo.getOrdersn();
+                    orderPrice = String.valueOf(String.format(Locale.getDefault(), "%.2f", planeOfChinaInfo.getTotalprice()));
+                }
+            }
+            else if (type == 16){
+                CarRentOrderResponse carRentOrderResponse = (CarRentOrderResponse) bundle.getSerializable("order");
                 if (carRentOrderResponse != null){
                     ordersn = carRentOrderResponse.getOrdersn();
                     orderPrice = carRentOrderResponse.getPrice();
@@ -176,11 +185,11 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
     }
 
     private void setupView() {
-        tvTitleTop = (TextView) findViewById(R.id.tv_title_inner_travel);
+        TextView tvTitleTop = (TextView) findViewById(R.id.tv_title_inner_travel);
         tvTitleTop.setText("翠微收银台");
         ivTitleLeft = (ImageView) findViewById(R.id.title_main_tv_left_location);
 
-        tvOrderPrice = (TextView) findViewById(R.id.tv_order_price);
+        TextView tvOrderPrice = (TextView) findViewById(R.id.tv_order_price);
         tvAliPay = (Button) findViewById(R.id.tv_ali_pay);
         tvWeChatPay = (Button) findViewById(R.id.tv_wechat_pay);
 
@@ -205,25 +214,30 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
                 break;
             case R.id.tv_wechat_pay:
                 //TODO 微信付款
-                weChatPay();
+//                weChatPay();
 //                setResult(RESULT_OK);
 //                finish();
                 break;
         }
     }
 
-    private void weChatPay() {
-        // 注册APPID
-        final IWXAPI msgApi = WXAPIFactory.createWXAPI(getApplicationContext(), null);
-        // 将该app注册到微信
-        msgApi.registerApp("wxfa0103db1944bda3");
-    }
+//    private void weChatPay() {
+//        // 注册APPID
+//        final IWXAPI msgApi = WXAPIFactory.createWXAPI(getApplicationContext(), null);
+//        // 将该app注册到微信
+//        msgApi.registerApp("wxfa0103db1944bda3");
+//    }
 
     //{"head":{"code":"Alipay_index"},"field":{"ordersn":"80489619661756"}}
     private void aliPay() {
         LoadingIndicator.show(SelectPaymentActivity.this, getString(R.string.http_notice));
         PayActionBiz biz = new PayActionBiz(getApplicationContext(), handler);
-        biz.getPayInfo(ordersn);
+        if (type == 15){ //国内机票支付
+//            {"head":{"code":"Fly_pay"},"field":{"memberid":"52","ordersn":"82207348571085"}}
+            biz.getPlaneOfChinaPayInfo(MainActivity.user.getUserId(), ordersn);
+        }else {
+            biz.getPayInfo(ordersn);
+        }
     }
 
     @Override
