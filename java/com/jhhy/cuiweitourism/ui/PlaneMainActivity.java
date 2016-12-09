@@ -195,14 +195,6 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
 
     //搜索
     private void search() {
-        if(type == 2){ //往返，添加返程时间
-            if (TextUtils.isEmpty(dateReturn)){
-                ToastUtil.show(getApplicationContext(), "返程日期不能为空");
-                return;
-            }
-            LogUtil.e(TAG, "dateReturn = " + dateReturn);
-        }
-
         if (typeSearchFrom == 1 && typeSearchTo == 1) { //国内机票
             Intent intent = new Intent(getApplicationContext(), PlaneListActivity.class);
             Bundle bundle = new Bundle();
@@ -220,6 +212,11 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
             bundle.putString("dateFrom", dateFrom);
             bundle.putString("traveltype", traveltype);
             if (type == 2) { //往返，询价
+                if (TextUtils.isEmpty(dateReturn)){
+                    ToastUtil.show(getApplicationContext(), "返程日期不能为空");
+                    return;
+                }
+                LogUtil.e(TAG, "dateReturn = " + dateReturn);
                 bundle.putString("dateReturn", dateReturn);
             }
             intent.putExtras(bundle);
