@@ -4,6 +4,7 @@ import com.jhhy.cuiweitourism.model.Collection;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -49,7 +50,7 @@ public class PlaneTicketInternationalInfo extends Collection{
         }
     }
 
-    public ArrayList<AirlineCompanyInfo> A; //航空公司列表信息
+    public HashMap<String, AirlineCompanyInfo> A; //航空公司列表信息
 
 
     public static class AircraftTypeInfo{
@@ -62,7 +63,7 @@ public class PlaneTicketInternationalInfo extends Collection{
 
         @Override
         public String toString() {
-            return "AircraftTypeInfo{" +
+            return "AircraftTypeInfo{ " +
                     "typeCode='" + typeCode + '\'' +
                     ", typeName='" + typeName + '\'' +
                     ", typeNum='" + typeNum + '\'' +
@@ -334,22 +335,22 @@ public class PlaneTicketInternationalInfo extends Collection{
         public String faceValue; //"票面价",
         public String releasePriceFlightCompanyCheck; //"发布运价的航空公司(去程/回程) (查询退改签时需要回传)",
         public String fromAirportCheck; //"起飞机场(去程出发/回程出发) (查询退改签时需要回传)",
-        public String toAirportCheck; //"目的机场(去程到达/回程到达) (查询退改签时需要回传)",
+        public String toAirportCheck;   //"目的机场(去程到达/回程到达) (查询退改签时需要回传)",
         public String airportCabinCode; //"舱位代码(去程/回程)",
         public String airportCabinType; //"舱位类型(去程/回程)",
-        public String changeBackSign; //"退改签Sign(去程_回程)",
-        public String priceSource; //"价格来源",
+        public String changeBackSign;   //"退改签Sign(去程_回程)",
+        public String priceSource;      //"价格来源",
         public String freightBaseCheck; //"运价基础(去程,回程) (查询退改签时需要回传)",
-        public String currencyType; //"货币类型",
-        public String passengerCount; //"旅客数量",
+        public String currencyType;     //"货币类型",
+        public String passengerCount;   //"旅客数量",
         public Map<String, TaxTypeCode> taxTypeCodeMap; //XT : 税类型代码
         public String mainCarrierCheck; //"整个行程的主承运人(验价时需要回传)",
-        public String cabinCount; //"该组合舱位的剩余张数(注:9代表大于等于9张)" ,
-        public String rebate; //"返点" ,
-        public String award; //"奖励" ,
-        public String backMoney; //"返款" ,
-        public String serviceCharge; //"服务费" ,
-        public String extraCharge; //"附加费"
+        public String cabinCount;       //"该组合舱位的剩余张数(注:9代表大于等于9张)" ,
+        public String rebate;           //"返点" ,
+        public String award;            //"奖励" ,
+        public String backMoney;        //"返款" ,
+        public String serviceCharge;    //"服务费" ,
+        public String extraCharge;      //"附加费"
 
         @Override
         public String toString() {

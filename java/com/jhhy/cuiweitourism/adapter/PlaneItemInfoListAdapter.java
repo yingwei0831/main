@@ -10,7 +10,9 @@ import android.widget.TextView;
 import com.jhhy.cuiweitourism.OnItemTextViewClick;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketInfoOfChina;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketInternationalInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainTicketDetailInfo;
+import com.jhhy.cuiweitourism.ui.PlaneListInternationalActivity;
 
 import java.util.List;
 
@@ -19,8 +21,14 @@ import java.util.List;
  */
 public abstract class PlaneItemInfoListAdapter extends MyBaseAdapter implements OnItemTextViewClick {
 
+    private int type;
+
     public PlaneItemInfoListAdapter(Context ct, List list) {
         super(ct, list);
+    }
+
+    public void setType(int type){
+        this.type = type;
     }
 
     @Override
@@ -33,6 +41,7 @@ public abstract class PlaneItemInfoListAdapter extends MyBaseAdapter implements 
             holder.tvTicketPrice = (TextView) view.findViewById(R.id.tv_plane_ticket_price);
             holder.tvRefundNotice = (TextView) view.findViewById(R.id.tv_plane_ticket_refund);
             holder.btnReserveTicket = (Button) view.findViewById(R.id.btn_plane_ticket_reserve);
+            holder.tvTaxPrice = (TextView) view.findViewById(R.id.tv_tax_price);
             view.setTag(holder);
         }else {
             holder = (ViewHolder) view.getTag();
@@ -56,10 +65,25 @@ public abstract class PlaneItemInfoListAdapter extends MyBaseAdapter implements 
             }
         });
 
-        PlaneTicketInfoOfChina.SeatItemInfo seatItem = (PlaneTicketInfoOfChina.SeatItemInfo) getItem(i);
-        holder.tvTypeSeat.setText(String.format("%s%s折", seatItem.seatMsg, seatItem.discount));
-        holder.tvTicketPrice.setText(String.format("￥%s", seatItem.parPrice));
+        if (type == 1) {
+            holder.tvTaxPrice.setVisibility(View.VISIBLE);
+            PlaneTicketInternationalInfo.PlaneTicketInternationalHF hf = (PlaneTicketInternationalInfo.PlaneTicketInternationalHF) getItem(i);
 
+            String[] cabinTypes = hf.cabin.passengerType.airportCabinType.split("/");
+            StringBuffer sb = new StringBuffer();
+            for (String cabinType1 : cabinTypes) {
+                sb.append(PlaneListInternationalActivity.info.R.get(cabinType1)).append("|");
+            }
+            String cabinType =  sb.toString().substring(0, sb.length()-1);
+
+            holder.tvTypeSeat.setText(cabinType);
+            holder.tvTicketPrice.setText(String.format("￥%s", hf.cabin.baseFare.faceValueTotal)); //票面价 ; 含税总价：hf.cabin.totalFare.taxTotal
+            holder.tvTaxPrice.setText(String.format("税费：￥%s", hf.cabin.passengerType.taxTypeCodeMap.get("XT").price)); //税费xxx; 含税总价；
+        }else{
+            PlaneTicketInfoOfChina.SeatItemInfo seatItem = (PlaneTicketInfoOfChina.SeatItemInfo) getItem(i);
+            holder.tvTypeSeat.setText(String.format("%s%s折", seatItem.seatMsg, seatItem.discount));
+            holder.tvTicketPrice.setText(String.format("￥%s", seatItem.parPrice));
+        }
         return view;
     }
 
@@ -68,5 +92,6 @@ public abstract class PlaneItemInfoListAdapter extends MyBaseAdapter implements 
         private TextView tvTicketPrice;
         private TextView tvRefundNotice;
         private Button btnReserveTicket;
+        private TextView tvTaxPrice;
     }
 }

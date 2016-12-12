@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/tv_plane_ticket_price"
+            android:layout_toLeftOf="@+id/layout_price"
             android:orientation="vertical">
 
             <TextView
@@ -35,20 +35,38 @@
                 android:drawableRight="@mipmap/arrow_right_dark"
                 android:paddingBottom="4dp"
                 android:paddingTop="10dp"
-                android:text="退改签说明" />
+                android:text="退改签说明"
+                android:textColor="@color/colorGrayDark"/>
 
         </LinearLayout>
 
-
-        <TextView
-            android:id="@+id/tv_plane_ticket_price"
+        <LinearLayout
+            android:id="@+id/layout_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:text="￥120"
-            android:textColor="@color/colorTab1RecommendForYouMoney"
-            android:textSize="18sp" />
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            >
+            <TextView
+                android:id="@+id/tv_plane_ticket_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="￥120"
+                android:textColor="@color/colorTab1RecommendForYouMoney"
+                android:textSize="18sp" />
+            <TextView
+                android:id="@+id/tv_tax_price"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="税费：￥477"
+                android:paddingBottom="4dp"
+                android:paddingTop="10dp"
+                android:textColor="@color/colorGrayDark"/>
+        </LinearLayout>
+
 
     </RelativeLayout>
 

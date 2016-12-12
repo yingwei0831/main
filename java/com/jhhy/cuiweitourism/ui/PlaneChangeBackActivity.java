@@ -3,9 +3,11 @@ package com.jhhy.cuiweitourism.ui;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
+import com.jhhy.cuiweitourism.net.utils.LogUtil;
 
 /**
  * 退改签说明
@@ -42,8 +44,17 @@ public class PlaneChangeBackActivity extends BaseActionBarActivity {
         tvTitle.setText(getString(R.string.plane_flight_change_ticket_title));
         tvRefundTicket = (TextView) findViewById(R.id.tv_plane_ticket_refund);
         tvChangeTicket = (TextView) findViewById(R.id.tv_plane_ticket_change);
+
+        LogUtil.e("PlaneChangeBackActivity", "change = "+change);
+        LogUtil.e("PlaneChangeBackActivity", "notice = "+notice);
+        if (change == null || "null".equals(change)){
+            tvChangeTicket.setVisibility(View.GONE);
+            TextView tvRefundNotice = (TextView) findViewById(R.id.tv_refund_notice);
+            tvRefundTicket.setText(getString(R.string.plane_flight_change_ticket_title));
+        }else{
+            tvChangeTicket.setText(change);
+        }
         tvRefundTicket.setText(refund);
-        tvChangeTicket.setText(change);
     }
 
     @Override

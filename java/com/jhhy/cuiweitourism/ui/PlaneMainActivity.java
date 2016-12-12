@@ -36,7 +36,7 @@ import java.util.ArrayList;
 
 public class PlaneMainActivity extends BaseActionBarActivity implements RadioGroup.OnCheckedChangeListener, OnItemTextViewClick {
 
-    private String TAG = PlaneMainActivity.class.getSimpleName();
+    private String TAG = "PlaneMainActivity";
 
     private RadioGroup radioGroup; //出行类型
     private ImageView ivExchange; //交换出发地和目的地
@@ -195,13 +195,22 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
 
     //搜索
     private void search() {
-        if (typeSearchFrom == 1 && typeSearchTo == 1) { //国内机票
+        if (typeSearchFrom == 1 && typeSearchTo == 1) { //国内机票,返程则查询两次
             Intent intent = new Intent(getApplicationContext(), PlaneListActivity.class);
             Bundle bundle = new Bundle();
             bundle.putSerializable("fromCity", fromCity);
             bundle.putSerializable("toCity", toCity);
             bundle.putString("dateFrom", dateFrom);
             bundle.putString("traveltype", traveltype);
+            bundle.putInt("type", type); //单程，往返
+            if (type == 2) { //往返，询价
+                if (TextUtils.isEmpty(dateReturn)){
+                    ToastUtil.show(getApplicationContext(), "返程日期不能为空");
+                    return;
+                }
+                LogUtil.e(TAG, "dateReturn = " + dateReturn);
+                bundle.putString("dateReturn", dateReturn);
+            }
             intent.putExtras(bundle);
             startActivityForResult(intent, VIEW_PLANE_LIST);
         } else { //国际机票
@@ -211,6 +220,7 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
             bundle.putSerializable("toCity", toCity);
             bundle.putString("dateFrom", dateFrom);
             bundle.putString("traveltype", traveltype);
+            bundle.putInt("type", type); //单程，往返
             if (type == 2) { //往返，询价
                 if (TextUtils.isEmpty(dateReturn)){
                     ToastUtil.show(getApplicationContext(), "返程日期不能为空");

@@ -84,7 +84,6 @@ public class PlaneListAdapter extends MyBaseAdapter {
 //            if () //单程
             if (flight != null){
                 PlaneTicketInternationalInfo.PlaneTicketInternationalFS s1 = flight.S1;
-                String fKey = flight.F;
                 holder.tvArrivalType.setVisibility(View.VISIBLE);
                 holder.tvConsumingTime.setVisibility(View.VISIBLE);
                 holder.tvStartTime.setText(s1.fromTime);
@@ -98,7 +97,7 @@ public class PlaneListAdapter extends MyBaseAdapter {
                 holder.tvFromAirport.setText(String.format("%s%s", PlaneListInternationalActivity.info.P.get(s1.fromAirportCode).fullName, s1.fromAirportName)); //起飞机场/航站楼
                 holder.tvArrivalAirport.setText(String.format("%s%s", PlaneListInternationalActivity.info.P.get(s1.toAirportCode).fullName, s1.toAirportName)); //起飞机场/航站楼
 
-                PlaneTicketInternationalInfo.PlaneTicketInternationalHF hf = PlaneListInternationalActivity.info.HMap.get(fKey);
+                PlaneTicketInternationalInfo.PlaneTicketInternationalHF hf = PlaneListInternationalActivity.info.HMap.get(flight.F);
                 if (priceType == 1){ //含税总价
                     holder.tvTicketPrice.setText(String.format("￥%s", hf.cabin.totalFare.taxTotal));
                     holder.tvPlaneClass.setText(context.getString(R.string.plane_flight_tax));

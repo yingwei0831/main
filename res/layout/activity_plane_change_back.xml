@@ -11,6 +11,7 @@
     tools:context="com.jhhy.cuiweitourism.ui.PlaneChangeBackActivity">
 
     <TextView
+        android:id="@+id/tv_refund_notice"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/plane_flight_refund_ticket"
@@ -26,6 +27,7 @@
         android:textColor="@android:color/black" />
 
     <TextView
+        android:id="@+id/tv_change_notice"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"

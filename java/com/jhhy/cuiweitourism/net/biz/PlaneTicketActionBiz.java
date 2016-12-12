@@ -10,12 +10,14 @@ import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneOrderOfChinaRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketCityFetch;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketInfoForChinalRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketInfoInternationalRequest;
+import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketInternationalChangeBack;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketOfChinaChangeBack;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneOrderOfChinaResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketCityInfo;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketInternationalChangeBackRespond;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketInternationalInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketInfoOfChina;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketOfChinaChangeBackRespond;
@@ -190,7 +192,7 @@ public class PlaneTicketActionBiz extends BasicActionBiz {
                 if(map.containsKey("A")) {
                     LinkedTreeMap<String, LinkedTreeMap<String, ArrayList<String>>> content = (LinkedTreeMap<String, LinkedTreeMap<String, ArrayList<String>>>) map.get("A");
                     Iterator iter = content.entrySet().iterator();
-                    ArrayList<PlaneTicketInternationalInfo.AirlineCompanyInfo> airlineCompanyInfos = new ArrayList<>();
+                    HashMap<String, PlaneTicketInternationalInfo.AirlineCompanyInfo> airlineCompanyInfos = new HashMap<>();
                     while (iter.hasNext()) {
                         Map.Entry<String, ArrayList<String>> entry = (Map.Entry<String, ArrayList<String>>) iter.next();
                         ArrayList<String> value = entry.getValue();
@@ -199,7 +201,7 @@ public class PlaneTicketActionBiz extends BasicActionBiz {
                         airlineCompany.companyName = value.get(0);
                         airlineCompany.shortName = value.get(1);
                         airlineCompany.isOnlineCheckin = value.get(2);
-                        airlineCompanyInfos.add(airlineCompany);
+                        airlineCompanyInfos.put(entry.getKey(), airlineCompany);
                     }
                     info.A = airlineCompanyInfos;
                 }
@@ -457,9 +459,22 @@ public class PlaneTicketActionBiz extends BasicActionBiz {
     /**
      *  国际飞机票政策
      */
+    public void planeTicketInternationalPolicyInfo(PlaneTicketInternationalChangeBack request, BizGenericCallback<PlaneTicketInternationalChangeBackRespond> callback){
+        request.code = "Plane_tuistate";
+        FetchGenericResponse<PlaneTicketInternationalChangeBackRespond> fetchGenericResponse = new FetchGenericResponse<PlaneTicketInternationalChangeBackRespond>(callback) {
+            @Override
+            public void onCompletion(FetchResponseModel response) {
+                PlaneTicketInternationalChangeBackRespond info = parseJsonToObject(response, PlaneTicketInternationalChangeBackRespond.class);
+                GenericResponseModel<PlaneTicketInternationalChangeBackRespond> returnModel = new GenericResponseModel<>(response.head, info);
+                this.bizCallback.onCompletion(returnModel);
+            }
 
-    public void planeTicketInternationalPolicyInfo(){
-
+            @Override
+            public void onError(FetchError error) {
+                this.bizCallback.onError(error);
+            }
+        };
+        HttpUtils.executeXutils(request, new FetchGenericCallback<>(fetchGenericResponse));
     }
 
     /**

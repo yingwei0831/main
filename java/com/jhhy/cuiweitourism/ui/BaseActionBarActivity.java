@@ -17,6 +17,7 @@ public class BaseActionBarActivity extends AppCompatActivity implements View.OnC
     protected ImageView ivTitleRight;
     protected TextView tvTitle;
     protected ActionBar actionBar;
+    protected TextView tvPlaneDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +41,7 @@ public class BaseActionBarActivity extends AppCompatActivity implements View.OnC
 
     protected void setupView() {
         tvTitle = (TextView) actionBar.getCustomView().findViewById(R.id.tv_title_inner_travel);
+        tvPlaneDate = (TextView) actionBar.getCustomView().findViewById(R.id.tv_select_plane_date);
         ivTitleLeft = (ImageView) actionBar.getCustomView().findViewById(R.id.title_main_tv_left_location);
         ivTitleRight = (ImageView) actionBar.getCustomView().findViewById(R.id.title_main_iv_right_telephone);
     }

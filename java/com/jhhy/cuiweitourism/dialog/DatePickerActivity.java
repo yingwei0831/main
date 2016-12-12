@@ -103,7 +103,7 @@ public class DatePickerActivity extends Activity implements View.OnClickListener
         week = Utils.getDayOfStrE(calendar.get(Calendar.DAY_OF_WEEK));
         newString = String.format("%d年%02d月%02d日 %s", year, month, date, Utils.getDayOfStr(calendar.get(Calendar.DAY_OF_WEEK))); //calendar.get(Calendar.DAY_OF_WEEK);
         longdate = Utils.getTime(String.format(Locale.getDefault(), "%d-%02d-%02d", year, month, date));
-        LogUtil.e(TAG, "longdate = " + longdate +", currentTimeMillis = " + System.currentTimeMillis());
+//        LogUtil.e(TAG, "longdate = " + longdate +", currentTimeMillis = " + System.currentTimeMillis());
         npYear.setMaxValue(calendar.get(Calendar.YEAR) + 2);
         npYear.setMinValue(calendar.get(Calendar.YEAR));
 
@@ -160,7 +160,7 @@ public class DatePickerActivity extends Activity implements View.OnClickListener
         week = Utils.getDayOfStrE(c.get(Calendar.DAY_OF_WEEK));
         newString = String.format("%d年%02d月%02d日 %s", year, month, date, Utils.getDayOfStr(c.get(Calendar.DAY_OF_WEEK)));
         longdate = Utils.getTime(String.format(Locale.getDefault(), "%d-%02d-%02d", year, month, date));
-        LogUtil.e(TAG, "longdate = " + longdate +", currentTimeMillis = " + System.currentTimeMillis());
+//        LogUtil.e(TAG, "longdate = " + longdate +", currentTimeMillis = " + System.currentTimeMillis());
         tvDate.setText(newString);
     }
 

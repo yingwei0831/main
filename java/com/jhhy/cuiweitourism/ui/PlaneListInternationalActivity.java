@@ -265,8 +265,6 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
         }
     }
 
-
-
 //    private void setRbBg() {
 //        rbSortTime.setCompoundDrawables(null, timeDrawable, null, null);
 //        rbSortPrice.setCompoundDrawables(null, priceDrawable, null, null);
@@ -291,7 +289,7 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
         Intent intent = new Intent(getApplicationContext(), PlaneItemInfoInternationalActivity.class);
         Bundle bundle = new Bundle();
         PlaneTicketInternationalInfo.PlaneTicketInternationalF flight = list.get((int) l);
-//        bundle.putSerializable("flight", flight);
+        bundle.putSerializable("flight", flight);
         bundle.putString("dateFrom", dateFrom);
         bundle.putSerializable("fromCity", fromCity);
         bundle.putSerializable("toCity", toCity);

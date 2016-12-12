@@ -209,7 +209,7 @@ public class PopupWindowPlaneOuterScreen extends PopupWindow implements OnClickL
         secondListAirplane.addAll(PlaneListInternationalActivity.info.J.values());
 
         secondListAirportCompany = new ArrayList<>();
-        secondListAirportCompany.addAll(PlaneListInternationalActivity.info.A);
+        secondListAirportCompany.addAll(PlaneListInternationalActivity.info.A.values());
     }
 
     private void addListener() {

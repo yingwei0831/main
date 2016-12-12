@@ -52,7 +52,8 @@
                 android:drawableLeft="@mipmap/icon_air_flight"
                 android:drawablePadding="8dp"
                 android:text="出发城市"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textColor="@color/colorGrayDark"/>
 
             <TextView
                 android:id="@+id/tv_plane_from_city"
@@ -86,7 +87,8 @@
                 android:drawableLeft="@mipmap/icon_air_flight"
                 android:drawablePadding="8dp"
                 android:text="到达城市"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textColor="@color/colorGrayDark"/>
 
             <TextView
                 android:id="@+id/tv_plane_to_city"
@@ -125,7 +127,8 @@
             android:drawableLeft="@mipmap/icon_train_calendar"
             android:drawablePadding="8dp"
             android:text="出发时间"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textColor="@color/colorGrayDark"/>
 
         <TextView
             android:id="@+id/tv_plane_from_time"
