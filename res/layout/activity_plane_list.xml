@@ -12,6 +12,7 @@
         android:background="@color/colorLineGray2" />
 
     <RelativeLayout
+        android:id="@+id/layout_request_next_day"
         android:layout_width="match_parent"
         android:layout_height="50dp">
 

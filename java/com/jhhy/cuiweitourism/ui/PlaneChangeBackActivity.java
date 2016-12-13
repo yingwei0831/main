@@ -45,12 +45,13 @@ public class PlaneChangeBackActivity extends BaseActionBarActivity {
         tvRefundTicket = (TextView) findViewById(R.id.tv_plane_ticket_refund);
         tvChangeTicket = (TextView) findViewById(R.id.tv_plane_ticket_change);
 
-        LogUtil.e("PlaneChangeBackActivity", "change = "+change);
-        LogUtil.e("PlaneChangeBackActivity", "notice = "+notice);
         if (change == null || "null".equals(change)){
             tvChangeTicket.setVisibility(View.GONE);
             TextView tvRefundNotice = (TextView) findViewById(R.id.tv_refund_notice);
-            tvRefundTicket.setText(getString(R.string.plane_flight_change_ticket_title));
+            tvRefundNotice.setText(getString(R.string.plane_flight_change_ticket_title));
+
+            TextView tvChangeNotice = (TextView) findViewById(R.id.tv_change_notice);
+            tvChangeNotice.setVisibility(View.GONE);
         }else{
             tvChangeTicket.setText(change);
         }

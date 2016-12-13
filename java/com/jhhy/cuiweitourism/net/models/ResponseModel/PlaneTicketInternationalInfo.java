@@ -1,5 +1,8 @@
 package com.jhhy.cuiweitourism.net.models.ResponseModel;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.jhhy.cuiweitourism.model.Collection;
 
 import java.io.Serializable;
@@ -314,7 +317,7 @@ public class PlaneTicketInternationalInfo extends Collection{
     }
     public Map<String, PlaneTicketInternationalHF> HMap; //<F1, PlaneTicketInternationalHF>
 
-    public static class PlaneTicketInternationalHFCabin  extends Collection{
+    public static class PlaneTicketInternationalHFCabin  extends Collection implements Serializable{
         public String passengerTypeKey; //乘客类型(ADT/CHD/INF)
         public PassengerType passengerType; //乘客类型
         public BaseFare baseFare; //"票面价总计金额","货币类型"
@@ -331,7 +334,7 @@ public class PlaneTicketInternationalInfo extends Collection{
         }
     }
 
-    public static class PassengerType{
+    public static class PassengerType implements Serializable, Parcelable {
         public String faceValue; //"票面价",
         public String releasePriceFlightCompanyCheck; //"发布运价的航空公司(去程/回程) (查询退改签时需要回传)",
         public String fromAirportCheck; //"起飞机场(去程出发/回程出发) (查询退改签时需要回传)",
@@ -351,6 +354,9 @@ public class PlaneTicketInternationalInfo extends Collection{
         public String backMoney;        //"返款" ,
         public String serviceCharge;    //"服务费" ,
         public String extraCharge;      //"附加费"
+
+        public PassengerType() {
+        }
 
         @Override
         public String toString() {
@@ -376,8 +382,70 @@ public class PlaneTicketInternationalInfo extends Collection{
                     ", extraCharge='" + extraCharge + '\'' +
                     '}';
         }
+
+        public static final Parcelable.Creator<PassengerType> CREATOR = new Creator<PassengerType>() {
+            @Override
+            public PassengerType createFromParcel(Parcel in) {
+                return new PassengerType(in);
+            }
+
+            @Override
+            public PassengerType[] newArray(int size) {
+                return new PassengerType[size];
+            }
+        };
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel parcel, int i) {
+            parcel.writeString(faceValue);
+            parcel.writeString(releasePriceFlightCompanyCheck);
+            parcel.writeString(fromAirportCheck);
+            parcel.writeString(toAirportCheck);
+            parcel.writeString(airportCabinCode);
+            parcel.writeString(airportCabinType);
+            parcel.writeString(changeBackSign);
+            parcel.writeString(priceSource);
+            parcel.writeString(freightBaseCheck);
+            parcel.writeString(currencyType);
+            parcel.writeString(passengerCount);
+            parcel.writeMap(taxTypeCodeMap);
+            parcel.writeString(mainCarrierCheck );
+            parcel.writeString(cabinCount       );
+            parcel.writeString(rebate           );
+            parcel.writeString(award            );
+            parcel.writeString(backMoney        );
+            parcel.writeString(serviceCharge    );
+            parcel.writeString(extraCharge      );
+        }
+
+        private PassengerType(Parcel in){
+            faceValue = in.readString();
+            releasePriceFlightCompanyCheck = in.readString();
+            fromAirportCheck = in.readString();
+            toAirportCheck = in.readString();
+            airportCabinCode = in.readString();
+            airportCabinType = in.readString();
+            changeBackSign = in.readString();
+            priceSource = in.readString();
+            freightBaseCheck = in.readString();
+            currencyType = in.readString();
+            passengerCount = in.readString();
+            taxTypeCodeMap = in.readHashMap(HashMap.class.getClassLoader());
+            mainCarrierCheck = in.readString();
+            cabinCount       = in.readString();
+            rebate           = in.readString();
+            award            = in.readString();
+            backMoney        = in.readString();
+            serviceCharge    = in.readString();
+            extraCharge      = in.readString();
+        }
     }
-    public static class TaxTypeCode{
+    public static class TaxTypeCode implements Serializable{
         public String price; //"金额",
         public String currencyType; //"货币类型"
 
@@ -389,7 +457,7 @@ public class PlaneTicketInternationalInfo extends Collection{
                     '}';
         }
     }
-    public static class BaseFare{
+    public static class BaseFare implements Serializable{
         public String faceValueTotal; //"票面价总计金额",
         public String currencyType; //"货币类型"
 
@@ -401,7 +469,7 @@ public class PlaneTicketInternationalInfo extends Collection{
                     '}';
         }
     }
-    public static class TotalFare{
+    public static class TotalFare implements Serializable{
         public String taxTotal; //"含税总计金额",
         public String currencyType; //"货币类型"
 

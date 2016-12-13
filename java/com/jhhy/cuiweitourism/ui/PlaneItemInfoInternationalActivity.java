@@ -59,14 +59,14 @@ public class PlaneItemInfoInternationalActivity extends BaseActionBarActivity {
 
     private PullToRefreshListView pullListView;
     private ListView listView;
-    private List<PlaneTicketInternationalInfo.PlaneTicketInternationalHF> list = new ArrayList<>();
+    private List<PlaneTicketInternationalInfo.PlaneTicketInternationalHFCabin> list = new ArrayList<>();
     private PlaneItemInfoListAdapter adapter;
 
     private PlaneTicketInternationalInfo.PlaneTicketInternationalF flight; //航班信息
     private PlaneTicketCityInfo fromCity; //出发城市
     private PlaneTicketCityInfo toCity; //到达城市
     private String dateFrom; //出发日期
-
+    private PlaneTicketInternationalInfo.PlaneTicketInternationalHFCabin cabin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +81,7 @@ public class PlaneItemInfoInternationalActivity extends BaseActionBarActivity {
         fromCity = (PlaneTicketCityInfo) bundle.getSerializable("fromCity");
         toCity = (PlaneTicketCityInfo) bundle.getSerializable("toCity");
         dateFrom = bundle.getString("dateFrom");
-//        list = flight.getSeatItems();
+        cabin = PlaneListInternationalActivity.info.HMap.get(flight.F).cabin;
     }
 
     @Override
@@ -106,8 +106,7 @@ public class PlaneItemInfoInternationalActivity extends BaseActionBarActivity {
         tvPlaneInfo = (TextView) findViewById(R.id.tv_plane_order_plane_date);
         //转机，返程
 
-        PlaneTicketInternationalInfo.PlaneTicketInternationalHF hf = PlaneListInternationalActivity.info.HMap.get(flight.F);
-        String[] cabinTypes = hf.cabin.passengerType.airportCabinType.split(",");
+        String[] cabinTypes = cabin.passengerType.airportCabinType.split(",");
         StringBuffer sb = new StringBuffer();
         for (String cabinType1 : cabinTypes) {
             sb.append(PlaneListInternationalActivity.info.R.get(cabinType1)).append("|");
@@ -124,12 +123,16 @@ public class PlaneItemInfoInternationalActivity extends BaseActionBarActivity {
             tvToAirport.setText(String.format(Locale.getDefault(), "%s%s", toCity.getAirportname(), flight.S1.toAirportName));
             tvStartTime.setText(flight.S1.fromTime);
             tvArrivalTime.setText(flight.S1.toTime);
-            tvTimeConsuming.setText(Utils.getDiffMinuteStr(String.format(Locale.getDefault(), "%s %s", flight.S1.fromDate,  flight.S1.fromTime), String.format(Locale.getDefault(), "%s %s", flight.S1.toDate, flight.S1.toTime)));
+            tvTimeConsuming.setText(Utils.getDiffMinuteStr(
+                    String.format(Locale.getDefault(), "%s %s", flight.S1.fromDate,  flight.S1.fromTime),
+                    String.format(Locale.getDefault(), "%s %s", flight.S1.toDate, flight.S1.toTime)));
 
             tvCabinLevel.setText(cabinType); //TODO 舱位类型
         } else {
-            tvFromAirport.setText(String.format(Locale.getDefault(), "%s%s", PlaneListInternationalActivity.info.P.get(flight.S1.flightInfos.get(0).fromAirportCodeCheck).fullName, flight.S1.flightInfos.get(0).fromTerminal)); //起飞机场，起飞航站楼
-            tvToAirport.setText(String.format(Locale.getDefault(), "%s%s", PlaneListInternationalActivity.info.P.get(flight.S1.flightInfos.get(0).toAirportCodeCheck).fullName, flight.S1.flightInfos.get(0).toTermianl)); //到达机场，到达航站楼
+            tvFromAirport.setText(String.format(Locale.getDefault(), "%s%s",
+                    PlaneListInternationalActivity.info.P.get(flight.S1.flightInfos.get(0).fromAirportCodeCheck).fullName, flight.S1.flightInfos.get(0).fromTerminal)); //起飞机场，起飞航站楼
+            tvToAirport.setText(String.format(Locale.getDefault(), "%s%s",
+                    PlaneListInternationalActivity.info.P.get(flight.S1.flightInfos.get(0).toAirportCodeCheck).fullName, flight.S1.flightInfos.get(0).toTermianl)); //到达机场，到达航站楼
             tvStartTime.setText(flight.S1.flightInfos.get(0).fromTimeCheck);
             tvArrivalTime.setText(flight.S1.flightInfos.get(0).toTimeCheck);
             tvTimeConsuming.setText(Utils.getDiffMinuteStr(
@@ -145,21 +148,22 @@ public class PlaneItemInfoInternationalActivity extends BaseActionBarActivity {
             tvSecibdFlightFromTime = (TextView) findViewById(R.id.tv_plane_start_time_international);
             tvSecibdFlightToTime = (TextView) findViewById(R.id.tv_plane_end_time_international);
 
-            tvTransferFromAirport.setText(String.format(Locale.getDefault(), "%s%s", PlaneListInternationalActivity.info.P.get(flight.S1.flightInfos.get(1).fromAirportCodeCheck).fullName, flight.S1.flightInfos.get(1).fromTerminal)); //起飞机场，起飞航站楼
-            tvTransferToAirport.setText(String.format(Locale.getDefault(), "%s%s", PlaneListInternationalActivity.info.P.get(flight.S1.flightInfos.get(1).toAirportCodeCheck).fullName, flight.S1.flightInfos.get(1).toTermianl)); //到达机场，到达航站楼
+            tvTransferFromAirport.setText(String.format(Locale.getDefault(), "%s%s",
+                    PlaneListInternationalActivity.info.P.get(flight.S1.flightInfos.get(1).fromAirportCodeCheck).fullName, flight.S1.flightInfos.get(1).fromTerminal)); //起飞机场，起飞航站楼
+            tvTransferToAirport.setText(String.format(Locale.getDefault(), "%s%s",
+                    PlaneListInternationalActivity.info.P.get(flight.S1.flightInfos.get(1).toAirportCodeCheck).fullName, flight.S1.flightInfos.get(1).toTermianl)); //到达机场，到达航站楼
             tvSecondFlightConsumingTime.setText(Utils.getDiffMinuteStr(
                     String.format(Locale.getDefault(), "%s %s", flight.S1.flightInfos.get(1).fromDateCheck,  flight.S1.flightInfos.get(1).fromTimeCheck),
                     String.format(Locale.getDefault(), "%s %s", flight.S1.flightInfos.get(1).toDateCheck, flight.S1.flightInfos.get(1).toTimeCheck)));
-            LogUtil.e(TAG, "舱位类型：" + PlaneListInternationalActivity.info.HMap.get(flight.F).cabin.passengerType.airportCabinType);
-            tvSecondFlightCabin.setText(PlaneListInternationalActivity.info.R.get(PlaneListInternationalActivity.info.HMap.get(flight.F).cabin.passengerType.airportCabinType)); //舱位类型
+            LogUtil.e(TAG, "舱位类型：" + cabin.passengerType.airportCabinType);
+            tvSecondFlightCabin.setText(PlaneListInternationalActivity.info.R.get(cabin.passengerType.airportCabinType)); //舱位类型
             tvSecibdFlightFromTime.setText(flight.S1.flightInfos.get(1).fromTimeCheck);
             tvSecibdFlightToTime.setText(flight.S1.flightInfos.get(1).toTimeCheck);
         }
-
-
         PlaneTicketInternationalInfo.AircraftTypeInfo airline = PlaneListInternationalActivity.info.J.get(flight.S1.flightInfos.get(0).flightTypeCheck);
-        LogUtil.e(TAG, "key = "+ PlaneListInternationalActivity.info.HMap.get(flight.F).cabin.passengerType.airportCabinCode +",  "+airline);
-        String info = String.format("%s%s | %s (%s) | %s", PlaneListInternationalActivity.info.A.get(flight.S1.flightInfos.get(0).airlineCompanyCheck).companyName, flight.S1.flightInfos.get(0).flightNumberCheck, airline.typeName, airline.airframe, Utils.getDateStrYMDE(flight.S1.fromDate));
+        LogUtil.e(TAG, "key = "+ cabin.passengerType.airportCabinCode +";   "+airline);
+        String info = String.format("%s%s | %s (%s) | %s", PlaneListInternationalActivity.info.A.get(flight.S1.flightInfos.get(0).airlineCompanyCheck).shortName, flight.S1.flightInfos.get(0).flightNumberCheck,
+                airline.typeName, airline.airframe, Utils.getDateStrYMDE(flight.S1.fromDate));
         tvPlaneInfo.setText(info); //
 
         pullListView = (PullToRefreshListView) findViewById(R.id.list_plane_detail);
@@ -186,7 +190,7 @@ public class PlaneItemInfoInternationalActivity extends BaseActionBarActivity {
             }
         });
 
-        list.add(PlaneListInternationalActivity.info.HMap.get(flight.F));
+        list.add(cabin);
         adapter = new PlaneItemInfoListAdapter(getApplicationContext(), list) {
             @Override
             public void onItemTextViewClick(int position, View textView, int id) {
@@ -195,7 +199,6 @@ public class PlaneItemInfoInternationalActivity extends BaseActionBarActivity {
         };
         adapter.setType(1);
         listView.setAdapter(adapter);
-//        View itemView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.item_plane_seat_type, null);
     }
 
     //退改签说明，预定
@@ -215,8 +218,9 @@ public class PlaneItemInfoInternationalActivity extends BaseActionBarActivity {
     }
 
     private void refundTicket() {
+        LoadingIndicator.show(PlaneItemInfoInternationalActivity.this, getString(R.string.http_notice));
         PlaneTicketActionBiz biz = new PlaneTicketActionBiz();
-        PlaneTicketInternationalInfo.PassengerType passengerType = PlaneListInternationalActivity.info.HMap.get(flight.F).cabin.passengerType;
+        PlaneTicketInternationalInfo.PassengerType passengerType = cabin.passengerType;
         PlaneTicketInternationalChangeBack.AirRulesRQBean airRulesRQBean =
                 new PlaneTicketInternationalChangeBack.AirRulesRQBean(flight.S1.fromDate, flight.S1.fromTime,
                         passengerType.freightBaseCheck, passengerType.releasePriceFlightCompanyCheck, passengerType.fromAirportCheck,
@@ -252,16 +256,15 @@ public class PlaneItemInfoInternationalActivity extends BaseActionBarActivity {
     }
 
     private void reserveTicker(int position) {
-       /* Intent intent = new Intent(getApplicationContext(), PlaneEditOrderActivity.class);
+        Intent intent = new Intent(getApplicationContext(), PlaneEditOrderInternationalActivity.class);
         Bundle bundle = new Bundle();
-//        PlaneTicketInfoOfChina.SeatItemInfo seat = list.get(position);
-//        bundle.putSerializable("flight", flight);
-        bundle.putInt("positionSeat", position);
+        bundle.putSerializable("flight", flight);
         bundle.putString("dateFrom", dateFrom);
         bundle.putSerializable("fromCity", fromCity);
         bundle.putSerializable("toCity", toCity);
+        bundle.putSerializable("cabin", cabin);
         intent.putExtras(bundle);
-        startActivityForResult(intent, EDIT_PLANE_ORDER); //查看某趟列车*/
+        startActivityForResult(intent, EDIT_PLANE_ORDER); //预定当前航班
     }
 
     private int EDIT_PLANE_ORDER = 9632; //编辑机票订单

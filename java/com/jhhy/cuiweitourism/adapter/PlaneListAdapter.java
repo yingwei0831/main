@@ -16,6 +16,7 @@ import com.jhhy.cuiweitourism.ui.PlaneListInternationalActivity;
 import com.jhhy.cuiweitourism.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -27,8 +28,8 @@ public class PlaneListAdapter extends MyBaseAdapter {
 
     private String TAG = "PlaneListAdapter";
     private int type; //1：国内机票  2：国外机票
-    private int singleType = -1; //1:单程 0:往返
     private int priceType; //2:票价+税费；1:含税票价
+    private int traveltype; //1:返程 0:单程
 
     private PlaneTicketCityInfo fromCity;
     private PlaneTicketCityInfo toCity;
@@ -38,6 +39,10 @@ public class PlaneListAdapter extends MyBaseAdapter {
         this.fromCity = fromCity;
         this.toCity = toCity;
         this.type = type;
+    }
+
+    public void setTraveltype(int traveltype){
+        this.traveltype = traveltype;
     }
 
     public void setPriceType(int priceType){
@@ -81,9 +86,13 @@ public class PlaneListAdapter extends MyBaseAdapter {
             }
         }else if (type == 2){
             PlaneTicketInternationalInfo.PlaneTicketInternationalF flight = (PlaneTicketInternationalInfo.PlaneTicketInternationalF) getItem(i);
-//            if () //单程
             if (flight != null){
-                PlaneTicketInternationalInfo.PlaneTicketInternationalFS s1 = flight.S1;
+                PlaneTicketInternationalInfo.PlaneTicketInternationalFS s1 = null;
+                if (traveltype == 1){
+                    s1 = flight.S2;
+                }else{
+                    s1 = flight.S1;
+                }
                 holder.tvArrivalType.setVisibility(View.VISIBLE);
                 holder.tvConsumingTime.setVisibility(View.VISIBLE);
                 holder.tvStartTime.setText(s1.fromTime);
@@ -105,12 +114,14 @@ public class PlaneListAdapter extends MyBaseAdapter {
                     holder.tvTicketPrice.setText(String.format("￥%s", hf.cabin.baseFare.faceValueTotal)); //票面价 ; 含税总价：hf.cabin.totalFare.taxTotal
                     holder.tvPlaneClass.setText(String.format("税费：￥%s", hf.cabin.passengerType.taxTypeCodeMap.get("XT").price)); //税费xxx; 含税总价；
                 }
-                String[] cabinTypes = hf.cabin.passengerType.airportCabinType.split(",");
-                StringBuffer sb = new StringBuffer();
-                for (String cabinType1 : cabinTypes) {
-                    sb.append(PlaneListInternationalActivity.info.R.get(cabinType1)).append("|");
-                }
-                String cabinType =  sb.toString().substring(0, sb.length()-1);
+                String[] cabinTypes = hf.cabin.passengerType.airportCabinType.split("/");
+                LogUtil.e(TAG, "舱位代码："+Arrays.toString(cabinTypes));
+                String cabinType = PlaneListInternationalActivity.info.R.get(cabinTypes[traveltype]); //
+//                StringBuffer sb = new StringBuffer();
+//                for (String cabinType1 : cabinTypes) {
+//                    sb.append(PlaneListInternationalActivity.info.R.get(cabinType1)).append("|");
+//                }
+//                String cabinType =  sb.toString().substring(0, sb.length()-1);
                 holder.tvPlaneInfo.setText(String.format("%s%s | %s", s1.flightInfos.get(0).flightNumberCheck, PlaneListInternationalActivity.info.J.get(s1.flightInfos.get(0).flightTypeCheck).typeName, cabinType)); //飞机/舱位 MU5003空客A320(J)|经济舱(R)
             }
         }

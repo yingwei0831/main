@@ -2,17 +2,16 @@ package com.jhhy.cuiweitourism.ui;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RadioButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -20,13 +19,10 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.PlaneListAdapter;
 import com.jhhy.cuiweitourism.net.biz.PlaneTicketActionBiz;
-import com.jhhy.cuiweitourism.net.biz.TrainTicketActionBiz;
-import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketInfoForChinalRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketInfoInternationalRequest;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketCityInfo;
-import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketInfoOfChina;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketInternationalInfo;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
@@ -34,7 +30,6 @@ import com.jhhy.cuiweitourism.popupwindows.PopupWindowPlaneOuterScreen;
 import com.jhhy.cuiweitourism.popupwindows.PopupWindowPlanePriceType;
 import com.jhhy.cuiweitourism.popupwindows.PopupWindowPlaneSortType;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
-import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.jhhy.cuiweitourism.utils.Utils;
 import com.just.sun.pricecalendar.ToastCommon;
 
@@ -44,29 +39,27 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
-public class PlaneListInternationalActivity extends BaseActionBarActivity implements  AdapterView.OnItemClickListener, PopupWindow.OnDismissListener //,RadioGroup.OnCheckedChangeListener
+public class PlaneListInternationalBackActivity extends BaseActionBarActivity implements  AdapterView.OnItemClickListener, PopupWindow.OnDismissListener //,RadioGroup.OnCheckedChangeListener
 {
 
-    private String TAG = "PlaneListInternationalActivity";
+    private String TAG = "PlaneListInternationalBackActivity";
     private PlaneTicketActionBiz planeBiz; //机票业务类
 
-    private TextView tvPreDay; //前一天
-    private TextView tvNextDay; //后一天
-    private TextView tvCurrentDay; //今天 2016-10-24 周一
+//    private TextView tvPreDay; //前一天
+//    private TextView tvNextDay; //后一天
+//    private TextView tvCurrentDay; //今天 2016-10-24 周一
 
 //    private View parent;
     private PullToRefreshListView pullListView;
     private ListView listView;
-    public static List<PlaneTicketInternationalInfo.PlaneTicketInternationalF> list = new ArrayList<>();
+//    private List<PlaneTicketInternationalInfo.PlaneTicketInternationalF> list = new ArrayList<>();
 
     private PlaneListAdapter adapter;
 
-    public static PlaneTicketInternationalInfo info; //查询得到的航班信息
+//    public static PlaneTicketInternationalInfo info; //查询得到的航班信息
 
 //    private RadioGroup bottomRg; //底部筛选组合
     private RadioButton rbScreen;       //筛选
@@ -86,10 +79,9 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
     private PlaneTicketCityInfo fromCity; //出发城市
     private PlaneTicketCityInfo toCity; //到达城市
     private String dateFrom; //出发日期
-    private String tempTime; //出发时间，下一天，上一天用
+//    private String tempTime; //出发时间，下一天，上一天用
 
     private String dateReturn = ""; //返程日期
-    private String dateReturnTemp = "";
     private String traveltype; //航程类型 OW（单程） RT（往返）
     private String stoptype = "A"; // 是否中转 A（所有） D（直达）
     private String carrier = ""; //航司
@@ -108,8 +100,8 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
                     ToastCommon.toastShortShow(getApplicationContext(), null, "请求飞机票信息出错，请返回重试");
                     break;
                 case 1:
-                    dateFrom = tempTime;
-                    tvCurrentDay.setText(dateFrom);
+//                    dateFrom = tempTime;
+//                    tvCurrentDay.setText(dateFrom);
                     adapter.setData(listData);
                     adapter.notifyDataSetChanged();
                     break;
@@ -134,8 +126,8 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
         setContentView(R.layout.activity_plane_list);
         getData();
         super.onCreate(savedInstanceState);
-        LoadingIndicator.show(PlaneListInternationalActivity.this, getString(R.string.http_notice));
-        getInternetData();
+//        LoadingIndicator.show(PlaneListInternationalBackActivity.this, getString(R.string.http_notice));
+//        getInternetData();
     }
 
     private void getData() {
@@ -146,25 +138,25 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
         traveltype = bundle.getString("traveltype");
         if ("RT".equals(traveltype)){
             dateReturn = bundle.getString("dateReturn");
-            if (dateReturn != null) {
-                dateReturnTemp = dateReturn.substring(0, dateReturn.indexOf(" "));
-            }
         }
     }
 
     @Override
     protected void setupView() {
         super.setupView();
-        tvTitle.setText(String.format("%s—%s", fromCity.getName(), toCity.getName()));
+        tvTitle.setText(String.format("%s—%s", toCity.getName(), fromCity.getName()));
         if ("RT".equals(traveltype)){
             tvPlaneDate.setVisibility(View.VISIBLE);
-            tvPlaneDate.setText(String.format(Locale.getDefault(), "选去程：%s", dateFrom.substring(0, dateFrom.indexOf(" "))));
+            tvPlaneDate.setText(String.format(Locale.getDefault(), "选返程：%s", dateFrom.substring(0, dateFrom.indexOf(" "))));
         }
-        tvPreDay = (TextView) findViewById( R.id.tv_train_preference);
-        tvNextDay = (TextView) findViewById(R.id.tv_train_next_day);
-        tvCurrentDay = (TextView) findViewById(R.id.tv_train_ticket_day);
-        tempTime = dateFrom;
-        tvCurrentDay.setText(dateFrom);
+        RelativeLayout layout = (RelativeLayout) findViewById(R.id.layout_request_next_day);
+        layout.setVisibility(View.GONE);
+
+//        tvPreDay = (TextView) findViewById( R.id.tv_train_preference);
+//        tvNextDay = (TextView) findViewById(R.id.tv_train_next_day);
+//        tvCurrentDay = (TextView) findViewById(R.id.tv_train_ticket_day);
+//        tempTime = dateFrom;
+//        tvCurrentDay.setText(dateFrom);
 
 //        parent = findViewById(R.id.train_list_parent);
         pullListView = (PullToRefreshListView) findViewById(R.id.list_train_detail);
@@ -175,7 +167,7 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
         pullListView.getLoadingLayoutProxy().setReleaseLabel("松开加载更多");
 
         //上拉、下拉设定
-        pullListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+        pullListView.setMode(PullToRefreshBase.Mode.DISABLED);
         listView = pullListView.getRefreshableView();
 
         //上拉、下拉监听函数
@@ -183,9 +175,9 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
                 //下拉刷新,清空数据
-                if (refresh)    return;
-                refresh = true;
-                getInternetData();
+//                if (refresh)    return;
+//                refresh = true;
+//                getInternetData();
             }
 
             @Override
@@ -194,8 +186,11 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
 
             }
         });
-
+        listData = new ArrayList<>(PlaneListInternationalActivity.info.FMap.values());
+        LogUtil.e(TAG, "listData.size = " + listData.size());
+        sortDirect();
         adapter = new PlaneListAdapter(getApplicationContext(), listData, fromCity, toCity, 2);
+        adapter.setTraveltype(1);
         listView.setAdapter(adapter);
 
         rbScreen = (RadioButton) findViewById(R.id.rb_plane_screen);
@@ -239,16 +234,16 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
     public void onClick(View view) {
         super.onClick(view);
         switch (view.getId()){
-            case R.id.tv_train_preference: //前一天
-                tempTime = getDateStr(dateFrom.substring(0, dateFrom.indexOf(" ")), -1);
-                LoadingIndicator.show(PlaneListInternationalActivity.this, getString(R.string.http_notice));
-                getInternetData();
-                break;
-            case R.id.tv_train_next_day: //后一天
-                tempTime = getDateStr(dateFrom.substring(0, dateFrom.indexOf(" ")), 1);
-                LoadingIndicator.show(PlaneListInternationalActivity.this, getString(R.string.http_notice));
-                getInternetData();
-                break;
+//            case R.id.tv_train_preference: //前一天
+//                tempTime = getDateStr(dateFrom.substring(0, dateFrom.indexOf(" ")), -1);
+//                LoadingIndicator.show(PlaneListInternationalBackActivity.this, getString(R.string.http_notice));
+//                getInternetData();
+//                break;
+//            case R.id.tv_train_next_day: //后一天
+//                tempTime = getDateStr(dateFrom.substring(0, dateFrom.indexOf(" ")), 1);
+//                LoadingIndicator.show(PlaneListInternationalBackActivity.this, getString(R.string.http_notice));
+//                getInternetData();
+//                break;
             case R.id.rb_plane_screen: //筛选
                 bottomTag = 1;
                 screen();
@@ -280,8 +275,8 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
     @Override
     protected void addListener() {
         super.addListener();
-        tvPreDay .setOnClickListener(this);
-        tvNextDay.setOnClickListener(this);
+//        tvPreDay .setOnClickListener(this);
+//        tvNextDay.setOnClickListener(this);
 
         rbScreen.setOnClickListener(this);
         rbSortTime.setOnClickListener(this);
@@ -292,34 +287,22 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        if ("RT".equals(traveltype)){ //选返程
-            Intent intent = new Intent(getApplicationContext(), PlaneListInternationalBackActivity.class);
+        if ("RT".equals(traveltype)){
+//            Intent intent = new Intent(getApplicationContext(), .class);
+        }else {
+            Intent intent = new Intent(getApplicationContext(), PlaneItemInfoInternationalActivity.class);
             Bundle bundle = new Bundle();
             PlaneTicketInternationalInfo.PlaneTicketInternationalF flight = listData.get((int) l);
             bundle.putSerializable("flight", flight);
             bundle.putString("dateFrom", dateFrom);
             bundle.putSerializable("fromCity", fromCity);
             bundle.putSerializable("toCity", toCity);
-            bundle.putString("traveltype", traveltype);
-            bundle.putString("dateReturn", dateReturn);
-            intent.putExtras(bundle);
-            startActivityForResult(intent, SELECT_BACK_FLIGHT);
-        }else {
-            Intent intent = new Intent(getApplicationContext(), PlaneItemInfoInternationalActivity.class);
-            Bundle bundle = new Bundle();
-            PlaneTicketInternationalInfo.PlaneTicketInternationalF flight = list.get((int) l);
-            bundle.putSerializable("flight", flight);
-            bundle.putString("dateFrom", dateFrom);
-            bundle.putSerializable("fromCity", fromCity);
-            bundle.putSerializable("toCity", toCity);
-            bundle.putString("traveltype", traveltype);
             intent.putExtras(bundle);
             startActivityForResult(intent, VIEW_TRAIN_ITEM); //查看某趟航班
         }
     }
 
     private int VIEW_TRAIN_ITEM = 7546; //查看某趟列车
-    private int SELECT_BACK_FLIGHT = 7547; //选返程
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -332,60 +315,61 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
     }
 
     //获取国内飞机票
-    private void getInternetData(){
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                PlaneTicketInfoInternationalRequest request = new PlaneTicketInfoInternationalRequest(traveltype, fromCity.getCode(), toCity.getCode(),
-                        dateFrom.substring(0, dateFrom.indexOf(" ")), dateReturnTemp, stoptype, carrier);
-//{"head":{"code":"Plane_gjhb"},"field":{"boardpoint":"PEK","offPoint":"CDG","departuredate":"2016-12-02 星期五","stoptype":"A","carrier":"","returndate":""}} //填写返程日期
-//{"head":{"code":"Plane_gjhb"},"field":{"boardpoint":"PEK","offPoint":"CDG","departuredate":"2016-12-02 星期五","traveltype":"OW","stoptype":"A","carrier":"","returndate":""}} //参数错误
-//{"head":{"code":"Plane_gjhb"},"field":{"boardpoint":"PEK","offPoint":"BER","departuredate":"2016-12-02","traveltype":"OW","stoptype":"A","carrier":"","returndate":""}} //参数错误?
-                planeBiz.planeTicketInfoOfInternational(request, new BizGenericCallback<PlaneTicketInternationalInfo>() {
-                    @Override
-                    public void onCompletion(GenericResponseModel<PlaneTicketInternationalInfo> model) {
-                        if ("0001".equals(model.headModel.res_code)){
-                            Message msg = new Message();
-                            msg.what = -1;
-                            msg.obj = model.headModel.res_arg;
-                            handler.sendMessage(msg);
-                        }else if ("0000".equals(model.headModel.res_code)){
-                            if (refresh){
-                                info = null;
-                                listData.clear();
-                                listData = null;
-                                list.clear();
-                                list = null;
-                            }
-                            info = model.body;
-                            list = new ArrayList<>(info.FMap.values());
-                            listData = new ArrayList<>(info.FMap.values());
-                            sortDirect();
-                            handler.sendEmptyMessage(1);
-                            LogUtil.e(TAG,"planeTicketInfoInternational =" + info.toString());
-                        }
-                        LoadingIndicator.cancel();
-                    }
-
-                    @Override
-                    public void onError(FetchError error) {
-                        if (error.localReason != null){
-                            Message msg = new Message();
-                            msg.what = -1;
-                            msg.obj = error.localReason;
-                            handler.sendMessage(msg);
-                        }else{
-                            handler.sendEmptyMessage(-2);
-                        }
-                        LoadingIndicator.cancel();
-                        LogUtil.e(TAG, "planeTicketInfoInternational: " + error.toString());
-                    }
-                });
-            }
-        }.start();
-
-    }
+//    private void getInternetData(){
+//
+//        new Thread(){
+//            @Override
+//            public void run() {
+//                super.run();
+//                PlaneTicketInfoInternationalRequest request = new PlaneTicketInfoInternationalRequest(traveltype, fromCity.getCode(), toCity.getCode(),
+//                        dateFrom.substring(0, dateFrom.indexOf(" ")), dateReturn, stoptype, carrier);
+////{"head":{"code":"Plane_gjhb"},"field":{"boardpoint":"PEK","offPoint":"CDG","departuredate":"2016-12-02 星期五","stoptype":"A","carrier":"","returndate":""}} //填写返程日期
+////{"head":{"code":"Plane_gjhb"},"field":{"boardpoint":"PEK","offPoint":"CDG","departuredate":"2016-12-02 星期五","traveltype":"OW","stoptype":"A","carrier":"","returndate":""}} //参数错误
+////{"head":{"code":"Plane_gjhb"},"field":{"boardpoint":"PEK","offPoint":"BER","departuredate":"2016-12-02","traveltype":"OW","stoptype":"A","carrier":"","returndate":""}} //参数错误?
+//                planeBiz.planeTicketInfoOfInternational(request, new BizGenericCallback<PlaneTicketInternationalInfo>() {
+//                    @Override
+//                    public void onCompletion(GenericResponseModel<PlaneTicketInternationalInfo> model) {
+//                        if ("0001".equals(model.headModel.res_code)){
+//                            Message msg = new Message();
+//                            msg.what = -1;
+//                            msg.obj = model.headModel.res_arg;
+//                            handler.sendMessage(msg);
+//                        }else if ("0000".equals(model.headModel.res_code)){
+//                            if (refresh){
+//                                info = null;
+//                                listData.clear();
+//                                listData = null;
+//                                list.clear();
+//                                list = null;
+//                            }
+//                            info = model.body;
+//                            list = new ArrayList<>(info.FMap.values());
+//                            listData = new ArrayList<>(info.FMap.values());
+//                            sortDirect();
+//                            handler.sendEmptyMessage(1);
+//                            LogUtil.e(TAG,"planeTicketInfoInternational =" + info.toString());
+//                        }
+//                        LoadingIndicator.cancel();
+//                    }
+//
+//                    @Override
+//                    public void onError(FetchError error) {
+//                        if (error.localReason != null){
+//                            Message msg = new Message();
+//                            msg.what = -1;
+//                            msg.obj = error.localReason;
+//                            handler.sendMessage(msg);
+//                        }else{
+//                            handler.sendEmptyMessage(-2);
+//                        }
+//                        LoadingIndicator.cancel();
+//                        LogUtil.e(TAG, "planeTicketInfoInternational: " + error.toString());
+//                    }
+//                });
+//            }
+//        }.start();
+//
+//    }
 
     //筛选
     private PopupWindowPlaneOuterScreen popScreen;
@@ -540,10 +524,10 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
     //筛选5个条件
     private List<PlaneTicketInternationalInfo.PlaneTicketInternationalF> sortScreen() {
         List<PlaneTicketInternationalInfo.PlaneTicketInternationalF> listDirect = new ArrayList<>();
-        for (int i = 0; i < list.size(); i ++){
-            PlaneTicketInternationalInfo.PlaneTicketInternationalF item = list.get(i);
+        for (int i = 0; i < PlaneListInternationalActivity.list.size(); i ++){
+            PlaneTicketInternationalInfo.PlaneTicketInternationalF item = PlaneListInternationalActivity.list.get(i);
             //直飞，中转
-            if (direct && "0".equals(item.S1.transferFrequency)) { //直飞
+            if (direct && "0".equals(item.S2.transferFrequency)) { //直飞
                 listDirect.add(item);
             } else { //中转
                 listDirect.add(item);
@@ -575,7 +559,7 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
         List<PlaneTicketInternationalInfo.PlaneTicketInternationalF> listAirCompany = new ArrayList<>();
         for (int i = 0; i < listDirect.size(); i++){
             PlaneTicketInternationalInfo.PlaneTicketInternationalF itemF = listDirect.get(i);
-            if (codeAirCompany.equals(itemF.S1.flightInfos.get(0).airlineCompanyCheck)){
+            if (codeAirCompany.equals(itemF.S2.flightInfos.get(0).airlineCompanyCheck)){
                 listAirCompany.add(itemF);
             }
         }
@@ -591,7 +575,7 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
         List<PlaneTicketInternationalInfo.PlaneTicketInternationalF> listAirline = new ArrayList<>();
         for (int i = 0; i < listDirect.size(); i++){
             PlaneTicketInternationalInfo.PlaneTicketInternationalF itemF = listDirect.get(i);
-            if (codeAirline.equals(itemF.S1.flightInfos.get(0).flightTypeCheck)){
+            if (codeAirline.equals(itemF.S2.flightInfos.get(0).flightTypeCheck)){
                 listAirline.add(itemF);
             }
         }
@@ -607,7 +591,7 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
         List<PlaneTicketInternationalInfo.PlaneTicketInternationalF> listAirport = new ArrayList<>();
         for (int i = 0; i < listDirect.size(); i++){
             PlaneTicketInternationalInfo.PlaneTicketInternationalF itemF = listDirect.get(i);
-            if (codeAirport.equals(itemF.S1.fromAirportCode)){
+            if (codeAirport.equals(itemF.S2.fromAirportCode)){
                 listAirport.add(itemF);
             }
         }
@@ -632,18 +616,18 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
         List<PlaneTicketInternationalInfo.PlaneTicketInternationalF> listTime = new ArrayList<>();
         for(int i = 0; i < listDirect.size(); i++) {
             PlaneTicketInternationalInfo.PlaneTicketInternationalF itemF = listDirect.get(i);
-            String fromTime = itemF.S1.fromTime;
+            String fromTime = itemF.S2.fromTime;
             LogUtil.e(TAG, "fromTime = " + fromTime);
-            if (screenTimePosition == 1 && Utils.getEqualMinute(itemF.S1.fromTime, "12:00")){ //00:00~12:00
+            if (screenTimePosition == 1 && Utils.getEqualMinute(itemF.S2.fromTime, "12:00")){ //00:00~12:00
                 LogUtil.e(TAG, "screenTimePosition = " + screenTimePosition +"，fromTime = " + fromTime);
                 listTime.add(itemF);
-            } else if (screenTimePosition == 2 && Utils.getEqualMinute(itemF.S1.fromTime, "14:00") && !Utils.getEqualMinute(itemF.S1.fromTime, "12:00")) { //12:00~14:00
+            } else if (screenTimePosition == 2 && Utils.getEqualMinute(itemF.S2.fromTime, "14:00") && !Utils.getEqualMinute(itemF.S2.fromTime, "12:00")) { //12:00~14:00
                 LogUtil.e(TAG, "screenTimePosition = " + screenTimePosition +"，fromTime = " + fromTime);
                 listTime.add(itemF);
-            } else if (screenTimePosition == 3 && !Utils.getEqualMinute(itemF.S1.fromTime, "14:00") && Utils.getEqualMinute(itemF.S1.fromTime, "18:00")) { //14:00~18:00
+            } else if (screenTimePosition == 3 && !Utils.getEqualMinute(itemF.S2.fromTime, "14:00") && Utils.getEqualMinute(itemF.S2.fromTime, "18:00")) { //14:00~18:00
                 LogUtil.e(TAG, "screenTimePosition = " + screenTimePosition +"，fromTime = " + fromTime);
                 listTime.add(itemF);
-            } else if (screenTimePosition == 4 && !Utils.getEqualMinute(itemF.S1.fromTime, "18:00") && Utils.getEqualMinute(itemF.S1.fromTime, "24:00")) { //18:00~24:00
+            } else if (screenTimePosition == 4 && !Utils.getEqualMinute(itemF.S2.fromTime, "18:00") && Utils.getEqualMinute(itemF.S2.fromTime, "24:00")) { //18:00~24:00
                 LogUtil.e(TAG, "screenTimePosition = " + screenTimePosition +"，fromTime = " + fromTime);
                 listTime.add(itemF);
             }
@@ -655,8 +639,8 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
         Collections.sort(listData, new Comparator<PlaneTicketInternationalInfo.PlaneTicketInternationalF>() {
             @Override
             public int compare(PlaneTicketInternationalInfo.PlaneTicketInternationalF f1, PlaneTicketInternationalInfo.PlaneTicketInternationalF f2) {
-                PlaneTicketInternationalInfo.PlaneTicketInternationalFS f1s = f1.S1;
-                PlaneTicketInternationalInfo.PlaneTicketInternationalFS f2s = f2.S1;
+                PlaneTicketInternationalInfo.PlaneTicketInternationalFS f1s = f1.S2;
+                PlaneTicketInternationalInfo.PlaneTicketInternationalFS f2s = f2.S2;
 
                 if(Utils.getTimeH(String.format(Locale.getDefault(), "%s %s", f1s.toDate, f1s.toTime)) > Utils.getTimeH(String.format(Locale.getDefault(), "%s %s", f2s.toDate, f2s.toTime))) {
                     return 1;
@@ -673,8 +657,8 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
         Collections.sort(listData, new Comparator<PlaneTicketInternationalInfo.PlaneTicketInternationalF>() {
             @Override
             public int compare(PlaneTicketInternationalInfo.PlaneTicketInternationalF f1, PlaneTicketInternationalInfo.PlaneTicketInternationalF f2) {
-                PlaneTicketInternationalInfo.PlaneTicketInternationalFS f1s = f1.S1;
-                PlaneTicketInternationalInfo.PlaneTicketInternationalFS f2s = f2.S1;
+                PlaneTicketInternationalInfo.PlaneTicketInternationalFS f1s = f1.S2;
+                PlaneTicketInternationalInfo.PlaneTicketInternationalFS f2s = f2.S2;
 
                 if(Utils.getTimeHM(f1s.toTime) > Utils.getTimeHM(f2s.toTime)) {
                     return 1;
@@ -694,8 +678,8 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
         Collections.sort(listData, new Comparator<PlaneTicketInternationalInfo.PlaneTicketInternationalF>() {
             @Override
             public int compare(PlaneTicketInternationalInfo.PlaneTicketInternationalF f1, PlaneTicketInternationalInfo.PlaneTicketInternationalF f2) {
-                PlaneTicketInternationalInfo.PlaneTicketInternationalFS f1s = f1.S1;
-                PlaneTicketInternationalInfo.PlaneTicketInternationalFS f2s = f2.S1;
+                PlaneTicketInternationalInfo.PlaneTicketInternationalFS f1s = f1.S2;
+                PlaneTicketInternationalInfo.PlaneTicketInternationalFS f2s = f2.S2;
 
                 if (Utils.getTimeHM(f1s.fromTime) > Utils.getTimeHM(f2s.fromTime)) {
                     return 1;
@@ -714,8 +698,8 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
         Collections.sort(listData, new Comparator<PlaneTicketInternationalInfo.PlaneTicketInternationalF>() {
             @Override
             public int compare(PlaneTicketInternationalInfo.PlaneTicketInternationalF f1, PlaneTicketInternationalInfo.PlaneTicketInternationalF f2) {
-                PlaneTicketInternationalInfo.PlaneTicketInternationalHF hf1 = info.HMap.get(f1.F);
-                PlaneTicketInternationalInfo.PlaneTicketInternationalHF hf2 = info.HMap.get(f2.F);
+                PlaneTicketInternationalInfo.PlaneTicketInternationalHF hf1 = PlaneListInternationalActivity.info.HMap.get(f1.F);
+                PlaneTicketInternationalInfo.PlaneTicketInternationalHF hf2 = PlaneListInternationalActivity.info.HMap.get(f2.F);
                 if (selection == 1){ //含税总价排序
                     if (Integer.parseInt(hf1.cabin.totalFare.taxTotal) > Integer.parseInt(hf2.cabin.totalFare.taxTotal)){
                         return 1;
@@ -737,15 +721,15 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
 
     private List<PlaneTicketInternationalInfo.PlaneTicketInternationalF> listData = new ArrayList<>();
     private void sortDirect() { //直飞优先
-//        if (s1.stopPeriod == null || s1.stopPeriod.length() == 0) {
+//        if (s2.stopPeriod == null || s2.stopPeriod.length() == 0) {
 //        listData =
 //        stoptype = "D"; //"A"所有，"D"直达
         //单程/往返
         Collections.sort(listData, new Comparator<PlaneTicketInternationalInfo.PlaneTicketInternationalF>() {
             @Override
             public int compare(PlaneTicketInternationalInfo.PlaneTicketInternationalF f1, PlaneTicketInternationalInfo.PlaneTicketInternationalF f2) {
-                PlaneTicketInternationalInfo.PlaneTicketInternationalFS f1s = f1.S1;
-                PlaneTicketInternationalInfo.PlaneTicketInternationalFS f2s = f2.S1;
+                PlaneTicketInternationalInfo.PlaneTicketInternationalFS f1s = f1.S2;
+                PlaneTicketInternationalInfo.PlaneTicketInternationalFS f2s = f2.S2;
 
                 if (Integer.parseInt(f1s.transferFrequency) > Integer.parseInt(f2s.transferFrequency)){
                     return 1;
@@ -771,7 +755,7 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
         fromCity = null;
         toCity = null;
         dateFrom = null;
-        tempTime = null;
+//        tempTime = null;
         dateReturn = null;
         traveltype = null;
         stoptype = null;
@@ -779,15 +763,10 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
         handler = null;
         popPriceType = null;
 
-        if (list != null) {
-            list.clear();
-        }
-        list = null;
         if (listData != null) {
             listData.clear();
         }
         listData = null;
-        info = null;
         adapter = null;
     }
 

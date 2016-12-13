@@ -21,7 +21,7 @@ import java.util.List;
  */
 public abstract class PlaneItemInfoListAdapter extends MyBaseAdapter implements OnItemTextViewClick {
 
-    private int type;
+    private int type; //1,国际机票
 
     public PlaneItemInfoListAdapter(Context ct, List list) {
         super(ct, list);
@@ -67,9 +67,9 @@ public abstract class PlaneItemInfoListAdapter extends MyBaseAdapter implements 
 
         if (type == 1) {
             holder.tvTaxPrice.setVisibility(View.VISIBLE);
-            PlaneTicketInternationalInfo.PlaneTicketInternationalHF hf = (PlaneTicketInternationalInfo.PlaneTicketInternationalHF) getItem(i);
+            PlaneTicketInternationalInfo.PlaneTicketInternationalHFCabin cabin = (PlaneTicketInternationalInfo.PlaneTicketInternationalHFCabin) getItem(i);
 
-            String[] cabinTypes = hf.cabin.passengerType.airportCabinType.split("/");
+            String[] cabinTypes = cabin.passengerType.airportCabinType.split(",");
             StringBuffer sb = new StringBuffer();
             for (String cabinType1 : cabinTypes) {
                 sb.append(PlaneListInternationalActivity.info.R.get(cabinType1)).append("|");
@@ -77,8 +77,8 @@ public abstract class PlaneItemInfoListAdapter extends MyBaseAdapter implements 
             String cabinType =  sb.toString().substring(0, sb.length()-1);
 
             holder.tvTypeSeat.setText(cabinType);
-            holder.tvTicketPrice.setText(String.format("￥%s", hf.cabin.baseFare.faceValueTotal)); //票面价 ; 含税总价：hf.cabin.totalFare.taxTotal
-            holder.tvTaxPrice.setText(String.format("税费：￥%s", hf.cabin.passengerType.taxTypeCodeMap.get("XT").price)); //税费xxx; 含税总价；
+            holder.tvTicketPrice.setText(String.format("￥%s", cabin.baseFare.faceValueTotal)); //票面价 ; 含税总价：hf.cabin.totalFare.taxTotal
+            holder.tvTaxPrice.setText(String.format("税费：￥%s", cabin.passengerType.taxTypeCodeMap.get("XT").price)); //税费xxx; 含税总价；
         }else{
             PlaneTicketInfoOfChina.SeatItemInfo seatItem = (PlaneTicketInfoOfChina.SeatItemInfo) getItem(i);
             holder.tvTypeSeat.setText(String.format("%s%s折", seatItem.seatMsg, seatItem.discount));

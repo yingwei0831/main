@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.OnItemTextViewClick;
 import com.jhhy.cuiweitourism.R;
+import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketOrderInternational;
 import com.jhhy.cuiweitourism.net.models.FetchModel.TrainTicketOrderFetch;
 
 import java.util.List;
@@ -19,10 +20,15 @@ import java.util.List;
 public class OrderEditContactsAdapter extends MyBaseAdapter {
 
     private OnItemTextViewClick listener;
+    private int type;
 
     public OrderEditContactsAdapter(Context ct, List list, OnItemTextViewClick listener) {
         super(ct, list);
         this.listener = listener;
+    }
+
+    public void setType(int type){
+        this.type = type;
     }
 
     @Override
@@ -53,10 +59,19 @@ public class OrderEditContactsAdapter extends MyBaseAdapter {
                 listener.onItemTextViewClick(i, clickViewD, 0);
             }
         });
-        TrainTicketOrderFetch.TicketInfo info = (TrainTicketOrderFetch.TicketInfo) getItem(i);
-        if (info != null){
-            holder.tvName.setText(info.getPsgName());
-            holder.tvID.setText(info.getCardNo());
+
+        if (type == 1){
+            PlaneTicketOrderInternational.PassengersBean item = (PlaneTicketOrderInternational.PassengersBean) getItem(i);
+            if (item != null) {
+                holder.tvName.setText(item.getName());
+                holder.tvID.setText(item.getCardNo());
+            }
+        }else {
+            TrainTicketOrderFetch.TicketInfo info = (TrainTicketOrderFetch.TicketInfo) getItem(i);
+            if (info != null) {
+                holder.tvName.setText(info.getPsgName());
+                holder.tvID.setText(info.getCardNo());
+            }
         }
         return view;
     }

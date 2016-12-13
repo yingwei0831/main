@@ -2,6 +2,7 @@ package com.jhhy.cuiweitourism.ui;
 
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -30,13 +31,19 @@ import com.jhhy.cuiweitourism.model.User;
 import com.jhhy.cuiweitourism.model.UserContacts;
 import com.jhhy.cuiweitourism.net.biz.PlaneTicketActionBiz;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneOrderOfChinaRequest;
+import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketInternationalChangeBack;
+import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketInternationalPolicyCheck;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketOfChinaChangeBack;
+import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketOrderInternational;
 import com.jhhy.cuiweitourism.net.models.FetchModel.TrainTicketOrderFetch;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneOrderOfChinaResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketCityInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketInfoOfChina;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketInternationalChangeBackRespond;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketInternationalInfo;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketInternationalPolicyCheckResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketOfChinaChangeBackRespond;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.Consts;
@@ -52,9 +59,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class PlaneEditOrderActivity extends AppCompatActivity implements View.OnClickListener, OnItemTextViewClick, CompoundButton.OnCheckedChangeListener {
+public class PlaneEditOrderInternationalActivity extends AppCompatActivity implements View.OnClickListener, OnItemTextViewClick, CompoundButton.OnCheckedChangeListener {
 
-    private String TAG = "PlaneEditOrderActivity";
+    private String TAG = "PlaneEditOrderInternationalActivity";
 
     private TextView tvTitleLeft;
     private ActionBar actionBar;
@@ -79,12 +86,23 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
     private PlaneTicketCityInfo fromCity; //出发城市
     private PlaneTicketCityInfo toCity; //到达城市
     private String dateFrom; //出发日期
-    private PlaneTicketInfoOfChina.FlightInfo flight; //航班信息
+    private PlaneTicketInternationalInfo.PlaneTicketInternationalF  flight; //航班信息
+    private PlaneTicketInternationalInfo.PlaneTicketInternationalHFCabin cabin;
 
-    private PlaneTicketInfoOfChina.SeatItemInfo seatInfo; //选择的座位信息
+
+    private TextView tvTransferFromAirport; //中转起飞机场
+    private TextView tvTransferToAirport; //中转降落机场
+    private TextView tvSecondFlightConsumingTime; //第二趟航班耗时
+    private TextView tvSecondFlightCabin; //第二趟航班舱位类型
+    private TextView tvSecondFlightFromTime; //第二趟航班起飞时间
+    private TextView tvSecondFlightToTime; //第二趟航班到达时间
+
+//    private PlaneTicketInfoOfChina.SeatItemInfo seatInfo; //选择的座位信息
 
     private int priceDelayCost; //航班延误险价格
     private int priceAccidentCost; //航空意外险价格
+
+    private String travelType; //形成类型：往返，单程
 
     private PlaneOrderOfChinaResponse info;
 
@@ -124,11 +142,38 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
         View v = LayoutInflater.from(getApplicationContext()).inflate(R.layout.title_simple, null);
         actionBar.setCustomView(v, new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT)); //自定义ActionBar布局);
         actionBar.setElevation(0); //删除自带阴影
-        setContentView(R.layout.activity_plane_edit_order);
+        setContentView(R.layout.activity_plane_edit_order_international);
 
         getData();
+        checkData();
         setupView();
         addListener();
+    }
+
+    /**
+     * 国际机票验价
+     */
+    private void checkData() {
+       /* List<PlaneTicketInternationalPolicyCheck.IFlight> iFlights = new ArrayList<>();
+        PlaneTicketInternationalPolicyCheck.IFlight iFlight = new PlaneTicketInternationalPolicyCheck.IFlight("", );
+
+        iFlights.add(iFlight);
+
+        List<List<PlaneTicketInternationalPolicyCheck.IFlight>> interFlights = new ArrayList<>();
+        interFlights.add(iFlights);
+
+        PlaneTicketInternationalPolicyCheck request = new PlaneTicketInternationalPolicyCheck(travelType, "1E", "ALL", interFlights);
+        planeBiz.planeTicketInternationalPolicyCheck(request, new BizGenericCallback<PlaneTicketInternationalPolicyCheckResponse>() {
+            @Override
+            public void onCompletion(GenericResponseModel<PlaneTicketInternationalPolicyCheckResponse> model) {
+
+            }
+
+            @Override
+            public void onError(FetchError error) {
+
+            }
+        });*/
     }
 
     private void setupView() {
@@ -142,14 +187,70 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
         TextView tvToAirport = (TextView) findViewById(R.id.tv_plane_end_station); //到达机场
         TextView tvStartTime = (TextView) findViewById(R.id.tv_plane_start_time); //起飞时间
         TextView tvArrivalTime = (TextView) findViewById(R.id.tv_plane_end_time); //到达时间
-        TextView tvStartDate = (TextView) findViewById(R.id.tv_plane_start_date); //起飞日期
-        TextView tvArrivalDate = (TextView) findViewById(R.id.tv_plane_arrival_time); //到达日期
-        TextView tvTimeConsuming = (TextView) findViewById(R.id.tv_plane_order_time_consuming); //耗时
+//        TextView tvStartDate = (TextView) findViewById(R.id.tv_plane_start_date); //起飞日期
+//        TextView tvArrivalDate = (TextView) findViewById(R.id.tv_plane_arrival_time); //到达日期
+        TextView tvTimeConsuming = (TextView) findViewById(R.id.tv_plane_order_time_consuming_second); //耗时
+        TextView tvCabinLevel = (TextView) findViewById(R.id.tv_plane_order_time_consuming); //舱位类型
+
         TextView tvPlaneInfo = (TextView) findViewById(R.id.tv_plane_order_plane_date); //航班信息
 
-        TextView tvTicketPrice = (TextView) findViewById(R.id.tv_plane_seat_price);
-        TextView tvConstructionFuel = (TextView) findViewById(R.id.tv_plane_construction_fuel);
-        tvRefundNotice = (TextView) findViewById(R.id.tv_plane_refund_notice);
+        LogUtil.e(TAG, "舱位类型 = " + cabin.passengerType.airportCabinType);
+        String[] cabinTypes = cabin.passengerType.airportCabinType.split(",");
+        StringBuffer sb = new StringBuffer();
+        for (String cabinType1 : cabinTypes) {
+            sb.append(PlaneListInternationalActivity.info.R.get(cabinType1)).append("|");
+        }
+        String cabinType =  sb.toString().substring(0, sb.length()-1);
+        LogUtil.e(TAG, "中转次数 = " + flight.S1.transferFrequency);
+        tvFromAirport.setText(String.format(Locale.getDefault(), "%s%s",
+                PlaneListInternationalActivity.info.P.get(flight.S1.flightInfos.get(0).fromAirportCodeCheck).fullName, flight.S1.flightInfos.get(0).fromTerminal)); //起飞机场，起飞航站楼
+        tvToAirport.setText(String.format(Locale.getDefault(), "%s%s",
+                PlaneListInternationalActivity.info.P.get(flight.S1.flightInfos.get(0).toAirportCodeCheck).fullName, flight.S1.flightInfos.get(0).toTermianl)); //到达机场，到达航站楼
+        tvStartTime.setText(flight.S1.flightInfos.get(0).fromTimeCheck);
+        tvArrivalTime.setText(flight.S1.flightInfos.get(0).toTimeCheck);
+        tvTimeConsuming.setText(Utils.getDiffMinuteStr(
+                String.format(Locale.getDefault(), "%s %s", flight.S1.flightInfos.get(0).fromDateCheck,  flight.S1.flightInfos.get(0).fromTimeCheck),
+                String.format(Locale.getDefault(), "%s %s", flight.S1.flightInfos.get(0).toDateCheck, flight.S1.flightInfos.get(0).toTimeCheck)));
+
+        tvCabinLevel.setText(cabinType); //TODO 舱位类型
+        LogUtil.e(TAG, "中转次数 = " + flight.S1.transferFrequency);
+        if ("0".equals(flight.S1.transferFrequency)){ //中转次数=0
+
+        } else {
+            tvTransferFromAirport = (TextView) findViewById(R.id.tv_plane_start_station_international);
+            tvTransferToAirport = (TextView) findViewById(R.id.tv_plane_end_station_international);
+            tvSecondFlightConsumingTime = (TextView) findViewById(R.id.tv_plane_order_time_consuming_second_international);
+            tvSecondFlightCabin = (TextView) findViewById(R.id.tv_plane_order_time_consuming_international);
+            tvSecondFlightFromTime = (TextView) findViewById(R.id.tv_plane_start_time_international);
+            tvSecondFlightToTime = (TextView) findViewById(R.id.tv_plane_end_time_international);
+
+            tvTransferFromAirport.setText(String.format(Locale.getDefault(), "%s%s",
+                    PlaneListInternationalActivity.info.P.get(flight.S1.flightInfos.get(1).fromAirportCodeCheck).fullName, flight.S1.flightInfos.get(1).fromTerminal)); //起飞机场，起飞航站楼
+            tvTransferToAirport.setText(String.format(Locale.getDefault(), "%s%s",
+                    PlaneListInternationalActivity.info.P.get(flight.S1.flightInfos.get(1).toAirportCodeCheck).fullName, flight.S1.flightInfos.get(1).toTermianl)); //到达机场，到达航站楼
+            tvSecondFlightConsumingTime.setText(Utils.getDiffMinuteStr(
+                    String.format(Locale.getDefault(), "%s %s", flight.S1.flightInfos.get(1).fromDateCheck,  flight.S1.flightInfos.get(1).fromTimeCheck),
+                    String.format(Locale.getDefault(), "%s %s", flight.S1.flightInfos.get(1).toDateCheck, flight.S1.flightInfos.get(1).toTimeCheck)));
+            LogUtil.e(TAG, "舱位类型（去程/回程）：" + cabin.passengerType.airportCabinType);
+            tvSecondFlightCabin.setText(PlaneListInternationalActivity.info.R.get(cabin.passengerType.airportCabinType)); //舱位类型
+            tvSecondFlightFromTime.setText(flight.S1.flightInfos.get(1).fromTimeCheck);
+            tvSecondFlightToTime.setText(flight.S1.flightInfos.get(1).toTimeCheck);
+        }
+        PlaneTicketInternationalInfo.AircraftTypeInfo airline = PlaneListInternationalActivity.info.J.get(flight.S1.flightInfos.get(0).flightTypeCheck);
+        LogUtil.e(TAG, "飞机类型：  " + airline);
+        String info = String.format("%s%s | %s (%s) | %s",
+                PlaneListInternationalActivity.info.A.get(flight.S1.flightInfos.get(0).airlineCompanyCheck).shortName, flight.S1.flightInfos.get(0).flightNumberCheck,
+                airline.typeName, airline.airframe, Utils.getDateStrYMDE(flight.S1.fromDate));
+        tvPlaneInfo.setText(info); //航班信息
+
+        TextView tvTicketPrice = (TextView) findViewById(R.id.tv_plane_seat_price); //票价
+        TextView tvTax = (TextView) findViewById(R.id.tv_plane_tax_price); //税费
+        TextView tvPrice = (TextView) findViewById(R.id.tv_plane_total_price); //总价
+        tvTicketPrice.setText(String.format(Locale.getDefault(), "￥%.2f", Float.parseFloat(cabin.baseFare.faceValueTotal))); //票价(票面价)
+        tvTax.setText(String.format(Locale.getDefault(), "￥%.2f", Float.parseFloat(cabin.passengerType.taxTypeCodeMap.get("XT").price))); //税费
+        tvPrice.setText(String.format(Locale.getDefault(), "￥%.2f", Float.parseFloat(cabin.totalFare.taxTotal))); //总价（单张票总价）
+
+        tvRefundNotice = (TextView) findViewById(R.id.tv_plane_refund_notice); //退改签说明
 
         tvSelectorContacts = (TextView) findViewById(R.id.tv_plane_add_passenger); //添加乘客
         listViewContacts = (MyListView) findViewById(R.id.list_plane_contacts); //装载乘机人
@@ -161,14 +262,15 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
         cbAccidentCost  = (CheckBox) findViewById(R.id.rb_plane_order_accident_insurance);
 
         tvPriceTotal = (TextView) findViewById(R.id.tv_edit_order_price); //订单总金额
-        tvPriceTotal.setText(String.format(Locale.getDefault(), "%.2f", listContact.size() * (Float.parseFloat(seatInfo.settlePrice) + Float.parseFloat(flight.airportTax) + Float.parseFloat(flight.fuelTax))));
+        tvPriceTotal.setText(String.format(Locale.getDefault(), "%.2f", listContact.size() * (Float.parseFloat(cabin.totalFare.taxTotal))));
         ivArrowTop = (ImageView) findViewById(R.id.iv_edit_order_arrow_top); //点击查看订单金额详情
         btnPay = (Button) findViewById(R.id.btn_edit_order_pay); //去往立即支付
 
         adapter = new OrderEditContactsAdapter(getApplicationContext(), listContact, this);
+        adapter.setType(1);
         listViewContacts.setAdapter(adapter);
 
-        tvFromAirport.setText(String.format(Locale.getDefault(), "%s%s", fromCity.getAirportname(), "--".equals(flight.orgJetquay)?"":flight.orgJetquay));
+        /*tvFromAirport.setText(String.format(Locale.getDefault(), "%s%s", fromCity.getAirportname(), "--".equals(flight.orgJetquay)?"":flight.orgJetquay));
         tvToAirport.setText(String.format(Locale.getDefault(), "%s%s", toCity.getAirportname(), "--".equals(flight.dstJetquay)?"":flight.dstJetquay));
         tvStartTime.setText(String.format("%s:%s", flight.depTime.substring(0, 2), flight.depTime.substring(2)));
         tvArrivalTime.setText(String.format("%s:%s", flight.arriTime.substring(0, 2), flight.arriTime.substring(2)));
@@ -179,10 +281,7 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
         SpannableStringBuilder sb = new SpannableStringBuilder(info);
         ForegroundColorSpan mealSpan = new ForegroundColorSpan(getResources().getColor(R.color.colorMeal));
         sb.setSpan(mealSpan, info.lastIndexOf(" ") + 1, info.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-        tvPlaneInfo.setText(sb);
-
-        tvTicketPrice.setText(String.format(Locale.getDefault(), "￥%.2f", Float.parseFloat(seatInfo.settlePrice))); //parPrice,settlePrice
-        tvConstructionFuel.setText(String.format("￥%s/￥%s", flight.airportTax, flight.fuelTax)); //机建燃油费
+        tvPlaneInfo.setText(sb);*/
 
         planeBiz = new PlaneTicketActionBiz();
     }
@@ -190,12 +289,12 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
     private void getData() {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null){
-            flight = (PlaneTicketInfoOfChina.FlightInfo) bundle.getSerializable("flight");
+            flight = (PlaneTicketInternationalInfo.PlaneTicketInternationalF) bundle.getSerializable("flight");
             fromCity = (PlaneTicketCityInfo) bundle.getSerializable("fromCity");
             toCity = (PlaneTicketCityInfo) bundle.getSerializable("toCity");
             dateFrom = bundle.getString("dateFrom");
-            int positionSeat = bundle.getInt("positionSeat");
-            seatInfo = flight.getSeatItems().get(positionSeat);
+            cabin = (PlaneTicketInternationalInfo.PlaneTicketInternationalHFCabin) bundle.getSerializable("cabin");
+            travelType = bundle.getString("travelType");
         }
     }
 
@@ -255,6 +354,7 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
     private void viewOrderDetail() {
         if (popupWindow == null) {
             View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.popup_plane_order_price_detail, null);
+            setupPopView(view);
             popupWindow = new PopupWindow(view, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             view.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
             popUpHeight = view.getMeasuredHeight();
@@ -265,7 +365,6 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
             popupWindow.setFocusable(true);
             // 获得位置
             ivArrowTop.getLocationOnScreen(location);
-            setupPopView(view);
         }
         if (popupWindow.isShowing()){
             popupWindow.dismiss();
@@ -276,13 +375,17 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
     }
 
     private void popShow() {
-        tvPopPlaneInfo.setText(String.format(Locale.getDefault(), "%s (%s)", flight.flightNo, seatInfo.getSeatMsg()));
-        tvPopPriceAdult.setText(String.format(Locale.getDefault(), "￥%.2f", Float.parseFloat(seatInfo.settlePrice)));
+        tvPopPlaneInfo.setText(String.format(Locale.getDefault(), "%s%s (%s)",
+                PlaneListInternationalActivity.info.A.get(flight.S1.flightInfos.get(0).airlineCompanyCheck).shortName,
+                flight.S1.flightInfos.get(0).flightNumberCheck,
+                PlaneListInternationalActivity.info.R.get(cabin.passengerType.airportCabinType)));
+
+        tvPopPriceAdult.setText(String.format(Locale.getDefault(), "￥%.2f", Float.parseFloat(cabin.baseFare.faceValueTotal)));
         tvPopNumberAdult.setText(String.format(Locale.getDefault(), "x %d人", listContact.size()));
-        tvPopPriceAdditional.setText(String.format(Locale.getDefault(), "￥%d", Integer.parseInt(flight.airportTax) + Integer.parseInt(flight.fuelTax)));
+        tvPopPriceAdditional.setText(String.format(Locale.getDefault(), "￥%.2f", Float.parseFloat(cabin.passengerType.taxTypeCodeMap.get("XT").price)));
         tvPopNumberAdditional.setText(String.format(Locale.getDefault(), "x %d人", listContact.size()));
-        tvPopPriceEnsurance.setText(String.format(Locale.getDefault(), "￥%d", (priceAccidentCost + priceDelayCost) * listContact.size()));
-        tvPopNumberEnsurance.setText(String.format(Locale.getDefault(), "x %d份", listContact.size()));
+//        tvPopPriceEnsurance.setText(String.format(Locale.getDefault(), "￥%d", (priceAccidentCost + priceDelayCost) * listContact.size()));
+//        tvPopNumberEnsurance.setText(String.format(Locale.getDefault(), "x %d份", listContact.size()));
         tvPopNumberPassenger.setText(String.format(Locale.getDefault(), "x %d", listContact.size()));
     }
 
@@ -291,18 +394,22 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
     private TextView tvPopNumberAdult; //成人数量
     private TextView tvPopPriceAdditional; //机建燃油费
     private TextView tvPopNumberAdditional; //机建燃油费数量
-    private TextView tvPopPriceEnsurance; //保险价格
-    private TextView tvPopNumberEnsurance; //保险数量
     private TextView tvPopNumberPassenger; //乘机人数
 
     private void setupPopView(View view) {
         tvPopPlaneInfo = (TextView) view.findViewById(R.id.tv_plane_info);
         tvPopPriceAdult = (TextView) view.findViewById(R.id.tv_plane_price_adult);
         tvPopNumberAdult = (TextView) view.findViewById(R.id.tv_plane_number_adult);
+        TextView tvPopTaxTitle = (TextView) view.findViewById(R.id.tv_tax_title);
+        tvPopTaxTitle.setText("税费");
         tvPopPriceAdditional = (TextView) view.findViewById(R.id.tv_plane_price_additional);
         tvPopNumberAdditional = (TextView) view.findViewById(R.id.tv_plane_number_additional);
-        tvPopPriceEnsurance = (TextView) view.findViewById(R.id.tv_plane_price_insurance);
-        tvPopNumberEnsurance = (TextView) view.findViewById(R.id.tv_plane_number_insurance);
+        TextView tvInsuranceTitle = (TextView) view.findViewById(R.id.tv_plane_price_insurance_title);
+        TextView tvPopPriceInsurance = (TextView) view.findViewById(R.id.tv_plane_price_insurance);
+        TextView tvPopNumberInsurance = (TextView) view.findViewById(R.id.tv_plane_number_insurance);
+        tvInsuranceTitle.setVisibility(View.GONE);
+        tvPopPriceInsurance.setVisibility(View.GONE);
+        tvPopNumberInsurance.setVisibility(View.GONE);
         tvPopNumberPassenger = (TextView) view.findViewById(R.id.tv_plane_number_passenger);
     }
 
@@ -318,20 +425,15 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
                 ArrayList<UserContacts> listSelection = bundle.getParcelableArrayList("selection");
                 if (listSelection != null) {
                     for (UserContacts contact : listSelection) {
-                        TrainTicketOrderFetch.TicketInfo contactTrain = new TrainTicketOrderFetch.TicketInfo(contact.getContactsName(), "2", contact.getContactsIdCard(), "1", seatInfo.seatCode, seatInfo.settlePrice);
+                        PlaneTicketOrderInternational.PassengersBean contactTrain =
+                                new PlaneTicketOrderInternational.PassengersBean(
+                                        contact.getContactsName(), "1", "2", contact.getContactsIdCard(), contact.getContactsMobile(), cabin.passengerType.faceValue, cabin.baseFare.faceValueTotal, "", "", "", cabin.passengerType.taxTypeCodeMap.get("XT").price);
                         listContact.add(contactTrain);
                     }
                     adapter.setData(listContact);
                     adapter.notifyDataSetChanged();
                 }
-                int acPrice = 0, dcPrice = 0;
-                if (cbAccidentCost.isChecked()){
-                    acPrice = priceAccidentCost * listContact.size();
-                }
-                if (cbDelayCost.isChecked()){
-                    dcPrice = priceDelayCost * listContact.size();
-                }
-                tvPriceTotal.setText(String.format(Locale.getDefault(), "%.2f", listContact.size() * (Float.parseFloat(seatInfo.settlePrice) + acPrice + dcPrice + Float.parseFloat(flight.airportTax) + Float.parseFloat(flight.fuelTax))));
+                calculateTotalPrice();
             }else if (requestCode == Consts.REQUEST_CODE_RESERVE_PAY){ //去支付，支付成功
                 LogUtil.e(TAG, "订单支付成功");
             }else if (requestCode == REQUEST_LOGIN) { //登录成功
@@ -350,7 +452,18 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
         }
     }
 
-    private ArrayList<TrainTicketOrderFetch.TicketInfo> listContact = new ArrayList<>(); //乘车人列表
+    private void calculateTotalPrice() {
+        int acPrice = 0, dcPrice = 0;
+        if (cbAccidentCost.isChecked()){
+            acPrice = priceAccidentCost * listContact.size();
+        }
+        if (cbDelayCost.isChecked()){
+            dcPrice = priceDelayCost * listContact.size();
+        }
+        tvPriceTotal.setText(String.format(Locale.getDefault(), "%.2f", listContact.size() * (Float.parseFloat(cabin.totalFare.taxTotal) + acPrice + dcPrice)));
+    }
+
+    private ArrayList<PlaneTicketOrderInternational.PassengersBean> listContact = new ArrayList<>(); //乘车人列表
 
     @Override
     public void onItemTextViewClick(int position, View view, int id) {
@@ -359,28 +472,19 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
                 listContact.remove(position);
                 adapter.setData(listContact);
                 adapter.notifyDataSetChanged();
+                calculateTotalPrice();
                 break;
             case R.id.iv_contact_view_detail: //详情
 //                ToastUtil.show(getApplicationContext(), "详情");
                 break;
-
         }
-
-        int acPrice = 0, dcPrice = 0;
-        if (cbAccidentCost.isChecked()){
-            acPrice = priceAccidentCost * listContact.size();
-        }
-        if (cbDelayCost.isChecked()){
-            dcPrice = priceDelayCost * listContact.size();
-        }
-        tvPriceTotal.setText(String.format(Locale.getDefault(), "%.2f", listContact.size() * (Float.parseFloat(seatInfo.settlePrice) + Float.parseFloat(flight.airportTax) + Float.parseFloat(flight.fuelTax) + acPrice + dcPrice)));
     }
 
     /**
      * 去支付页面
      */
     private void goToPay() {
-        LoadingIndicator.show(PlaneEditOrderActivity.this, getString(R.string.http_notice));
+        LoadingIndicator.show(PlaneEditOrderInternationalActivity.this, getString(R.string.http_notice));
         final String name = etLinkName.getText().toString();
         final String mobile = etLinkMobile.getText().toString();
 
@@ -406,37 +510,21 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
             return;
         }
 
-        LoadingIndicator.show(PlaneEditOrderActivity.this, getString(R.string.http_notice));
-        //国内机票，提交订单，进入支付页面
+        LoadingIndicator.show(PlaneEditOrderInternationalActivity.this, getString(R.string.http_notice));
+        //国际机票，提交订单，进入支付页面
         new Thread(){
             @Override
             public void run() {
                 super.run();
-                List<PlaneOrderOfChinaRequest.PassengersBean> passengers = new ArrayList<>();
-                for (int i = 0; i < listContact.size(); i++) {
-                    TrainTicketOrderFetch.TicketInfo contact = listContact.get(i);
-                    String pType = "6";
-                    if ("1".equals(contact.CardType) || "2".equals(contact.CardType)){
-                        pType = "1";
-                    }else if ("4".equals(contact.CardType)){
-                        pType = "5";
-                    }else if ("5".equals(contact.CardType)){
-                        pType = "2";
-                    } else { // if ("3".equals(contact.CardType)){
-                        pType = "6";
-                    }
-                    PlaneOrderOfChinaRequest.PassengersBean passengersBean = new PlaneOrderOfChinaRequest.PassengersBean("", contact.CardNo, pType, contact.PsgName, "0", "");
-                    passengers.add(passengersBean);
-                }
-                List<PlaneOrderOfChinaRequest.SegmentsBean> segments = new ArrayList<>();
-                PlaneOrderOfChinaRequest.SegmentsBean segmentsBean = new PlaneOrderOfChinaRequest.SegmentsBean(flight.dstCity, flight.arriTime, flight.orgCity, dateFrom.substring(0, dateFrom.indexOf(" ")), flight.depTime, flight.flightNo, flight.planeType, seatInfo.seatCode);
-                segments.add(segmentsBean);
 
-                PlaneOrderOfChinaRequest.PnrInfoBean pnrInfoBean = new PlaneOrderOfChinaRequest.PnrInfoBean(flight.airportTax, flight.fuelTax, seatInfo.settlePrice, passengers, segments);
-                PlaneOrderOfChinaRequest request = new PlaneOrderOfChinaRequest(
-                        seatInfo.policyData.policyId, name, mobile, pnrInfoBean, MainActivity.user.getUserId(),
-                        seatInfo.policyData.commisionPoint, seatInfo.policyData.commisionMoney, seatInfo.settlePrice);
-                planeBiz.planeTicketOrderOfChina(request, new BizGenericCallback<PlaneOrderOfChinaResponse>() {
+                List<PlaneOrderOfChinaRequest.SegmentsBean> segments = new ArrayList<>();
+//                PlaneOrderOfChinaRequest.SegmentsBean segmentsBean = new PlaneOrderOfChinaRequest.SegmentsBean(flight.dstCity, flight.arriTime, flight.orgCity, dateFrom.substring(0, dateFrom.indexOf(" ")), flight.depTime, flight.flightNo, flight.planeType, seatInfo.seatCode);
+//                segments.add(segmentsBean);
+
+//                PlaneOrderOfChinaRequest.PnrInfoBean pnrInfoBean = new PlaneOrderOfChinaRequest.PnrInfoBean(flight.airportTax, flight.fuelTax, seatInfo.parPrice, passengers, segments);
+//                PlaneTicketOrderInternational request = new PlaneTicketOrderInternational(MainActivity.user.getUserId(), name, mobile, "",
+//                        seatInfo.policyData.policyId, name, mobile, pnrInfoBean, MainActivity.user.getUserId(), seatInfo.policyData.commisionPoint, seatInfo.policyData.commisionMoney, seatInfo.settlePrice);
+                /*planeBiz.planeTicketOrderInternational(request, new BizGenericCallback<PlaneOrderOfChinaResponse>() {
                     @Override
                     public void onCompletion(GenericResponseModel<PlaneOrderOfChinaResponse> model) {
                         if ("0001".equals(model.headModel.res_code)){
@@ -463,24 +551,29 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
                         }
                         LogUtil.e(TAG, "planeTicketOfChinaOrderSubmit: " + error.toString());
                     }
-                });
+                });*/
             }
         }.start();
     }
 
     private void changeBack() {
-        LoadingIndicator.show(PlaneEditOrderActivity.this, getString(R.string.http_notice));
-        PlaneTicketOfChinaChangeBack changeBack = new PlaneTicketOfChinaChangeBack(flight.flightNo, seatInfo.seatCode, dateFrom.substring(0, dateFrom.indexOf(" ")), flight.param1, flight.dstCity);
+        LoadingIndicator.show(PlaneEditOrderInternationalActivity.this, getString(R.string.http_notice));
         PlaneTicketActionBiz biz = new PlaneTicketActionBiz();
-        biz.planeTicketOfChinaChangeBack(changeBack, new BizGenericCallback<PlaneTicketOfChinaChangeBackRespond>() {
+        PlaneTicketInternationalInfo.PassengerType passengerType = cabin.passengerType;
+        PlaneTicketInternationalChangeBack.AirRulesRQBean airRulesRQBean =
+                new PlaneTicketInternationalChangeBack.AirRulesRQBean(flight.S1.fromDate, flight.S1.fromTime,
+                        passengerType.freightBaseCheck, passengerType.releasePriceFlightCompanyCheck, passengerType.fromAirportCheck,
+                        passengerType.toAirportCheck, passengerType.changeBackSign);
+        List<PlaneTicketInternationalChangeBack.AirRulesRQBean> airRulesRQBeanList = new ArrayList<>();
+        airRulesRQBeanList.add(airRulesRQBean);
+        PlaneTicketInternationalChangeBack request = new PlaneTicketInternationalChangeBack(airRulesRQBeanList);
+        biz.planeTicketInternationalPolicyInfo(request, new BizGenericCallback<PlaneTicketInternationalChangeBackRespond>() {
             @Override
-            public void onCompletion(GenericResponseModel<PlaneTicketOfChinaChangeBackRespond> model) {
+            public void onCompletion(GenericResponseModel<PlaneTicketInternationalChangeBackRespond> model) {
                 if ("0000".equals(model.headModel.res_code)){
                     Intent intent = new Intent(getApplicationContext(), PlaneChangeBackActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putString("refund", model.body.getReturnX().getModifyAndRefundStipulateList().getRefundStipulate()); //退
-                    bundle.putString("change", model.body.getReturnX().getModifyAndRefundStipulateList().getChangeStipulate()); //改qian
-                    bundle.putString("notice", model.body.getReturnX().getModifyAndRefundStipulateList().getModifyStipulate());  //注意
+                    bundle.putString("refund", model.body.getZc()); //退
                     intent.putExtras(bundle);
                     startActivity(intent);
                 }else if ("0001".equals(model.headModel.res_code)){
@@ -518,7 +611,7 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
         if (cbDelayCost.isChecked()){
             dcPrice = priceDelayCost * listContact.size();
         }
-        tvPriceTotal.setText(String.format(Locale.getDefault(), "%.2f", ((Float.parseFloat(seatInfo.settlePrice) + Float.parseFloat(flight.airportTax) + Float.parseFloat(flight.fuelTax)) * listContact.size() + acPrice + dcPrice)));
+//        tvPriceTotal.setText(String.format(Locale.getDefault(), "%.2f", ((Float.parseFloat(seatInfo.parPrice) + Float.parseFloat(flight.airportTax) + Float.parseFloat(flight.fuelTax)) * listContact.size() + acPrice + dcPrice)));
     }
 
     //预定须知
@@ -535,8 +628,8 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
         tvPopNumberAdult = null;
         tvPopPriceAdditional = null;
         tvPopNumberAdditional = null;
-        tvPopPriceEnsurance = null;
-        tvPopNumberEnsurance = null;
+//        tvPopPriceEnsurance = null;
+//        tvPopNumberEnsurance = null;
         tvPopNumberPassenger = null;
     }
 }

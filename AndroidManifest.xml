@@ -569,6 +569,12 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/ActionBarTheme" />
+         <activity
+            android:name=".ui.PlaneListInternationalBackActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/ActionBarTheme" />
+
         <activity
             android:name=".ui.TrainEditOrderActivity"
             android:launchMode="singleTop"
@@ -581,6 +587,13 @@
             android:screenOrientation="portrait"
             android:theme="@style/ActionBarTheme"
             android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity
+            android:name=".ui.PlaneEditOrderInternationalActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/ActionBarTheme"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+
         <activity
             android:name=".ui.PlaneInquiryEditOrderActivity"
             android:launchMode="singleTop"

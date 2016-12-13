@@ -1,8 +1,5 @@
 package com.jhhy.cuiweitourism.net.biz;
 
-import android.content.Context;
-import android.os.Handler;
-
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
@@ -12,6 +9,8 @@ import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketInfoForChinalRequ
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketInfoInternationalRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketInternationalChangeBack;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketOfChinaChangeBack;
+import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketOrderInternational;
+import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketInternationalPolicyCheck;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
@@ -20,6 +19,7 @@ import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketCityInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketInternationalChangeBackRespond;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketInternationalInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketInfoOfChina;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketInternationalPolicyCheckResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketOfChinaChangeBackRespond;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.netcallback.FetchGenericCallback;
@@ -30,10 +30,8 @@ import com.jhhy.cuiweitourism.net.utils.LogUtil;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -297,6 +295,7 @@ public class PlaneTicketActionBiz extends BasicActionBiz {
                             }
                             s1.flightInfos = flightInfos;
                             fn.S1 = s1;
+                            LogUtil.e("PlaneTicketActionBiz", "fn.S1");
                         }else if (fContent.containsKey("S2")){
                             PlaneTicketInternationalInfo.PlaneTicketInternationalFS s2 = new PlaneTicketInternationalInfo.PlaneTicketInternationalFS();
                             ArrayList sContent = fContent.get("S2");
@@ -367,11 +366,12 @@ public class PlaneTicketActionBiz extends BasicActionBiz {
                             }
                             s2.flightInfos = flightInfos;
                             fn.S2 = s2;
+                            LogUtil.e("PlaneTicketActionBiz", "fn.S2");
                         }
                         fMap.put(fKey, fn);
                     }
                     info.FMap = fMap;
-                    LogUtil.e("PlaneTicketActionBiz", "");
+                    LogUtil.e("PlaneTicketActionBiz", "info.FMap");
                 }
 
                 if (map.containsKey("H")){
@@ -457,7 +457,7 @@ public class PlaneTicketActionBiz extends BasicActionBiz {
     }
 
     /**
-     *  国际飞机票政策
+     *  国际飞机票退改签政策
      */
     public void planeTicketInternationalPolicyInfo(PlaneTicketInternationalChangeBack request, BizGenericCallback<PlaneTicketInternationalChangeBackRespond> callback){
         request.code = "Plane_tuistate";
@@ -478,6 +478,27 @@ public class PlaneTicketActionBiz extends BasicActionBiz {
     }
 
     /**
+     * 国际机票匹配政策（验价）
+     */
+    public void planeTicketInternationalPolicyCheck(PlaneTicketInternationalPolicyCheck request, BizGenericCallback<PlaneTicketInternationalPolicyCheckResponse> callback){
+        request.code = "Order_zchx";
+        FetchGenericResponse<PlaneTicketInternationalPolicyCheckResponse> fetchGenericResponse = new FetchGenericResponse<PlaneTicketInternationalPolicyCheckResponse>(callback) {
+            @Override
+            public void onCompletion(FetchResponseModel response) {
+                PlaneTicketInternationalPolicyCheckResponse info = parseJsonToObject(response, PlaneTicketInternationalPolicyCheckResponse.class);
+                GenericResponseModel<PlaneTicketInternationalPolicyCheckResponse> returnModel = new GenericResponseModel<>(response.head, info);
+                this.bizCallback.onCompletion(returnModel);
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                this.bizCallback.onError(error);
+            }
+        };
+        HttpUtils.executeXutils(request, new FetchGenericCallback<>(fetchGenericResponse));
+    }
+
+    /**
      *  出发城市，到达城市
      */
     public void planeTicketDepartureAndReachCity(){
@@ -486,8 +507,21 @@ public class PlaneTicketActionBiz extends BasicActionBiz {
     /**
      * 国际机票下单
      */
-    public void planeTicketOrderInternational(){
+    public void planeTicketOrderInternational(PlaneTicketOrderInternational request, BizGenericCallback<PlaneOrderOfChinaResponse> callback){
+        request.code = "Order_gjflyorder";
+        FetchGenericResponse<PlaneOrderOfChinaResponse> fetchResponse = new FetchGenericResponse<PlaneOrderOfChinaResponse>(callback) {
+            @Override
+            public void onCompletion(FetchResponseModel response) {
+                PlaneOrderOfChinaResponse info = parseJsonToObject(response, PlaneOrderOfChinaResponse.class);
+                GenericResponseModel<PlaneOrderOfChinaResponse> returnModel = new GenericResponseModel<PlaneOrderOfChinaResponse>(response.head, info);
+                this.bizCallback.onCompletion(returnModel);
+            }
 
-
+            @Override
+            public void onError(FetchError error) {
+                this.bizCallback.onError(error);
+            }
+        };
+        HttpUtils.executeXutils(request, new FetchGenericCallback<>(fetchResponse));
     }
 }

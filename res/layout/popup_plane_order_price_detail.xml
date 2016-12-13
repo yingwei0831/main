@@ -32,6 +32,7 @@
                 android:textColor="@android:color/white" />
 
             <TextView
+                android:id="@+id/tv_tax_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
@@ -39,6 +40,7 @@
                 android:textColor="@android:color/white" />
 
             <TextView
+                android:id="@+id/tv_plane_price_insurance_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
