@@ -2,6 +2,7 @@ package com.jhhy.cuiweitourism.net.models.FetchModel;
 
 import com.google.gson.Gson;
 import com.jhhy.cuiweitourism.net.utils.Consts;
+import com.jhhy.cuiweitourism.net.utils.LogUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -11,6 +12,7 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -75,14 +77,32 @@ import java.util.Map;
         try {
             for(String key : stringObjectMap.keySet()){
                 Object obj = stringObjectMap.get(key);
-                if(obj instanceof ArrayList){
-                    ArrayList<BasicFetchModel> array = (ArrayList<BasicFetchModel>)obj;
+                if(obj instanceof List){
                     JSONArray jsonArray = new JSONArray();
-                    for(BasicFetchModel model : array){
-                        JSONObject modelJsonObj = toFieldJsonObject(model.toMapObject());
-                        jsonArray.put(modelJsonObj);
+                    for (Object aryObj: (List) obj){
+                        if (aryObj instanceof List){
+                            JSONArray jsonArray1 = new JSONArray();
+                            for (Object aryObj1: (List)aryObj){
+                                if (aryObj1 instanceof List){
+                                }else if (aryObj1 instanceof BasicFetchModel) {
+                                    JSONObject modelJsonObj = toFieldJsonObject(((BasicFetchModel)aryObj1).toMapObject());
+                                    jsonArray1.put(modelJsonObj);
+                                }
+                            }
+                            jsonArray.put(jsonArray1);
+                        }else if (aryObj instanceof BasicFetchModel){
+                            JSONObject modelJsonObj = toFieldJsonObject(((BasicFetchModel)aryObj).toMapObject());
+                            jsonArray.put(modelJsonObj);
+                        }
                     }
                     fieldObj.put(key, jsonArray);
+//                    ArrayList<BasicFetchModel> array = (ArrayList<BasicFetchModel>)obj;
+//                    JSONArray jsonArray = new JSONArray();
+//                    for(BasicFetchModel model : array){
+//                        JSONObject modelJsonObj = toFieldJsonObject(model.toMapObject());
+//                        jsonArray.put(modelJsonObj);
+//                    }
+//                    fieldObj.put(key, jsonArray);
                 }else if (obj instanceof BasicFetchModel ){
                     BasicFetchModel model = (BasicFetchModel) obj;
                     JSONObject modelObj = toFieldJsonObject(model.toMapObject());
@@ -93,7 +113,7 @@ import java.util.Map;
             }
         } catch (JSONException e) {
             e.printStackTrace();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return fieldObj;

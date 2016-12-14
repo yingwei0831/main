@@ -304,7 +304,7 @@ public class PlaneTicketInternationalInfo extends Collection{
 //    }
 
     public static class PlaneTicketInternationalHF  extends Collection{
-        public String aircraftCabin;
+        public String aircraftCabin; //舱位组合(去程/回程, 验价时需要回传)
         public PlaneTicketInternationalHFCabin cabin;
 
         @Override

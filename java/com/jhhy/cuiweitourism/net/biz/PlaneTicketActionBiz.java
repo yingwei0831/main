@@ -8,9 +8,9 @@ import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketCityFetch;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketInfoForChinalRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketInfoInternationalRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketInternationalChangeBack;
+import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketInternationalPolicyCheckRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketOfChinaChangeBack;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketOrderInternational;
-import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketInternationalPolicyCheck;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
@@ -39,9 +39,7 @@ import java.util.Map;
  */
 public class PlaneTicketActionBiz extends BasicActionBiz {
 
-//    public PlaneTicketActionBiz(Context context, Handler handler) {
-//        super(context, handler);
-//    }
+    private String TAG = "PlaneTicketActionBiz";
 
     public PlaneTicketActionBiz(){
     }
@@ -226,6 +224,9 @@ public class PlaneTicketActionBiz extends BasicActionBiz {
                         PlaneTicketInternationalInfo.PlaneTicketInternationalF fn = new PlaneTicketInternationalInfo.PlaneTicketInternationalF();
                         LinkedTreeMap<String, ArrayList<Object>> fContent = content.get(fKey);
                         fn.F = fKey;
+//                        LogUtil.e(TAG, "fn.F = " + fKey);
+                        ArrayList s = new ArrayList<>(fContent.keySet());
+//                        LogUtil.e(TAG, "Fkeys = " + s);
                         if (fContent.containsKey("S1")){ //S1
                             ArrayList sContent = fContent.get("S1");
                             ArrayList sContent1 = (ArrayList) sContent.get(0);
@@ -295,12 +296,13 @@ public class PlaneTicketActionBiz extends BasicActionBiz {
                             }
                             s1.flightInfos = flightInfos;
                             fn.S1 = s1;
-                            LogUtil.e("PlaneTicketActionBiz", "fn.S1");
-                        }else if (fContent.containsKey("S2")){
-                            PlaneTicketInternationalInfo.PlaneTicketInternationalFS s2 = new PlaneTicketInternationalInfo.PlaneTicketInternationalFS();
+//                            LogUtil.e("PlaneTicketActionBiz", "fn.S1");
+                        }
+                        if (fContent.containsKey("S2")){
                             ArrayList sContent = fContent.get("S2");
-
                             ArrayList sContent1 = (ArrayList) sContent.get(0);
+                            PlaneTicketInternationalInfo.PlaneTicketInternationalFS s2 = new PlaneTicketInternationalInfo.PlaneTicketInternationalFS();
+
                             s2.AVCode = String.valueOf(sContent1.get(0));
                             s2.planeInfoNode = String.valueOf(sContent1.get(1));
                             s2.fromAirportCode = String.valueOf(sContent1.get(2));
@@ -366,7 +368,7 @@ public class PlaneTicketActionBiz extends BasicActionBiz {
                             }
                             s2.flightInfos = flightInfos;
                             fn.S2 = s2;
-                            LogUtil.e("PlaneTicketActionBiz", "fn.S2");
+//                            LogUtil.e("PlaneTicketActionBiz", "fn.S2");
                         }
                         fMap.put(fKey, fn);
                     }
@@ -480,7 +482,7 @@ public class PlaneTicketActionBiz extends BasicActionBiz {
     /**
      * 国际机票匹配政策（验价）
      */
-    public void planeTicketInternationalPolicyCheck(PlaneTicketInternationalPolicyCheck request, BizGenericCallback<PlaneTicketInternationalPolicyCheckResponse> callback){
+    public void planeTicketInternationalPolicyCheck(PlaneTicketInternationalPolicyCheckRequest request, BizGenericCallback<PlaneTicketInternationalPolicyCheckResponse> callback){
         request.code = "Order_zchx";
         FetchGenericResponse<PlaneTicketInternationalPolicyCheckResponse> fetchGenericResponse = new FetchGenericResponse<PlaneTicketInternationalPolicyCheckResponse>(callback) {
             @Override

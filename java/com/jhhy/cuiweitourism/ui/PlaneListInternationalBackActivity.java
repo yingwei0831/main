@@ -46,7 +46,7 @@ public class PlaneListInternationalBackActivity extends BaseActionBarActivity im
 {
 
     private String TAG = "PlaneListInternationalBackActivity";
-    private PlaneTicketActionBiz planeBiz; //机票业务类
+//    private PlaneTicketActionBiz planeBiz; //机票业务类
 
 //    private TextView tvPreDay; //前一天
 //    private TextView tvNextDay; //后一天
@@ -75,7 +75,7 @@ public class PlaneListInternationalBackActivity extends BaseActionBarActivity im
 
 //    private Drawable timeDrawable; //时间初始图片
 //    private Drawable priceDrawable; //价格初始图片
-
+    private PlaneTicketInternationalInfo.PlaneTicketInternationalF flightInterFlight; //去程的航班信息
     private PlaneTicketCityInfo fromCity; //出发城市
     private PlaneTicketCityInfo toCity; //到达城市
     private String dateFrom; //出发日期
@@ -136,6 +136,7 @@ public class PlaneListInternationalBackActivity extends BaseActionBarActivity im
         toCity = (PlaneTicketCityInfo) bundle.getSerializable("toCity");
         dateFrom = bundle.getString("dateFrom");
         traveltype = bundle.getString("traveltype");
+        flightInterFlight = (PlaneTicketInternationalInfo.PlaneTicketInternationalF) bundle.getSerializable("flight");
         if ("RT".equals(traveltype)){
             dateReturn = bundle.getString("dateReturn");
         }
@@ -147,7 +148,7 @@ public class PlaneListInternationalBackActivity extends BaseActionBarActivity im
         tvTitle.setText(String.format("%s—%s", toCity.getName(), fromCity.getName()));
         if ("RT".equals(traveltype)){
             tvPlaneDate.setVisibility(View.VISIBLE);
-            tvPlaneDate.setText(String.format(Locale.getDefault(), "选返程：%s", dateFrom.substring(0, dateFrom.indexOf(" "))));
+            tvPlaneDate.setText(String.format(Locale.getDefault(), "选返程：%s", dateReturn.substring(0, dateReturn.indexOf(" "))));
         }
         RelativeLayout layout = (RelativeLayout) findViewById(R.id.layout_request_next_day);
         layout.setVisibility(View.GONE);
@@ -187,7 +188,7 @@ public class PlaneListInternationalBackActivity extends BaseActionBarActivity im
             }
         });
         listData = new ArrayList<>(PlaneListInternationalActivity.info.FMap.values());
-        LogUtil.e(TAG, "listData.size = " + listData.size());
+//        LogUtil.e(TAG, "listData.size = " + listData.size());
         sortDirect();
         adapter = new PlaneListAdapter(getApplicationContext(), listData, fromCity, toCity, 2);
         adapter.setTraveltype(1);
@@ -226,7 +227,7 @@ public class PlaneListInternationalBackActivity extends BaseActionBarActivity im
 //        timeDrawable.setBounds(0, 0, timeDrawable.getMinimumWidth(), timeDrawable.getMinimumHeight());
 //        priceDrawable.setBounds(0, 0, priceDrawable.getMinimumWidth(), priceDrawable.getMinimumHeight());
 
-        planeBiz = new PlaneTicketActionBiz();
+//        planeBiz = new PlaneTicketActionBiz();
     }
 
 
@@ -287,16 +288,16 @@ public class PlaneListInternationalBackActivity extends BaseActionBarActivity im
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        if ("RT".equals(traveltype)){
-//            Intent intent = new Intent(getApplicationContext(), .class);
-        }else {
+        if ("RT".equals(traveltype)){ //进入订票页面
             Intent intent = new Intent(getApplicationContext(), PlaneItemInfoInternationalActivity.class);
             Bundle bundle = new Bundle();
             PlaneTicketInternationalInfo.PlaneTicketInternationalF flight = listData.get((int) l);
-            bundle.putSerializable("flight", flight);
+            bundle.putSerializable("flight", flightInterFlight); //去程
+            bundle.putSerializable("flight2", flight); //返程
             bundle.putString("dateFrom", dateFrom);
             bundle.putSerializable("fromCity", fromCity);
             bundle.putSerializable("toCity", toCity);
+            bundle.putString("traveltype", traveltype);
             intent.putExtras(bundle);
             startActivityForResult(intent, VIEW_TRAIN_ITEM); //查看某趟航班
         }
@@ -746,7 +747,7 @@ public class PlaneListInternationalBackActivity extends BaseActionBarActivity im
     protected void onDestroy() {
         super.onDestroy();
         TAG = null;
-        planeBiz = null;
+//        planeBiz = null;
         rbScreen = null;
         rbSortTime = null;
         rbSortPrice = null;

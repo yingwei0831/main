@@ -156,10 +156,6 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
     protected void setupView() {
         super.setupView();
         tvTitle.setText(String.format("%s—%s", fromCity.getName(), toCity.getName()));
-        if ("RT".equals(traveltype)){
-            tvPlaneDate.setVisibility(View.VISIBLE);
-            tvPlaneDate.setText(String.format(Locale.getDefault(), "选去程：%s", dateFrom.substring(0, dateFrom.indexOf(" "))));
-        }
         tvPreDay = (TextView) findViewById( R.id.tv_train_preference);
         tvNextDay = (TextView) findViewById(R.id.tv_train_next_day);
         tvCurrentDay = (TextView) findViewById(R.id.tv_train_ticket_day);
@@ -196,6 +192,9 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
         });
 
         adapter = new PlaneListAdapter(getApplicationContext(), listData, fromCity, toCity, 2);
+        if ("RT".equals(traveltype)) {
+            adapter.setTraveltype(1);
+        }
         listView.setAdapter(adapter);
 
         rbScreen = (RadioButton) findViewById(R.id.rb_plane_screen);
@@ -292,30 +291,32 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        if ("RT".equals(traveltype)){ //选返程
-            Intent intent = new Intent(getApplicationContext(), PlaneListInternationalBackActivity.class);
+        //进入验价
+//        if ("RT".equals(traveltype)){ //选返程,将去程传入
+//            Intent intent = new Intent(getApplicationContext(), PlaneListInternationalBackActivity.class);
+//            Bundle bundle = new Bundle();
+//            PlaneTicketInternationalInfo.PlaneTicketInternationalF flight = listData.get((int) l);
+//            bundle.putSerializable("flight", flight);
+//            bundle.putString("dateFrom", dateFrom);
+//            bundle.putSerializable("fromCity", fromCity);
+//            bundle.putSerializable("toCity", toCity);
+//            bundle.putString("traveltype", traveltype);
+//            bundle.putString("dateReturn", dateReturn);
+//            intent.putExtras(bundle);
+//            startActivityForResult(intent, SELECT_BACK_FLIGHT);
+//        } else {
+            Intent intent = new Intent(getApplicationContext(), PlaneItemInfoInternationalActivity.class);
             Bundle bundle = new Bundle();
             PlaneTicketInternationalInfo.PlaneTicketInternationalF flight = listData.get((int) l);
             bundle.putSerializable("flight", flight);
             bundle.putString("dateFrom", dateFrom);
-            bundle.putSerializable("fromCity", fromCity);
-            bundle.putSerializable("toCity", toCity);
-            bundle.putString("traveltype", traveltype);
             bundle.putString("dateReturn", dateReturn);
-            intent.putExtras(bundle);
-            startActivityForResult(intent, SELECT_BACK_FLIGHT);
-        }else {
-            Intent intent = new Intent(getApplicationContext(), PlaneItemInfoInternationalActivity.class);
-            Bundle bundle = new Bundle();
-            PlaneTicketInternationalInfo.PlaneTicketInternationalF flight = list.get((int) l);
-            bundle.putSerializable("flight", flight);
-            bundle.putString("dateFrom", dateFrom);
             bundle.putSerializable("fromCity", fromCity);
             bundle.putSerializable("toCity", toCity);
             bundle.putString("traveltype", traveltype);
             intent.putExtras(bundle);
             startActivityForResult(intent, VIEW_TRAIN_ITEM); //查看某趟航班
-        }
+//        }
     }
 
     private int VIEW_TRAIN_ITEM = 7546; //查看某趟列车

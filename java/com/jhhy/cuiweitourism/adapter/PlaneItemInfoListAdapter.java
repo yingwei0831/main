@@ -21,7 +21,7 @@ import java.util.List;
  */
 public abstract class PlaneItemInfoListAdapter extends MyBaseAdapter implements OnItemTextViewClick {
 
-    private int type; //1,国际机票
+    private int type; //1,国际机票; 否则国内机票
 
     public PlaneItemInfoListAdapter(Context ct, List list) {
         super(ct, list);

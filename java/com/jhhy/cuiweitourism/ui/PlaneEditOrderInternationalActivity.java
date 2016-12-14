@@ -32,7 +32,7 @@ import com.jhhy.cuiweitourism.model.UserContacts;
 import com.jhhy.cuiweitourism.net.biz.PlaneTicketActionBiz;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneOrderOfChinaRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketInternationalChangeBack;
-import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketInternationalPolicyCheck;
+import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketInternationalPolicyCheckRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketOfChinaChangeBack;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketOrderInternational;
 import com.jhhy.cuiweitourism.net.models.FetchModel.TrainTicketOrderFetch;
@@ -104,6 +104,7 @@ public class PlaneEditOrderInternationalActivity extends AppCompatActivity imple
 
     private String travelType; //形成类型：往返，单程
 
+    private PlaneTicketInternationalPolicyCheckResponse checkResponse; //验价返回数据
     private PlaneOrderOfChinaResponse info;
 
     private Handler handler = new Handler(){
@@ -154,28 +155,56 @@ public class PlaneEditOrderInternationalActivity extends AppCompatActivity imple
      * 国际机票验价
      */
     private void checkData() {
-       /* List<PlaneTicketInternationalPolicyCheck.IFlight> iFlights = new ArrayList<>();
-        PlaneTicketInternationalPolicyCheck.IFlight iFlight = new PlaneTicketInternationalPolicyCheck.IFlight("", );
+        List<List<PlaneTicketInternationalPolicyCheckRequest.IFlight>> interFlights = new ArrayList<>();
+        PlaneTicketActionBiz planeBiz = new PlaneTicketActionBiz();
 
-        iFlights.add(iFlight);
+        List<PlaneTicketInternationalPolicyCheckRequest.IFlight> iFlightsSingle = new ArrayList<>(); //单程
+        ArrayList<PlaneTicketInternationalInfo.FlightInfo> iFlightS1 = flight.S1.flightInfos;
+        for (int i = 0; i < iFlightS1.size(); i++){
+            PlaneTicketInternationalInfo.FlightInfo flightInfo = iFlightS1.get(i);
+            PlaneTicketInternationalPolicyCheckRequest.IFlight iFlight = new PlaneTicketInternationalPolicyCheckRequest.IFlight(String.valueOf(i), "S1",
+                    cabin.passengerType.mainCarrierCheck, flightInfo.toDateCheck, flightInfo.toTimeCheck, flightInfo.fromAirportCodeCheck, flightInfo.toAirportCodeCheck, flightInfo.airlineCompanyCheck,
+                    cabin.passengerType.airportCabinCode, cabin.passengerType.airportCabinType, flightInfo.toDateCheck, flightInfo.toTimeCheck, flightInfo.flightNumberCheck, flightInfo.toAirportCodeCheck, flightInfo.toTermianl);
+            iFlightsSingle.add(iFlight);
+        }
+        interFlights.add(iFlightsSingle);
 
-        List<List<PlaneTicketInternationalPolicyCheck.IFlight>> interFlights = new ArrayList<>();
-        interFlights.add(iFlights);
+        if ("RT".equals(travelType)) {
+            List<PlaneTicketInternationalPolicyCheckRequest.IFlight> iFlightsMultiply = new ArrayList<>(); //往返
+            ArrayList<PlaneTicketInternationalInfo.FlightInfo> iFlightS2 = flight.S2.flightInfos;
+            for (int i = 0; i < iFlightS2.size(); i++) {
+                PlaneTicketInternationalInfo.FlightInfo flightInfo = iFlightS2.get(i);
+                PlaneTicketInternationalPolicyCheckRequest.IFlight iFlight = new PlaneTicketInternationalPolicyCheckRequest.IFlight(String.valueOf(i), "S1",
+                        cabin.passengerType.mainCarrierCheck, flightInfo.toDateCheck, flightInfo.toTimeCheck, flightInfo.fromAirportCodeCheck, flightInfo.toAirportCodeCheck, flightInfo.airlineCompanyCheck,
+                        cabin.passengerType.airportCabinCode, cabin.passengerType.airportCabinType, flightInfo.toDateCheck, flightInfo.toTimeCheck, flightInfo.flightNumberCheck, flightInfo.toAirportCodeCheck, flightInfo.toTermianl);
+                iFlightsSingle.add(iFlight);
+            }
+            interFlights.add(iFlightsMultiply);
+        }
 
-        PlaneTicketInternationalPolicyCheck request = new PlaneTicketInternationalPolicyCheck(travelType, "1E", "ALL", interFlights);
+        PlaneTicketInternationalPolicyCheckRequest request = new PlaneTicketInternationalPolicyCheckRequest(travelType, "1E", "ALL", interFlights);
         planeBiz.planeTicketInternationalPolicyCheck(request, new BizGenericCallback<PlaneTicketInternationalPolicyCheckResponse>() {
             @Override
             public void onCompletion(GenericResponseModel<PlaneTicketInternationalPolicyCheckResponse> model) {
-
+                if ("0001".equals(model.headModel.res_code)){
+                    ToastUtil.show(getApplicationContext(), model.headModel.res_arg);
+                }else if ("0000".equals(model.headModel.res_code)){
+                    checkResponse = model.body;
+                }
+                LoadingIndicator.cancel();
             }
 
             @Override
             public void onError(FetchError error) {
-
+                if (error.localReason != null){
+                    ToastUtil.show(getApplicationContext(), error.localReason);
+                }else{
+                    ToastUtil.show(getApplicationContext(), "验价失败，请返回重试");
+                }
+                LoadingIndicator.cancel();
             }
-        });*/
+        });
     }
-
     private void setupView() {
         TextView tvTitle = (TextView) actionBar.getCustomView().findViewById(R.id.tv_title_simple_title);
         tvTitle.setText(getString(R.string.train_order_edit));

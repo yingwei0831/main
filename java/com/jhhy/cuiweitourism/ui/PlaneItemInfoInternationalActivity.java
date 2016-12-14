@@ -17,12 +17,14 @@ import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.PlaneItemInfoListAdapter;
 import com.jhhy.cuiweitourism.net.biz.PlaneTicketActionBiz;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketInternationalChangeBack;
+import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketInternationalPolicyCheckRequest;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketCityInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketInfoOfChina;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketInternationalChangeBackRespond;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketInternationalInfo;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketInternationalPolicyCheckResponse;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
@@ -62,10 +64,13 @@ public class PlaneItemInfoInternationalActivity extends BaseActionBarActivity {
     private List<PlaneTicketInternationalInfo.PlaneTicketInternationalHFCabin> list = new ArrayList<>();
     private PlaneItemInfoListAdapter adapter;
 
-    private PlaneTicketInternationalInfo.PlaneTicketInternationalF flight; //航班信息
+    private PlaneTicketInternationalInfo.PlaneTicketInternationalF flight; //航班信息——单程
+//    private PlaneTicketInternationalInfo.PlaneTicketInternationalF flightRT; //航班信息——返程
     private PlaneTicketCityInfo fromCity; //出发城市
     private PlaneTicketCityInfo toCity; //到达城市
     private String dateFrom; //出发日期
+    private String dateReturn; //返程日期
+    private String traveltype; //航程类型 OW（单程） RT（往返）
     private PlaneTicketInternationalInfo.PlaneTicketInternationalHFCabin cabin;
 
     @Override
@@ -81,6 +86,11 @@ public class PlaneItemInfoInternationalActivity extends BaseActionBarActivity {
         fromCity = (PlaneTicketCityInfo) bundle.getSerializable("fromCity");
         toCity = (PlaneTicketCityInfo) bundle.getSerializable("toCity");
         dateFrom = bundle.getString("dateFrom");
+        traveltype = bundle.getString("traveltype");
+        if ("RT".equals(traveltype)){
+//            flightRT = (PlaneTicketInternationalInfo.PlaneTicketInternationalF) bundle.getSerializable("flight2"); //返程
+            dateReturn = bundle.getString("dateReturn");
+        }
         cabin = PlaneListInternationalActivity.info.HMap.get(flight.F).cabin;
     }
 
@@ -199,6 +209,7 @@ public class PlaneItemInfoInternationalActivity extends BaseActionBarActivity {
         };
         adapter.setType(1);
         listView.setAdapter(adapter);
+
     }
 
     //退改签说明，预定
@@ -217,16 +228,70 @@ public class PlaneItemInfoInternationalActivity extends BaseActionBarActivity {
         }
     }
 
+    private void reserveTicker(int position) {
+        Intent intent = new Intent(getApplicationContext(), PlaneEditOrderInternationalActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("flight", flight);
+        bundle.putString("dateFrom", dateFrom);
+        bundle.putSerializable("fromCity", fromCity);
+        bundle.putSerializable("toCity", toCity);
+        bundle.putSerializable("cabin", cabin);
+        bundle.putString("travelType", traveltype);
+        if ("RT".equals(traveltype)){
+            bundle.putString("dateReturn", dateReturn);
+        }
+        intent.putExtras(bundle);
+        startActivityForResult(intent, EDIT_PLANE_ORDER); //预定当前航班
+    }
+
+    private int EDIT_PLANE_ORDER = 9632; //编辑机票订单
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (RESULT_OK == resultCode){
+            if (requestCode == EDIT_PLANE_ORDER){ //机票订单成功
+
+            }
+        }
+    }
+
+    @Override
+    protected void addListener() {
+        super.addListener();
+
+    }
+
+    /**
+     * 退改签政策查询
+     */
     private void refundTicket() {
         LoadingIndicator.show(PlaneItemInfoInternationalActivity.this, getString(R.string.http_notice));
         PlaneTicketActionBiz biz = new PlaneTicketActionBiz();
         PlaneTicketInternationalInfo.PassengerType passengerType = cabin.passengerType;
-        PlaneTicketInternationalChangeBack.AirRulesRQBean airRulesRQBean =
-                new PlaneTicketInternationalChangeBack.AirRulesRQBean(flight.S1.fromDate, flight.S1.fromTime,
-                        passengerType.freightBaseCheck, passengerType.releasePriceFlightCompanyCheck, passengerType.fromAirportCheck,
-                        passengerType.toAirportCheck, passengerType.changeBackSign);
+
         List<PlaneTicketInternationalChangeBack.AirRulesRQBean> airRulesRQBeanList = new ArrayList<>();
-        airRulesRQBeanList.add(airRulesRQBean);
+        for (int i = 0; i < flight.S1.flightInfos.size(); i++) {
+            PlaneTicketInternationalInfo.FlightInfo flightItem = flight.S1.flightInfos.get(i);
+            PlaneTicketInternationalChangeBack.AirRulesRQBean airRulesRQBean =
+                    new PlaneTicketInternationalChangeBack.AirRulesRQBean(flightItem.fromDateCheck, flightItem.fromTimeCheck,
+                            passengerType.freightBaseCheck, passengerType.releasePriceFlightCompanyCheck, passengerType.fromAirportCheck,
+                            passengerType.toAirportCheck, passengerType.changeBackSign);
+
+            airRulesRQBeanList.add(airRulesRQBean);
+        }
+        if ("RT".equals(traveltype)){
+            for (int i = 0; i < flight.S1.flightInfos.size(); i++) {
+                PlaneTicketInternationalInfo.FlightInfo flightItem = flight.S2.flightInfos.get(i);
+                PlaneTicketInternationalChangeBack.AirRulesRQBean airRulesRQBean =
+                        new PlaneTicketInternationalChangeBack.AirRulesRQBean(flightItem.fromDateCheck, flightItem.fromTimeCheck,
+                                passengerType.freightBaseCheck, passengerType.releasePriceFlightCompanyCheck, passengerType.fromAirportCheck,
+                                passengerType.toAirportCheck, passengerType.changeBackSign);
+
+                airRulesRQBeanList.add(airRulesRQBean);
+            }
+        }
+
         PlaneTicketInternationalChangeBack request = new PlaneTicketInternationalChangeBack(airRulesRQBeanList);
         biz.planeTicketInternationalPolicyInfo(request, new BizGenericCallback<PlaneTicketInternationalChangeBackRespond>() {
             @Override
@@ -253,35 +318,5 @@ public class PlaneItemInfoInternationalActivity extends BaseActionBarActivity {
                 LoadingIndicator.cancel();
             }
         });
-    }
-
-    private void reserveTicker(int position) {
-        Intent intent = new Intent(getApplicationContext(), PlaneEditOrderInternationalActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("flight", flight);
-        bundle.putString("dateFrom", dateFrom);
-        bundle.putSerializable("fromCity", fromCity);
-        bundle.putSerializable("toCity", toCity);
-        bundle.putSerializable("cabin", cabin);
-        intent.putExtras(bundle);
-        startActivityForResult(intent, EDIT_PLANE_ORDER); //预定当前航班
-    }
-
-    private int EDIT_PLANE_ORDER = 9632; //编辑机票订单
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (RESULT_OK == resultCode){
-            if (requestCode == EDIT_PLANE_ORDER){ //机票订单成功
-
-            }
-        }
-    }
-
-    @Override
-    protected void addListener() {
-        super.addListener();
-
     }
 }

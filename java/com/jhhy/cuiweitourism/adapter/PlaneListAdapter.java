@@ -4,9 +4,12 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
+import com.jhhy.cuiweitourism.model.Line;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketCityInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketInfoOfChina;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketInternationalInfo;
@@ -19,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -30,6 +34,7 @@ public class PlaneListAdapter extends MyBaseAdapter {
     private int type; //1：国内机票  2：国外机票
     private int priceType; //2:票价+税费；1:含税票价
     private int traveltype; //1:返程 0:单程
+    private int typeMultiply; //转机
 
     private PlaneTicketCityInfo fromCity;
     private PlaneTicketCityInfo toCity;
@@ -55,7 +60,7 @@ public class PlaneListAdapter extends MyBaseAdapter {
         ViewHolder holder = null;
         if (view == null){
             holder = new ViewHolder();
-            view = LayoutInflater.from(context).inflate(R.layout.item_plane_list, null);
+            view = LayoutInflater.from(context).inflate(R.layout.item_plane_list_return, null);
             holder.tvStartTime = (TextView) view.findViewById(R.id.tv_plane_start_time);
             holder.tvFromAirport = (TextView) view.findViewById(R.id.tv_plane_from_airport);
             holder.tvArrivalTime = (TextView) view.findViewById(R.id.tv_plane_arrival_time);
@@ -66,6 +71,22 @@ public class PlaneListAdapter extends MyBaseAdapter {
             holder.tvArrivalType = (TextView) view.findViewById(R.id.tv_plane_arrival_type);
             holder.tvConsumingTime = (TextView) view.findViewById(R.id.tv_plane_consuming_time);
 //            holder.tvTicketNum = (TextView) view.findViewById(R.id.tv_plane_ticket_number);
+
+            holder.layoutReturnTop = (RelativeLayout) view.findViewById(R.id.layout_return_top);
+            holder.layoutReturnBottom = (LinearLayout) view.findViewById(R.id.layout_return_bottom);
+//            holder.layoutReturnTop.setVisibility(View.GONE);
+//            holder.layoutReturnBottom.setVisibility(View.GONE);
+
+            holder.tvStartTimeReturn = (TextView) view.findViewById(R.id.tv_plane_start_time_return);
+            holder.tvFromAirportReturn = (TextView) view.findViewById(R.id.tv_plane_from_airport_return);
+            holder.tvArrivalTimeReturn = (TextView) view.findViewById(R.id.tv_plane_arrival_time_return);
+            holder.tvArrivalAirportReturn = (TextView) view.findViewById(R.id.tv_plane_arrival_airport_return);
+//            holder.tvTicketPriceReturn = (TextView) view.findViewById(R.id.tv_plane_ticket_price_return);
+//            holder.tvPlaneClassReturn = (TextView) view.findViewById(R.id.tv_plane_ticket_class_return);
+            holder.tvPlaneInfoReturn = (TextView) view.findViewById(R.id.tv_plane_info_return);
+            holder.tvArrivalTypeReturn = (TextView) view.findViewById(R.id.tv_plane_arrival_type_return);
+            holder.tvConsumingTimeReturn = (TextView) view.findViewById(R.id.tv_plane_consuming_time_return);
+            holder.tvTicketNum = (TextView) view.findViewById(R.id.tv_plane_ticket_number_return);
             view.setTag(holder);
         }else{
             holder = (ViewHolder) view.getTag();
@@ -87,42 +108,76 @@ public class PlaneListAdapter extends MyBaseAdapter {
         }else if (type == 2){
             PlaneTicketInternationalInfo.PlaneTicketInternationalF flight = (PlaneTicketInternationalInfo.PlaneTicketInternationalF) getItem(i);
             if (flight != null){
-                PlaneTicketInternationalInfo.PlaneTicketInternationalFS s1 = null;
-                if (traveltype == 1){
-                    s1 = flight.S2;
+
+                PlaneTicketInternationalInfo.PlaneTicketInternationalHF hf = PlaneListInternationalActivity.info.HMap.get(flight.F);
+                String[] cabinTypes = hf.cabin.passengerType.airportCabinType.split("/");
+                LogUtil.e(TAG, "舱位代码：" + hf.cabin.passengerType.airportCabinType);
+
+                if (traveltype == 1){ //有返程
+                    holder.layoutReturnTop.setVisibility(View.VISIBLE);
+                    holder.layoutReturnBottom.setVisibility(View.VISIBLE);
+//                    holder.tvArrivalTypeReturn.setVisibility(View.VISIBLE);
+//                    holder.tvConsumingTimeReturn.setVisibility(View.VISIBLE);
+                    PlaneTicketInternationalInfo.PlaneTicketInternationalFS s2 = flight.S2;
+
+                    holder.tvStartTimeReturn.setText(s2.fromTime);
+                    holder.tvArrivalTimeReturn.setText(s2.toTime);
+                    if ("0".equals(s2.transferFrequency)) {
+                        holder.tvArrivalTypeReturn.setText(context.getString(R.string.plane_flight_single)); //直达
+                    } else {
+                        holder.tvArrivalTypeReturn.setText(context.getString(R.string.plane_flight_unsingle)); //中转
+                    }
+                    holder.tvConsumingTimeReturn.setText(Utils.getDiffMinuteStr(String.format("%s %s", s2.fromDate, s2.fromTime), String.format("%s %s", s2.toDate, s2.toTime))); //耗时
+                    holder.tvFromAirportReturn.setText(String.format("%s%s", PlaneListInternationalActivity.info.P.get(s2.fromAirportCode).fullName, s2.fromAirportName)); //起飞机场/航站楼
+                    holder.tvArrivalAirportReturn.setText(String.format("%s%s", PlaneListInternationalActivity.info.P.get(s2.toAirportCode).fullName, s2.toAirportName)); //起飞机场/航站楼
+//                    if (priceType == 1) { //含税总价
+//                        holder.tvTicketPriceReturn.setText(String.format("￥%s", hf.cabin.totalFare.taxTotal));
+//                        holder.tvPlaneClassReturn.setText(context.getString(R.string.plane_flight_tax));
+//                    } else { //税价+票价
+//                        holder.tvTicketPriceReturn.setText(String.format("￥%s", hf.cabin.baseFare.faceValueTotal)); //票面价 ; 含税总价：hf.cabin.totalFare.taxTotal
+//                        holder.tvPlaneClassReturn.setText(String.format("税费：￥%s", hf.cabin.passengerType.taxTypeCodeMap.get("XT").price)); //税费xxx; 含税总价；
+//                    }
+                    holder.tvPlaneInfoReturn.setText(String.format("%s%s | %s",
+                            s2.flightInfos.get(0).flightNumberCheck,
+                            PlaneListInternationalActivity.info.J.get(s2.flightInfos.get(0).flightTypeCheck).typeName,
+                            PlaneListInternationalActivity.info.R.get(cabinTypes[1]))); //飞机/舱位 MU5003空客A320(J)|经济舱(R)
                 }else{
-                    s1 = flight.S1;
+                    holder.layoutReturnTop.setVisibility(View.GONE);
+                    holder.layoutReturnBottom.setVisibility(View.GONE);
                 }
                 holder.tvArrivalType.setVisibility(View.VISIBLE);
                 holder.tvConsumingTime.setVisibility(View.VISIBLE);
+                PlaneTicketInternationalInfo.PlaneTicketInternationalFS s1 = flight.S1;
+
                 holder.tvStartTime.setText(s1.fromTime);
                 holder.tvArrivalTime.setText(s1.toTime);
                 if ("0".equals(s1.transferFrequency)) {
                     holder.tvArrivalType.setText(context.getString(R.string.plane_flight_single)); //直达
-                }else{
+                } else {
                     holder.tvArrivalType.setText(context.getString(R.string.plane_flight_unsingle)); //中转
                 }
-                holder.tvConsumingTime.setText(Utils.getDiffMinuteStr(String.format("%s %s", s1.fromDate, s1.fromTime), String.format("%s %s", s1.toDate, s1.toTime))); //TODO 耗时
+                holder.tvConsumingTime.setText(Utils.getDiffMinuteStr(String.format("%s %s", s1.fromDate, s1.fromTime), String.format("%s %s", s1.toDate, s1.toTime))); //耗时
                 holder.tvFromAirport.setText(String.format("%s%s", PlaneListInternationalActivity.info.P.get(s1.fromAirportCode).fullName, s1.fromAirportName)); //起飞机场/航站楼
                 holder.tvArrivalAirport.setText(String.format("%s%s", PlaneListInternationalActivity.info.P.get(s1.toAirportCode).fullName, s1.toAirportName)); //起飞机场/航站楼
 
-                PlaneTicketInternationalInfo.PlaneTicketInternationalHF hf = PlaneListInternationalActivity.info.HMap.get(flight.F);
-                if (priceType == 1){ //含税总价
+                if (priceType == 1) { //含税总价
                     holder.tvTicketPrice.setText(String.format("￥%s", hf.cabin.totalFare.taxTotal));
                     holder.tvPlaneClass.setText(context.getString(R.string.plane_flight_tax));
                 } else { //税价+票价
                     holder.tvTicketPrice.setText(String.format("￥%s", hf.cabin.baseFare.faceValueTotal)); //票面价 ; 含税总价：hf.cabin.totalFare.taxTotal
                     holder.tvPlaneClass.setText(String.format("税费：￥%s", hf.cabin.passengerType.taxTypeCodeMap.get("XT").price)); //税费xxx; 含税总价；
                 }
-                String[] cabinTypes = hf.cabin.passengerType.airportCabinType.split("/");
-                LogUtil.e(TAG, "舱位代码："+Arrays.toString(cabinTypes));
-                String cabinType = PlaneListInternationalActivity.info.R.get(cabinTypes[traveltype]); //
-//                StringBuffer sb = new StringBuffer();
-//                for (String cabinType1 : cabinTypes) {
-//                    sb.append(PlaneListInternationalActivity.info.R.get(cabinType1)).append("|");
-//                }
-//                String cabinType =  sb.toString().substring(0, sb.length()-1);
-                holder.tvPlaneInfo.setText(String.format("%s%s | %s", s1.flightInfos.get(0).flightNumberCheck, PlaneListInternationalActivity.info.J.get(s1.flightInfos.get(0).flightTypeCheck).typeName, cabinType)); //飞机/舱位 MU5003空客A320(J)|经济舱(R)
+                if (Integer.parseInt(hf.cabin.passengerType.cabinCount) >= 9){
+                    holder.tvTicketNum.setVisibility(View.INVISIBLE);
+                }else {
+                    holder.tvTicketNum.setVisibility(View.VISIBLE);
+                    holder.tvTicketNum.setText(String.format(Locale.getDefault(), "%s张", hf.cabin.passengerType.cabinCount));
+                }
+                holder.tvPlaneInfo.setText(String.format("%s%s | %s",
+                        s1.flightInfos.get(0).flightNumberCheck,
+                        PlaneListInternationalActivity.info.J.get(s1.flightInfos.get(0).flightTypeCheck).typeName,
+                        PlaneListInternationalActivity.info.R.get(cabinTypes[0]))); //飞机/舱位 MU5003空客A320(J)|经济舱(R)
+
             }
         }
         return view;
@@ -139,9 +194,28 @@ public class PlaneListAdapter extends MyBaseAdapter {
         private TextView tvPlaneClass;  //舱位
 
         private TextView tvPlaneInfo;   //飞机信息
-//        private TextView tvTicketNum;   //机票数量
+        private TextView tvTicketNum;   //机票数量
 
         private TextView tvArrivalType; //直达、中转
         private TextView tvConsumingTime; //耗时
+
+        private RelativeLayout layoutReturnTop;
+        private LinearLayout layoutReturnBottom;
+        private TextView tvStartTimeReturn;
+        private TextView tvFromAirportReturn;
+
+        private TextView tvArrivalTimeReturn;
+        private TextView tvArrivalAirportReturn;
+
+//        private TextView tvTicketPriceReturn;
+//        private TextView tvPlaneClassReturn;  //舱位
+
+        private TextView tvPlaneInfoReturn;   //飞机信息
+//        private TextView tvTicketNumReturn;   //机票数量
+
+        private TextView tvArrivalTypeReturn; //直达、中转
+        private TextView tvConsumingTimeReturn; //耗时
+
+
     }
 }

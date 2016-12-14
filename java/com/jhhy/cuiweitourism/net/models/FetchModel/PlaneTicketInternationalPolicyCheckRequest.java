@@ -8,11 +8,15 @@ import java.util.List;
  * Created by jiahe008 on 2016/12/13.
  * 国际机票政策匹配（验价）
  */
-public class PlaneTicketInternationalPolicyCheck extends BasicFetchModel {
+public class PlaneTicketInternationalPolicyCheckRequest extends BasicFetchModel {
 
     /**
      * TravelType : OW
-     * A : [[{"SegmentID":"0","SegmentType":"S1","TicketingCarrier":"MU","ArrivalDate":"2016-12-03","ArrivalTime":"00:00","BoardPoint":"PEK","BoardPointAT":"","Carrier":"MU","ClassCode":"V","ClassRank":"E","DepartureDate":"2016-12-02","DepartureTime":"19:10","FlightNo":"MU9801","OffPoint":"BKK","OffPointAT":""}]]
+     * A : [
+     *          [
+     *              {"SegmentID":"0","SegmentType":"S1","TicketingCarrier":"MU","ArrivalDate":"2016-12-03","ArrivalTime":"00:00","BoardPoint":"PEK","BoardPointAT":"","Carrier":"MU","ClassCode":"V","ClassRank":"E","DepartureDate":"2016-12-02","DepartureTime":"19:10","FlightNo":"MU9801","OffPoint":"BKK","OffPointAT":""}
+     *          ]
+     *     ]
      * Gds : 1E
      * Plats : ALL
      */
@@ -20,9 +24,9 @@ public class PlaneTicketInternationalPolicyCheck extends BasicFetchModel {
     private String TravelType;
     private String Gds;
     private String Plats;
-    private List<List<IFlight>> A;
+    private List<List<IFlight>> A; //[S1,S2]
 
-    public PlaneTicketInternationalPolicyCheck(String travelType, String gds, String plats, List<List<IFlight>> a) {
+    public PlaneTicketInternationalPolicyCheckRequest(String travelType, String gds, String plats, List<List<IFlight>> a) {
         TravelType = travelType;
         Gds = gds;
         Plats = plats;
@@ -65,7 +69,7 @@ public class PlaneTicketInternationalPolicyCheck extends BasicFetchModel {
         /**
          * SegmentID : 0            航段
          * SegmentType : S1         去程/返程
-         * TicketingCarrier : MU    主承运人
+         * TicketingCarrier : MU    主承运人,整个行程的主承运人,从H节点获得
          * ArrivalDate : 2016-12-03 到达日期
          * ArrivalTime : 00:00      到达时间
          * BoardPoint : PEK         出发城市
