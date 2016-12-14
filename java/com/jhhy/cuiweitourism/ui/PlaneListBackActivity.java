@@ -6,33 +6,25 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.ContextCompat;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.PlaneListAdapter;
-import com.jhhy.cuiweitourism.adapter.TrainListAdapter;
 import com.jhhy.cuiweitourism.net.biz.PlaneTicketActionBiz;
 import com.jhhy.cuiweitourism.net.biz.TrainTicketActionBiz;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketInfoForChinalRequest;
-import com.jhhy.cuiweitourism.net.models.FetchModel.TrainTicketFetch;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketCityInfo;
-import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketCityInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketInfoOfChina;
-import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainTicketDetailInfo;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
-import com.jhhy.cuiweitourism.popupwindows.PopupWindowScreenTrain;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.utils.Utils;
 import com.just.sun.pricecalendar.ToastCommon;
@@ -46,15 +38,16 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class PlaneListActivity extends BaseActionBarActivity implements  AdapterView.OnItemClickListener //,RadioGroup.OnCheckedChangeListener
+public class PlaneListBackActivity extends BaseActionBarActivity implements  AdapterView.OnItemClickListener //,RadioGroup.OnCheckedChangeListener
 {
 
     private String TAG = "PlaneListActivity";
-    private PlaneTicketActionBiz planeBiz; //机票业务类
 
-    private TextView tvPreDay; //前一天
-    private TextView tvNextDay; //后一天
-    private TextView tvCurrentDay; //今天 2016-10-24 周一
+    private PlaneTicketActionBiz planeBiz;
+
+//    private TextView tvPreDay; //前一天
+//    private TextView tvNextDay; //后一天
+//    private TextView tvCurrentDay; //今天 2016-10-24 周一
 
 //    private View parent;
     private PullToRefreshListView pullListView;
@@ -99,7 +92,7 @@ public class PlaneListActivity extends BaseActionBarActivity implements  Adapter
                     break;
                 case 1:
                     dateFrom = tempTime;
-                    tvCurrentDay.setText(dateFrom);
+//                    tvCurrentDay.setText(dateFrom);
                     adapter.setData(list);
                     adapter.notifyDataSetChanged();
                     break;
@@ -129,17 +122,18 @@ public class PlaneListActivity extends BaseActionBarActivity implements  Adapter
     @Override
     protected void setupView() {
         super.setupView();
-        tvTitle.setText(String.format("%s—%s", fromCity.getName(), toCity.getName()));
-        if ("RT".equals(traveltype)){
-            tvPlaneDate.setVisibility(View.VISIBLE);
-            tvPlaneDate.setText(String.format(Locale.getDefault(), "选去程：%s", dateFrom.substring(0, dateFrom.indexOf(" "))));
-        }
+        tvTitle.setText(String.format("%s—%s", toCity.getName(), fromCity.getName()));
+        tvPlaneDate.setVisibility(View.VISIBLE);
+        tvPlaneDate.setText(String.format(Locale.getDefault(), "选返程：%s", dateReturn.substring(0, dateReturn.indexOf(" "))));
+        View view = findViewById(R.id.layout_request_next_day);
+        view.setVisibility(View.GONE);
 
-        tvPreDay = (TextView) findViewById( R.id.tv_train_preference);
-        tvNextDay = (TextView) findViewById(R.id.tv_train_next_day);
-        tvCurrentDay = (TextView) findViewById(R.id.tv_train_ticket_day);
-        tempTime = dateFrom;
-        tvCurrentDay.setText(dateFrom);
+
+//        tvPreDay = (TextView) findViewById( R.id.tv_train_preference);
+//        tvNextDay = (TextView) findViewById(R.id.tv_train_next_day);
+//        tvCurrentDay = (TextView) findViewById(R.id.tv_train_ticket_day);
+        tempTime = dateReturn;
+//        tvCurrentDay.setText(dateFrom);
 
 //        parent = findViewById(R.id.train_list_parent);
         pullListView = (PullToRefreshListView) findViewById(R.id.list_train_detail);
@@ -176,14 +170,14 @@ public class PlaneListActivity extends BaseActionBarActivity implements  Adapter
         rbSortPrice = (RadioButton) findViewById(R.id.rb_plane_price);
 
         //起飞时间升序
-        drawableSortStartTimeIncrease = ContextCompat.getDrawable(PlaneListActivity.this, R.mipmap.icon_train_start_time_decrease); //时间从早到晚
+        drawableSortStartTimeIncrease = ContextCompat.getDrawable(PlaneListBackActivity.this, R.mipmap.icon_train_start_time_decrease); //时间从早到晚
         drawableSortStartTimeDecrease = ContextCompat.getDrawable(getApplicationContext(), R.mipmap.icon_train_start_time_increase); //时间从晚到早
 
         drawableSortStartTimeIncrease.setBounds(0, 0, drawableSortStartTimeIncrease.getMinimumWidth(), drawableSortStartTimeIncrease.getMinimumHeight());
         drawableSortStartTimeDecrease.setBounds(0, 0, drawableSortStartTimeDecrease.getMinimumWidth(), drawableSortStartTimeDecrease.getMinimumHeight());
 
         //价格排序
-        drawableSortPriceIncrease = ContextCompat.getDrawable(PlaneListActivity.this, R.mipmap.icon_price_incrase); //时间从早到晚
+        drawableSortPriceIncrease = ContextCompat.getDrawable(PlaneListBackActivity.this, R.mipmap.icon_price_incrase); //时间从早到晚
         drawableSortPriceDecrease = ContextCompat.getDrawable(getApplicationContext(), R.mipmap.icon_price_decrase); //时间从晚到早
 
         drawableSortPriceIncrease.setBounds(0, 0, drawableSortPriceIncrease.getMinimumWidth(), drawableSortPriceIncrease.getMinimumHeight());
@@ -205,14 +199,14 @@ public class PlaneListActivity extends BaseActionBarActivity implements  Adapter
     public void onClick(View view) {
         super.onClick(view);
         switch (view.getId()){
-            case R.id.tv_train_preference: //前一天
-                tempTime = getDateStr(dateFrom.substring(0, dateFrom.indexOf(" ")), -1);
-                getInternetData();
-                break;
-            case R.id.tv_train_next_day: //后一天
-                tempTime = getDateStr(dateFrom.substring(0, dateFrom.indexOf(" ")), 1);
-                getInternetData();
-                break;
+//            case R.id.tv_train_preference: //前一天
+//                tempTime = getDateStr(dateFrom.substring(0, dateFrom.indexOf(" ")), -1);
+//                getInternetData();
+//                break;
+//            case R.id.tv_train_next_day: //后一天
+//                tempTime = getDateStr(dateFrom.substring(0, dateFrom.indexOf(" ")), 1);
+//                getInternetData();
+//                break;
             case R.id.rb_plane_screen: //筛选
                 screen();
                 break;
@@ -244,8 +238,8 @@ public class PlaneListActivity extends BaseActionBarActivity implements  Adapter
     @Override
     protected void addListener() {
         super.addListener();
-        tvPreDay .setOnClickListener(this);
-        tvNextDay.setOnClickListener(this);
+//        tvPreDay .setOnClickListener(this);
+//        tvNextDay.setOnClickListener(this);
 
         rbScreen.setOnClickListener(this);
         rbSortTime.setOnClickListener(this);
@@ -281,30 +275,18 @@ public class PlaneListActivity extends BaseActionBarActivity implements  Adapter
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        if ("RT".equals(traveltype)){ //进入选返程
-            Intent intent = new Intent(getApplicationContext(), PlaneListBackActivity.class);
-            Bundle bundle = new Bundle();
-            PlaneTicketInfoOfChina.FlightInfo flight = list.get((int) l);
-            bundle.putSerializable("flight", flight);
-            bundle.putString("dateFrom", dateFrom);
-            bundle.putSerializable("fromCity", fromCity);
-            bundle.putSerializable("toCity", toCity);
-            bundle.putString("traveltype", traveltype);
-            bundle.putString("dateReturn", dateReturn);
-            intent.putExtras(bundle);
-            startActivityForResult(intent, VIEW_TRAIN_ITEM); //查看某趟航班
-        }else {
-            Intent intent = new Intent(getApplicationContext(), PlaneItemInfoActivity.class);
-            Bundle bundle = new Bundle();
-            PlaneTicketInfoOfChina.FlightInfo flight = list.get((int) l);
-            bundle.putSerializable("flight", flight);
-            bundle.putString("dateFrom", dateFrom);
-            bundle.putSerializable("fromCity", fromCity);
-            bundle.putSerializable("toCity", toCity);
-            bundle.putString("traveltype", traveltype);
-            intent.putExtras(bundle);
-            startActivityForResult(intent, VIEW_TRAIN_ITEM); //查看某趟航班
-        }
+        //生成订单，去程+返程
+        Intent intent = new Intent(getApplicationContext(), PlaneItemInfoActivity.class);
+        Bundle bundle = new Bundle();
+        PlaneTicketInfoOfChina.FlightInfo flight = list.get((int) l);
+//        bundle.putSerializable("flight", flight); //去程
+        bundle.putSerializable("flight1", flight); //返程
+        bundle.putString("dateFrom", dateFrom);
+        bundle.putSerializable("fromCity", fromCity);
+        bundle.putSerializable("toCity", toCity);
+        bundle.putString("traveltype", traveltype);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, VIEW_TRAIN_ITEM); //查看某趟列车
     }
 
     private int VIEW_TRAIN_ITEM = 7546; //查看某趟列车
@@ -398,12 +380,13 @@ public class PlaneListActivity extends BaseActionBarActivity implements  Adapter
 
     //获取国内飞机票
     private void getInternetData(){
-        LoadingIndicator.show(PlaneListActivity.this, getString(R.string.http_notice));
+        LoadingIndicator.show(PlaneListBackActivity.this, getString(R.string.http_notice));
         new Thread(){
             @Override
             public void run() {
                 super.run();
-                PlaneTicketInfoForChinalRequest request = new PlaneTicketInfoForChinalRequest(fromCity.getCode(), toCity.getCode(), tempTime.substring(0, tempTime.indexOf(" ")));
+                PlaneTicketInfoForChinalRequest request = new PlaneTicketInfoForChinalRequest(
+                        toCity.getCode(), fromCity.getCode(), tempTime.substring(0, tempTime.indexOf(" ")));
                 planeBiz.planeTicketInfoInChina(request, new BizGenericCallback<PlaneTicketInfoOfChina>() {
                     @Override
                     public void onCompletion(GenericResponseModel<PlaneTicketInfoOfChina> model) {

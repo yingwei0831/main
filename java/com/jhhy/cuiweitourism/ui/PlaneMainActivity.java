@@ -202,10 +202,10 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
             bundle.putSerializable("toCity", toCity);
             bundle.putString("dateFrom", dateFrom);
             bundle.putString("traveltype", traveltype);
-            bundle.putInt("type", type); //单程，往返
-            if (type == 2) { //往返，询价
+//            bundle.putInt("type", type); //单程，往返
+            if (type == 2) { //往返
                 if (TextUtils.isEmpty(dateReturn)){
-                    ToastUtil.show(getApplicationContext(), "返程日期不能为空");
+                    ToastUtil.show(getApplicationContext(), "请选择返程日期");
                     return;
                 }
                 LogUtil.e(TAG, "dateReturn = " + dateReturn);
@@ -220,7 +220,7 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
             bundle.putSerializable("toCity", toCity);
             bundle.putString("dateFrom", dateFrom);
             bundle.putString("traveltype", traveltype);
-            bundle.putInt("type", type); //单程，往返
+//            bundle.putInt("type", type); //单程，往返
             if (type == 2) { //往返，询价
                 if (TextUtils.isEmpty(dateReturn)){
                     ToastUtil.show(getApplicationContext(), "返程日期不能为空");
@@ -369,7 +369,7 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
                 tvAddInquiry.setVisibility(View.VISIBLE);
                 layoutInquiryType.setVisibility(View.VISIBLE);
                 type = 3;
-                traveltype = "";
+//                traveltype = "";
                 break;
         }
     }
