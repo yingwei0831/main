@@ -37,7 +37,7 @@ import java.util.Locale;
 
 public class PlaneItemInfoInternationalActivity extends BaseActionBarActivity {
 
-    private static final String TAG = "PlaneItemInfoInternationalActivity";
+    private String TAG = "PlaneItemInfoInternationalActivity";
     private TextView tvFromAirport; //起飞机场
     private TextView tvToAirport;   //降落机场
 

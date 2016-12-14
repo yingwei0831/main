@@ -565,6 +565,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/ActionBarTheme" />
         <activity
+            android:name=".ui.PlaneListBackActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/ActionBarTheme" />
+
+        <activity
             android:name=".ui.PlaneListInternationalActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
