@@ -43,7 +43,7 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
     private Button tvAliPay;
     private Button tvWeChatPay;
 
-    private int type; //11:热门活动支付,21:酒店支付, 16:租车订单, 14:国内火车票订单； 15：国内飞机票订单
+    private int type; //11:热门活动支付,21:酒店支付, 16:租车订单, 14:国内火车票订单； 15：国内飞机票订单/国外
     private ActivityOrderInfo hotInfo; //热门活动订单
     private HotelOrderInfo hotelInfo; //酒店订单
     private TrainTicketOrderInfo trainInfo; //火车票订单

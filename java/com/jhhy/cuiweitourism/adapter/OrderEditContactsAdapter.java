@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.OnItemTextViewClick;
 import com.jhhy.cuiweitourism.R;
-import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketOrderInternational;
+import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketOrderInternationalRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.TrainTicketOrderFetch;
 
 import java.util.List;
@@ -61,7 +61,7 @@ public class OrderEditContactsAdapter extends MyBaseAdapter {
         });
 
         if (type == 1){
-            PlaneTicketOrderInternational.PassengersBean item = (PlaneTicketOrderInternational.PassengersBean) getItem(i);
+            PlaneTicketOrderInternationalRequest.PassengersBean item = (PlaneTicketOrderInternationalRequest.PassengersBean) getItem(i);
             if (item != null) {
                 holder.tvName.setText(item.getName());
                 holder.tvID.setText(item.getCardNo());

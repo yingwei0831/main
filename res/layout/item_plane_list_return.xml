@@ -129,7 +129,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/tv_plane_start_time_return"
@@ -264,7 +264,7 @@
             android:layout_marginTop="4dp"
             android:text="1张"
             android:textColor="@android:color/holo_red_light"
-            android:visibility="visible"
+            android:visibility="invisible"
             android:paddingBottom="10dp"
             />
 

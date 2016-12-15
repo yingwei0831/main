@@ -291,32 +291,17 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        //进入验价
-//        if ("RT".equals(traveltype)){ //选返程,将去程传入
-//            Intent intent = new Intent(getApplicationContext(), PlaneListInternationalBackActivity.class);
-//            Bundle bundle = new Bundle();
-//            PlaneTicketInternationalInfo.PlaneTicketInternationalF flight = listData.get((int) l);
-//            bundle.putSerializable("flight", flight);
-//            bundle.putString("dateFrom", dateFrom);
-//            bundle.putSerializable("fromCity", fromCity);
-//            bundle.putSerializable("toCity", toCity);
-//            bundle.putString("traveltype", traveltype);
-//            bundle.putString("dateReturn", dateReturn);
-//            intent.putExtras(bundle);
-//            startActivityForResult(intent, SELECT_BACK_FLIGHT);
-//        } else {
-            Intent intent = new Intent(getApplicationContext(), PlaneItemInfoInternationalActivity.class);
-            Bundle bundle = new Bundle();
-            PlaneTicketInternationalInfo.PlaneTicketInternationalF flight = listData.get((int) l);
-            bundle.putSerializable("flight", flight);
-            bundle.putString("dateFrom", dateFrom);
-            bundle.putString("dateReturn", dateReturn);
-            bundle.putSerializable("fromCity", fromCity);
-            bundle.putSerializable("toCity", toCity);
-            bundle.putString("traveltype", traveltype);
-            intent.putExtras(bundle);
-            startActivityForResult(intent, VIEW_TRAIN_ITEM); //查看某趟航班
-//        }
+        Intent intent = new Intent(getApplicationContext(), PlaneItemInfoInternationalActivity2.class);
+        Bundle bundle = new Bundle();
+        PlaneTicketInternationalInfo.PlaneTicketInternationalF flight = listData.get((int) l);
+        bundle.putSerializable("flight", flight);
+        bundle.putString("dateFrom", dateFrom);
+        bundle.putString("dateReturn", dateReturn);
+        bundle.putSerializable("fromCity", fromCity);
+        bundle.putSerializable("toCity", toCity);
+        bundle.putString("traveltype", traveltype);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, VIEW_TRAIN_ITEM); //查看某趟航班
     }
 
     private int VIEW_TRAIN_ITEM = 7546; //查看某趟列车

@@ -6,7 +6,7 @@ import java.util.List;
  * Created by jiahe008 on 2016/12/1.
  * 国际机票下单请求
  */
-public class PlaneTicketOrderInternational extends BasicFetchModel{
+public class PlaneTicketOrderInternationalRequest extends BasicFetchModel{
     /**
      * uid : 1
      * linkman : 张三
@@ -30,10 +30,10 @@ public class PlaneTicketOrderInternational extends BasicFetchModel{
     private String BalanceMoney;
     private String PlatformType;
     private String TravelType;
-    private List<List<InterFlightsBean>> InterFlights; //单程1条，往返2条
+    private List<List<PlaneTicketInternationalPolicyCheckRequest.IFlight>> InterFlights; //单程1条，往返2条
     private List<PassengersBean> Passengers;
 
-    public PlaneTicketOrderInternational(String uid, String linkman, String linktel, String policyId, String platCode, String accountLevel, String balanceMoney, String platformType, String travelType, List<List<InterFlightsBean>> interFlights, List<PassengersBean> passengers) {
+    public PlaneTicketOrderInternationalRequest(String uid, String linkman, String linktel, String policyId, String platCode, String accountLevel, String balanceMoney, String platformType, String travelType, List<List<PlaneTicketInternationalPolicyCheckRequest.IFlight>> interFlights, List<PassengersBean> passengers) {
         this.uid = uid;
         this.linkman = linkman;
         this.linktel = linktel;
@@ -119,11 +119,11 @@ public class PlaneTicketOrderInternational extends BasicFetchModel{
         this.TravelType = TravelType;
     }
 
-    public List<List<InterFlightsBean>> getInterFlights() {
+    public List<List<PlaneTicketInternationalPolicyCheckRequest.IFlight>> getInterFlights() {
         return InterFlights;
     }
 
-    public void setInterFlights(List<List<InterFlightsBean>> InterFlights) {
+    public void setInterFlights(List<List<PlaneTicketInternationalPolicyCheckRequest.IFlight>> InterFlights) {
         this.InterFlights = InterFlights;
     }
 
@@ -135,161 +135,6 @@ public class PlaneTicketOrderInternational extends BasicFetchModel{
         this.Passengers = Passengers;
     }
 
-    public static class InterFlightsBean extends BasicFetchModel{
-        /**
-         * SegmentID : 0
-         * SegmentType : S1
-         * TicketingCarrier : MU
-         * ArrivalDate : 2016-12-03
-         * ArrivalTime : 00:00
-         * BoardPoint : PEK
-         * BoardPointAT :
-         * Carrier : MU
-         * ClassCode : V
-         * ClassRank : E
-         * DepartureDate : 2016-12-02
-         * DepartureTime : 19:10
-         * FlightNo : MU9801
-         * OffPoint : BKK
-         * OffPointAT :
-         */
-
-        private String SegmentID;
-        private String SegmentType;
-        private String TicketingCarrier;
-        private String ArrivalDate;
-        private String ArrivalTime;
-        private String BoardPoint;
-        private String BoardPointAT;
-        private String Carrier;
-        private String ClassCode;
-        private String ClassRank;
-        private String DepartureDate;
-        private String DepartureTime;
-        private String FlightNo;
-        private String OffPoint;
-        private String OffPointAT;
-
-        public String getSegmentID() {
-            return SegmentID;
-        }
-
-        public void setSegmentID(String SegmentID) {
-            this.SegmentID = SegmentID;
-        }
-
-        public String getSegmentType() {
-            return SegmentType;
-        }
-
-        public void setSegmentType(String SegmentType) {
-            this.SegmentType = SegmentType;
-        }
-
-        public String getTicketingCarrier() {
-            return TicketingCarrier;
-        }
-
-        public void setTicketingCarrier(String TicketingCarrier) {
-            this.TicketingCarrier = TicketingCarrier;
-        }
-
-        public String getArrivalDate() {
-            return ArrivalDate;
-        }
-
-        public void setArrivalDate(String ArrivalDate) {
-            this.ArrivalDate = ArrivalDate;
-        }
-
-        public String getArrivalTime() {
-            return ArrivalTime;
-        }
-
-        public void setArrivalTime(String ArrivalTime) {
-            this.ArrivalTime = ArrivalTime;
-        }
-
-        public String getBoardPoint() {
-            return BoardPoint;
-        }
-
-        public void setBoardPoint(String BoardPoint) {
-            this.BoardPoint = BoardPoint;
-        }
-
-        public String getBoardPointAT() {
-            return BoardPointAT;
-        }
-
-        public void setBoardPointAT(String BoardPointAT) {
-            this.BoardPointAT = BoardPointAT;
-        }
-
-        public String getCarrier() {
-            return Carrier;
-        }
-
-        public void setCarrier(String Carrier) {
-            this.Carrier = Carrier;
-        }
-
-        public String getClassCode() {
-            return ClassCode;
-        }
-
-        public void setClassCode(String ClassCode) {
-            this.ClassCode = ClassCode;
-        }
-
-        public String getClassRank() {
-            return ClassRank;
-        }
-
-        public void setClassRank(String ClassRank) {
-            this.ClassRank = ClassRank;
-        }
-
-        public String getDepartureDate() {
-            return DepartureDate;
-        }
-
-        public void setDepartureDate(String DepartureDate) {
-            this.DepartureDate = DepartureDate;
-        }
-
-        public String getDepartureTime() {
-            return DepartureTime;
-        }
-
-        public void setDepartureTime(String DepartureTime) {
-            this.DepartureTime = DepartureTime;
-        }
-
-        public String getFlightNo() {
-            return FlightNo;
-        }
-
-        public void setFlightNo(String FlightNo) {
-            this.FlightNo = FlightNo;
-        }
-
-        public String getOffPoint() {
-            return OffPoint;
-        }
-
-        public void setOffPoint(String OffPoint) {
-            this.OffPoint = OffPoint;
-        }
-
-        public String getOffPointAT() {
-            return OffPointAT;
-        }
-
-        public void setOffPointAT(String OffPointAT) {
-            this.OffPointAT = OffPointAT;
-        }
-    }
 
     public static class PassengersBean extends BasicFetchModel{
         /**
