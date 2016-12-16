@@ -1,7 +1,7 @@
 package com.jhhy.cuiweitourism.net.models.FetchModel;
 
 /**
- * Created by zhangguang on 16/10/12.
+ * Created by birneysky on 16/10/12.
  */
 public class ForeEndMoreCommentFetch extends BasicFetchModel {
 

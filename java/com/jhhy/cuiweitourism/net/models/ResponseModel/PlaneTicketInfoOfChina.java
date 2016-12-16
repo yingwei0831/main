@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- * Created by zhangguang on 16/10/25.
+ * Created by birneysky on 16/10/25.
  */
 public class PlaneTicketInfoOfChina implements Serializable{
 

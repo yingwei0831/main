@@ -1,7 +1,7 @@
 package com.jhhy.cuiweitourism.net.models.ResponseModel;
 
 /**
- * Created by zhangguang on 16/9/30.
+ * Created by birneysky on 16/9/30.
  */
 public class CarRentDetail {
     //{"id":"5","title":"考斯特","seatnum":"20"}

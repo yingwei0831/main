@@ -38,7 +38,7 @@ import java.util.Set;
 
 
 /**
- * Created by zhangguang on 16/10/9.
+ * Created by birneysky on 16/10/9.
  */
 public class VisaActionBiz extends BasicActionBiz {
 

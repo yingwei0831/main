@@ -38,14 +38,14 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
 
     private String TAG = "PlaneMainActivity";
 
-    private RadioGroup radioGroup; //出行类型
-    private ImageView ivExchange; //交换出发地和目的地
-    private TextView tvFromCity;
-    private TextView tvToCity;
-    private TextView tvFromDate;
+    private RadioGroup  radioGroup; //出行类型
+    private ImageView   ivExchange; //交换出发地和目的地
+    private TextView    tvFromCity;
+    private TextView    tvToCity;
+    private TextView    tvFromDate;
     private LinearLayout layoutReturnDate; //返程时间
-    private TextView tvReturnDate; //返程时间
-    private Button btnSearch; //搜索
+    private TextView    tvReturnDate; //返程时间
+    private Button      btnSearch; //搜索
 
 //    private String selectDate; //当前时间
     private String dateFrom; //选择的出发时间，显示在Textview 上
@@ -585,6 +585,15 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
         planeBiz = null;
         fromCity = null;
         toCity = null;
+
+        radioGroup= null;
+        ivExchange= null;
+        tvFromCity= null;
+        tvToCity= null;
+        tvFromDate= null;
+        layoutReturnDate= null;
+        tvReturnDate= null;
+        btnSearch= null;
     }
 
     public static void actionStart(Context context, Bundle bundle){

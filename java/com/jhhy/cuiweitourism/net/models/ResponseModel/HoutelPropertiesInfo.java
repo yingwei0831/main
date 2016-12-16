@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- * Created by zhangguang on 16/10/17.
+ * Created by birneysky on 16/10/17.
  */
 public class HoutelPropertiesInfo implements Serializable {
 //    @Override

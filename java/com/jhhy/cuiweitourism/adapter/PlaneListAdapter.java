@@ -160,7 +160,7 @@ public class PlaneListAdapter extends MyBaseAdapter {
                     holder.tvPlaneInfo.setText(String.format("%s%s | %s",
                             s1.flightInfos.get(0).flightNumberCheck,
                             PlaneListInternationalActivity.info.J.get(s1.flightInfos.get(0).flightTypeCheck).typeName,
-                            PlaneListInternationalActivity.info.R.get(hf.cabin.passengerType.airportCabinType))); //飞机/舱位 MU5003空客A320(J)|经济舱(R)
+                            cabinTypes[0])); //飞机/舱位 MU5003空客A320(J)|经济舱(R)
                 } else { //中转
                     holder.tvArrivalType.setText(context.getString(R.string.plane_flight_unsingle));
                     String[] cabinTypeS1 = cabinTypes[0].split(",");

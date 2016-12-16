@@ -3,7 +3,7 @@ package com.jhhy.cuiweitourism.net.models.ResponseModel;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by zhangguang on 16/10/10.
+ * Created by birneysky on 16/10/10.
  */
 public class ForceEndSearchInfo {
 

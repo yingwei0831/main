@@ -69,7 +69,24 @@ public class PayActionBiz {
             handler.sendEmptyMessage(Consts.NET_ERROR);
         }
     }
-
+    private String CODE_PAY_PLANE_INTERNATIONAL = "Plane_gjzhifu";
+    public void getPlaneInternationalPayInfo(final String mid, final String ordersn){
+        if (NetworkUtil.checkNetwork(context)) {
+            new Thread() {
+                @Override
+                public void run() {
+                    Map<String, Object> headMap = new HashMap<>();
+                    headMap.put(Consts.KEY_CODE, CODE_PAY_PLANE_INTERNATIONAL);
+                    Map<String, Object> fieldMap = new HashMap<>();
+                    fieldMap.put("memberid", mid);
+                    fieldMap.put("ordersn", ordersn);
+                    HttpUtils.executeXutils(headMap, fieldMap, getPayInfoCallback);
+                }
+            }.start();
+        }else{
+            handler.sendEmptyMessage(Consts.NET_ERROR);
+        }
+    }
 
 //    {"head":{"code":"Wxpay_pay"},"field":{"ordersn":"01737195485166"}} 微信支付
     private String CODE_PAY_WECHAT = "Wxpay_pay";

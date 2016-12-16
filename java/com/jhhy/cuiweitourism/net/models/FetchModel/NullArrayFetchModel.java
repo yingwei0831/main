@@ -7,7 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * Created by zhangguang on 16/10/17.
+ * Created by birneysky on 16/10/17.
  */
 public class NullArrayFetchModel extends  BasicFetchModel {
 

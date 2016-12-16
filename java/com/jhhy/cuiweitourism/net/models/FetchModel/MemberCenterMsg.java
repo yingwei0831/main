@@ -1,7 +1,7 @@
 package com.jhhy.cuiweitourism.net.models.FetchModel;
 
 /**
- * Created by zhangguang on 16/10/10.
+ * Created by birneysky on 16/10/10.
  */
 public class MemberCenterMsg extends BasicFetchModel {
 

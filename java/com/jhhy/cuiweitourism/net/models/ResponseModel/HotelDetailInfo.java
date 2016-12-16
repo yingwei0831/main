@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- * Created by zhangguang on 16/10/10.
+ * Created by birneysky on 16/10/10.
  */
 public class HotelDetailInfo implements Serializable{
 //    "title": "九寨沟喜来登大酒店",

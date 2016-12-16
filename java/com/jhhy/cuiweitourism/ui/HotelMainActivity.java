@@ -24,7 +24,17 @@ import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.circleviewpager.ViewFactory;
 import com.jhhy.cuiweitourism.model.ADInfo;
 import com.jhhy.cuiweitourism.model.PhoneBean;
+import com.jhhy.cuiweitourism.net.biz.HotelActionBiz;
+import com.jhhy.cuiweitourism.net.models.FetchModel.HotelProvinceResponse;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketCityInfo;
+import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.Consts;
+import com.jhhy.cuiweitourism.net.utils.HanziToPinyin;
+import com.jhhy.cuiweitourism.net.utils.LogUtil;
+import com.jhhy.cuiweitourism.utils.LoadingIndicator;
+import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.jhhy.cuiweitourism.utils.Utils;
 import com.just.sun.pricecalendar.ToastCommon;
 
@@ -57,7 +67,10 @@ public class HotelMainActivity extends BaseActivity implements View.OnClickListe
     private String checkOutDate;
     private int stayDays;
 
-    private PhoneBean selectCity; //首页城市
+    private HotelProvinceResponse.ProvinceBean selectCity; //固定城市
+
+    private HotelActionBiz hotelBiz;
+    public static List<HotelProvinceResponse.ProvinceBean> listHotelProvince;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,12 +88,45 @@ public class HotelMainActivity extends BaseActivity implements View.OnClickListe
         addListener();
     }
 
+    private void getProvince() {
+        LoadingIndicator.show(HotelMainActivity.this, getString(R.string.http_notice));
+        hotelBiz.getHotelProvinceList(new BizGenericCallback<HotelProvinceResponse>() {
+            @Override
+            public void onCompletion(GenericResponseModel<HotelProvinceResponse> model) {
+                if ("0000".equals(model.headModel.res_code)){
+                    //进入省份页面
+                    listHotelProvince = model.body.getItem();
+                    HanziToPinyin hzToPyConvertor = HanziToPinyin.getInstance();
+                    for (HotelProvinceResponse.ProvinceBean itemInfo : listHotelProvince){
+                        HanziToPinyin.PinYinCollection collection = hzToPyConvertor.getPinYin(itemInfo.getName());
+                        itemInfo.setQuanPin(collection.fullPY);
+                        itemInfo.setJianPin(collection.shortPY);
+                        itemInfo.setHeadChar(String.valueOf(collection.headChar));
+                    }
+                    selectCityByUser();
+                }else if ("0001".equals(model.headModel.res_code)){
+                    ToastUtil.show(getApplicationContext(), model.headModel.res_arg);
+                }
+                LoadingIndicator.cancel();
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                LogUtil.e(TAG, "请求省份： " + error);
+                if (error.localReason != null){
+                    ToastUtil.show(getApplicationContext(), error.localReason);
+                }else{
+                    ToastUtil.show(getApplicationContext(), "请求省份信息失败，请重试");
+                }
+                LoadingIndicator.cancel();
+            }
+        });
+    }
+
     private void getData() {
-        selectCity = (PhoneBean) getIntent().getExtras().getSerializable("selectCity");
-        if (selectCity == null){
-            selectCity = new PhoneBean();
-            selectCity.setName("北京");
-        }
+        selectCity = new HotelProvinceResponse.ProvinceBean();
+        selectCity.setName("北京");
+        selectCity.setID("0100");
     }
 
     private GestureDetector mGestureDetector; // MyScrollView的手势?
@@ -143,6 +189,8 @@ private List<ADInfo> infos = new ArrayList<ADInfo>();
         tvCheckInDate.setText("今天");
         tvCheckOutDate.setText("明天");
         stayDays = 1;
+
+        hotelBiz = new HotelActionBiz();
     }
 
     private void addListener() {
@@ -164,11 +212,12 @@ private List<ADInfo> infos = new ArrayList<ADInfo>();
             case R.id.tv_location_name: //选择位置
                 ToastCommon.toastShortShow(getApplicationContext(), null, "后台没有接口");
                 break;
-            case R.id.tv_location_icon: //定位
-                Intent intentLocation = new Intent(getApplicationContext(), LocationSourceActivity.class);
-//                Bundle bundle = new Bundle();
-//                intentLocation.putExtras(bundle);
-                startActivity(intentLocation);
+            case R.id.tv_location_icon: //TODO 定位,选择地址
+                if (listHotelProvince == null) {
+                    getProvince();
+                }else{
+                    selectCityByUser();
+                }
                 break;
             case R.id.layout_hotel_check_in: //选择入住日期
                 Intent intentFromDate = new Intent( getApplicationContext(), HotelCalendarActivity.class);
@@ -199,6 +248,7 @@ private List<ADInfo> infos = new ArrayList<ADInfo>();
     }
 
     private int SELECT_CHECK_IN_DATE = 6524; //选择入住日期
+    private int SELECT_CHECK_IN_ADDRESS = 6525; //选择住店地址
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -219,6 +269,15 @@ private List<ADInfo> infos = new ArrayList<ADInfo>();
                 tvCheckOutDate.setText(String.format("%s月%s日", checkOutDate.substring(checkOutDate.indexOf("-") + 1, checkOutDate.lastIndexOf("-")), checkOutDate.substring(checkOutDate.lastIndexOf("-"))));
 //                tvCheckOutDate.setText(checkOutDate);
             }
+        } else if (requestCode == SELECT_CHECK_IN_ADDRESS){ //选择地址
+            if (resultCode == RESULT_OK){
+                Bundle bundle = data.getExtras();
+                HotelProvinceResponse.ProvinceBean city =  bundle.getParcelable("selectCity");
+                if (city != null) {
+                    selectCity = city;
+                    tvAddress.setText(city.getName());
+                }
+            }
         }
     }
 
@@ -232,13 +291,19 @@ private List<ADInfo> infos = new ArrayList<ADInfo>();
         bundle.putString("checkInDate", checkInDate);
         bundle.putString("checkOutDate", checkOutDate);
         bundle.putInt("stayDays", stayDays);
-        bundle.putSerializable("selectCity", selectCity);
+        bundle.putParcelable("selectCity", selectCity);
         String keyWords = etSearchText.getText().toString();
         if (!TextUtils.isEmpty(keyWords)){
             bundle.putString("keyWords", keyWords);
         }
         intentSearch.putExtras(bundle);
         startActivity(intentSearch);
+    }
+
+    private void selectCityByUser() {
+        Intent intent = new Intent(getApplicationContext(), HotelCitySelectionActivity.class);
+
+        startActivityForResult(intent, SELECT_CHECK_IN_ADDRESS);
     }
 
     public static void actionStart(Context context, Bundle bundle){
@@ -425,4 +490,13 @@ private List<ADInfo> infos = new ArrayList<ADInfo>();
             }
         }
     };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (listHotelProvince != null) {
+            listHotelProvince.clear();
+            listHotelProvince = null;
+        }
+    }
 }

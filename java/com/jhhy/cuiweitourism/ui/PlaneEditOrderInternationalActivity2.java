@@ -74,6 +74,7 @@ public class PlaneEditOrderInternationalActivity2 extends AppCompatActivity impl
     private TextView tvPriceTotal; //订单金额
     private ImageView ivArrowTop; //订单金额详情
     private Button btnPay; //立即支付
+    private boolean paying; //支付
 
     private PlaneTicketCityInfo fromCity; //出发城市
     private PlaneTicketCityInfo toCity; //到达城市
@@ -117,7 +118,7 @@ public class PlaneEditOrderInternationalActivity2 extends AppCompatActivity impl
                     Intent intent = new Intent(getApplicationContext(), SelectPaymentActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("order", info);
-                    bundle.putInt("type",15);
+                    bundle.putInt("type",17);
                     intent.putExtras(bundle);
                     startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_PAY); //订单生成成功，去支付
                     break;
@@ -142,38 +143,36 @@ public class PlaneEditOrderInternationalActivity2 extends AppCompatActivity impl
         setContentView(R.layout.activity_plane_edit_order_international_2);
 
         getData();
-        checkData();
+//        checkData();
         setupView();
         addListener();
     }
 
-    /**
-     * 国际机票验价
-     */
-    private void checkData() {
-        PlaneTicketInternationalPolicyCheckRequest request = new PlaneTicketInternationalPolicyCheckRequest(travelType, "1E", "ALL", interFlights);
-        planeBiz.planeTicketInternationalPolicyCheck(request, new BizGenericCallback<PlaneTicketInternationalPolicyResponse>() {
-            @Override
-            public void onCompletion(GenericResponseModel<PlaneTicketInternationalPolicyResponse> model) {
-                if ("0001".equals(model.headModel.res_code)){
-                    ToastUtil.show(getApplicationContext(), model.headModel.res_arg);
-                }else if ("0000".equals(model.headModel.res_code)){
-                    checkResponse = model.body;
-                }
-                LoadingIndicator.cancel();
-            }
+//    private void checkData() {
+//        PlaneTicketInternationalPolicyCheckRequest request = new PlaneTicketInternationalPolicyCheckRequest(travelType, "1E", "ALL", interFlights);
+//        planeBiz.planeTicketInternationalPolicyCheck(request, new BizGenericCallback<PlaneTicketInternationalPolicyResponse>() {
+//            @Override
+//            public void onCompletion(GenericResponseModel<PlaneTicketInternationalPolicyResponse> model) {
+//                if ("0001".equals(model.headModel.res_code)){
+//                    ToastUtil.show(getApplicationContext(), model.headModel.res_arg);
+//                }else if ("0000".equals(model.headModel.res_code)){
+//                    checkResponse = model.body;
+//                }
+//                LoadingIndicator.cancel();
+//            }
+//
+//            @Override
+//            public void onError(FetchError error) {
+//                if (error.localReason != null){
+//                    ToastUtil.show(getApplicationContext(), error.localReason);
+//                }else{
+//                    ToastUtil.show(getApplicationContext(), "验价失败，请返回重试");
+//                }
+//                LoadingIndicator.cancel();
+//            }
+//        });
+//    }
 
-            @Override
-            public void onError(FetchError error) {
-                if (error.localReason != null){
-                    ToastUtil.show(getApplicationContext(), error.localReason);
-                }else{
-                    ToastUtil.show(getApplicationContext(), "验价失败，请返回重试");
-                }
-                LoadingIndicator.cancel();
-            }
-        });
-    }
     private void setupView() {
         TextView tvTitle = (TextView) actionBar.getCustomView().findViewById(R.id.tv_title_simple_title);
         tvTitle.setText(getString(R.string.train_order_edit));
@@ -250,6 +249,8 @@ public class PlaneEditOrderInternationalActivity2 extends AppCompatActivity impl
             dateFrom = bundle.getString("dateFrom");
             cabin = (PlaneTicketInternationalInfo.PlaneTicketInternationalHFCabin) bundle.getSerializable("cabin");
             travelType = bundle.getString("travelType");
+            checkResponse =  PlaneItemInfoInternationalActivity2.checkResponseData;
+//            LogUtil.e(TAG, checkResponse);
             if ("RT".equals(travelType)){
                 dateReturn = bundle.getString("dateReturn");
             }
@@ -262,8 +263,9 @@ public class PlaneEditOrderInternationalActivity2 extends AppCompatActivity impl
         for (int i = 0; i < iFlightS1.size(); i++){
             PlaneTicketInternationalInfo.FlightInfo flightInfo = iFlightS1.get(i);
             PlaneTicketInternationalPolicyCheckRequest.IFlight iFlight = new PlaneTicketInternationalPolicyCheckRequest.IFlight(String.valueOf(i), "S1",
-                    cabin.passengerType.mainCarrierCheck, flightInfo.toDateCheck, flightInfo.toTimeCheck, flightInfo.fromAirportCodeCheck, flightInfo.toAirportCodeCheck, flightInfo.airlineCompanyCheck,
-                    cabin.passengerType.airportCabinCode, cabin.passengerType.airportCabinType, flightInfo.toDateCheck, flightInfo.fromTimeCheck, flightInfo.flightNumberCheck, flightInfo.toAirportCodeCheck, flightInfo.toTermianl);
+                    cabin.passengerType.mainCarrierCheck, flightInfo.toDateCheck, flightInfo.toTimeCheck, flightInfo.fromAirportCodeCheck, flightInfo.fromTerminal, flightInfo.airlineCompanyCheck,
+                    cabin.passengerType.airportCabinCode, cabin.passengerType.airportCabinType, flightInfo.fromDateCheck, flightInfo.fromTimeCheck,
+                    flightInfo.flightNumberCheck, flightInfo.toAirportCodeCheck, flightInfo.toTermianl);
             iFlightsSingle.add(iFlight);
         }
         interFlights.add(iFlightsSingle);
@@ -275,8 +277,9 @@ public class PlaneEditOrderInternationalActivity2 extends AppCompatActivity impl
                 PlaneTicketInternationalInfo.FlightInfo flightInfo = iFlightS2.get(i);
                 LogUtil.e(TAG, flightInfo);
                 PlaneTicketInternationalPolicyCheckRequest.IFlight iFlight = new PlaneTicketInternationalPolicyCheckRequest.IFlight(String.valueOf(i), "S2",
-                        cabin.passengerType.mainCarrierCheck, flightInfo.toDateCheck, flightInfo.toTimeCheck, flightInfo.fromAirportCodeCheck, flightInfo.toAirportCodeCheck, flightInfo.airlineCompanyCheck,
-                        cabin.passengerType.airportCabinCode, cabin.passengerType.airportCabinType, flightInfo.toDateCheck, flightInfo.fromTimeCheck, flightInfo.flightNumberCheck, flightInfo.toAirportCodeCheck, flightInfo.toTermianl);
+                        cabin.passengerType.mainCarrierCheck, flightInfo.toDateCheck, flightInfo.toTimeCheck, flightInfo.fromAirportCodeCheck, flightInfo.fromTerminal, flightInfo.airlineCompanyCheck,
+                        cabin.passengerType.airportCabinCode, cabin.passengerType.airportCabinType, flightInfo.fromDateCheck, flightInfo.fromTimeCheck,
+                        flightInfo.flightNumberCheck, flightInfo.toAirportCodeCheck, flightInfo.toTermianl);
                 iFlightsMultiply.add(iFlight);
             }
             interFlights.add(iFlightsMultiply);
@@ -469,38 +472,46 @@ public class PlaneEditOrderInternationalActivity2 extends AppCompatActivity impl
      * 去支付页面
      */
     private void goToPay() {
-        LoadingIndicator.show(PlaneEditOrderInternationalActivity2.this, getString(R.string.http_notice));
+        if (paying){
+            return;
+        }
         final String name = etLinkName.getText().toString();
         final String mobile = etLinkMobile.getText().toString();
 
         if (TextUtils.isEmpty(name)) {
             ToastUtil.show(getApplicationContext(), "联系人不能为空");
             etLinkName.requestFocus();
-            LoadingIndicator.cancel();
+//            LoadingIndicator.cancel();
             return;
         }
         if(TextUtils.isEmpty(mobile)){
             ToastUtil.show(getApplicationContext(), "联系人手机号码不能为空");
             etLinkMobile.requestFocus();
-            LoadingIndicator.cancel();
+//            LoadingIndicator.cancel();
             return;
-        }else if (mobile.length() != 11){
+        }
+        if (mobile.length() != 11){
             ToastUtil.show(getApplicationContext(), "请检查联系人手机号码");
             etLinkMobile.requestFocus();
+//            LoadingIndicator.cancel();
             return;
         }
         if (listContact.size() == 0){
             ToastUtil.show(getApplicationContext(), "请选择乘车人");
-            LoadingIndicator.cancel();
+//            LoadingIndicator.cancel();
             return;
         }
-
+        if (paying){
+            return;
+        }
+        paying = true;
         LoadingIndicator.show(PlaneEditOrderInternationalActivity2.this, getString(R.string.http_notice));
         //国际机票，提交订单，进入支付页面
         new Thread(){
             @Override
             public void run() {
                 super.run();
+
                 PlaneTicketOrderInternationalRequest request = new PlaneTicketOrderInternationalRequest(MainActivity.user.getUserId(), name, mobile, checkResponse.getPolicys().getPolicy().getPolicyId(),
                         checkResponse.getPolicys().getPolicy().getPlatCode(), checkResponse.getPolicys().getPolicy().getAccountLevel(), checkResponse.getPolicys().getPolicy().getSettlePrice(),
                         checkResponse.getPolicys().getPolicy().getPlatformType(), travelType, interFlights, listContact);
@@ -516,7 +527,8 @@ public class PlaneEditOrderInternationalActivity2 extends AppCompatActivity impl
                             info = model.body;
                             handler.sendEmptyMessage(1);
                         }
-                        LogUtil.e(TAG,"planeTicketOfChinaOrderSubmit: " + model.body.toString());
+                        LogUtil.e(TAG,"planeTicketInternationalOrderSubmit: " + model.body.toString());
+                        paying = false;
                     }
 
                     @Override
@@ -529,7 +541,8 @@ public class PlaneEditOrderInternationalActivity2 extends AppCompatActivity impl
                         }else{
                             handler.sendEmptyMessage(-2);
                         }
-                        LogUtil.e(TAG, "planeTicketOfChinaOrderSubmit: " + error.toString());
+                        LogUtil.e(TAG, "planeTicketInternationalOrderSubmit: " + error.toString());
+                        paying = false;
                     }
                 });
             }
@@ -600,6 +613,13 @@ public class PlaneEditOrderInternationalActivity2 extends AppCompatActivity impl
     }
 
     @Override
+    protected void onRestart() {
+        super.onRestart();
+        LogUtil.e(TAG, "data = " + PlaneItemInfoInternationalActivity2.checkResponseData);
+        LogUtil.e(TAG, "data = " + checkResponse);
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         popupWindow = null;
@@ -611,5 +631,6 @@ public class PlaneEditOrderInternationalActivity2 extends AppCompatActivity impl
 //        tvPopPriceEnsurance = null;
 //        tvPopNumberEnsurance = null;
         tvPopNumberPassenger = null;
+        checkResponse = null;
     }
 }

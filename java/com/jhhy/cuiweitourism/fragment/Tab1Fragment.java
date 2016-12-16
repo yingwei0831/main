@@ -622,9 +622,7 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
                     break;
                 case R.id.tv_tab1_hotel: //TODO 酒店
 //                    ToastCommon.toastShortShow(getContext(), null, getString(R.string.developing_notice));
-                    Bundle bundleHotel = new Bundle();
-                    bundleHotel.putSerializable("selectCity", selectCity);
-                    HotelMainActivity.actionStart(getContext(), bundleHotel);
+                    HotelMainActivity.actionStart(getContext(), null);
                     break;
                 case R.id.layout_personalized_custom: //个性定制
                     Bundle bundleCustom = new Bundle();

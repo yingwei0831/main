@@ -18,7 +18,7 @@ import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
 /**
- * Created by zhangguang on 16/9/30.
+ * Created by birneysky on 16/9/30.
  */
 public class FetchCallBack implements Callback.CommonCallback<String> {
 

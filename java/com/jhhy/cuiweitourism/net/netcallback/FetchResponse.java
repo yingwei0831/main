@@ -4,7 +4,7 @@ import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchResponseModel;
 
 /**
- * Created by zhangguang on 16/9/30.
+ * Created by birneysky on 16/9/30.
  */
 public abstract class FetchResponse {
 

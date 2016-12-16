@@ -43,7 +43,7 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
     private Button tvAliPay;
     private Button tvWeChatPay;
 
-    private int type; //11:热门活动支付,21:酒店支付, 16:租车订单, 14:国内火车票订单； 15：国内飞机票订单/国外
+    private int type; //11:热门活动支付,21:酒店支付, 16:租车订单, 14:国内火车票订单； 15：国内飞机票订单；17：国外
     private ActivityOrderInfo hotInfo; //热门活动订单
     private HotelOrderInfo hotelInfo; //酒店订单
     private TrainTicketOrderInfo trainInfo; //火车票订单
@@ -167,7 +167,7 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
                     orderPrice = String.valueOf(String.format(Locale.getDefault(), "%.2f", planeOfChinaInfo.getTotalprice()));
                 }
             }
-            else if (type == 16){
+            else if (type == 16 || type == 17){
                 CarRentOrderResponse carRentOrderResponse = (CarRentOrderResponse) bundle.getSerializable("order");
                 if (carRentOrderResponse != null){
                     ordersn = carRentOrderResponse.getOrdersn();
@@ -228,14 +228,15 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
 //        msgApi.registerApp("wxfa0103db1944bda3");
 //    }
 
-    //{"head":{"code":"Alipay_index"},"field":{"ordersn":"80489619661756"}}
     private void aliPay() {
         LoadingIndicator.show(SelectPaymentActivity.this, getString(R.string.http_notice));
         PayActionBiz biz = new PayActionBiz(getApplicationContext(), handler);
         if (type == 15){ //国内机票支付
-//            {"head":{"code":"Fly_pay"},"field":{"memberid":"52","ordersn":"82207348571085"}}
             biz.getPlaneOfChinaPayInfo(MainActivity.user.getUserId(), ordersn);
-        }else {
+        } else if (type == 17){ //国际机票支付
+            biz.getPlaneInternationalPayInfo(MainActivity.user.getUserId(), ordersn);
+        }
+        else {
             biz.getPayInfo(ordersn);
         }
     }

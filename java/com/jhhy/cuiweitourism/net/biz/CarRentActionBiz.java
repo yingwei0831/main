@@ -38,7 +38,7 @@ import java.util.List;
 
 
 /**
- * Created by zhangguang on 16/9/29.
+ * Created by birneysky on 16/9/29.
  */
 public class CarRentActionBiz extends BasicActionBiz {
 //    public CarRentActionBiz(Context context, Handler handler) {

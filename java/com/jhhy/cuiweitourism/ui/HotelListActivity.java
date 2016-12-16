@@ -70,9 +70,6 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what) {
-
-            }
         }
     };
 

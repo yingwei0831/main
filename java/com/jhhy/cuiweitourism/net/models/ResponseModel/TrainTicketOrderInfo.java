@@ -3,7 +3,7 @@ package com.jhhy.cuiweitourism.net.models.ResponseModel;
 import java.io.Serializable;
 
 /**
- * Created by zhangguang on 16/10/19.
+ * Created by birneysky on 16/10/19.
  */
 public class TrainTicketOrderInfo implements Serializable{
 //    "ordersn": "80572124935477",

@@ -1,19 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_hot_activity_list"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.InnerTravelCityActivity">
+    android:background="@android:color/white"
+    >
 
-    <!--<include layout="@layout/search_bar_simple_out" />-->
     <RelativeLayout
         android:id="@+id/layout_search"
         android:layout_width="match_parent"
         android:layout_height="52dp"
-        android:layout_below="@+id/title_city_selection"
         android:paddingBottom="8dp"
         android:paddingTop="8dp"
         android:paddingRight="16dp"
@@ -45,14 +42,11 @@
             android:textColorHint="#ff333333"
             android:textSize="16sp" />
     </RelativeLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1.2px"
         android:background="@color/colorLineGray2" />
-    <!--<FrameLayout-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:background="@android:color/white">-->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -136,8 +130,5 @@
             android:text="@string/tab1_inner_travel_sort_default"
             android:textColor="@android:color/white" />
     </LinearLayout>
-
-    <!--</FrameLayout>-->
-
 
 </LinearLayout>

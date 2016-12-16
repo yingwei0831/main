@@ -5,22 +5,18 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.PlaneInfoInternationalAdapter;
-import com.jhhy.cuiweitourism.adapter.PlaneItemInfoListAdapter;
 import com.jhhy.cuiweitourism.net.biz.PlaneTicketActionBiz;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketInternationalChangeBack;
+import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketInternationalPolicyCheckRequest;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketCityInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketInternationalChangeBackRespond;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketInternationalInfo;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketInternationalPolicyResponse;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
@@ -51,6 +47,8 @@ public class PlaneItemInfoInternationalActivity2 extends BaseActionBarActivity {
     private String dateReturn; //返程日期
     private String traveltype; //航程类型 OW（单程） RT（往返）
     private PlaneTicketInternationalInfo.PlaneTicketInternationalHFCabin cabin;
+
+    public static PlaneTicketInternationalPolicyResponse checkResponseData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,8 +140,9 @@ public class PlaneItemInfoInternationalActivity2 extends BaseActionBarActivity {
             case R.id.tv_plane_ticket_refund: //退改签说明
                 refundTicket();
                 break;
-            case R.id.btn_plane_ticket_reserve: //预定
-                reserveTicker();
+            case R.id.btn_plane_ticket_reserve: //先验价再进入订单页
+                checkData();
+//                reserveTicker();
                 break;
         }
     }
@@ -157,11 +156,77 @@ public class PlaneItemInfoInternationalActivity2 extends BaseActionBarActivity {
         bundle.putSerializable("toCity", toCity);
         bundle.putSerializable("cabin", cabin);
         bundle.putString("travelType", traveltype);
+//        bundle.putParcelable("checkResponse", checkResponse);
         if ("RT".equals(traveltype)){
             bundle.putString("dateReturn", dateReturn);
         }
         intent.putExtras(bundle);
         startActivityForResult(intent, EDIT_PLANE_ORDER); //预定当前航班
+    }
+    /**
+     * 国际机票验价
+     */
+    private void checkData() {
+        LoadingIndicator.show(PlaneItemInfoInternationalActivity2.this, getString(R.string.http_notice));
+        PlaneTicketActionBiz planeBiz = new PlaneTicketActionBiz();
+
+        List<List<PlaneTicketInternationalPolicyCheckRequest.IFlight>>  interFlights = new ArrayList<>();
+        List<PlaneTicketInternationalPolicyCheckRequest.IFlight> iFlightsSingle = new ArrayList<>(); //单程
+        ArrayList<PlaneTicketInternationalInfo.FlightInfo> iFlightS1 = flight.S1.flightInfos;
+        for (int i = 0; i < iFlightS1.size(); i++){
+            PlaneTicketInternationalInfo.FlightInfo flightInfo = iFlightS1.get(i);
+            PlaneTicketInternationalPolicyCheckRequest.IFlight iFlight = new PlaneTicketInternationalPolicyCheckRequest.IFlight(String.valueOf(i), "S1",
+                    cabin.passengerType.mainCarrierCheck, flightInfo.toDateCheck, flightInfo.toTimeCheck, flightInfo.fromAirportCodeCheck, flightInfo.fromTerminal, flightInfo.airlineCompanyCheck,
+                    cabin.passengerType.airportCabinCode, cabin.passengerType.airportCabinType, flightInfo.fromDateCheck, flightInfo.fromTimeCheck,
+                    flightInfo.flightNumberCheck, flightInfo.toAirportCodeCheck, flightInfo.toTermianl);
+            iFlightsSingle.add(iFlight);
+        }
+        interFlights.add(iFlightsSingle);
+
+        if ("RT".equals(traveltype)) {
+            List<PlaneTicketInternationalPolicyCheckRequest.IFlight> iFlightsMultiply = new ArrayList<>(); //往返
+            ArrayList<PlaneTicketInternationalInfo.FlightInfo> iFlightS2 = flight.S2.flightInfos;
+            for (int i = 0; i < iFlightS2.size(); i++) {
+                PlaneTicketInternationalInfo.FlightInfo flightInfo = iFlightS2.get(i);
+                LogUtil.e(TAG, flightInfo);
+                PlaneTicketInternationalPolicyCheckRequest.IFlight iFlight = new PlaneTicketInternationalPolicyCheckRequest.IFlight(String.valueOf(i), "S2",
+                        cabin.passengerType.mainCarrierCheck, flightInfo.toDateCheck, flightInfo.toTimeCheck, flightInfo.fromAirportCodeCheck, flightInfo.fromTerminal, flightInfo.airlineCompanyCheck,
+                        cabin.passengerType.airportCabinCode, cabin.passengerType.airportCabinType, flightInfo.fromDateCheck, flightInfo.fromTimeCheck,
+                        flightInfo.flightNumberCheck, flightInfo.toAirportCodeCheck, flightInfo.toTermianl);
+                iFlightsMultiply.add(iFlight);
+            }
+            interFlights.add(iFlightsMultiply);
+        }
+
+        PlaneTicketInternationalPolicyCheckRequest request = new PlaneTicketInternationalPolicyCheckRequest(traveltype, "1E", "ALL", interFlights);
+        planeBiz.planeTicketInternationalPolicyCheck(request, new BizGenericCallback<PlaneTicketInternationalPolicyResponse>() {
+            @Override
+            public void onCompletion(GenericResponseModel<PlaneTicketInternationalPolicyResponse> model) {
+                if ("0001".equals(model.headModel.res_code)){
+                    ToastUtil.show(getApplicationContext(), model.headModel.res_arg);
+                }else if ("0000".equals(model.headModel.res_code)){
+                    PlaneTicketInternationalPolicyResponse checkResponse = model.body;
+                    if ("N".equals(checkResponse.getPolicys().getPolicy().getFlag())){
+                        ToastUtil.show(getApplicationContext(), checkResponse.getPolicys().getPolicy().getErrMsg());
+                    }else if ("Y".equals(checkResponse.getPolicys().getPolicy().getFlag())){
+                        checkResponseData = checkResponse;
+                        reserveTicker();
+                    }
+                }
+                LoadingIndicator.cancel();
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                LogUtil.e(TAG, "ERROR = "+error);
+                if (error.localReason != null){
+                    ToastUtil.show(getApplicationContext(), error.localReason);
+                }else{
+                    ToastUtil.show(getApplicationContext(), "验价失败，请返回重试");
+                }
+                LoadingIndicator.cancel();
+            }
+        });
     }
 
     private int EDIT_PLANE_ORDER = 9632; //编辑机票订单
@@ -238,5 +303,11 @@ public class PlaneItemInfoInternationalActivity2 extends BaseActionBarActivity {
                 LoadingIndicator.cancel();
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        checkResponseData = null;
     }
 }

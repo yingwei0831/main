@@ -19,8 +19,6 @@ import java.util.ArrayList;
  */
 public class CuiweiInfoBiz extends BasicActionBiz{
 
-    private final String BIZTAG = "Publics_service";
-
     /**
      * 请求关于翠微相关网址
      * @param callBack

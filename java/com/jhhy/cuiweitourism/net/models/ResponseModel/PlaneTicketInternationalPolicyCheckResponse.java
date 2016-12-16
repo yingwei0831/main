@@ -14,7 +14,13 @@ public class PlaneTicketInternationalPolicyCheckResponse {
      * ErrorMsg : []
      * ErrorStack : []
      * SearchInfo : {"TotalTime":"4.521","TotalPlatforms":"1","SuccessPlatforms":"0","PolicyCount":"0"}
-     * Policys : {"Policy":{"Flag":"N","PlatCode":"017","ErrMsg":"未获取到相关政策信息！获取到的政策被过滤掉了！","IsVip":"0","AccountLevel":"0","TaxAmount":"0","Price":"0","SettlePrice":"0","AduTaxFare":"0","AduRewardTicketFare":"0","AduRewardDiscount":"0","AduEtdzFare":"0","AduRewardMoney":"0","ChdBaseDiscount":"0","ChdRewardDiscount":"0","ChdTaxFare":"0","ChdRewardTicketFare":"0","ChdEtdzFare":"0","ChdRewardMoney":"0"}}
+     * Policys : {
+     *              "Policy":{
+     *                  "Flag":"N","PlatCode":"017","ErrMsg":"未获取到相关政策信息！获取到的政策被过滤掉了！","IsVip":"0","AccountLevel":"0","TaxAmount":"0","Price":"0","SettlePrice":"0","AduTaxFare":"0",
+     *                  "AduRewardTicketFare":"0","AduRewardDiscount":"0","AduEtdzFare":"0","AduRewardMoney":"0","ChdBaseDiscount":"0","ChdRewardDiscount":"0","ChdTaxFare":"0","ChdRewardTicketFare":"0",
+     *                  "ChdEtdzFare":"0","ChdRewardMoney":"0"
+     *              }
+     *          }
      */
 
     private String RequestID;

@@ -3,30 +3,30 @@ package com.jhhy.cuiweitourism.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
-import com.jhhy.cuiweitourism.adapter.CitySelectionGridViewAdapter;
+import com.jhhy.cuiweitourism.adapter.HotelProvinceAdapter;
 import com.jhhy.cuiweitourism.adapter.PlaneAirportAdapter;
-import com.jhhy.cuiweitourism.adapter.TrainStationAdapter;
-import com.jhhy.cuiweitourism.dao.CityRecordDao;
+import com.jhhy.cuiweitourism.net.biz.HotelActionBiz;
+import com.jhhy.cuiweitourism.net.models.FetchModel.HotelCityRequest;
+import com.jhhy.cuiweitourism.net.models.FetchModel.HotelProvinceResponse;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketCityInfo;
-import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainStationInfo;
+import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
-import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.jhhy.cuiweitourism.view.LetterIndexView;
 import com.jhhy.cuiweitourism.view.PinnedSectionListView;
@@ -43,16 +43,10 @@ import java.util.List;
 import java.util.Set;
 
 
-public class PlaneCitySelectionActivity extends BaseActivity implements View.OnClickListener, RadioGroup.OnCheckedChangeListener {
+public class HotelCitySelectionActivity extends BaseActivity implements View.OnClickListener {
 
-    private static final String TAG = PlaneCitySelectionActivity.class.getSimpleName();
-//    private TextView tvTitle;
-//    private ImageView ivTitleLeft;
-    private View layoutTitle;
-    private RadioGroup radioGroup; //国内城市，国际城市
-    private RadioButton radioButtonInner;
-    private RadioButton radioButtonOuter;
-    private int cityType = 1; //国内/国外
+    private String TAG = "HotelCitySelectionActivity";
+
     /**
      * 搜索栏
      */
@@ -73,15 +67,15 @@ public class PlaneCitySelectionActivity extends BaseActivity implements View.OnC
     /**
      * 所有名字集合
      */
-    private ArrayList<PlaneTicketCityInfo> list_all;
+    private List<HotelProvinceResponse.ProvinceBean> list_all;
     /**
      * 显示名字集合
      */
-    private ArrayList<PlaneTicketCityInfo> list_show;
+    private List<HotelProvinceResponse.ProvinceBean> list_show;
     /**
      * 列表适配器
      */
-    private PlaneAirportAdapter adapter;
+    private HotelProvinceAdapter adapter;
     /**
      * 保存名字首字母
      */
@@ -97,21 +91,10 @@ public class PlaneCitySelectionActivity extends BaseActivity implements View.OnC
 
     private ImageView ivSearchLeft; //搜索栏左边的返回图标
 
-//    private View headerView;
-//    private List<TrainStationInfo> citiesHot;
-//    private GridView mHotGridView; //热门城市
-//    private CitySelectionGridViewAdapter gvHotAdapter;
-
-//    private TextView tvCurrentCity; //当前定位城市
-//    private TrainStationInfo currentCity; //当前城市
-
-//    private View layoutHistory; //历史记录布局
-//    private GridView gvHistoryRecord; //历史记录
-//    private List<TrainStationInfo> listHistory = new ArrayList<>();
-//    private CitySelectionGridViewAdapter gvHistoryAdapter;
-
     private ListView listSearch; //显示搜索数据
-    private PlaneAirportAdapter adapterSearch;
+    private HotelProvinceAdapter adapterSearch;
+
+    private int type; //省——>市
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,14 +107,10 @@ public class PlaneCitySelectionActivity extends BaseActivity implements View.OnC
     }
 
     private void setupView() {
-        layoutTitle = findViewById(R.id.title_city_selection);
+        View layoutTitle = findViewById(R.id.title_city_selection);
         layoutTitle.setVisibility(View.GONE);
-        radioGroup = (RadioGroup) findViewById(R.id.radio_group_airport);
-        radioButtonInner = (RadioButton) findViewById(R.id.rb_city_inner);
-        radioButtonOuter = (RadioButton) findViewById(R.id.rb_city_outer);
-//        tvTitle = (TextView) findViewById(R.id.tv_title_inner_travel);
-//        tvTitle.setText(getString(R.string.tab4_account_certification_gender_notice));
-//        ivTitleLeft = (ImageView) findViewById(R.id.title_main_tv_left_location);
+        RadioGroup radioGroup = (RadioGroup) findViewById(R.id.radio_group_airport);
+        radioGroup.setVisibility(View.GONE);
 
         View layoutSearch = findViewById(R.id.layout_search);
         layoutSearch.setBackgroundColor(Color.WHITE);
@@ -145,40 +124,20 @@ public class PlaneCitySelectionActivity extends BaseActivity implements View.OnC
         letterIndexView = (LetterIndexView) findViewById(R.id.phone_LetterIndexView);
         txt_center = (TextView) findViewById(R.id.phone_txt_center);
 
-        //头部
-//        headerView = View.inflate(this, R.layout.header_city_selection, null);
-        //当前城市
-//        tvCurrentCity = (TextView) headerView.findViewById(R.id.tv_current_city);
-        //历史记录
-//        layoutHistory = headerView.findViewById(R.id.layout_history);
-//        gvHistoryRecord = (GridView) headerView.findViewById(R.id.gv_header_city_selection_record);
-//        gvHistoryAdapter = new CitySelectionGridViewAdapter(getApplicationContext(), listHistory);
-//        gvHistoryRecord.setAdapter(gvHistoryAdapter);
-//        gvHistoryRecord.setSelector(new ColorDrawable(Color.TRANSPARENT));
-        //热门城市
-//        mHotGridView = (GridView) headerView.findViewById(R.id.gv_header_city_selection_hot); //热门城市
-//        citiesHot = new ArrayList<>();
-//        gvHotAdapter = new CitySelectionGridViewAdapter(this, citiesHot);
-//        mHotGridView.setAdapter(gvHotAdapter);
-//        mHotGridView.setSelector(new ColorDrawable(Color.TRANSPARENT));
-//        listView.addHeaderView(headerView);
-
         //列表    用到的数据
-        list_all = new ArrayList<PlaneTicketCityInfo>();
-        list_show = new ArrayList<PlaneTicketCityInfo>();
-        map_IsHead = new HashMap<String, Integer>();
+        list_all = new ArrayList<>();
+        list_show = new ArrayList<>();
+        map_IsHead = new HashMap<>();
 
-        adapter = new PlaneAirportAdapter(PlaneCitySelectionActivity.this, list_show, map_IsHead);
+        adapter = new HotelProvinceAdapter(getApplicationContext(), list_show, map_IsHead);
         listView.setAdapter(adapter);
 
-        adapterSearch = new PlaneAirportAdapter(PlaneCitySelectionActivity.this, list_show, map_IsHead);
+        adapterSearch = new HotelProvinceAdapter(HotelCitySelectionActivity.this, list_show, map_IsHead);
         listSearch = (ListView) findViewById(R.id.list_search);
         listSearch.setAdapter(adapterSearch);
 
-        radioGroup.setOnCheckedChangeListener(this);
         ivSearchLeft.setOnClickListener(this);
     }
-
 
     @Override
     public void onClick(View view) {
@@ -188,42 +147,12 @@ public class PlaneCitySelectionActivity extends BaseActivity implements View.OnC
                 break;
         }
     }
-    private int type = 1; //1:国内机场 2:国外机场
-    private void getData() {
-        Bundle bundle = getIntent().getExtras();
-        if (bundle != null){
-            type = bundle.getInt("type");
-        }
-        if (type == 1 || type == 3) {
-            list_all = PlaneMainActivity.airportInner;
-            cityType = 1;
-            radioButtonInner.setChecked(true);
-        } else if (type == 2) {
-            list_all = PlaneMainActivity.airportOuter;
-            cityType = 2;
-            radioButtonOuter.setChecked(true);
-        }
-    }
 
-    @Override
-    public void onCheckedChanged(RadioGroup radioGroup, int i) {
-        list_show.clear();
-        map_IsHead.clear();
-        switch (i){
-            case R.id.rb_city_inner:
-                list_all = PlaneMainActivity.airportInner;
-                cityType = 1;
-                break;
-            case R.id.rb_city_outer:
-                list_all = PlaneMainActivity.airportOuter;
-                cityType = 2;
-                break;
-        }
-        setupData();
+    private void getData() {
+        list_all = HotelMainActivity.listHotelProvince;
     }
 
     private void initView() {
-//        ivTitleLeft.setOnClickListener(this);
         // 输入监听
         edit_search.addTextChangedListener(new TextWatcher() {
             @Override
@@ -240,52 +169,50 @@ public class PlaneCitySelectionActivity extends BaseActivity implements View.OnC
                 map_IsHead.clear();
                 //把输入的字符改成大写
                 String search = editable.toString().trim().toUpperCase();
-                LogUtil.e(TAG, "search = " + search);
 
                 if (TextUtils.isEmpty(search)) {
                     listSearch.setVisibility(View.GONE);
                     for (int i = 0; i < list_all.size(); i++) {
-                        PlaneTicketCityInfo bean = list_all.get(i);
+                        HotelProvinceResponse.ProvinceBean bean = list_all.get(i);
                         //中文字符匹配首字母和英文字符匹配首字母
-                        if (!map_IsHead.containsKey(bean.headChar)) {// 如果不包含就添加一个标题
-                            PlaneTicketCityInfo bean1 = new PlaneTicketCityInfo();
+                        if (!map_IsHead.containsKey(bean.getHeadChar())) {// 如果不包含就添加一个标题
+                            HotelProvinceResponse.ProvinceBean bean1 = new HotelProvinceResponse.ProvinceBean();
                             // 设置名字
                             bean1.setName(bean.getName());
-                            bean1.headChar = bean.headChar;
+                            bean1.setHeadChar(bean.getHeadChar());
                             // 设置标题type
-                            bean1.type = PlaneCitySelectionActivity.TITLE;
+                            bean1.setType(HotelCitySelectionActivity.TITLE);
                             list_show.add(bean1);
                             // map的值为标题的下标
-                            map_IsHead.put(bean1.headChar, list_show.size() - 1);
+                            map_IsHead.put(bean1.getHeadChar(), list_show.size() - 1);
                         }
                         // 设置Item type
-                        bean.type = PlaneCitySelectionActivity.ITEM;
+                        bean.setType(HotelCitySelectionActivity.ITEM);
                         list_show.add(bean);
                     }
                 } else {
                     for (int i = 0; i < list_all.size(); i++) {
-                        PlaneTicketCityInfo bean = list_all.get(i);
+                        HotelProvinceResponse.ProvinceBean bean = list_all.get(i);
                         //中文字符匹配首字母和英文字符匹配首字母
-                        if (bean.getName().contains(search) || bean.fullPY.contains(search) || bean.shortPY.contains(search)) {
-                            if (!map_IsHead.containsKey(bean.headChar)) { // 如果不包含就添加一个标题
-                                PlaneTicketCityInfo bean1 = new PlaneTicketCityInfo();
+                        if (bean.getName().contains(search) || bean.getQuanPin().contains(search) || bean.getJianPin().contains(search)) {
+                            if (!map_IsHead.containsKey(bean.getHeadChar())) { // 如果不包含就添加一个标题
+                                HotelProvinceResponse.ProvinceBean bean1 = new HotelProvinceResponse.ProvinceBean();
                                 // 设置名字
                                 bean1.setName(bean.getName());
-                                bean1.headChar = bean.headChar;
+                                bean1.setHeadChar(bean.getHeadChar());
                                 // 设置标题type
-                                bean1.type = PlaneCitySelectionActivity.TITLE;
+                                bean1.setType(HotelCitySelectionActivity.TITLE);
                                 list_show.add(bean1);
                                 // map的值为标题的下标
-                                map_IsHead.put(bean1.headChar, list_show.size() - 1);
+                                map_IsHead.put(bean1.getHeadChar(), list_show.size() - 1);
                             }
                             // 设置Item type
-                            bean.type = PlaneCitySelectionActivity.ITEM;
+                            bean.setType(HotelCitySelectionActivity.ITEM);
                             list_show.add(bean);
                         }
                     }
                     listSearch.setVisibility(View.VISIBLE);
                 }
-//                adapter.notifyDataSetChanged();
                 adapterSearch.notifyDataSetChanged();
             }
         });
@@ -295,20 +222,20 @@ public class PlaneCitySelectionActivity extends BaseActivity implements View.OnC
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 LogUtil.e(TAG, "--------------listView---onItemClick--------------");
-                if (list_show.get(i).type == PlaneCitySelectionActivity.ITEM) { // 标题点击不给操作
-                    if (cityType == 2){
-                    }else if (cityType == 1){
+                if (list_show.get(i).getType() == HotelCitySelectionActivity.ITEM) { // 标题点击不给操作
+                    HotelProvinceResponse.ProvinceBean city = list_show.get(i);
+                    if (type == 0){ //省份
+                        getCityData(city.getID());
+                    }else if (type == 1) { //城市
+//                    ToastCommon.toastShortShow(getApplicationContext(), null, city.getName());
+                        Intent intent = new Intent();
+                        Bundle bundle = new Bundle();
+                        bundle.putParcelable("selectCity", city);
+                        intent.putExtras(bundle);
+                        LogUtil.e(TAG, "selectCity = " + city);
+                        setResult(RESULT_OK, intent);
+                        finish();
                     }
-                    PlaneTicketCityInfo city = list_show.get(i);
-                    ToastCommon.toastShortShow(getApplicationContext(), null, city.getName());
-                    Intent intent = new Intent();
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("selectCity", city);
-                    bundle.putInt("typeSearch", cityType);
-                    intent.putExtras(bundle);
-                    LogUtil.e(TAG, "selectCity = " + city);
-                    setResult(RESULT_OK, intent);
-                    finish();
                 }
             }
         });
@@ -317,16 +244,12 @@ public class PlaneCitySelectionActivity extends BaseActivity implements View.OnC
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 LogUtil.e(TAG, "--------------listSearch---onItemClick--------------");
-                if (list_show.get(i).type == PlaneCitySelectionActivity.ITEM) { // 标题点击不给操作
-                    if (cityType == 2){
-                    }else if (cityType == 1){
-                    }
-                    PlaneTicketCityInfo city = list_show.get(i);
+                if (list_show.get(i).getType() == HotelCitySelectionActivity.ITEM) { // 标题点击不给操作
+                    HotelProvinceResponse.ProvinceBean city = list_show.get(i);
                     ToastCommon.toastShortShow(getApplicationContext(), null, city.getName());
                     Intent intent = new Intent();
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("selectCity", city);
-                    bundle.putInt("typeSearch", cityType);
+                    bundle.putParcelable("selectCity", city);
                     intent.putExtras(bundle);
                     LogUtil.e(TAG, "selectCity = " + city);
                     setResult(RESULT_OK, intent);
@@ -351,18 +274,18 @@ public class PlaneCitySelectionActivity extends BaseActivity implements View.OnC
 
         // 初始化数据，顺便放入把标题放入map集合
         for (int i = 0; i < list_all.size(); i++) {
-            PlaneTicketCityInfo cityBean = list_all.get(i);
-            if (!map_IsHead.containsKey(cityBean.headChar)) { // 如果不包含就添加一个标题
-                PlaneTicketCityInfo cityBean1 = new PlaneTicketCityInfo();
+            HotelProvinceResponse.ProvinceBean cityBean = list_all.get(i);
+            if (!map_IsHead.containsKey(cityBean.getHeadChar())) { // 如果不包含就添加一个标题
+                HotelProvinceResponse.ProvinceBean cityBean1 = new HotelProvinceResponse.ProvinceBean();
                 // 设置名字
                 cityBean1.setName(cityBean.getName());
                 // 设置标题type
-                cityBean1.type = PlaneCitySelectionActivity.TITLE;
-                cityBean1.headChar = cityBean.headChar;
+                cityBean1.setType(HotelCitySelectionActivity.TITLE);
+                cityBean1.setHeadChar(cityBean.getHeadChar());
                 list_show.add(cityBean1);
 
                 // map的值为标题的下标
-                map_IsHead.put(cityBean1.headChar, list_show.size() - 1);
+                map_IsHead.put(cityBean1.getHeadChar(), list_show.size() - 1);
             }
             list_show.add(cityBean);
         }
@@ -404,18 +327,57 @@ public class PlaneCitySelectionActivity extends BaseActivity implements View.OnC
         //-------------end-----------
 
         adapter.notifyDataSetChanged();
-        LoadingIndicator.cancel(); //handler.sendMessage(handler.obtainMessage());
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK){
+            if (type == 1){ //城市
+                type--;
+                //设置为省份
+                list_show.clear();
+                map_IsHead.clear();
+                list_all = HotelMainActivity.listHotelProvince;
+                setupData();
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
-    public class MemberSortUtil implements Comparator<PlaneTicketCityInfo> {
+    private void getCityData(String provinceId) {
+        //网络请求，获取城市数据
+        HotelActionBiz biz = new HotelActionBiz();
+        HotelCityRequest request = new HotelCityRequest(provinceId);
+        biz.getHotelCityList(request, new BizGenericCallback<HotelProvinceResponse>() {
+            @Override
+            public void onCompletion(GenericResponseModel<HotelProvinceResponse> model) {
+                if ("0000".equals(model.headModel.res_code)) {
+                    type++;
+//                setupData();
+                }else if ("0001".equals(model.headModel.res_code)){
+
+                }
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                if (error.localReason != null){
+
+                }else{
+
+                }
+            }
+        });
+    }
+
+    public class MemberSortUtil implements Comparator<HotelProvinceResponse.ProvinceBean> {
         /**
          * 按拼音排序
          */
         @Override
-        public int compare(PlaneTicketCityInfo lhs, PlaneTicketCityInfo rhs) {
+        public int compare(HotelProvinceResponse.ProvinceBean lhs, HotelProvinceResponse.ProvinceBean rhs) {
             Comparator<Object> cmp = Collator.getInstance(java.util.Locale.CHINA);
-            return cmp.compare(lhs.fullPY, rhs.fullPY);
+            return cmp.compare(lhs.getQuanPin(), rhs.getQuanPin());
         }
     }
 
@@ -429,7 +391,7 @@ public class PlaneCitySelectionActivity extends BaseActivity implements View.OnC
     }
 
     public static void actionStart(Context context, Bundle bundle) {
-        Intent intent = new Intent(context, PlaneCitySelectionActivity.class);
+        Intent intent = new Intent(context, HotelCitySelectionActivity.class);
         if (bundle != null) {
             intent.putExtra("bundle", bundle);
         }
