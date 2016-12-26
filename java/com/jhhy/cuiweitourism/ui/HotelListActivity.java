@@ -20,17 +20,22 @@ import com.jhhy.cuiweitourism.adapter.HotelListAdapter;
 import com.jhhy.cuiweitourism.model.PhoneBean;
 import com.jhhy.cuiweitourism.net.biz.HotelActionBiz;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelListFetchRequest;
+import com.jhhy.cuiweitourism.net.models.FetchModel.HotelListRequest;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelListInfo;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelListResponse;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelProvinceResponse;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.popupwindows.PopupWindowHotelLevel;
 import com.jhhy.cuiweitourism.popupwindows.PopupWindowHotelSort;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
+import com.jhhy.cuiweitourism.utils.Utils;
 import com.just.sun.pricecalendar.ToastCommon;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class HotelListActivity extends BaseActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
 
@@ -42,7 +47,8 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
     private PullToRefreshListView pullToRefreshListView;
     private ListView listView;
     private HotelListAdapter adapter;
-    private ArrayList<HotelListInfo> listHotel = new ArrayList<>();
+//    private ArrayList<HotelListInfo> listHotel = new ArrayList<>();
+    private List<HotelListResponse.HotelBean> listHotel = new ArrayList<>();
 
     private View layout;
     private TextView tvScreen; //筛选
@@ -56,15 +62,26 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
     private boolean loadMore;
     private boolean refresh = true;
 
-    private String areaId = "北京"; //城市名字，与主页一样
-    private String order = "price desc";
-    private String price = ""; //价格
+//    private String areaId = "北京"; //城市名字，与主页一样
+//    private String order = "price desc";
+    private String price = ""; //房价范围 格式：0-150
 
     private String checkInDate ;
     private String checkOutDate;
     private int    stayDays    ;
-    private PhoneBean selectCity;
+    private HotelProvinceResponse.ProvinceBean selectCity;
     private String keyWords;
+    private String district = "";       //行政区编码
+    private String downTown = "";       //商业区编码
+    private String landMark = "";       //景点/标志物
+    private String starLevel = "";      //酒店星级; 经济/客栈: 0,1,2    三星/舒适: 3;   四星/高档: 4    五星/豪华: 5
+    private String isEconomy = "0";     //是否经济；1是0否
+    private String isApartment = "0";   //是否公寓；1是0否
+    private String brandName = "";  	//酒店品牌编号
+    private String facilities = "";     //设施ID 多个设施用逗号,隔开
+    private String sortBy = "G";         //排序项: 价格P/星级S/好评G
+    private String sortType = "D";       //排序顺序:升序A 降序 D
+
 
     private Handler handler = new Handler(){
         @Override
@@ -91,7 +108,7 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
                 checkInDate = bundle.getString("checkInDate");
                 checkOutDate = bundle.getString("checkOutDate");
                 stayDays    = bundle.getInt("stayDays");
-                selectCity = (PhoneBean) bundle.getSerializable("selectCity");
+                selectCity = bundle.getParcelable("selectCity");
                 keyWords = bundle.getString("keyWords");
                 if (keyWords == null){
                     keyWords = "";
@@ -103,48 +120,40 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
     private void getHotelListData(){
         LoadingIndicator.show(HotelListActivity.this, getString(R.string.http_notice));
         HotelActionBiz hotelBiz = new HotelActionBiz();
-        //"areaid":"8","starttime":"2016-09-16","endtime":"","keyword":"","page":"1","offset":"10","order":"price desc","price":"","level":""
-        //获取酒店列表
-        HotelListFetchRequest request = new HotelListFetchRequest(selectCity.getName(), checkInDate, checkOutDate, keyWords, String.valueOf(pageTemp), "10", String.valueOf(orderPosition), price, String.valueOf(levelPosition));
-//        HotelListFetchRequest request = new HotelListFetchRequest(areaId, startTime, endTime, keyWords, String.valueOf(page), "10", order, price, "");
-        hotelBiz.hotelGetInfoList(request, new BizGenericCallback<ArrayList<HotelListInfo>>() {
+        HotelListRequest request = new HotelListRequest(selectCity.getCode(), checkInDate, checkOutDate, keyWords, district, downTown, landMark, price, starLevel, isEconomy,
+                isApartment, brandName, "", facilities, String.valueOf(pageTemp), "10", sortBy, sortType);
+        hotelBiz.hotelList(request, new BizGenericCallback<HotelListResponse>() {
             @Override
-            public void onCompletion(GenericResponseModel<ArrayList<HotelListInfo>> model) {
+            public void onCompletion(GenericResponseModel<HotelListResponse> model) {
+                resetListView();
                 if ("0001".equals(model.headModel.res_code)){
                     ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);
                 }else if ("0000".equals(model.headModel.res_code)){
-                    ArrayList<HotelListInfo> array = model.body;
-                    LogUtil.e(TAG,"houtelGetInfoList =" + array.toString());
-                    listHotel = array;
-                    refreshView();
+                    List<HotelListResponse.HotelBean> array = model.body.getHotels().getHotel();
+                    LogUtil.e(TAG,"hotelGetInfoList =" + array.toString());
+                    if (refresh){
+                        listHotel = array;
+                        adapter.setData(listHotel);
+                    }
                     if (loadMore){
                         page = pageTemp;
+                        listHotel.addAll(array);
+                        adapter.addData(array);
                     }
                 }
-                if (loadMore){
-                    loadMore = false;
-                }
-                if (refresh){
-                    refresh = false;
-                }
-                pullToRefreshListView.onRefreshComplete();
+                resetValue();
                 LoadingIndicator.cancel();
             }
 
             @Override
             public void onError(FetchError error) {
+                resetListView();
                 if (error.localReason != null){
                     ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
-                }else {
-                    LogUtil.e(TAG, "houtelGetInfoList: " + error.toString());
+                } else {
+                    LogUtil.e(TAG, "hotelGetInfoList: " + error.toString());
                 }
-                if (loadMore){
-                    loadMore = false;
-                }
-                if (refresh){
-                    refresh = false;
-                }
-                pullToRefreshListView.onRefreshComplete();
+                resetValue();
                 LoadingIndicator.cancel();
             }
         });
@@ -158,10 +167,10 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
         pullToRefreshListView = (PullToRefreshListView) findViewById(R.id.activity_hot_activity_list_view);
         listView = pullToRefreshListView.getRefreshableView();
         //这几个刷新Label的设置
-        pullToRefreshListView.getLoadingLayoutProxy().setLastUpdatedLabel("lastUpdateLabel");
-        pullToRefreshListView.getLoadingLayoutProxy().setPullLabel("PULLLABLE");
-        pullToRefreshListView.getLoadingLayoutProxy().setRefreshingLabel("refreshingLabel");
-        pullToRefreshListView.getLoadingLayoutProxy().setReleaseLabel("releaseLabel");
+        pullToRefreshListView.getLoadingLayoutProxy().setLastUpdatedLabel(Utils.getCurrentTime());
+        pullToRefreshListView.getLoadingLayoutProxy().setPullLabel("下拉刷新");
+        pullToRefreshListView.getLoadingLayoutProxy().setRefreshingLabel("正在刷新");
+        pullToRefreshListView.getLoadingLayoutProxy().setReleaseLabel("松开刷新");
 
         //上拉、下拉设定
         pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
@@ -203,9 +212,9 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
     private void addListener() {
         ivTitleLeft.setOnClickListener(this);
 
-        tvScreen   .setOnClickListener(this);
-        tvSelectPosition   .setOnClickListener(this);
-        tvPriceLevel   .setOnClickListener(this);
+        tvScreen        .setOnClickListener(this);
+        tvSelectPosition.setOnClickListener(this);
+        tvPriceLevel    .setOnClickListener(this);
         tvSortDefault   .setOnClickListener(this);
 
         listView.setOnItemClickListener(this);
@@ -311,10 +320,6 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
         }
     }
 
-    private void refreshView(){
-        adapter.setData(listHotel);
-    }
-
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
         //TODO 进入酒店详情页
@@ -323,12 +328,30 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
         bundle.putString("checkInDate", checkInDate);
         bundle.putString("checkOutDate", checkOutDate);
         bundle.putInt("stayDays", stayDays);
-        bundle.putSerializable("selectCity", selectCity);
+        bundle.putParcelable("selectCity", selectCity);
 
-        bundle.putString("id", listHotel.get((int)l).getId());
+        bundle.putString("id", listHotel.get((int)l).getHotelID());
         Intent intent = new Intent(getApplicationContext(), HotelDetailActivity.class);
         intent.putExtras(bundle);
         startActivityForResult(intent, VIEW_HOTEL_DETAIL);
+    }
+
+    private void resetValue() {
+        if (loadMore){
+            loadMore = false;
+        }
+        if (refresh){
+            refresh = false;
+        }
+    }
+
+    private void resetListView() {
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                pullToRefreshListView.onRefreshComplete();
+            }
+        }, 2000);
     }
 
     public static void actionStart(Context context, Bundle data){

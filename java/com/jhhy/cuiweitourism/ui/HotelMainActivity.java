@@ -23,12 +23,10 @@ import android.widget.ViewFlipper;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.circleviewpager.ViewFactory;
 import com.jhhy.cuiweitourism.model.ADInfo;
-import com.jhhy.cuiweitourism.model.PhoneBean;
 import com.jhhy.cuiweitourism.net.biz.HotelActionBiz;
-import com.jhhy.cuiweitourism.net.models.FetchModel.HotelProvinceResponse;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelProvinceResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
-import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketCityInfo;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.HanziToPinyin;
@@ -96,13 +94,6 @@ public class HotelMainActivity extends BaseActivity implements View.OnClickListe
                 if ("0000".equals(model.headModel.res_code)){
                     //进入省份页面
                     listHotelProvince = model.body.getItem();
-                    HanziToPinyin hzToPyConvertor = HanziToPinyin.getInstance();
-                    for (HotelProvinceResponse.ProvinceBean itemInfo : listHotelProvince){
-                        HanziToPinyin.PinYinCollection collection = hzToPyConvertor.getPinYin(itemInfo.getName());
-                        itemInfo.setQuanPin(collection.fullPY);
-                        itemInfo.setJianPin(collection.shortPY);
-                        itemInfo.setHeadChar(String.valueOf(collection.headChar));
-                    }
                     selectCityByUser();
                 }else if ("0001".equals(model.headModel.res_code)){
                     ToastUtil.show(getApplicationContext(), model.headModel.res_arg);
@@ -126,7 +117,7 @@ public class HotelMainActivity extends BaseActivity implements View.OnClickListe
     private void getData() {
         selectCity = new HotelProvinceResponse.ProvinceBean();
         selectCity.setName("北京");
-        selectCity.setID("0100");
+        selectCity.setCode("0101");
     }
 
     private GestureDetector mGestureDetector; // MyScrollView的手势?
@@ -273,6 +264,7 @@ private List<ADInfo> infos = new ArrayList<ADInfo>();
             if (resultCode == RESULT_OK){
                 Bundle bundle = data.getExtras();
                 HotelProvinceResponse.ProvinceBean city =  bundle.getParcelable("selectCity");
+                LogUtil.e(TAG, "选择地址："+city);
                 if (city != null) {
                     selectCity = city;
                     tvAddress.setText(city.getName());

@@ -184,9 +184,11 @@ public class Tab4AllOrdersActivity extends BaseActivity implements View.OnClickL
                             tvTitle.setText(typeTitles[1]);
                             break;
                         case 2:
+                            type = "82";
                             tvTitle.setText(typeTitles[2]);
                             break;
                         case 3:
+                            type = "80";
                             tvTitle.setText(typeTitles[3]);
                             break;
                         case 4:

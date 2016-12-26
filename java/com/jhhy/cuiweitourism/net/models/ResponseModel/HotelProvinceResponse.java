@@ -1,4 +1,4 @@
-package com.jhhy.cuiweitourism.net.models.FetchModel;
+package com.jhhy.cuiweitourism.net.models.ResponseModel;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -56,7 +56,7 @@ public class HotelProvinceResponse implements Parcelable{
     }
 
     public static class ProvinceBean implements Parcelable{
-        /**请求城市
+        /**请求省份返回城市
          * Code : 5448
          * IsDomc : D
          * IsHot : N
@@ -74,7 +74,6 @@ public class HotelProvinceResponse implements Parcelable{
          * ID : 3800
          * Name : 首尔特别市
          */
-
         private String ID;
         private String Name;
         private String QuanPin;
@@ -163,7 +162,22 @@ public class HotelProvinceResponse implements Parcelable{
 
         public void setName(String Name) {
             this.Name = Name;
+        }
 
+        @Override
+        public String toString() {
+            return "ProvinceBean{" +
+                    "Code='" + Code + '\'' +
+                    ", IsDomc='" + IsDomc + '\'' +
+                    ", IsHot='" + IsHot + '\'' +
+                    ", IsShow='" + IsShow + '\'' +
+                    ", ID='" + ID + '\'' +
+                    ", Name='" + Name + '\'' +
+                    ", QuanPin='" + QuanPin + '\'' +
+                    ", JianPin='" + JianPin + '\'' +
+                    ", headChar='" + headChar + '\'' +
+                    ", type=" + type +
+                    '}';
         }
 
         public static final Parcelable.Creator<ProvinceBean> CREATOR = new Parcelable.Creator<ProvinceBean>() {
@@ -187,19 +201,27 @@ public class HotelProvinceResponse implements Parcelable{
         public void writeToParcel(Parcel out, int flag) {
             out.writeString(ID);
             out.writeString(Name);
-//            out.writeString(fullPY);
-//            out.writeString(shortPY);
+            out.writeString(QuanPin);
+            out.writeString(JianPin);
 //            out.writeString(headChar);
 //            out.writeInt(type);
+            out.writeString(Code);
+            out.writeString(IsDomc);
+            out.writeString(IsHot);
+            out.writeString(IsShow);
         }
 
         private ProvinceBean(Parcel in){
             ID = in.readString();
             Name = in.readString();
-//            fullPY = in.readString();
-//            shortPY = in.readString();
+            QuanPin = in.readString();
+            JianPin = in.readString();
 //            headChar = in.readString();
 //            type = in.readInt();
+            Code = in.readString();
+            IsDomc = in.readString();
+            IsHot = in.readString();
+            IsShow = in.readString();
         }
     }
 }

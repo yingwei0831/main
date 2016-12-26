@@ -3,38 +3,35 @@
     android:id="@+id/activity_hot_activity_list"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@android:color/white"
-    >
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/layout_search"
         android:layout_width="match_parent"
         android:layout_height="52dp"
         android:paddingBottom="8dp"
-        android:paddingTop="8dp"
         android:paddingRight="16dp"
-        >
+        android:paddingTop="8dp">
 
         <ImageView
             android:id="@+id/iv_title_search_left"
             android:layout_width="40dp"
             android:layout_height="match_parent"
-            android:src="@mipmap/arrow_left_green"
             android:scaleType="centerInside"
-            />
+            android:src="@mipmap/arrow_left_green" />
 
         <EditText
-            android:layout_toRightOf="@+id/iv_title_search_left"
-            android:drawableLeft="@mipmap/edit_search"
             android:id="@+id/edit_search"
             android:layout_width="match_parent"
             android:layout_height="40dp"
+            android:layout_toRightOf="@+id/iv_title_search_left"
             android:background="#EFF2F7"
+            android:drawableLeft="@mipmap/edit_search"
             android:drawablePadding="6dp"
             android:focusableInTouchMode="true"
-            android:hint="关键字/位置/品牌/酒店等"
             android:gravity="center"
+            android:hint="关键字/位置/品牌/酒店等"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:singleLine="true"
@@ -84,8 +81,8 @@
 
             android:drawableTop="@mipmap/tab1_inner_travel_sort_default"
             android:gravity="center_horizontal"
-            android:paddingBottom="6dp"
-            android:paddingTop="8dp"
+            android:paddingBottom="4dp"
+            android:paddingTop="6dp"
             android:text="@string/hotel_hotel_my_hotel_screen"
             android:textColor="@android:color/white" />
 
@@ -98,8 +95,8 @@
             android:drawablePadding="4dp"
             android:drawableTop="@mipmap/tab1_inner_travel_trip_days"
             android:gravity="center_horizontal"
-            android:paddingBottom="6dp"
-            android:paddingTop="8dp"
+            android:paddingBottom="4dp"
+            android:paddingTop="6dp"
             android:text="@string/hotel_hotel_my_hotel_area"
             android:textColor="@android:color/white" />
 
@@ -112,8 +109,8 @@
             android:drawableTop="@mipmap/icon_inner_travel_start_time"
 
             android:gravity="center_horizontal"
-            android:paddingBottom="6dp"
-            android:paddingTop="8dp"
+            android:paddingBottom="4dp"
+            android:paddingTop="6dp"
             android:text="@string/hotel_hotel_my_hotel_level"
             android:textColor="@android:color/white" />
 
@@ -125,8 +122,8 @@
             android:drawablePadding="4dp"
             android:drawableTop="@mipmap/tab1_inner_travel_sort_default"
             android:gravity="center_horizontal"
-            android:paddingBottom="6dp"
-            android:paddingTop="8dp"
+            android:paddingBottom="4dp"
+            android:paddingTop="6dp"
             android:text="@string/tab1_inner_travel_sort_default"
             android:textColor="@android:color/white" />
     </LinearLayout>

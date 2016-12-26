@@ -8,12 +8,10 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
-import com.jhhy.cuiweitourism.net.models.FetchModel.HotelProvinceResponse;
-import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketCityInfo;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelProvinceResponse;
 import com.jhhy.cuiweitourism.ui.CitySelectionActivity;
 import com.jhhy.cuiweitourism.view.PinnedSectionListView;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 

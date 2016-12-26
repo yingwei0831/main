@@ -26,9 +26,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@android:color/black"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:text="北京鸿坤国际酒店"
             android:paddingBottom="2dp"
+            android:maxLines="1"
+            android:ellipsize="end"
             />
         <RelativeLayout
             android:id="@+id/layout_hotel_kind"
@@ -40,13 +42,14 @@
                 android:id="@+id/tv_hotel_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:text="经济型"
+                android:textSize="14sp"
+                android:textColor="@color/colorGrayDark"
                 />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="￥"
+                android:textSize="12sp"
                 android:layout_toLeftOf="@+id/tv_item_hotel_list_money_unit"
                 android:textColor="@color/colorTab1RecommendForYouMoney"
                 android:layout_alignBaseline="@+id/tv_item_hotel_list_money_unit"
@@ -55,7 +58,7 @@
                 android:id="@+id/tv_item_hotel_list_money_unit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:text="1210"
                 android:textColor="@color/colorTab1RecommendForYouMoney"
                 android:layout_toLeftOf="@+id/tv_item_hotel_list_unit"
@@ -66,6 +69,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="起"
+                android:textSize="12sp"
+                android:textColor="@color/colorGrayDark"
                 android:layout_alignParentRight="true"
                 />
         </RelativeLayout>
@@ -79,8 +84,8 @@
                 android:id="@+id/tv_hotel_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:text="西客站"
+                android:textSize="14sp"
+                android:textColor="@color/colorGrayDark"
                 android:layout_toLeftOf="@+id/tv_distance_pre"
                 android:ellipsize="end"
                 android:maxLines="1"
@@ -90,6 +95,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="距离当前"
+                android:textSize="12sp"
+                android:textColor="@color/colorGrayDark"
                 android:layout_toLeftOf="@+id/tv_item_hotel_list_distance"
                 android:layout_alignBaseline="@+id/tv_item_hotel_list_distance"
                 />
@@ -97,8 +104,9 @@
                 android:id="@+id/tv_item_hotel_list_distance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:text="18.6"
+                android:textSize="14sp"
+                android:text="0"
+                android:textColor="@android:color/black"
                 android:layout_toLeftOf="@+id/tv_item_hotel_list_distance_unit"
                 />
             <TextView
@@ -106,6 +114,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="公里"
+                android:textSize="12sp"
+                android:textColor="@color/colorGrayDark"
                 android:layout_alignParentRight="true"
                 android:layout_alignBaseline="@+id/tv_item_hotel_list_distance"
                 />

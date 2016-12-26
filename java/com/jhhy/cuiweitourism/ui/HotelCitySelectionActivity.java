@@ -18,15 +18,15 @@ import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.HotelProvinceAdapter;
-import com.jhhy.cuiweitourism.adapter.PlaneAirportAdapter;
 import com.jhhy.cuiweitourism.net.biz.HotelActionBiz;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelCityRequest;
-import com.jhhy.cuiweitourism.net.models.FetchModel.HotelProvinceResponse;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelProvinceResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
-import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketCityInfo;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
+import com.jhhy.cuiweitourism.net.utils.HanziToPinyin;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
+import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.jhhy.cuiweitourism.view.LetterIndexView;
 import com.jhhy.cuiweitourism.view.PinnedSectionListView;
@@ -227,7 +227,7 @@ public class HotelCitySelectionActivity extends BaseActivity implements View.OnC
                     if (type == 0){ //省份
                         getCityData(city.getID());
                     }else if (type == 1) { //城市
-//                    ToastCommon.toastShortShow(getApplicationContext(), null, city.getName());
+                        ToastCommon.toastShortShow(getApplicationContext(), null, city.getName());
                         Intent intent = new Intent();
                         Bundle bundle = new Bundle();
                         bundle.putParcelable("selectCity", city);
@@ -246,14 +246,18 @@ public class HotelCitySelectionActivity extends BaseActivity implements View.OnC
                 LogUtil.e(TAG, "--------------listSearch---onItemClick--------------");
                 if (list_show.get(i).getType() == HotelCitySelectionActivity.ITEM) { // 标题点击不给操作
                     HotelProvinceResponse.ProvinceBean city = list_show.get(i);
-                    ToastCommon.toastShortShow(getApplicationContext(), null, city.getName());
-                    Intent intent = new Intent();
-                    Bundle bundle = new Bundle();
-                    bundle.putParcelable("selectCity", city);
-                    intent.putExtras(bundle);
-                    LogUtil.e(TAG, "selectCity = " + city);
-                    setResult(RESULT_OK, intent);
-                    finish();
+                    if (type == 0){ //省份
+                        getCityData(city.getID());
+                    }else if (type == 1) { //城市
+                        ToastCommon.toastShortShow(getApplicationContext(), null, city.getName());
+                        Intent intent = new Intent();
+                        Bundle bundle = new Bundle();
+                        bundle.putParcelable("selectCity", city);
+                        intent.putExtras(bundle);
+                        LogUtil.e(TAG, "selectCity = " + city);
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    }
                 }
             }
         });
@@ -339,12 +343,14 @@ public class HotelCitySelectionActivity extends BaseActivity implements View.OnC
                 map_IsHead.clear();
                 list_all = HotelMainActivity.listHotelProvince;
                 setupData();
+                return true;
             }
         }
         return super.onKeyDown(keyCode, event);
     }
 
     private void getCityData(String provinceId) {
+//        LoadingIndicator.show(HotelCitySelectionActivity.this, getString(R.string.http_notice));
         //网络请求，获取城市数据
         HotelActionBiz biz = new HotelActionBiz();
         HotelCityRequest request = new HotelCityRequest(provinceId);
@@ -353,19 +359,26 @@ public class HotelCitySelectionActivity extends BaseActivity implements View.OnC
             public void onCompletion(GenericResponseModel<HotelProvinceResponse> model) {
                 if ("0000".equals(model.headModel.res_code)) {
                     type++;
-//                setupData();
+                    list_all = model.body.getItem();
+                    list_show.clear();
+                    map_IsHead.clear();
+                    setupData();
                 }else if ("0001".equals(model.headModel.res_code)){
-
+                    ToastUtil.show(getApplicationContext(), model.headModel.res_arg);
                 }
+//                LoadingIndicator.cancel();
+                LogUtil.e(TAG, model.body.getItem());
             }
 
             @Override
             public void onError(FetchError error) {
                 if (error.localReason != null){
-
+                    ToastUtil.show(getApplicationContext(), error.localReason);
                 }else{
-
+                    ToastUtil.show(getApplicationContext(), "获取城市信息失败，请重试");
                 }
+//                LoadingIndicator.cancel();
+                LogUtil.e(TAG, error.toString());
             }
         });
     }
@@ -377,7 +390,9 @@ public class HotelCitySelectionActivity extends BaseActivity implements View.OnC
         @Override
         public int compare(HotelProvinceResponse.ProvinceBean lhs, HotelProvinceResponse.ProvinceBean rhs) {
             Comparator<Object> cmp = Collator.getInstance(java.util.Locale.CHINA);
-            return cmp.compare(lhs.getQuanPin(), rhs.getQuanPin());
+            String q1 = lhs.getQuanPin().replace("(", "").replace(")", "");
+            String q2 = rhs.getQuanPin().replace("(", "").replace(")", "");
+            return cmp.compare(q1, q2);
         }
     }
 
