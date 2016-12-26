@@ -24,9 +24,11 @@ import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.circleviewpager.ViewFactory;
 import com.jhhy.cuiweitourism.model.ADInfo;
 import com.jhhy.cuiweitourism.net.biz.HotelActionBiz;
+import com.jhhy.cuiweitourism.net.models.FetchModel.HotelScreenBrandRequest;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelProvinceResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelScreenFacilities;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.HanziToPinyin;
@@ -69,6 +71,7 @@ public class HotelMainActivity extends BaseActivity implements View.OnClickListe
 
     private HotelActionBiz hotelBiz;
     public static List<HotelProvinceResponse.ProvinceBean> listHotelProvince;
+    public static List<HotelScreenFacilities.FacilityItemBean> facilities; //酒店设施服务
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +86,30 @@ public class HotelMainActivity extends BaseActivity implements View.OnClickListe
         setContentView(R.layout.activity_hotel_main);
         getData();
         setupView();
+        getFacilities();
         addListener();
+    }
+
+    private void getFacilities() {
+        hotelBiz.hotelScreenFacilities(new BizGenericCallback<HotelScreenFacilities>() {
+            @Override
+            public void onCompletion(GenericResponseModel<HotelScreenFacilities> model) {
+                if ("0000".equals(model.headModel.res_code)){
+                    facilities = model.body.getItem();
+                }else if ("0001".equals(model.headModel.res_code)){
+                    ToastUtil.show(getApplicationContext(), model.headModel.res_arg);
+                }
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                if (error.localReason != null){
+                    ToastUtil.show(getApplicationContext(), error.localReason);
+                }else{
+                    ToastUtil.show(getApplicationContext(), "请求酒店设施服务信息失败，请返回重试");
+                }
+            }
+        });
     }
 
     private void getProvince() {
@@ -274,10 +300,12 @@ private List<ADInfo> infos = new ArrayList<ADInfo>();
     }
 
     private void search() {
-        if (checkInDate == null || checkOutDate == null || stayDays == 0){
-            ToastCommon.toastShortShow(getApplicationContext(), null, "请选择住店时间");
-            return;
-        }
+//        if (checkInDate == null || checkOutDate == null || stayDays == 0){
+//            ToastCommon.toastShortShow(getApplicationContext(), null, "请选择住店时间");
+//            return;
+//        }
+        //TODO 酒店品牌
+
         Intent intentSearch = new Intent(getApplicationContext(), HotelListActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString("checkInDate", checkInDate);
