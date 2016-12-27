@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
+import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.yingwei.view.rangebar.RangeBar;
 
 
@@ -40,7 +41,7 @@ public class PopupWindowHotelLevel extends PopupWindow implements OnClickListene
 //    private boolean isClear;
 
     private boolean commit;
-    private int starLevel;
+    private int starLevel = 1;
     private int priceMin;
     private int priceMax;
 
@@ -240,6 +241,10 @@ public class PopupWindowHotelLevel extends PopupWindow implements OnClickListene
                 dismiss();
                 break;
             case R.id.title_main_iv_right_telephone: //确定
+                if (priceMin == priceMax && 0 != priceMin && 0 != priceMax){
+                    ToastUtil.show(mActivity, "请重新选择价格区间");
+                    return;
+                }
                 commit = true;
                 dismiss();
                 break;
@@ -277,6 +282,10 @@ public class PopupWindowHotelLevel extends PopupWindow implements OnClickListene
 
     public int getPriceMax() {
         return priceMax;
+    }
+
+    private int getMoney(int position){
+        return 0;
     }
 
 

@@ -34,6 +34,7 @@ import com.just.sun.pricecalendar.ToastCommon;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class HotelListActivity extends BaseActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
 
@@ -284,7 +285,7 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
     }
 
     private PopupWindowHotelLevel popUpLevel;
-    private int levelPosition; //星级选择
+    private int levelPosition = 1; //星级选择
     private int priceMinPosition; //价格最低选择
     private int priceMaxPosition; //价格最高选择
 
@@ -305,10 +306,22 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
                 boolean commit = popUpLevel.getCommit();
                 if (commit){
                     levelPosition = popUpLevel.getStarLevel();
+                    if (levelPosition == 1){
+                        starLevel = "";
+                    }else if (levelPosition == 2){
+                        starLevel = "0,1,2";
+                    }else{
+                        starLevel = String.valueOf(levelPosition);
+                    }
                     priceMinPosition = popUpLevel.getPriceMin();
                     priceMaxPosition = popUpLevel.getPriceMax();
+                    if (priceMinPosition == 0 && priceMaxPosition == 0){
+                        price = "";
+                    }else{
+                        price = String.format(Locale.getDefault(), "%d-%d", priceMinPosition, priceMaxPosition);
+                    }
+                    LogUtil.e(TAG, "starLevel = " + starLevel +", price= " + price);
                     //TODO 重新请求数据
-
                 }
             }
         });
