@@ -20,7 +20,7 @@ public class HotelListRequest extends BasicFetchModel{
      * IsApartment : 0      是否公寓；1是0否
      * BrandName :          酒店品牌编号
      * CheckInNum :         入住人数
-     * Facilities :         设施ID 多个设施用逗号,隔开；1 免费wifi； 2 收费wifi 3 免费宽带；4 收费宽带； 5 免费停车场；6 收费停车场； 7 免费接机服务；8 收费接机服务； 9 室内游泳池；10 室外游泳池； 11 健身房；12 商务中心； 13 会议室；14 酒店餐厅
+     * Facilities :         设施ID 多个设施用逗号,隔开；1 免费wifi； 2 收费wifi; 3 免费宽带；4 收费宽带； 5 免费停车场；6 收费停车场； 7 免费接机服务；8 收费接机服务； 9 室内游泳池；10 室外游泳池； 11 健身房；12 商务中心； 13 会议室；14 酒店餐厅
      * CurrentPage : 1
      * PageNumber : 10
      * SortBy : P           排序项: 价格P/星级S/好评G

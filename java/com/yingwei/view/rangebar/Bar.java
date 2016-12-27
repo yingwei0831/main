@@ -19,6 +19,8 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.TypedValue;
 
+import com.jhhy.cuiweitourism.net.utils.LogUtil;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +29,7 @@ import java.util.List;
  * thumbs).
  */
 class Bar {
-
+    private final String TAG = "Bar";
     // Member Variables ////////////////////////////////////////////////////////
 
     private final Paint mPaint;
@@ -44,7 +46,6 @@ class Bar {
     private final float mTickEndY;
 
     /******* add by birneysky *****/
-//    private String[] bottomText = {"¥ 0","¥ 150","¥ 300","¥ 500","¥ 700","不限"};//
     private List<String> bottomText = new ArrayList<>();
     /*******************************/
 
@@ -77,11 +78,11 @@ class Bar {
         mPaint.setStrokeWidth(BarWeight);
         mPaint.setAntiAlias(true);
 
-        bottomText.add("￥ 0");
-        bottomText.add("￥ 150");
-        bottomText.add("￥ 300");
-        bottomText.add("￥ 500");
-        bottomText.add("￥ 700");
+        bottomText.add("￥0");
+        bottomText.add("￥150");
+        bottomText.add("￥300");
+        bottomText.add("￥500");
+        bottomText.add("￥700");
         bottomText.add("不限");
     }
 
@@ -171,7 +172,7 @@ class Bar {
 
         /******* add by birneysky *****/
         float radius = (mTickEndY - mTickStartY) / 2.0f;
-        mPaint.setTextSize(22f);
+        mPaint.setTextSize(36f); //以px为单位
         mPaint.setTextAlign(Paint.Align.CENTER);
         mPaint.setColor(0xFF28CE9D);
         /*******************************/
@@ -181,10 +182,10 @@ class Bar {
             //canvas.drawLine(x, mTickStartY, x, mTickEndY, mPaint);
 
             /******* add by birneysky *****/
-            canvas.drawArc(new RectF(x - radius, mTickStartY, x+ radius, mTickEndY), 0, 360, true, mPaint);
+            canvas.drawArc(new RectF(x - radius, mTickStartY, x + radius, mTickEndY), 0, 360, true, mPaint);
             String temp = String.format("$ 胡萝卜:%d",i);
 
-            canvas.drawText(bottomText.get(i),x,mTickEndY + radius + 30,mPaint);
+            canvas.drawText(bottomText.get(i), x, mTickEndY + radius + 30, mPaint);
             /*******************************/
         }
         // Draw final tick. We draw the final tick outside the loop to avoid any
@@ -192,12 +193,17 @@ class Bar {
 
         //canvas.drawLine(mRightX, mTickStartY, mRightX, mTickEndY, mPaint);
         /******* add by birneysky *****/
-        canvas.drawArc(new RectF((mRightX - radius),mTickStartY,mRightX + radius,mTickEndY),0,360,true,mPaint);
-        canvas.drawText(bottomText.get(5),mRightX,mTickEndY + radius + 30,mPaint);
+        canvas.drawArc(new RectF((mRightX - radius), mTickStartY, mRightX + radius, mTickEndY), 0, 360, true, mPaint);
+        canvas.drawText(bottomText.get(5), mRightX, mTickEndY + radius + 30, mPaint);
         /*******************************/
     }
 
     public void setText(List<String> bottomText){
         this.bottomText = bottomText;
+    }
+
+    public float getBarHeight(){
+//        LogUtil.e(TAG, "mY = " + mY + ", mTickStartY = " + mTickStartY + ", mTickEndY = " + mTickEndY);
+        return mTickEndY - mTickStartY;
     }
 }

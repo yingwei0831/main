@@ -21,7 +21,7 @@ import com.yingwei.view.rangebar.RangeBar;
 public class PopupWindowHotelLevel extends PopupWindow implements OnClickListener {
 
     private Activity mActivity;
-    private String TAG = PopupWindowHotelLevel.class.getSimpleName();
+    private String TAG = "PopupWindowHotelLevel";
 
     private TextView tvCancel; //取消
     private TextView tvConfirm; //确认
@@ -44,7 +44,7 @@ public class PopupWindowHotelLevel extends PopupWindow implements OnClickListene
     private int priceMin;
     private int priceMax;
 
-    private int count = 5;
+    private int count = 6;
 
     public PopupWindowHotelLevel(Activity activity, View parent) {
         super(activity);
@@ -147,7 +147,7 @@ public class PopupWindowHotelLevel extends PopupWindow implements OnClickListene
             public void onIndexChangeListener(RangeBar rangeBar, int leftThumbIndex, int rightThumbIndex) {
                 priceMin = leftThumbIndex;
                 priceMax = rightThumbIndex;
-                LogUtil.e(TAG, "leftThumbIndex =" + leftThumbIndex + "rightThumbIndex=" + rightThumbIndex); //0,1,2,3,4
+                LogUtil.e(TAG, "leftThumbIndex = " + leftThumbIndex + ", rightThumbIndex = " + rightThumbIndex); //TODO 0,1,2,3,4,5 两边不能重合
             }
         });
     }

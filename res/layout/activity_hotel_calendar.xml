@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     tools:context="com.jhhy.cuiweitourism.ui.PriceCalendarReserveActivity"
     android:orientation="vertical"
+    android:background="@android:color/white"
     >
     <include layout="@layout/title_tab1_inner_travel"/>
 

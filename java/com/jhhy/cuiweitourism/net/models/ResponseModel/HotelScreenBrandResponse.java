@@ -1,5 +1,6 @@
 package com.jhhy.cuiweitourism.net.models.ResponseModel;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -17,7 +18,14 @@ public class HotelScreenBrandResponse {
         this.Item = Item;
     }
 
-    public static class BrandItemBean {
+    public static class BrandItemBean implements Serializable{
+        public BrandItemBean() {
+        }
+
+        public BrandItemBean(String name) {
+            Name = name;
+        }
+
         /**
          * CityCode : 0101
          * HotelNum : 31
@@ -27,6 +35,7 @@ public class HotelScreenBrandResponse {
          * QuanPin : RuJia
          * Shortname : 如家
          */
+
 
         private String CityCode;
         private String HotelNum;

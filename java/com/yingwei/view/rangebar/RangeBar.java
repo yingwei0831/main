@@ -25,6 +25,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.jhhy.cuiweitourism.R;
+import com.jhhy.cuiweitourism.net.utils.LogUtil;
 
 
 /**
@@ -202,15 +203,17 @@ public class RangeBar extends View {
         } else {
             height = mDefaultHeight;
         }
-
-        setMeasuredDimension(width, height);
+        float mBarHeight = 0;
+        if (mBar != null) {
+            mBarHeight = mBar.getBarHeight();
+        }
+        setMeasuredDimension(width, (int) (height + mBarHeight));
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 
         super.onSizeChanged(w, h, oldw, oldh);
-
         final Context ctx = getContext();
 
         // This is the initial point at which we know the size of the View.
@@ -271,7 +274,6 @@ public class RangeBar extends View {
 
         mLeftThumb.draw(canvas);
         mRightThumb.draw(canvas);
-
     }
 
     @Override
@@ -334,6 +336,7 @@ public class RangeBar extends View {
                 mRightIndex = mTickCount - 1;
 
                 if (mListener != null) {
+                    LogUtil.e(TAG, "");
                     mListener.onIndexChangeListener(this, mLeftIndex, mRightIndex);
                 }
             }
@@ -813,7 +816,7 @@ public class RangeBar extends View {
      * @param thumb the thumb to press
      */
     private void pressThumb(Thumb thumb) {
-        if (mFirstSetTickCount == true)
+        if (mFirstSetTickCount)
             mFirstSetTickCount = false;
         thumb.press();
         invalidate();

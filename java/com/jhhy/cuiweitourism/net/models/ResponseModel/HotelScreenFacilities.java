@@ -1,5 +1,6 @@
 package com.jhhy.cuiweitourism.net.models.ResponseModel;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -17,7 +18,7 @@ public class HotelScreenFacilities {
         this.Item = Item;
     }
 
-    public static class FacilityItemBean {
+    public static class FacilityItemBean implements Serializable{
         /**
          * ID : 1
          * Name : 免费wifi
@@ -27,6 +28,13 @@ public class HotelScreenFacilities {
         private String ID;
         private String Name;
         private String NameEN;
+
+        public FacilityItemBean() {
+        }
+
+        public FacilityItemBean(String name) {
+            Name = name;
+        }
 
         public String getID() {
             return ID;

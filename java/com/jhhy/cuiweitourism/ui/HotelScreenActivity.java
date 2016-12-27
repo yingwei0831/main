@@ -1,5 +1,6 @@
 package com.jhhy.cuiweitourism.ui;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,6 +19,8 @@ import com.jhhy.cuiweitourism.adapter.InnerTravelTripDaysListViewAdapter;
 import com.jhhy.cuiweitourism.net.biz.HotelActionBiz;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelScreenBrandResponse;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelScreenFacilities;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HoutelPropertiesInfo;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
@@ -25,10 +28,12 @@ import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.just.sun.pricecalendar.ToastCommon;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 
 public class HotelScreenActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private String TAG = HotelScreenActivity.class.getSimpleName();
+    private String TAG = "HotelScreenActivity";
 
     private ImageView ivTitleLeft;
     private TextView tvTitle;
@@ -39,15 +44,21 @@ public class HotelScreenActivity extends AppCompatActivity implements View.OnCli
     private LinearLayout layoutCommit;
     private Button btnCommit;
 
-    private ArrayList<HoutelPropertiesInfo> screenProperties = new ArrayList<>();
-
+    private ArrayList<String> screenProperties = new ArrayList<>();
 
     private HotelSortListAdapter adapterFirst;
-    private HotelSortListAdapter adapterSecond;
+    private HotelSortListAdapter adapterSecondBrand;
+    private HotelSortListAdapter adapterSecondFacility;
 
+    private int type; //7：位置区域
+    private HotelSortListAdapter adapterSecondLocation; //位置区域
+    private int businessDistrictPosition; //商圈
+    private int districtPosition; //行政区
+    private int viewSpot; //景点
 
-//    private int firstSelection = 0;
-//    private int secondSelection = 0;
+//    private int hotelBrandPosition; //酒店品牌
+//    private int hotelFacilityPosition; //设施服务
+    private HashSet<Object> facilitySet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,46 +73,28 @@ public class HotelScreenActivity extends AppCompatActivity implements View.OnCli
 
         setContentView(R.layout.activity_select_all_country_area);
         getData();
-        getInternetData();
         setupView();
+        refreshView();
         addListener();
     }
 
     private void getData() {
-
-    }
-    private void getInternetData() {
-        LoadingIndicator.show(HotelScreenActivity.this, getString(R.string.http_notice));
-
-        HotelActionBiz hotelBiz = new HotelActionBiz();
-
-        // 获取酒店属性列表
-        hotelBiz.hotelGetPropertiesList(new BizGenericCallback<ArrayList<HoutelPropertiesInfo>>() {
-            @Override
-            public void onCompletion(GenericResponseModel<ArrayList<HoutelPropertiesInfo>> model) {
-
-                if ("0001".equals(model.headModel.res_code)){
-                    ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);
-                }else if ("0000".equals(model.headModel.res_code)) {
-                    ArrayList<HoutelPropertiesInfo> array = model.body;
-                    LogUtil.e(TAG, "hotelGetPropertiesList =" + array.toString());
-                    screenProperties = array;
-                    refreshView();
+        Intent intent = getIntent();
+        if (intent != null){
+            Bundle bundle = intent.getExtras();
+            if (bundle != null){
+                type = bundle.getInt("type");
+                if (7 == type){
+                    businessDistrictPosition = bundle.getInt("businessDistrictPosition");
+                    districtPosition = bundle.getInt("districtPosition");
+                    viewSpot = bundle.getInt("viewSpot");
+                }else{
+//                    hotelBrand = bundle.getInt("");
+//                    hotelFacility = bundle.getInt("");
                 }
-                LoadingIndicator.cancel();
+                LogUtil.e(TAG, "type = " + type);
             }
-
-            @Override
-            public void onError(FetchError error) {
-                if (error.localReason != null){
-                    ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
-                }else {
-                    LogUtil.e(TAG, "hotelGetPropertiesList: " + error.toString());
-                }
-                LoadingIndicator.cancel();
-            }
-        });
-
+        }
     }
 
     private void setupView() {
@@ -114,7 +107,7 @@ public class HotelScreenActivity extends AppCompatActivity implements View.OnCli
 
         layoutCommit = (LinearLayout) findViewById(R.id.layout_hotel_commit);
         layoutCommit.setVisibility(View.VISIBLE);
-        btnCommit = (Button) findViewById(R.id.btn_commit);
+        btnCommit = (Button) findViewById(R.id.btn_commit_screen);
     }
 
     private void addListener() {
@@ -130,8 +123,31 @@ public class HotelScreenActivity extends AppCompatActivity implements View.OnCli
         listViewSecond.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                adapterSecond.setSelection(i);
-                adapterSecond.notifyDataSetChanged();
+                int firstPosition = adapterFirst.getSelection();
+                if (7 == type){
+                    if (0 == firstPosition){
+                        businessDistrictPosition = i;
+                    }else if (1 == firstPosition){
+                        districtPosition = i;
+                    }else if (2 == firstPosition){
+                        viewSpot = i;
+                    }
+                    adapterSecondLocation.setSelection(i);
+                    adapterSecondLocation.notifyDataSetChanged();
+                } else {
+                    if (0 == firstPosition) {
+                        adapterSecondBrand.setSelection(i);
+                        adapterSecondBrand.notifyDataSetChanged();
+                    } else if (1 == firstPosition) {
+                        if (facilitySet.contains(i)){
+                            facilitySet.remove(i);
+                        }else {
+                            facilitySet.add(i);
+                        }
+                        adapterSecondFacility.setSelections(facilitySet);
+                        adapterSecondFacility.notifyDataSetChanged();
+                    }
+                }
             }
         });
     }
@@ -139,19 +155,60 @@ public class HotelScreenActivity extends AppCompatActivity implements View.OnCli
     private void refreshSecondListView(int position) {
         adapterFirst.setSelection(position);
         adapterFirst.notifyDataSetChanged();
-        adapterSecond.setData(screenProperties.get(position).getSon());
-        adapterSecond.notifyDataSetChanged();
+        if (7 == type){
+            if (0 == position){
+                adapterSecondLocation.setData(HotelMainActivity.listBusinessDistrict);
+                adapterSecondLocation.setSelection(businessDistrictPosition);
+            }else if (1 == position){
+                adapterSecondLocation.setData(HotelMainActivity.listDistrict);
+                adapterSecondLocation.setSelection(districtPosition);
+            }else if (2 == position){
+                adapterSecondLocation.setData(HotelMainActivity.listViewSpot);
+                adapterSecondLocation.setSelection(viewSpot);
+            }
+            listViewSecond.setAdapter(adapterSecondLocation);
+        } else {
+            if (0 == position) { //酒店品牌
+                adapterSecondBrand.setData(HotelMainActivity.listBrand);
+                adapterSecondBrand.setType(2);
+                listViewSecond.setAdapter(adapterSecondBrand);
+            } else if (1 == position) { //设施服务
+                adapterSecondFacility.setData(HotelMainActivity.facilities);
+                adapterSecondFacility.setType(3);
+                adapterSecondFacility.setSelections(facilitySet);
+                listViewSecond.setAdapter(adapterSecondFacility);
+            }
+        }
     }
 
     private void refreshView() {
+        if (type == 7){
+            screenProperties.add("商圈");
+            screenProperties.add("行政区");
+            screenProperties.add("景点");
+        } else {
+            screenProperties.add("酒店品牌");
+            screenProperties.add("设施服务");
+            facilitySet = new HashSet<>();
+            facilitySet.add(0);
+        }
         adapterFirst = new HotelSortListAdapter(getApplicationContext(), screenProperties);
         adapterFirst.setSelection(0);
         adapterFirst.setType(1);
         listViewFirst.setAdapter(adapterFirst);
-        adapterSecond = new HotelSortListAdapter(getApplicationContext(), screenProperties.get(0).getSon());
-        adapterSecond.setSelection(0);
-        adapterSecond.setType(2);
-        listViewSecond.setAdapter(adapterSecond);
+
+        if (7 ==  type){
+            adapterSecondLocation = new HotelSortListAdapter(getApplicationContext(), HotelMainActivity.listBusinessDistrict);
+            adapterSecondLocation.setType(type);
+            adapterSecondLocation.setSelection(businessDistrictPosition);
+            listViewSecond.setAdapter(adapterSecondLocation);
+        }else {
+            adapterSecondBrand = new HotelSortListAdapter(getApplicationContext(), HotelMainActivity.listBrand);
+            adapterSecondFacility = new HotelSortListAdapter(getApplicationContext(), HotelMainActivity.facilities);
+            adapterSecondBrand.setType(2);
+            adapterSecondBrand.setSelection(0);
+            listViewSecond.setAdapter(adapterSecondBrand);
+        }
     }
 
     @Override
@@ -160,10 +217,61 @@ public class HotelScreenActivity extends AppCompatActivity implements View.OnCli
             case R.id.title_main_tv_left_location:
                 finish();
                 break;
-            case R.id.btn_commit:
-
+            case R.id.btn_commit_screen:
+                commitScreen();
                 break;
         }
     }
 
+    private void commitScreen() {
+        int firstSelection = adapterFirst.getSelection();
+        LogUtil.e(TAG, "firstSelection = " + firstSelection);
+        Intent data = new Intent();
+        Bundle bundle = new Bundle();
+        if (7 == type){
+            bundle.putInt("businessDistrictPosition", businessDistrictPosition);
+            bundle.putInt("districtPosition", districtPosition);
+            bundle.putInt("viewSpot", viewSpot);
+        }else{
+            int brandPosition = adapterSecondBrand.getSelection();
+//            int facilityPosition = adapterSecondFacility.getSelection();
+            String brandName = "";
+            if (0 != brandPosition){
+                brandName = HotelMainActivity.listBrand.get(brandPosition).getID();
+            }
+            String facilityName = "";
+            if (facilitySet.contains(0)){
+                facilityName = "";
+            }else {
+                facilityName = Arrays.toString(facilitySet.toArray()).replace(" ", "").replace("[", "").replace("]", "");
+            }
+            bundle.putString("brandName", brandName);
+            bundle.putString("facilityName", facilityName);
+            LogUtil.e(TAG, "brandName = " + brandName +", facilityName = " + facilityName);
+        }
+        data.putExtras(bundle);
+        setResult(RESULT_OK, data);
+        finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        TAG = null;
+        ivTitleLeft = null;
+        tvTitle = null;
+        actionBar = null;
+        listViewFirst = null;
+        listViewSecond = null;
+        layoutCommit = null;
+        btnCommit = null;
+        if (screenProperties != null){
+            screenProperties.clear();
+            screenProperties = null;
+        }
+        adapterFirst = null;
+        adapterSecondBrand = null;
+        adapterSecondFacility = null;
+        adapterSecondLocation = null;
+    }
 }

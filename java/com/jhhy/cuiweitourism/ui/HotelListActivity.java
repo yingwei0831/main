@@ -17,13 +17,10 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.HotelListAdapter;
-import com.jhhy.cuiweitourism.model.PhoneBean;
 import com.jhhy.cuiweitourism.net.biz.HotelActionBiz;
-import com.jhhy.cuiweitourism.net.models.FetchModel.HotelListFetchRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelListRequest;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
-import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelListInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelListResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelProvinceResponse;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
@@ -31,6 +28,7 @@ import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.popupwindows.PopupWindowHotelLevel;
 import com.jhhy.cuiweitourism.popupwindows.PopupWindowHotelSort;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
+import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.jhhy.cuiweitourism.utils.Utils;
 import com.just.sun.pricecalendar.ToastCommon;
 
@@ -55,7 +53,6 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
     private TextView tvSelectPosition; //位置区域
     private TextView tvPriceLevel; //价格星级
     private TextView tvSortDefault; //默认排序
-
 
     private int pageTemp = 1;
     private int page = 1;
@@ -82,6 +79,12 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
     private String sortBy = "G";         //排序项: 价格P/星级S/好评G
     private String sortType = "D";       //排序顺序:升序A 降序 D
 
+    private int brandNamePosition ;
+    private int facilitiesPosition;
+
+    private int businessDistrictPosition; //商业区
+    private int districtPosition; //行政区
+    private int viewSpot; //景点
 
     private Handler handler = new Handler(){
         @Override
@@ -122,7 +125,7 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
         HotelActionBiz hotelBiz = new HotelActionBiz();
         HotelListRequest request = new HotelListRequest(selectCity.getCode(), checkInDate, checkOutDate, keyWords, district, downTown, landMark, price, starLevel, isEconomy,
                 isApartment, brandName, "", facilities, String.valueOf(pageTemp), "10", sortBy, sortType);
-        hotelBiz.hotelList(request, new BizGenericCallback<HotelListResponse>() {
+        hotelBiz.getHotelList(request, new BizGenericCallback<HotelListResponse>() {
             @Override
             public void onCompletion(GenericResponseModel<HotelListResponse> model) {
                 resetListView();
@@ -148,10 +151,11 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
             @Override
             public void onError(FetchError error) {
                 resetListView();
-                if (error.localReason != null){
+                if (error.localReason != null && !"null".equals(error.localReason)){
                     ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
                 } else {
-                    LogUtil.e(TAG, "hotelGetInfoList: " + error.toString());
+//                    LogUtil.e(TAG, "hotelGetInfoList: " + error.toString());
+                    ToastUtil.show(getApplicationContext(), "获取酒店列表失败，请重试");
                 }
                 resetValue();
                 LoadingIndicator.cancel();
@@ -231,7 +235,14 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
                 startActivityForResult(intentScreen, SELECT_SCREEN);
                 break;
             case R.id.tv_tab1_hot_activity_list_trip_days: //位置区域
-
+                Intent intentLocation = new Intent( getApplicationContext(), HotelScreenActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putInt("type", 7);
+                bundle.putInt("businessDistrictPosition", businessDistrictPosition);
+                bundle.putInt("districtPosition", districtPosition);
+                bundle.putInt("viewSpot", viewSpot);
+                intentLocation.putExtras(bundle);
+                startActivityForResult(intentLocation, SELECT_LOCATION);
                 break;
             case R.id.tv_tab1_hot_activity_list_start_time: //价格星级
 
@@ -305,6 +316,7 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
 
     private int VIEW_HOTEL_DETAIL = 3801; //查看酒店详情
     private int SELECT_SCREEN = 5696; //筛选
+    private int SELECT_LOCATION = 5697; //位置区域
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -315,7 +327,35 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
             }
         }else if(requestCode == SELECT_SCREEN){ //筛选
             if (resultCode == RESULT_OK){
-
+                Bundle bundle = data.getExtras();
+                brandName = bundle.getString("brandName");
+                facilities = bundle.getString("facilityName");
+                refresh = true;
+                getHotelListData();
+            }
+        }else if(requestCode == SELECT_LOCATION){ //位置区域
+            if (resultCode == RESULT_OK){
+                Bundle bundle = data.getExtras();
+                businessDistrictPosition = bundle.getInt("businessDistrictPosition");
+                districtPosition = bundle.getInt("districtPosition");
+                viewSpot = bundle.getInt("viewSpot");
+                if (0 != businessDistrictPosition){
+                    downTown = HotelMainActivity.listBrand.get(businessDistrictPosition).getID();
+                }else{
+                    downTown = "";
+                }
+                if (0 != districtPosition){
+                    district = HotelMainActivity.listDistrict.get(districtPosition).getID();
+                }else {
+                    district = "";
+                }
+                if (0 != viewSpot){
+                    landMark = HotelMainActivity.listViewSpot.get(viewSpot).getID();
+                }else {
+                    landMark = "";
+                }
+                refresh = true;
+                getHotelListData();
             }
         }
     }
@@ -351,7 +391,7 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
             public void run() {
                 pullToRefreshListView.onRefreshComplete();
             }
-        }, 2000);
+        }, 1500);
     }
 
     public static void actionStart(Context context, Bundle data){

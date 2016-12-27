@@ -6,6 +6,7 @@ import com.jhhy.cuiweitourism.net.models.FetchModel.HotelListFetchRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelListRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelOrderFetch;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelScreenBrandRequest;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelPositionLocationResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelListResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelProvinceResponse;
 import com.jhhy.cuiweitourism.net.models.FetchModel.NullArrayFetchModel;
@@ -97,13 +98,18 @@ public class HotelActionBiz extends  BasicActionBiz {
     /**
      * 酒店列表
      */
-    public void hotelList(HotelListRequest request, BizGenericCallback<HotelListResponse> callback){
+    public void getHotelList(HotelListRequest request, BizGenericCallback<HotelListResponse> callback){
         request.code = "Hotel_lists";
         FetchGenericResponse<HotelListResponse> fetchResponse = new FetchGenericResponse<HotelListResponse>(callback) {
             @Override
             public void onCompletion(FetchResponseModel response) {
-                HotelListResponse model = parseJsonToObject(response, HotelListResponse.class);
-                GenericResponseModel<HotelListResponse> returnModel = new GenericResponseModel<>(response.head, model);
+                GenericResponseModel<HotelListResponse> returnModel = null;
+                if ("0001".equals(response.head.res_code)){
+                    returnModel = new GenericResponseModel<>(response.head, null);
+                }else if ("0000".equals(response.head.res_code)){
+                    HotelListResponse model = parseJsonToObject(response, HotelListResponse.class);
+                    returnModel = new GenericResponseModel<>(response.head, model);
+                }
                 this.bizCallback.onCompletion(returnModel);
             }
 
@@ -156,6 +162,68 @@ public class HotelActionBiz extends  BasicActionBiz {
             }
         };
         HttpUtils.executeXutils(fetchModel, new FetchGenericCallback<>(fetchResponse));
+    }
+
+    /**
+     * 行政区
+     */
+    public void getHotelLocationDistrict(HotelScreenBrandRequest request, BizGenericCallback<HotelPositionLocationResponse> callback){
+        request.code = "Hotel_xzq";
+        FetchGenericResponse<HotelPositionLocationResponse> fetchResponse = new FetchGenericResponse<HotelPositionLocationResponse>(callback) {
+            @Override
+            public void onCompletion(FetchResponseModel response) {
+                HotelPositionLocationResponse model = parseJsonToObject(response, HotelPositionLocationResponse.class);
+                GenericResponseModel<HotelPositionLocationResponse> returnModel = new GenericResponseModel<>(response.head, model);
+                this.bizCallback.onCompletion(returnModel);
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                this.bizCallback.onError(error);
+            }
+        };
+        HttpUtils.executeXutils(request, new FetchGenericCallback<>(fetchResponse));
+    }
+
+    /**
+     * 商区
+     */
+    public void getHotelLocationBusinessDistrict(HotelScreenBrandRequest request, BizGenericCallback<HotelPositionLocationResponse> callback){
+        request.code = "Hotel_syq";
+        FetchGenericResponse<HotelPositionLocationResponse> fetchResponse = new FetchGenericResponse<HotelPositionLocationResponse>(callback) {
+            @Override
+            public void onCompletion(FetchResponseModel response) {
+                HotelPositionLocationResponse model = parseJsonToObject(response, HotelPositionLocationResponse.class);
+                GenericResponseModel<HotelPositionLocationResponse> returnModel = new GenericResponseModel<>(response.head, model);
+                this.bizCallback.onCompletion(returnModel);
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                this.bizCallback.onError(error);
+            }
+        };
+        HttpUtils.executeXutils(request, new FetchGenericCallback<>(fetchResponse));
+    }
+    /**
+     * 景点
+     */
+    public void getHotelLocationViewSpot(HotelScreenBrandRequest request, BizGenericCallback<HotelPositionLocationResponse> callback){
+        request.code = "Hotel_fjq";
+        FetchGenericResponse<HotelPositionLocationResponse> fetchResponse = new FetchGenericResponse<HotelPositionLocationResponse>(callback) {
+            @Override
+            public void onCompletion(FetchResponseModel response) {
+                HotelPositionLocationResponse model = parseJsonToObject(response, HotelPositionLocationResponse.class);
+                GenericResponseModel<HotelPositionLocationResponse> returnModel = new GenericResponseModel<>(response.head, model);
+                this.bizCallback.onCompletion(returnModel);
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                this.bizCallback.onError(error);
+            }
+        };
+        HttpUtils.executeXutils(request, new FetchGenericCallback<>(fetchResponse));
     }
 
     /**

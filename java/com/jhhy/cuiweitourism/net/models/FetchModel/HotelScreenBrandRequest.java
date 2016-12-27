@@ -11,6 +11,10 @@ public class HotelScreenBrandRequest extends BasicFetchModel {
 
     private String CityCode;
 
+    public HotelScreenBrandRequest(String cityCode) {
+        CityCode = cityCode;
+    }
+
     public String getCityCode() {
         return CityCode;
     }
