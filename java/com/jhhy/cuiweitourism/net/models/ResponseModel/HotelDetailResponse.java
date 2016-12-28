@@ -697,9 +697,9 @@ public class HotelDetailResponse {
         private String InvoiceMode;
         private String CurrencyCode;
         private String PlanType;
-        private HotelBookingRulesBean BookingRules;
-        private List<String> IsCancel;
-        private List<String> GuranteeRules;
+//        private HotelBookingRulesBean BookingRules;
+//        private List<String> IsCancel;
+//        private List<String> GuranteeRules;
         private List<String> PrepayRules;
 
         public String getRoomName() {
@@ -854,29 +854,29 @@ public class HotelDetailResponse {
             this.PlanType = PlanType;
         }
 
-        public HotelBookingRulesBean getBookingRules() {
-            return BookingRules;
-        }
+//        public HotelBookingRulesBean getBookingRules() {
+//            return BookingRules;
+//        }
+//
+//        public void setBookingRules(HotelBookingRulesBean BookingRules) {
+//            this.BookingRules = BookingRules;
+//        }
 
-        public void setBookingRules(HotelBookingRulesBean BookingRules) {
-            this.BookingRules = BookingRules;
-        }
+//        public List<String> getIsCancel() {
+//            return IsCancel;
+//        }
+//
+//        public void setIsCancel(List<String> IsCancel) {
+//            this.IsCancel = IsCancel;
+//        }
 
-        public List<String> getIsCancel() {
-            return IsCancel;
-        }
-
-        public void setIsCancel(List<String> IsCancel) {
-            this.IsCancel = IsCancel;
-        }
-
-        public List<String> getGuranteeRules() {
-            return GuranteeRules;
-        }
-
-        public void setGuranteeRules(List<String> GuranteeRules) {
-            this.GuranteeRules = GuranteeRules;
-        }
+//        public List<String> getGuranteeRules() {
+//            return GuranteeRules;
+//        }
+//
+//        public void setGuranteeRules(List<String> GuranteeRules) {
+//            this.GuranteeRules = GuranteeRules;
+//        }
 
         public List<String> getPrepayRules() {
             return PrepayRules;
