@@ -5,20 +5,63 @@ package com.jhhy.cuiweitourism.net.models.FetchModel;
  */
 public class HotelDetailRequest extends BasicFetchModel {
 
-    public String id;
+    /**                          是否必填
+     * HotelID : 90175394           Y
+     * CheckInDate : 2016-12-13     Y
+     * CheckOutDate : 2016-12-20    Y
+     * RoomID : 0002                N
+     * ProductID : 400931           N
+     */
 
-    public HotelDetailRequest(String id) {
-        this.id = id;
+    private String HotelID;
+    private String CheckInDate;
+    private String CheckOutDate;
+    private String RoomID;
+    private String ProductID;
+
+    public HotelDetailRequest(String hotelID, String checkInDate, String checkOutDate) {
+        HotelID = hotelID;
+        CheckInDate = checkInDate;
+        CheckOutDate = checkOutDate;
     }
 
-    public HotelDetailRequest() {
+    public String getHotelID() {
+        return HotelID;
     }
 
-    public String getId() {
-        return id;
+    public void setHotelID(String HotelID) {
+        this.HotelID = HotelID;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public String getCheckInDate() {
+        return CheckInDate;
+    }
+
+    public void setCheckInDate(String CheckInDate) {
+        this.CheckInDate = CheckInDate;
+    }
+
+    public String getCheckOutDate() {
+        return CheckOutDate;
+    }
+
+    public void setCheckOutDate(String CheckOutDate) {
+        this.CheckOutDate = CheckOutDate;
+    }
+
+    public String getRoomID() {
+        return RoomID;
+    }
+
+    public void setRoomID(String RoomID) {
+        this.RoomID = RoomID;
+    }
+
+    public String getProductID() {
+        return ProductID;
+    }
+
+    public void setProductID(String ProductID) {
+        this.ProductID = ProductID;
     }
 }

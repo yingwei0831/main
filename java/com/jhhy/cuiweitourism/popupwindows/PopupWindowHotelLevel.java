@@ -125,6 +125,8 @@ public class PopupWindowHotelLevel extends PopupWindow implements OnClickListene
         rangeBar.setThumbColorNormal(color);
         rangeBar.setThumbColorPressed(color);
 
+        priceMax = count - 1;
+
         rbAll.setChecked(true);
 //        rbPrice.setChecked(true);
 //        rbComfort.setChecked(true);
@@ -241,7 +243,7 @@ public class PopupWindowHotelLevel extends PopupWindow implements OnClickListene
                 dismiss();
                 break;
             case R.id.title_main_iv_right_telephone: //确定
-                if (priceMin == priceMax && 0 != priceMin && 0 != priceMax){
+                if (priceMin == priceMax){
                     ToastUtil.show(mActivity, "请重新选择价格区间");
                     return;
                 }
@@ -283,10 +285,5 @@ public class PopupWindowHotelLevel extends PopupWindow implements OnClickListene
     public int getPriceMax() {
         return priceMax;
     }
-
-    private int getMoney(int position){
-        return 0;
-    }
-
 
 }

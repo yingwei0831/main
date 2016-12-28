@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.OnItemTextViewClick;
 import com.jhhy.cuiweitourism.R;
+import com.jhhy.cuiweitourism.adapter.OrderEditContactsAdapter;
 import com.jhhy.cuiweitourism.model.UserContacts;
 import com.jhhy.cuiweitourism.net.biz.TrainTicketActionBiz;
 import com.jhhy.cuiweitourism.net.models.FetchModel.TrainTicketOrderFetch;
@@ -33,9 +34,11 @@ import com.jhhy.cuiweitourism.popupwindows.PopTrainSeatType;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.jhhy.cuiweitourism.utils.Utils;
+import com.jhhy.cuiweitourism.view.MyListView;
 import com.just.sun.pricecalendar.ToastCommon;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class TrainEditOrderActivity extends AppCompatActivity implements View.OnClickListener, OnItemTextViewClick {
 
@@ -65,7 +68,9 @@ public class TrainEditOrderActivity extends AppCompatActivity implements View.On
 
     private TextView tvAdultCount; //成人1人
     private TextView tvSelectorContacts; //添加乘客
-    private LinearLayout layoutContacts;; //联系人装载布局
+    private MyListView listViewContacts; //联系人装载布局
+    private OrderEditContactsAdapter adapter;
+//    private LinearLayout layoutContacts; //联系人装载布局
 
     private EditText etLinkName; //联系人
     private EditText etLinkMobile; //联系电话
@@ -145,7 +150,8 @@ public class TrainEditOrderActivity extends AppCompatActivity implements View.On
 
         tvAdultCount = (TextView) findViewById(R.id.tv_train_passenger_count); //人数
         tvSelectorContacts = (TextView) findViewById(R.id.tv_train_add_passenger); //添加乘客
-        layoutContacts = (LinearLayout) findViewById(R.id.layout_contacts);
+        listViewContacts = (MyListView) findViewById(R.id.list_plane_contacts); //装载乘机人
+//        layoutContacts = (LinearLayout) findViewById(R.id.layout_contacts);
 
         etLinkName = (EditText) findViewById(R.id.et_train_order_link_name); //联系人
         etLinkMobile = (EditText) findViewById(R.id.et_train_link_mobile); //联系电话
@@ -161,6 +167,9 @@ public class TrainEditOrderActivity extends AppCompatActivity implements View.On
         tvArrivalStation.setText(detail.arrivalStation);
         tvTrainInfo.setText(String.format("%s%s", detail.trainTypeName, detail.trainNum));
         tvTicketDate.setText(startDate);
+
+        adapter = new OrderEditContactsAdapter(getApplicationContext(), listContact, this);
+        listViewContacts.setAdapter(adapter);
 
         trainBiz = new TrainTicketActionBiz();
         refreshview();
@@ -273,33 +282,17 @@ public class TrainEditOrderActivity extends AppCompatActivity implements View.On
             if (requestCode == Consts.REQUEST_CODE_RESERVE_SELECT_CONTACT){ //选择常用联系人
                 Bundle bundle = data.getExtras();
                 ArrayList<UserContacts> listSelection = bundle.getParcelableArrayList("selection");
-//                listContact.clear();
-                for (UserContacts contact : listSelection) {
-                    TrainTicketOrderFetch.TicketInfo contactTrain = new TrainTicketOrderFetch.TicketInfo(
-                            contact.getContactsName(), "2", contact.getContactsIdCard(), "1", seatInfo.seatCode, seatInfo.floorPrice);
-                    View contactView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.item_train_contact, null);
-                    TextView tvName = (TextView) contactView.findViewById(R.id.tv_contact_name);
-                    TextView tvCardID = (TextView) contactView.findViewById(R.id.tv_contact_card_id);
-                    final ImageView ivTrash = (ImageView) contactView.findViewById(R.id.iv_train_trash);
-                    ImageView ivDetail = (ImageView) contactView.findViewById(R.id.iv_contact_view_detail);
-                    ivTrash.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            onItemTextViewClick(listContact.size() - 1, ivTrash, ivTrash.getId());
-                        }
-                    });
-                    ivDetail.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                        }
-                    });
-                    tvName.setText(contact.getContactsName());
-                    tvCardID.setText(contact.getContactsIdCard());
-                    layoutContacts.addView(contactView);
-                    listContact.add(contactTrain);
+                if (listSelection != null) {
+                    for (UserContacts contact : listSelection) {
+                        TrainTicketOrderFetch.TicketInfo contactTrain = new TrainTicketOrderFetch.TicketInfo(
+                                contact.getContactsName(), "2", contact.getContactsIdCard(), "1", seatInfo.seatCode, seatInfo.floorPrice);
+                        listContact.add(contactTrain);
+                    }
+                    adapter.setData(listContact);
+                    adapter.notifyDataSetChanged();
                 }
-                tvAdultCount.setText(String.format("成人%d人", listContact.size()));
-                tvPriceTotal.setText(String.format("%.2f", Float.parseFloat(seatInfo.floorPrice) * listContact.size()));
+                tvAdultCount.setText(String.format(Locale.getDefault(), "成人%d人", listContact.size()));
+                tvPriceTotal.setText(String.format(Locale.getDefault(), "%.2f", Float.parseFloat(seatInfo.floorPrice) * listContact.size()));
             }else if (requestCode == Consts.REQUEST_CODE_RESERVE_PAY){ //去支付，支付成功
                 setResult(RESULT_OK);
                 finish();
@@ -312,9 +305,10 @@ public class TrainEditOrderActivity extends AppCompatActivity implements View.On
     @Override
     public void onItemTextViewClick(int position, View imageView, int id) {
         listContact.remove(position);
-        layoutContacts.removeViewAt(position);
-        tvAdultCount.setText(String.format("成人%d人", listContact.size()));
-        tvPriceTotal.setText(String.format("%.2f", Float.parseFloat(seatInfo.floorPrice) * listContact.size()));
+        adapter.setData(listContact);
+        adapter.notifyDataSetChanged();
+        tvAdultCount.setText(String.format(Locale.getDefault(), "成人%d人", listContact.size()));
+        tvPriceTotal.setText(String.format(Locale.getDefault(), "%.2f", Float.parseFloat(seatInfo.floorPrice) * listContact.size()));
     }
 
     /**
@@ -385,12 +379,9 @@ public class TrainEditOrderActivity extends AppCompatActivity implements View.On
         }.start();
     }
 
-
     //预定须知
     private void reserveNotice() {
         ToastCommon.toastShortShow(getApplicationContext(), null, "预定须知");
     }
-
-
 
 }

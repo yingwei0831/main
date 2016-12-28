@@ -13,6 +13,9 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.amap.api.maps2d.AMapUtils;
+import com.amap.api.maps2d.CoordinateConverter;
+import com.amap.api.maps2d.model.LatLng;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.jhhy.cuiweitourism.R;
@@ -28,11 +31,14 @@ import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.popupwindows.PopupWindowHotelLevel;
 import com.jhhy.cuiweitourism.popupwindows.PopupWindowHotelSort;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
+import com.jhhy.cuiweitourism.utils.SharedPreferencesUtils;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.jhhy.cuiweitourism.utils.Utils;
 import com.just.sun.pricecalendar.ToastCommon;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -86,6 +92,8 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
     private int businessDistrictPosition; //商业区
     private int districtPosition; //行政区
     private int viewSpot; //景点
+    private String[] location;
+    private LatLng latLng;
 
     private Handler handler = new Handler(){
         @Override
@@ -200,6 +208,9 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
 
         adapter = new HotelListAdapter(getApplicationContext(), listHotel);
         pullToRefreshListView.setAdapter(adapter);
+        SharedPreferencesUtils sp = SharedPreferencesUtils.getInstance(getApplicationContext());
+        location = sp.getLocation();
+        latLng = new LatLng(Double.parseDouble(location[0]), Double.parseDouble(location[1]));
     }
 
     private void loadMore() {
@@ -246,11 +257,9 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
                 startActivityForResult(intentLocation, SELECT_LOCATION);
                 break;
             case R.id.tv_tab1_hot_activity_list_start_time: //价格星级
-
                 showPopupWindowLevel();
                 break;
             case R.id.tv_tab1_hot_activity_list_screen_price: //默认排序
-
                 showPopupWindowSort();
                 break;
 
@@ -277,11 +286,99 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
                 int orderPositionNew = popUpSort.getSortPosition();
                 if (orderPosition != orderPositionNew){
                     orderPosition = orderPositionNew;
-                    //TODO 重新获取数据
-
+                    //TODO 排序
+                    if (orderPosition == 0){ //
+                        sortByDefault();
+                    }else if (orderPosition == 1){ //"距离 近—>远"
+                        sortByDistance();
+                    }else if (orderPosition == 2 || orderPosition == 3){ //"价格 低—>高" //"价格 高—>低"
+                        sortByPrice();
+                    }else if (orderPosition == 4 || orderPosition == 5){ //"星级 高—>低" //"星级 低—>高"
+                        sortByStarLevel();
+                    }
+                    adapter.setData(listHotel);
                 }
             }
         });
+    }
+
+    private void sortByDefault() {
+        tvSortDefault.setText("默认排序");
+    }
+
+    private void sortByStarLevel() {
+        Collections.sort(listHotel, new Comparator<HotelListResponse.HotelBean>() { //"星级 高—>低"
+            @Override
+            public int compare(HotelListResponse.HotelBean hotelBean1, HotelListResponse.HotelBean hotelBean2) {
+                if (Integer.parseInt(hotelBean1.getStartLevel()) > Integer.parseInt(hotelBean2.getStartLevel())){
+                    return -1;
+                }else if (Integer.parseInt(hotelBean1.getStartLevel()) < Integer.parseInt(hotelBean2.getStartLevel())){
+                    return 1;
+                }
+                return 0;
+            }
+        });
+        if (orderPosition == 5){ //"星级 低—>高"
+            Collections.reverse(listHotel);
+            tvSortDefault.setText("星级由低到高");
+        }else{
+            tvSortDefault.setText("星级由高到低");
+        }
+    }
+
+    private void sortByPrice() {
+        Collections.sort(listHotel, new Comparator<HotelListResponse.HotelBean>() { //"价格 低—>高"
+            @Override
+            public int compare(HotelListResponse.HotelBean hotelBean1, HotelListResponse.HotelBean hotelBean2) {
+                if (Float.parseFloat(hotelBean1.getMinPrice()) > Float.parseFloat(hotelBean2.getMinPrice())){
+                    return 1;
+                }else if (Float.parseFloat(hotelBean1.getMinPrice()) < Float.parseFloat(hotelBean2.getMinPrice())){
+                    return -1;
+                }
+                return 0;
+            }
+        });
+        if (orderPosition == 3){ //"价格 高—>低"
+            Collections.reverse(listHotel);
+            tvSortDefault.setText("价格由高到低");
+        }else{
+            tvSortDefault.setText("价格由低到高");
+        }
+    }
+
+    private void sortByDistance() {
+        Collections.sort(listHotel, new Comparator<HotelListResponse.HotelBean>() { //"距离 近—>远"
+            @Override
+            public int compare(HotelListResponse.HotelBean hotelBean1, HotelListResponse.HotelBean hotelBean2) {
+                CoordinateConverter converter  = new CoordinateConverter();
+                // CoordType.GPS 待转换坐标类型
+                converter.from(CoordinateConverter.CoordType.BAIDU);
+
+                LatLng sourceLatLng1 = new LatLng(Double.parseDouble(hotelBean1.getBaidulat()), Double.parseDouble(hotelBean1.getBaidulon())); //百度和高德转换坐标
+                // sourceLatLng待转换坐标点 LatLng类型
+                converter.coord(sourceLatLng1);
+                // 执行转换操作
+                LatLng desLatLng1 = converter.convert();
+
+                float distance1 = AMapUtils.calculateLineDistance(latLng, desLatLng1) / 1000; //计算直线距离
+
+                LatLng sourceLatLng2 = new LatLng(Double.parseDouble(hotelBean2.getBaidulat()), Double.parseDouble(hotelBean2.getBaidulon())); //百度和高德转换坐标
+                // sourceLatLng待转换坐标点 LatLng类型
+                converter.coord(sourceLatLng2);
+                // 执行转换操作
+                LatLng desLatLng2 = converter.convert();
+
+                float distance2 = AMapUtils.calculateLineDistance(latLng, desLatLng2) / 1000; //计算直线距离
+
+                if (distance1 > distance2){
+                    return 1;
+                }else if (distance1 < distance2){
+                    return -1;
+                }
+                return 0;
+            }
+        });
+        tvSortDefault.setText("由近到远");
     }
 
     private PopupWindowHotelLevel popUpLevel;
@@ -315,13 +412,15 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
                     }
                     priceMinPosition = popUpLevel.getPriceMin();
                     priceMaxPosition = popUpLevel.getPriceMax();
-                    if (priceMinPosition == 0 && priceMaxPosition == 0){
+                    if (priceMinPosition == 0 && priceMaxPosition == 5){
                         price = "";
                     }else{
-                        price = String.format(Locale.getDefault(), "%d-%d", priceMinPosition, priceMaxPosition);
+                        price = String.format(Locale.getDefault(), "%s-%s", getMoney(priceMinPosition), getMoney(priceMaxPosition));
                     }
                     LogUtil.e(TAG, "starLevel = " + starLevel +", price= " + price);
                     //TODO 重新请求数据
+                    refresh = true;
+                    getHotelListData();
                 }
             }
         });
@@ -382,6 +481,7 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
         bundle.putString("checkOutDate", checkOutDate);
         bundle.putInt("stayDays", stayDays);
         bundle.putParcelable("selectCity", selectCity);
+        bundle.putString("imageUrl", listHotel.get((int)l).getImgUrl());
 
         bundle.putString("id", listHotel.get((int)l).getHotelID());
         Intent intent = new Intent(getApplicationContext(), HotelDetailActivity.class);
@@ -405,6 +505,22 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
                 pullToRefreshListView.onRefreshComplete();
             }
         }, 1500);
+    }
+
+    private String getMoney(int position){
+        if(position == 0){
+            return "0";
+        }else if (position == 1){
+            return "150";
+        }else if (position == 2){
+            return "300";
+        }else if (position == 3){
+            return "500";
+        }else if (position == 4){
+            return "700";
+        }else {
+            return "1000000";
+        }
     }
 
     public static void actionStart(Context context, Bundle data){

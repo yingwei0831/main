@@ -12,6 +12,9 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.amap.api.maps2d.AMapUtils;
+import com.amap.api.maps2d.CoordinateConverter;
+import com.amap.api.maps2d.model.LatLng;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.jhhy.cuiweitourism.R;
@@ -23,26 +26,36 @@ import com.jhhy.cuiweitourism.net.models.FetchModel.HotelDetailRequest;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelDetailInfo;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelDetailResponse;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelProvinceResponse;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.utils.ImageLoaderUtil;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
+import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.jhhy.cuiweitourism.utils.Utils;
 import com.just.sun.pricecalendar.ToastCommon;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 
 public class HotelDetailActivity extends BaseActionBarActivity implements AdapterView.OnItemClickListener {
 
     private String TAG = HotelDetailActivity.class.getSimpleName();
-    private String id;
+    private String hotelID; //
     private int type;
     private HotelActionBiz hotelBiz;
-    private HotelDetailInfo hotelDetail = new HotelDetailInfo();
+//    private HotelDetailInfo hotelDetail = new HotelDetailInfo();
+    public static HotelDetailResponse hotelDetail = new HotelDetailResponse();
 
     private PullToRefreshListView hotelListView;
     private ListView listView;
     private HotelDetailInnerListAdapter adapter;
+    private List<HotelDetailResponse.HotelRoomBean> listRooms;
+    private List<HotelDetailResponse.HotelProductBean> listProducts = new ArrayList<>();
 
     private ImageView ivCollection; //收藏
     private ImageView ivMainImgs; //详情页展示的一张大图，点击进入查看全部图片页面
@@ -63,7 +76,8 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
     private String checkInDate ;
     private String checkOutDate;
     private int    stayDays    ;
-    private PhoneBean selectCity;
+    private HotelProvinceResponse.ProvinceBean selectCity;
+    private String imageUrl;
 
     private Handler handler = new Handler(){
         @Override
@@ -97,30 +111,32 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
         if (intent != null){
             Bundle bundle = intent.getExtras();
             if (bundle != null){
-                id = bundle.getString("id");
+                hotelID = bundle.getString("id");
                 type = bundle.getInt("type"); //2:从收藏进来的酒店详情
 
                 checkInDate = bundle.getString("checkInDate");
                 checkOutDate = bundle.getString("checkOutDate");
                 stayDays    = bundle.getInt("stayDays");
-                selectCity = (PhoneBean) bundle.getSerializable("selectCity");
-                LogUtil.e(TAG, "checkInDate = " + checkInDate +", checkOutDate = " + checkOutDate +", stayDays = " + stayDays +", selectCity = " + selectCity +", id = " + id);
+                selectCity = bundle.getParcelable("selectCity");
+                imageUrl = bundle.getString("imageUrl");
+                LogUtil.e(TAG, "checkInDate = " + checkInDate +", checkOutDate = " + checkOutDate +", stayDays = " + stayDays +", selectCity = " + selectCity +", id = " + hotelID);
             }
         }
     }
 
     private void getInternetData() {
         LoadingIndicator.show(HotelDetailActivity.this, getString(R.string.http_notice));
-        HotelDetailRequest request1 = new HotelDetailRequest(id);
-        //获取酒店详情
+        HotelDetailRequest request1 = new HotelDetailRequest(hotelID, checkInDate, checkOutDate);
+//        //获取酒店详情
         hotelBiz = new HotelActionBiz();
-        hotelBiz.hotelGetDetailInfo(request1, new BizGenericCallback<HotelDetailInfo>() {
+        hotelBiz.getHotelDetailInfo(request1, new BizGenericCallback<HotelDetailResponse>() {
             @Override
-            public void onCompletion(GenericResponseModel<HotelDetailInfo> model) {
+            public void onCompletion(GenericResponseModel<HotelDetailResponse> model) {
                 if ("0001".equals(model.headModel.res_code)){
                     ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);
                 }else if ("0000".equals(model.headModel.res_code)){
                     hotelDetail = model.body;
+                    listRooms = hotelDetail.getHotel().getRooms().getRoom();
                     refreshView();
                     LogUtil.e(TAG,"hotelGetDetailInfo =" + hotelDetail.toString());
                 }
@@ -138,17 +154,28 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
                 LoadingIndicator.cancel();
             }
         });
+
     }
 
     private void refreshView() {
-        adapter.setData(hotelDetail.getRoom());
+        for (HotelDetailResponse.HotelRoomBean roomBean: listRooms){
+            List<HotelDetailResponse.HotelProductBean> products = roomBean.getProducts().getProduct();
+            for (HotelDetailResponse.HotelProductBean productBean: products){
+                productBean.setRoomName(roomBean.getRoomName());
+                productBean.setRoomImgUrl(imageUrl);
+                productBean.setRoomId(roomBean.getRoomID());
+                productBean.setBedType(roomBean.getBedType());
+                listProducts.add(productBean);
+            }
+        }
+        adapter.setData(listProducts);
         adapter.notifyDataSetChanged();
 
-        tvHotelName.setText(hotelDetail.getTitle());
-        tvHotelImgs.setText(hotelDetail.getPiclist().size()+"张图片");
-        tvHotelAddress.setText(hotelDetail.getAddress());
-        tvOpening.setText(hotelDetail.getOpentime()+"开业 "+hotelDetail.getDecoratetime()+"装修");
-        ImageLoaderUtil.getInstance(getApplicationContext()).displayImage(hotelDetail.getPiclist().get(0), ivMainImgs);
+        tvHotelName.setText(hotelDetail.getHotel().getName());
+        tvHotelImgs.setText(hotelDetail.getHotel().getImages().getImage().size()+"张图片");
+        tvHotelAddress.setText(hotelDetail.getHotel().getTraffic());
+        tvOpening.setText(hotelDetail.getHotel().getSummary());
+        ImageLoaderUtil.getInstance(getApplicationContext()).displayImage(imageUrl, ivMainImgs);
     }
 
     @Override
@@ -183,19 +210,19 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
             }
         });
 
-        adapter = new HotelDetailInnerListAdapter(getApplicationContext(), hotelDetail.getRoom()) {
+        adapter = new HotelDetailInnerListAdapter(getApplicationContext(), listProducts) {
             @Override
             public void goToArgument(View view, View viewGroup, int position, int which) {
-                HotelDetailInfo.Room room = hotelDetail.getRoom().get(position);
+//                HotelDetailResponse.HotelRoomBean room = hotelDetail.getHotel().getRooms().getRoom().get(position);
                 //TODO 生成订单
                 Intent intent = new Intent(getApplicationContext(), HotelEditOrderActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("hotelDetail", hotelDetail);
+//                bundle.putSerializable("hotelDetail", hotelDetail);
                 bundle.putString("checkInDate", checkInDate);
                 bundle.putString("checkOutDate", checkOutDate);
                 bundle.putInt("stayDays", stayDays);
-                bundle.putInt("position", position);
-                bundle.putSerializable("selectCity", selectCity);
+                bundle.putInt("position", position); //房间列表中第几个
+                bundle.putParcelable("selectCity", selectCity);
                 intent.putExtras(bundle);
                 startActivityForResult(intent, EDIT_HOTEL_ORDER);
             }
@@ -239,28 +266,41 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
         super.onClick(view);
         switch (view.getId()){
             case R.id.title_main_iv_right_telephone:
-                Utils.contact(getApplicationContext(), "010-23456789");
+                if (hotelDetail.getHotel().getPhone() != null || hotelDetail.getHotel().getPhone().length() != 0) {
+                    Utils.contact(getApplicationContext(), hotelDetail.getHotel().getPhone());
+                }else{
+                    ToastUtil.show(getApplicationContext(), "商家未提供联系方式");
+                }
                 break;
             case R.id.iv_collection_hotel:
                 LoadingIndicator.show(HotelDetailActivity.this, getString(R.string.http_notice));
                 UserCollectionBiz biz = new UserCollectionBiz(getApplicationContext(), handler);
-                biz.doCollection(MainActivity.user.getUserId(), "2", hotelDetail.getId());
+                biz.doCollection(MainActivity.user.getUserId(), "2", hotelDetail.getHotel().getHotelID());
                 break;
             case R.id.layout_hotel_address:
-                //TODO 进入地图
                 Intent intent = new Intent(getApplicationContext(), ReGeocoderActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("latitude", hotelDetail.getLat());
-                bundle.putString("longitude", hotelDetail.getLng());
-                bundle.putString("address", hotelDetail.getAddress());
+                //TODO 将百度地图坐标转换为高德地图坐标
+                LatLng latLngFrom = new LatLng(Double.parseDouble(hotelDetail.getHotel().getBaidulat()), Double.parseDouble(hotelDetail.getHotel().getBaidulon())); //百度和高德转换坐标
+                CoordinateConverter converter  = new CoordinateConverter();
+                // CoordType.GPS 待转换坐标类型
+                converter.from(CoordinateConverter.CoordType.BAIDU);
+                // sourceLatLng待转换坐标点 LatLng类型
+                converter.coord(latLngFrom);
+                // 执行转换操作
+                LatLng desLatLng = converter.convert();
+
+                bundle.putString("latitude", String.valueOf(desLatLng.latitude));
+                bundle.putString("longitude", String.valueOf(desLatLng.longitude));
+                bundle.putString("address", hotelDetail.getHotel().getTraffic());
                 intent.putExtras(bundle);
                 startActivity(intent);
                 break;
             case R.id.layout_hotel_opening:
-                //TODO 进入详情页
+                //TODO 进入酒店信息页
                 Intent intentInfo = new Intent(getApplicationContext(), HotelInfoActivity.class);
                 Bundle bundleInfo = new Bundle();
-                bundleInfo.putSerializable("info", hotelDetail);
+//                bundleInfo.putSerializable("info", hotelDetail);
                 intentInfo.putExtras(bundleInfo);
                 startActivity(intentInfo);
                 break;

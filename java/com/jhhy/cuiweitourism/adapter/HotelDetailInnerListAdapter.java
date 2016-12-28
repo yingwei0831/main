@@ -12,6 +12,7 @@ import com.jhhy.cuiweitourism.ArgumentOnClick;
 import com.jhhy.cuiweitourism.IOnItemClickListener;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelDetailInfo;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelDetailResponse;
 import com.jhhy.cuiweitourism.utils.ImageLoaderUtil;
 
 import java.util.List;
@@ -30,6 +31,12 @@ public abstract class HotelDetailInnerListAdapter extends MyBaseAdapter implemen
     public void setType(int type){
         this.type = type;
     }
+
+    @Override
+    public int getCount() {
+        return super.getCount();
+    }
+
     @Override
     public View getView(final int i, View view, final ViewGroup viewGroup) {
         ViewHolder holder = null;
@@ -57,12 +64,12 @@ public abstract class HotelDetailInnerListAdapter extends MyBaseAdapter implemen
                 }
             });
         }
-        HotelDetailInfo.Room room = (HotelDetailInfo.Room) getItem(i);
-        if (room != null){
-//            ImageLoaderUtil.getInstance(context).displayImage(room.getImgs().get(0), holder.imageView);
-            holder.tvRoomType.setText(room.getRoomname());
-            holder.tvBedType.setText(String.format("%s %s", room.getBreakfirst(), room.getRoomstyle()));
-            holder.tvPrice.setText(String.format("￥%s",room.getPrice()));
+        HotelDetailResponse.HotelProductBean product = (HotelDetailResponse.HotelProductBean) getItem(i);
+        if (product != null){
+            ImageLoaderUtil.getInstance(context).displayImage(product.getRoomImgUrl(), holder.imageView);
+            holder.tvRoomType.setText(product.getRoomName());
+            holder.tvBedType.setText(String.format("%s %s", product.getName(), product.getBedType()));
+            holder.tvPrice.setText(String.format("￥%s",product.getPrice()));
         }
         return view;
     }
