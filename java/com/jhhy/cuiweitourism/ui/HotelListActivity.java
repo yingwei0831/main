@@ -5,9 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
@@ -95,6 +97,8 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
     private String[] location;
     private LatLng latLng;
 
+    private TextView etSearch;
+
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -176,6 +180,7 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
 //        tvTitle = (TextView) findViewById(R.id.tv_title_inner_travel);
         layout = findViewById(R.id.activity_hot_activity_list);
         ivTitleLeft = (ImageView) findViewById(R.id.iv_title_search_left);
+        etSearch = (TextView) findViewById(R.id.edit_search);
 
         pullToRefreshListView = (PullToRefreshListView) findViewById(R.id.activity_hot_activity_list_view);
         listView = pullToRefreshListView.getRefreshableView();
@@ -221,12 +226,14 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
 
     private void refresh() {
         page = 1;
+        pageTemp = 1;
         refresh = true;
         getHotelListData();
     }
 
     private void addListener() {
         ivTitleLeft.setOnClickListener(this);
+        etSearch.setOnClickListener(this);
 
         tvScreen        .setOnClickListener(this);
         tvSelectPosition.setOnClickListener(this);
@@ -241,6 +248,9 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
         switch (view.getId()){
             case R.id.iv_title_search_left:
                 finish();
+                break;
+            case R.id.edit_search:
+                search();
                 break;
             case R.id.tv_tab1_hot_activity_list_sort_default: //筛选
                 Intent intentScreen = new Intent( getApplicationContext(), HotelScreenActivity.class);
@@ -264,6 +274,17 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
                 break;
 
         }
+    }
+
+    private void search() {
+        Intent intentSearch = new Intent(getApplicationContext(), HotelSearchKeyActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("checkInDate", checkInDate);
+        bundle.putString("checkOutDate", checkOutDate);
+        bundle.putInt("stayDays", stayDays);
+        bundle.putParcelable("selectCity", selectCity);
+        intentSearch.putExtras(bundle);
+        startActivity(intentSearch);
     }
 
     private PopupWindowHotelSort popUpSort;

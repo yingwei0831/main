@@ -4,13 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.jhhy.cuiweitourism.ui.HotelDetailActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
     <com.handmark.pulltorefresh.library.PullToRefreshListView
         android:id="@+id/listview_hotel_detail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
+        android:background="@android:color/white"
         >
 
     </com.handmark.pulltorefresh.library.PullToRefreshListView>

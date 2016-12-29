@@ -20,6 +20,7 @@ import com.jhhy.cuiweitourism.net.models.FetchModel.HotelOrderFetch;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelDetailInfo;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelDetailResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelOrderInfo;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
@@ -51,7 +52,8 @@ public class HotelEditOrderActivity extends BaseActionBarActivity implements Pop
     private String checkOutDate;
     private int    stayDays    ;
     private PhoneBean selectCity;
-    private HotelDetailInfo hotelDetail;
+//    private HotelDetailInfo hotelDetail;
+    private HotelDetailResponse hotelDetail;
     private int position;
 
     @Override
@@ -70,7 +72,7 @@ public class HotelEditOrderActivity extends BaseActionBarActivity implements Pop
                 checkOutDate = bundle.getString("checkOutDate");
                 stayDays = bundle.getInt("stayDays");
                 selectCity = (PhoneBean) bundle.getSerializable("selectCity");
-                hotelDetail = (HotelDetailInfo) bundle.getSerializable("hotelDetail");
+                hotelDetail = HotelDetailActivity.hotelDetail;
                 position = bundle.getInt("position");
                 LogUtil.e(TAG, "checkInDate = " + checkInDate +", checkOutDate = " + checkOutDate +", stayDays = " + stayDays +", selectCity = " + selectCity +", position = " + position);
             }
@@ -98,11 +100,11 @@ public class HotelEditOrderActivity extends BaseActionBarActivity implements Pop
         tvOrderPrice = (TextView) findViewById(R.id.tv_edit_order_price);
         btnPay = (Button) findViewById(R.id.btn_edit_order_pay);
 
-        tvHotelName.setText(hotelDetail.getTitle());
+//        tvHotelName.setText(hotelDetail.getTitle());
 //        tvRoomType.setText(hotelDetail.get);
         tvCheckInDate.setText(checkInDate);
         tvCheckOutInfo.setText(String.format("%s 共%d晚", checkOutDate, stayDays));
-        tvRoomPrice.setText(hotelDetail.getRoom().get(position).getPrice());
+//        tvRoomPrice.setText(hotelDetail.getRoom().get(position).getPrice());
     }
 
     @Override
@@ -162,33 +164,33 @@ public class HotelEditOrderActivity extends BaseActionBarActivity implements Pop
 //        productaid 酒店id 、suitid 酒店产品id、departdate 离开时间
         //提交酒店订单
         HotelActionBiz hotelBiz = new HotelActionBiz();
-        HotelOrderFetch fetch = new HotelOrderFetch(MainActivity.user.getUserId(), hotelDetail.getId(),hotelDetail.getTitle(),
-                hotelDetail.getRoom().get(position).getPrice(), checkInDate, String.valueOf(roomNumber), name, mobile,"",
-                hotelDetail.getRoom().get(position).getRoomid(), checkOutDate);
-        hotelBiz.HotelSubmitOrder(fetch, new BizGenericCallback<HotelOrderInfo>() {
-            @Override
-            public void onCompletion(GenericResponseModel<HotelOrderInfo> model) {
-                if ("0001".equals(model.headModel.res_code)){
-                    ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);
-                }else if ("0000".equals(model.headModel.res_code)){
-                    HotelOrderInfo info = model.body;
-                    refreshView(info);
-                    LogUtil.e(TAG,"HotelSubmitOrder =" + info.toString());
-                }
-                LoadingIndicator.cancel();
-            }
-
-            @Override
-            public void onError(FetchError error) {
-                if (error.localReason != null){
-                    ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
-                }else{
-                    ToastCommon.toastShortShow(getApplicationContext(), null, "提交订单信息出错，请重试");
-                }
-                LogUtil.e(TAG, "HotelSubmitOrder: " + error.toString());
-                LoadingIndicator.cancel();
-            }
-        });
+//        HotelOrderFetch fetch = new HotelOrderFetch(MainActivity.user.getUserId(), hotelDetail.getId(),hotelDetail.getTitle(),
+//                hotelDetail.getRoom().get(position).getPrice(), checkInDate, String.valueOf(roomNumber), name, mobile,"",
+//                hotelDetail.getRoom().get(position).getRoomid(), checkOutDate);
+//        hotelBiz.HotelSubmitOrder(fetch, new BizGenericCallback<HotelOrderInfo>() {
+//            @Override
+//            public void onCompletion(GenericResponseModel<HotelOrderInfo> model) {
+//                if ("0001".equals(model.headModel.res_code)){
+//                    ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);
+//                }else if ("0000".equals(model.headModel.res_code)){
+//                    HotelOrderInfo info = model.body;
+//                    refreshView(info);
+//                    LogUtil.e(TAG,"HotelSubmitOrder =" + info.toString());
+//                }
+//                LoadingIndicator.cancel();
+//            }
+//
+//            @Override
+//            public void onError(FetchError error) {
+//                if (error.localReason != null){
+//                    ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
+//                }else{
+//                    ToastCommon.toastShortShow(getApplicationContext(), null, "提交订单信息出错，请重试");
+//                }
+//                LogUtil.e(TAG, "HotelSubmitOrder: " + error.toString());
+//                LoadingIndicator.cancel();
+//            }
+//        });
     }
 
     //去支付

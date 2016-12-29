@@ -12,6 +12,7 @@
     <color name="colorFlash">#FF9369</color>
     <color name="colorFlashBorder">#FEFD02</color>
     <color name="colorTab1BgSearchBar">#4AC76C</color>
+    <color name="colorTab1BgSearchBarDark">#40ac5d</color>
 
     <color name="colorTab1Personalized">#53CA00</color>
     <color name="colorTab1HotActivity">#FF9A04</color>

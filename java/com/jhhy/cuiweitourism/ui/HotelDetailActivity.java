@@ -1,14 +1,19 @@
 package com.jhhy.cuiweitourism.ui;
 
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -21,18 +26,23 @@ import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.HotelDetailInnerListAdapter;
 import com.jhhy.cuiweitourism.biz.UserCollectionBiz;
 import com.jhhy.cuiweitourism.model.PhoneBean;
+import com.jhhy.cuiweitourism.model.User;
 import com.jhhy.cuiweitourism.net.biz.HotelActionBiz;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelDetailRequest;
+import com.jhhy.cuiweitourism.net.models.FetchModel.HotelPriceCheckRequest;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelDetailInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelDetailResponse;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelPriceCheckResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelProvinceResponse;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
+import com.jhhy.cuiweitourism.popupwindows.PopupWindowHotelRoomScreen;
 import com.jhhy.cuiweitourism.utils.ImageLoaderUtil;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
+import com.jhhy.cuiweitourism.utils.SharedPreferencesUtils;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.jhhy.cuiweitourism.utils.Utils;
 import com.just.sun.pricecalendar.ToastCommon;
@@ -49,13 +59,15 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
     private int type;
     private HotelActionBiz hotelBiz;
 //    private HotelDetailInfo hotelDetail = new HotelDetailInfo();
-    public static HotelDetailResponse hotelDetail = new HotelDetailResponse();
+    public static HotelDetailResponse hotelDetail;
 
     private PullToRefreshListView hotelListView;
     private ListView listView;
     private HotelDetailInnerListAdapter adapter;
     private List<HotelDetailResponse.HotelRoomBean> listRooms;
     private List<HotelDetailResponse.HotelProductBean> listProducts = new ArrayList<>();
+    private List<HotelDetailResponse.HotelProductBean> listProductsCopy = new ArrayList<>();
+    private int mPosition; //列表中第几个item
 
     private ImageView ivCollection; //收藏
     private ImageView ivMainImgs; //详情页展示的一张大图，点击进入查看全部图片页面
@@ -168,6 +180,7 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
                 listProducts.add(productBean);
             }
         }
+        listProductsCopy.addAll(listProducts);
         adapter.setData(listProducts);
         adapter.notifyDataSetChanged();
 
@@ -214,17 +227,9 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
             @Override
             public void goToArgument(View view, View viewGroup, int position, int which) {
 //                HotelDetailResponse.HotelRoomBean room = hotelDetail.getHotel().getRooms().getRoom().get(position);
-                //TODO 生成订单
-                Intent intent = new Intent(getApplicationContext(), HotelEditOrderActivity.class);
-                Bundle bundle = new Bundle();
-//                bundle.putSerializable("hotelDetail", hotelDetail);
-                bundle.putString("checkInDate", checkInDate);
-                bundle.putString("checkOutDate", checkOutDate);
-                bundle.putInt("stayDays", stayDays);
-                bundle.putInt("position", position); //房间列表中第几个
-                bundle.putParcelable("selectCity", selectCity);
-                intent.putExtras(bundle);
-                startActivityForResult(intent, EDIT_HOTEL_ORDER);
+                //先弹出选择房间数量，然后验价，再进入订单
+                showSelectNumber();
+                mPosition = position;
             }
         };
         hotelListView.setAdapter(adapter);
@@ -251,6 +256,18 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
         tvCheckInDays.setText(String.format("入住%d晚", stayDays));
     }
 
+    private void setHotelOrder(int position) {
+        Intent intent = new Intent(getApplicationContext(), HotelEditOrderActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("checkInDate", checkInDate);
+        bundle.putString("checkOutDate", checkOutDate);
+        bundle.putInt("stayDays", stayDays);
+        bundle.putInt("position", position); //房间列表中第几个
+        bundle.putParcelable("selectCity", selectCity);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, EDIT_HOTEL_ORDER);
+    }
+
     @Override
     protected void addListener() {
         super.addListener();
@@ -259,6 +276,7 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
         ivCollection.setOnClickListener(this);
         layoutAddress.setOnClickListener(this);
         layoutOpening.setOnClickListener(this);
+        tvScreenRoom.setOnClickListener(this);
     }
 
     @Override
@@ -272,12 +290,24 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
                     ToastUtil.show(getApplicationContext(), "商家未提供联系方式");
                 }
                 break;
-            case R.id.iv_collection_hotel:
-                LoadingIndicator.show(HotelDetailActivity.this, getString(R.string.http_notice));
-                UserCollectionBiz biz = new UserCollectionBiz(getApplicationContext(), handler);
-                biz.doCollection(MainActivity.user.getUserId(), "2", hotelDetail.getHotel().getHotelID());
-                break;
+//            case R.id.iv_collection_hotel: //收藏
+//                LoadingIndicator.show(HotelDetailActivity.this, getString(R.string.http_notice));
+//                if (MainActivity.logged) {
+//                    UserCollectionBiz biz = new UserCollectionBiz(getApplicationContext(), handler);
+//                    biz.doCollection(MainActivity.user.getUserId(), "2", hotelDetail.getHotel().getHotelID());
+//                }else{
+//    //            ToastUtil.show(getApplicationContext(), "请登录后再试");
+//                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+//                    Bundle bundle = new Bundle();
+//                    bundle.putInt("type", 2);
+//                    intent.putExtras(bundle);
+//                    startActivityForResult(intent, REQUEST_LOGIN);
+//                }
+//                break;
             case R.id.layout_hotel_address:
+                if (hotelDetail == null){
+                    return;
+                }
                 Intent intent = new Intent(getApplicationContext(), ReGeocoderActivity.class);
                 Bundle bundle = new Bundle();
                 //TODO 将百度地图坐标转换为高德地图坐标
@@ -297,30 +327,184 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
                 startActivity(intent);
                 break;
             case R.id.layout_hotel_opening:
-                //TODO 进入酒店信息页
+                //TODO 进入酒店详情页
+                if (hotelDetail == null){
+                    return;
+                }
                 Intent intentInfo = new Intent(getApplicationContext(), HotelInfoActivity.class);
                 Bundle bundleInfo = new Bundle();
 //                bundleInfo.putSerializable("info", hotelDetail);
                 intentInfo.putExtras(bundleInfo);
                 startActivity(intentInfo);
                 break;
+            case R.id.tv_screen_room_type: //TODO 筛选
+                showPopupRoomScreen();
+                break;
+            case R.id.btn_hot_activity_reserve: //TODO 下一步，填写订单  先验价,验价成功后，进入填写订单页
+                getHotelPrice();
+//                setHotelOrder(mPosition);
+                break;
+            case R.id.tv_price_calendar_number_reduce: //房间数减少
+                if (number <= 1){
+                    return;
+                }
+                number --;
+                popShow();
+                break;
+            case R.id.tv_price_calendar_number_add: //房间数增加
+                if (number >= 9){
+                    ToastCommon.toastShortShow(getApplicationContext(), null, "最多添加9间房");
+                    return;
+                }
+                number ++;
+                popShow();
+                break;
         }
+    }
+
+    private void getHotelPrice() {
+        HotelPriceCheckRequest request = new HotelPriceCheckRequest(checkInDate, checkOutDate,
+                Utils.getCurrentTimeYMDE(),  Utils.getCurrentTimeYMDE(),
+                hotelDetail.getHotel().getHotelID(), "", "", "", String.valueOf(number));
+        hotelBiz.getHotelPriceCheck(request, new BizGenericCallback<HotelPriceCheckResponse>() {
+            @Override
+            public void onCompletion(GenericResponseModel<HotelPriceCheckResponse> model) {
+
+            }
+
+            @Override
+            public void onError(FetchError error) {
+
+            }
+        });
+    }
+
+    private PopupWindowHotelRoomScreen popHotelRoomScreen;
+    private int positionMeal = 1;
+    private int positionBedType = 1;
+
+    private String screenMeal = "";
+    private String screenBedType = "";
+
+    private void showPopupRoomScreen() {
+        if (popHotelRoomScreen == null){
+            popHotelRoomScreen = new PopupWindowHotelRoomScreen(getApplicationContext());
+            addPopRoomListener();
+        }
+        if (popHotelRoomScreen.isShowing()){
+            popHotelRoomScreen.dismiss();
+        }else{
+            popHotelRoomScreen.showAtLocation(hotelListView, Gravity.BOTTOM, 0, 0);
+            popHotelRoomScreen.refreshView(positionMeal, positionBedType);
+        }
+    }
+
+    private void addPopRoomListener() {
+        popHotelRoomScreen.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+//                int positionMealNew = popHotelRoomScreen.getPositionMeal();
+//                int positionBedTypeNew = popHotelRoomScreen.getPositionBedType();
+//                if (positionMeal != positionMealNew && positionBedType != positionBedTypeNew){ //有改变
+//                    positionMeal = positionMealNew;
+//                    positionBedType = positionBedTypeNew;
+//                    listProducts.clear();
+//                    List<HotelDetailResponse.HotelProductBean> listProductsTemp = new ArrayList<HotelDetailResponse.HotelProductBean>();
+//                    //TODO 对当前数据进行房型筛选
+//                    for (HotelDetailResponse.HotelProductBean product : listProductsCopy){
+//                        if (positionMeal == 1){ //不限
+//                            listProducts.add(product);
+//                        } else { //含单早
+//                            if (product.getName().contains("含单早")){
+//                                listProducts.add(product);
+//                            }
+//                        }
+//                    }
+//                    for (HotelDetailResponse.HotelProductBean product : listProducts){
+//                        if (1 == positionBedType){
+//                            listProductsTemp.add(product);
+//                        }else{
+//                            //
+//                            listProductsTemp.add(product);
+//                        }
+//                    }
+//                    listProducts.clear();
+//                    listProducts.addAll(listProductsTemp);
+//                    listProductsTemp.clear();
+//                    listProductsTemp = null;
+//                    adapter.setData(listProducts);
+//                    adapter.notifyDataSetChanged();
+//                }
+            }
+        });
     }
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
     }
 
     private int EDIT_HOTEL_ORDER = 6522; //编辑酒店订单
+//    private int REQUEST_LOGIN = 2913; //请求登录
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == EDIT_HOTEL_ORDER){
-            if (resultCode == RESULT_OK){
+        if (resultCode == RESULT_OK){
+            if (requestCode == EDIT_HOTEL_ORDER){
 
             }
+//            else if (requestCode == REQUEST_LOGIN) { //登录成功
+//                User user = (User) data.getExtras().getSerializable(Consts.KEY_REQUEST);
+//                if (user != null) {
+//                    MainActivity.logged = true;
+//                    MainActivity.user = user;
+//                    SharedPreferencesUtils sp = SharedPreferencesUtils.getInstance(getApplicationContext());
+//                    sp.saveUserId(user.getUserId());
+//                }
+//            }
+//        }else{
+//            if (requestCode == REQUEST_LOGIN) { //登录
+//                ToastUtil.show(getApplicationContext(), "登录失败");
+//            }
         }
     }
+
+    private PopupWindow popupWindow; //选择房间数
+    private TextView tvNumber; //显示房间数
+    private int number = 1; //房间数
+
+    private void showSelectNumber() {
+        if (popupWindow == null) {
+            View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.activity_hot_select_number, null);
+            popupWindow = new PopupWindow(view, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+            // 允许点击外部消失
+            popupWindow.setBackgroundDrawable(new BitmapDrawable());
+            popupWindow.setOutsideTouchable(true);
+            popupWindow.setFocusable(true);
+            setupPopView(view);
+        }
+        if (popupWindow.isShowing()){
+            popupWindow.dismiss();
+        }else{
+            popupWindow.showAtLocation(tvScreenRoom, Gravity.NO_GRAVITY,0, 0);
+        }
+        popShow();
+    }
+
+    private void popShow() {
+        tvNumber.setText(String.valueOf(number));
+    }
+
+    private void setupPopView(View view) {
+        ImageView ivReduce = (ImageView) view.findViewById(R.id.tv_price_calendar_number_reduce);
+        ImageView ivAdd = (ImageView) view.findViewById(R.id.tv_price_calendar_number_add);
+        tvNumber = (TextView) view.findViewById(R.id.tv_price_calendar_number);
+        TextView tvTitlePop = (TextView) view.findViewById(R.id.tv_adult_notice);
+        tvTitlePop.setText("选择房间数");
+        Button btnReserveOrder = (Button) view.findViewById(R.id.btn_hot_activity_reserve);
+        ivReduce.setOnClickListener(this);
+        ivAdd.setOnClickListener(this);
+        btnReserveOrder.setOnClickListener(this);
+    }
+
 }

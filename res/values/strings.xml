@@ -330,6 +330,14 @@
     <string name="hotel_location_title">我的位置</string>
     <string name="hotel_location_address_title">酒店位置</string>
     <string name="hotel_info_title">酒店信息</string>
+    <string name="hotel_search_hint">关键字/位置/品牌/酒店名等</string>
+    <string name="hotel_room_screen_meal_all">不限</string>
+    <string name="hotel_room_screen_meal_breakfast">含早餐</string>
+    <string name="hotel_room_screen_meal_breakfast_single">单份早餐</string>
+    <string name="hotel_room_screen_meal_breakfast_double">双份早餐</string>
+    <string name="hotel_room_screen_bed_all">不限</string>
+    <string name="hotel_room_screen_bed_large">大床</string>
+    <string name="hotel_room_screen_bed_double">双床</string>
 
     <!--火车票-->
     <string name="train_screen_start_time">发车时段</string>

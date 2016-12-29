@@ -31,7 +31,7 @@ import com.jhhy.cuiweitourism.utils.ToastUtil;
  * 地理编码与逆地理编码功能介绍
  */
 public class ReGeocoderActivity extends BaseActionBarActivity implements
-		OnGeocodeSearchListener, OnClickListener {
+		OnGeocodeSearchListener {
 
 	private String TAG = ReGeocoderActivity.class.getSimpleName();
 
@@ -81,6 +81,8 @@ public class ReGeocoderActivity extends BaseActionBarActivity implements
 		tvTitle.setText(getString(R.string.hotel_location_address_title));
 		tvAddress = (TextView) findViewById(R.id.tv_hotel_location_address);
 		tvAddress.setText(address);
+
+		ivTitleLeft.setOnClickListener(this);
 	}
 
 	/**
@@ -201,16 +203,15 @@ public class ReGeocoderActivity extends BaseActionBarActivity implements
 	}
 
 	@Override
-	public void onClick(View v) {
-		switch (v.getId()) {
-		/**
-		 * 响应逆地理编码按钮
-		 */
-		case R.id.geoButton:
-			getAddress(latLonPoint);
-			break;
-		default:
-			break;
+	public void onClick(View view) {
+		super.onClick(view);
+		switch (view.getId()) {
+			/**
+			 * 响应逆地理编码按钮
+			 */
+			case R.id.geoButton:
+				getAddress(latLonPoint);
+				break;
 		}
 	}
 }

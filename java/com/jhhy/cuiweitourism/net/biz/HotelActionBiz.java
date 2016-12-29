@@ -5,10 +5,12 @@ import com.jhhy.cuiweitourism.net.models.FetchModel.HotelDetailRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelListFetchRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelListRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelOrderFetch;
+import com.jhhy.cuiweitourism.net.models.FetchModel.HotelPriceCheckRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelScreenBrandRequest;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelDetailResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelPositionLocationResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelListResponse;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelPriceCheckResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelProvinceResponse;
 import com.jhhy.cuiweitourism.net.models.FetchModel.NullArrayFetchModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
@@ -216,6 +218,27 @@ public class HotelActionBiz extends  BasicActionBiz {
             public void onCompletion(FetchResponseModel response) {
                 HotelPositionLocationResponse model = parseJsonToObject(response, HotelPositionLocationResponse.class);
                 GenericResponseModel<HotelPositionLocationResponse> returnModel = new GenericResponseModel<>(response.head, model);
+                this.bizCallback.onCompletion(returnModel);
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                this.bizCallback.onError(error);
+            }
+        };
+        HttpUtils.executeXutils(request, new FetchGenericCallback<>(fetchResponse));
+    }
+
+    /**
+     *数据校验
+     */
+    public void getHotelPriceCheck(HotelPriceCheckRequest request, BizGenericCallback<HotelPriceCheckResponse> callback){
+        request.code = "Hotel_datas";
+        FetchGenericResponse<HotelPriceCheckResponse> fetchResponse = new FetchGenericResponse<HotelPriceCheckResponse>(callback) {
+            @Override
+            public void onCompletion(FetchResponseModel response) {
+                HotelPriceCheckResponse model = parseJsonToObject(response, HotelPriceCheckResponse.class);
+                GenericResponseModel<HotelPriceCheckResponse> returnModel = new GenericResponseModel<>(response.head, model);
                 this.bizCallback.onCompletion(returnModel);
             }
 
