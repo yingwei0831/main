@@ -48,6 +48,7 @@ import com.jhhy.cuiweitourism.utils.Utils;
 import com.just.sun.pricecalendar.ToastCommon;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -67,7 +68,10 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
     private List<HotelDetailResponse.HotelRoomBean> listRooms;
     private List<HotelDetailResponse.HotelProductBean> listProducts = new ArrayList<>();
     private List<HotelDetailResponse.HotelProductBean> listProductsCopy = new ArrayList<>();
-    private int mPosition; //列表中第几个item
+    private int mPosition; //列表中第几个Room的item
+    private HotelDetailResponse.HotelProductBean roomItem; //选中的某个Room的某个Product
+    private HotelPriceCheckResponse priceCheck; //数据校验返回结果
+
 
     private ImageView ivCollection; //收藏
     private ImageView ivMainImgs; //详情页展示的一张大图，点击进入查看全部图片页面
@@ -194,7 +198,6 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
     @Override
     protected void setupView() {
         super.setupView();
-        LogUtil.e(TAG, "-----setupView------");
         tvTitle.setText(getString(R.string.hotel_detail_title));
         ivTitleRight.setImageResource(R.mipmap.icon_telephone_hollow);
         ivTitleRight.setVisibility(View.VISIBLE);
@@ -254,18 +257,6 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
 
         tvCheckInDate.setText(String.format("%s月%s日", checkInDate.substring(checkInDate.indexOf("-") + 1, checkInDate.lastIndexOf("-")), checkInDate.substring(checkInDate.lastIndexOf("-"))));
         tvCheckInDays.setText(String.format("入住%d晚", stayDays));
-    }
-
-    private void setHotelOrder(int position) {
-        Intent intent = new Intent(getApplicationContext(), HotelEditOrderActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putString("checkInDate", checkInDate);
-        bundle.putString("checkOutDate", checkOutDate);
-        bundle.putInt("stayDays", stayDays);
-        bundle.putInt("position", position); //房间列表中第几个
-        bundle.putParcelable("selectCity", selectCity);
-        intent.putExtras(bundle);
-        startActivityForResult(intent, EDIT_HOTEL_ORDER);
     }
 
     @Override
@@ -342,7 +333,6 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
                 break;
             case R.id.btn_hot_activity_reserve: //TODO 下一步，填写订单  先验价,验价成功后，进入填写订单页
                 getHotelPrice();
-//                setHotelOrder(mPosition);
                 break;
             case R.id.tv_price_calendar_number_reduce: //房间数减少
                 if (number <= 1){
@@ -363,20 +353,58 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
     }
 
     private void getHotelPrice() {
-        HotelPriceCheckRequest request = new HotelPriceCheckRequest(checkInDate, checkOutDate,
-                Utils.getCurrentTimeYMDE(),  Utils.getCurrentTimeYMDE(),
-                hotelDetail.getHotel().getHotelID(), "", "", "", String.valueOf(number));
-        hotelBiz.getHotelPriceCheck(request, new BizGenericCallback<HotelPriceCheckResponse>() {
-            @Override
-            public void onCompletion(GenericResponseModel<HotelPriceCheckResponse> model) {
-
+        roomItem = listProducts.get(mPosition);
+        if ("1".equals(roomItem.getIsBooking())){
+            LoadingIndicator.show(HotelDetailActivity.this, getString(R.string.http_notice));
+            String earlierCheckInDate = "";
+            if (Utils.getCurrentTimeYMD().equals(checkInDate)){
+                Calendar c = Calendar.getInstance();
+                earlierCheckInDate = String.format(Locale.getDefault(), "%s %d%s", checkInDate, c.get(Calendar.HOUR_OF_DAY)+1, ":00:00");
+            }else{
+                earlierCheckInDate = String.format(Locale.getDefault(), "%s %s", checkInDate, "08:00:00");
             }
+            HotelPriceCheckRequest request = new HotelPriceCheckRequest(checkInDate, checkOutDate,
+                    earlierCheckInDate,  String.format(Locale.getDefault(), "%s %s", checkInDate, "23:59:00"), //最早入店时间比当前晚5分钟，最晚入店时间为今天23:59:59，明天凌晨
+                    hotelDetail.getHotel().getHotelID(), roomItem.getRoomTypeID(), roomItem.getProductID(), roomItem.getPrice(), String.valueOf(number));
+            hotelBiz.getHotelPriceCheck(request, new BizGenericCallback<HotelPriceCheckResponse>() {
+                @Override
+                public void onCompletion(GenericResponseModel<HotelPriceCheckResponse> model) {
+                    LogUtil.e(TAG, "getHotelPriceCheck: "+model);
+                    LoadingIndicator.cancel();
+                    if ("0001".equals(model.headModel.res_code)){
+                        ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);
+                    }else if ("0000".equals(model.headModel.res_code)){
+                        priceCheck = model.body;
+                        setHotelOrder(mPosition);
+                    }
+                }
 
-            @Override
-            public void onError(FetchError error) {
+                @Override
+                public void onError(FetchError error) {
+                    if (error.localReason != null){
+                        ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
+                    }else{
+                        ToastCommon.toastShortShow(getApplicationContext(), null, "请求酒店数据校验出错，请重试");
+                    }
+                    LogUtil.e(TAG, "getHotelPriceCheck: "+error);
+                    LoadingIndicator.cancel();
+                }
+            });
+        }else{
+            ToastCommon.toastShortShow(getApplicationContext(), null, "当前房间不可预订");
+        }
+    }
 
-            }
-        });
+    private void setHotelOrder(int position) {
+        Intent intent = new Intent(getApplicationContext(), HotelEditOrderActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("checkInDate", checkInDate);
+        bundle.putString("checkOutDate", checkOutDate);
+        bundle.putInt("stayDays", stayDays);
+        bundle.putInt("position", position); //房间列表中第几个
+        bundle.putParcelable("selectCity", selectCity);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, EDIT_HOTEL_ORDER);
     }
 
     private PopupWindowHotelRoomScreen popHotelRoomScreen;

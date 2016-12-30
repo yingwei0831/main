@@ -23,6 +23,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -30,10 +32,14 @@ import android.view.inputmethod.InputMethodManager;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 
 import java.lang.reflect.Field;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -264,23 +270,23 @@ public class Utils {
      */
     public static String getCurrentTime(){
         Date date = new Date();
-        SimpleDateFormat formate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        return formate.format(date);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return format.format(date);
     }
     public static String getCurrentTimeYMD(){
         Date date = new Date();
-        SimpleDateFormat formate = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
-        return formate.format(date);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
+        return format.format(date);
     }
 
     /**
      * 格式：yyyy-MM-dd 周六
-     * @return
+     * @return 2016-12-30 周五
      */
      public static String getCurrentTimeYMDE(){
         Date date = new Date();
-        SimpleDateFormat formate = new SimpleDateFormat("yyyy-MM-dd E");
-        return formate.format(date);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd E");
+        return format.format(date);
     }
 
     //将分钟数转化为XX时XX分
@@ -296,26 +302,27 @@ public class Utils {
      * @param time 时间毫秒值
      * @return 格式化后的时间字符串
      */
-    public static String getTimeStr(long time){
-        Date date = new Date(time);
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
-        return format.format(date);
-    }
+//    public static String getTimeStr(long time){
+//        Date date = new Date(time);
+//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
+//        return format.format(date);
+//    }
 
     /**
      * @param time 毫秒
-     * @return
+     * @return 2016-12-30
      */
     public static String getTimeStrYMD(long time){
         Date date = new Date(time);
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
         return format.format(date);
     }
-    public static String getTimeStrYMDE(long time){
-        Date date = new Date(time);
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd E", Locale.CHINA);
-        return format.format(date);
-    }
+
+//    public static String getTimeStrYMDE(long time){
+//        Date date = new Date(time);
+//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd E", Locale.CHINA);
+//        return format.format(date);
+//    }
 
     /**
      * 转为毫秒
@@ -468,46 +475,55 @@ public class Utils {
         return 0;
     }
 
-    /**
-     * 获取现在时间的短时间格式
-     * @return 返回短时间格式 yyyy-MM-dd
-     */
-    public static String getNowDateShort() { //给定的毫秒值
-        Date currentTime = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        String dateString = formatter.format(currentTime);
-        LogUtil.e(TAG, "dateStringCurrent = " + dateString);
-        return dateString;
+    public static String getIPAddress(boolean useIPv4) {
+        try {
+            List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
+            for (NetworkInterface intf : interfaces) {
+                List<InetAddress> addrs = Collections.list(intf.getInetAddresses());
+                for (InetAddress addr : addrs) {
+                    if (!addr.isLoopbackAddress()) {
+                        String sAddr = addr.getHostAddress();
+                        //boolean isIPv4 = InetAddressUtils.isIPv4Address(sAddr);
+                        boolean isIPv4 = sAddr.indexOf(':')<0;
+
+                        if (useIPv4) {
+                            if (isIPv4)
+                                return sAddr;
+                        } else {
+                            if (!isIPv4) {
+                                int delim = sAddr.indexOf('%'); // drop ip6 zone suffix
+                                return delim<0 ? sAddr.toUpperCase() : sAddr.substring(0, delim).toUpperCase();
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } // for now eat exceptions
+        return "";
     }
 
-    public static String getTimeFormatHMS(long time){
-        StringBuffer sb = new StringBuffer();
-        //当前时间-发布时间=耗时
-//        long currentTime = System.currentTimeMillis() / 1000;
-//        long timeConsuming = currentTime - time;
-
-        long second = time % 60;
-        long minute = time / 60 % 60;
-        long hour = time / 60 / 60;
-        if(hour < 10){
-            if(hour != 0){
-                sb.append(hour).append(":");
-            }
-        }else{
-            sb.append(hour).append(":");
+    /**
+     * 通过wifi获取手机的IP地址
+     * @return string
+     */
+    public String getIpByWIFI(Context context) {
+        // 获取wifi服务
+        WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        // 判断wifi是否开启
+        if (!wifiManager.isWifiEnabled()) {
+            wifiManager.setWifiEnabled(true);
         }
-        if(minute < 10){
-            sb.append("0").append(minute).append(":");
-        }else{
-            sb.append(minute).append(":");
-        }
-        if(second < 10){
-            sb.append("0").append(second);
-        }else{
-            sb.append(second);
-        }
-//        LogUtil.i(TAG, "时间："+sb.toString());
-        return sb.toString();
+        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+        int ipAddress = wifiInfo.getIpAddress();
+        return intToIp(ipAddress);
+    }
+    private static String intToIp(int i) {
+        return (i & 0xFF ) + "." +
+                ((i >> 8 ) & 0xFF) + "." +
+                ((i >> 16 ) & 0xFF) + "." +
+                ( i >> 24 & 0xFF) ;
     }
 
     /**

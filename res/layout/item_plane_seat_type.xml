@@ -94,11 +94,16 @@
 
     <Button
         android:id="@+id/btn_plane_ticket_reserve"
-        android:layout_width="66dp"
-        android:layout_height="36dp"
-        android:layout_marginLeft="10dp"
+        android:layout_width="wrap_content"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
         android:background="@drawable/bg_btn_reserve_border_selector"
         android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
         android:text="@string/hotel_detail_reserve"
         android:textColor="@android:color/white" />
 </LinearLayout>

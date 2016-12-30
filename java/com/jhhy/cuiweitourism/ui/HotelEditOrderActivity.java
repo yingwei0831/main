@@ -22,6 +22,7 @@ import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelDetailInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelDetailResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelOrderInfo;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelProvinceResponse;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.popupwindows.PopupWindowNumberPicker;
@@ -51,7 +52,7 @@ public class HotelEditOrderActivity extends BaseActionBarActivity implements Pop
     private String checkInDate ;
     private String checkOutDate;
     private int    stayDays    ;
-    private PhoneBean selectCity;
+    private HotelProvinceResponse.ProvinceBean selectCity;
 //    private HotelDetailInfo hotelDetail;
     private HotelDetailResponse hotelDetail;
     private int position;
@@ -71,7 +72,7 @@ public class HotelEditOrderActivity extends BaseActionBarActivity implements Pop
                 checkInDate = bundle.getString("checkInDate");
                 checkOutDate = bundle.getString("checkOutDate");
                 stayDays = bundle.getInt("stayDays");
-                selectCity = (PhoneBean) bundle.getSerializable("selectCity");
+                selectCity = bundle.getParcelable("selectCity");
                 hotelDetail = HotelDetailActivity.hotelDetail;
                 position = bundle.getInt("position");
                 LogUtil.e(TAG, "checkInDate = " + checkInDate +", checkOutDate = " + checkOutDate +", stayDays = " + stayDays +", selectCity = " + selectCity +", position = " + position);

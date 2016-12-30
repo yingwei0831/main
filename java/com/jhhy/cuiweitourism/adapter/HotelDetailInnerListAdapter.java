@@ -70,6 +70,11 @@ public abstract class HotelDetailInnerListAdapter extends MyBaseAdapter implemen
             holder.tvRoomType.setText(product.getRoomName());
             holder.tvBedType.setText(String.format("%s %s", product.getName(), product.getBedType()));
             holder.tvPrice.setText(String.format("￥%s",product.getPrice()));
+            if ("1".equals(product.getIsBooking())){ //房间是否可预订 0已订完 1 可预订
+                holder.btnReserve.setBackground(context.getResources().getDrawable(R.drawable.bg_btn_reserve_border_selector)); //黄色
+            }else{
+                holder.btnReserve.setBackground(context.getResources().getDrawable(R.drawable.bg_btn_reserve_not_border_selector)); //灰色
+            }
         }
         return view;
     }

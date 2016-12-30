@@ -75,7 +75,7 @@
         android:layout_height="30dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:background="@drawable/bg_btn_regist_border_selector"
+        android:background="@drawable/bg_btn_reserve_border_selector"
         android:minWidth="0dp"
         android:paddingLeft="12dp"
         android:paddingRight="12dp"

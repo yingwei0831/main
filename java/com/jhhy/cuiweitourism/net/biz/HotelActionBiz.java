@@ -1,10 +1,16 @@
 package com.jhhy.cuiweitourism.net.biz;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.util.Log;
+
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelCityRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelDetailRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelListFetchRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelListRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelOrderFetch;
+import com.jhhy.cuiweitourism.net.models.FetchModel.HotelOrderRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelPriceCheckRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelScreenBrandRequest;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelDetailResponse;
@@ -248,6 +254,14 @@ public class HotelActionBiz extends  BasicActionBiz {
             }
         };
         HttpUtils.executeXutils(request, new FetchGenericCallback<>(fetchResponse));
+    }
+
+    /**
+     * 酒店下订单
+     */
+    public void setHotelOrder(HotelOrderRequest request){
+        request.code = "Hotel_order";
+
     }
 
     /**

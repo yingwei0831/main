@@ -59,4 +59,15 @@ public class HotelPriceCheckResponse {
     public void setCancelTime(String CancelTime) {
         this.CancelTime = CancelTime;
     }
+
+    @Override
+    public String toString() {
+        return "HotelPriceCheckResponse{" +
+                "ErrorCode='" + ErrorCode + '\'' +
+                ", ErrorMsg='" + ErrorMsg + '\'' +
+                ", GuaranteeRate='" + GuaranteeRate + '\'' +
+                ", CurrencyCode='" + CurrencyCode + '\'' +
+                ", CancelTime='" + CancelTime + '\'' +
+                '}';
+    }
 }
