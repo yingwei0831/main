@@ -37,7 +37,13 @@ public class FetchGenericCallback<T> implements Callback.CommonCallback<String> 
             FetchResponseModel model =  new FetchResponseModel(); //new Gson().fromJson(result,FetchResponseModel.class);
             model.body = bodyStr;
             model.head = new Gson().fromJson(headStr, FetchResponseModel.HeadModel.class);
-            this.response.onCompletion(model);
+            if ("0000".equals(model.head.res_code)) {
+                this.response.onCompletion(model);
+            }else{
+                FetchError error = new FetchError();
+                error.localReason = model.head.res_arg;
+                this.response.onError(error);
+            }
             //handler.sendMessage(new Message());
         } catch (JSONException e) {
             e.printStackTrace();

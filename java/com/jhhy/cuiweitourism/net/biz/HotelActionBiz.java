@@ -243,9 +243,15 @@ public class HotelActionBiz extends  BasicActionBiz {
         FetchGenericResponse<HotelPriceCheckResponse> fetchResponse = new FetchGenericResponse<HotelPriceCheckResponse>(callback) {
             @Override
             public void onCompletion(FetchResponseModel response) {
-                HotelPriceCheckResponse model = parseJsonToObject(response, HotelPriceCheckResponse.class);
-                GenericResponseModel<HotelPriceCheckResponse> returnModel = new GenericResponseModel<>(response.head, model);
-                this.bizCallback.onCompletion(returnModel);
+                if ("0000".equals(response.head.res_code)) {
+                    HotelPriceCheckResponse model = parseJsonToObject(response, HotelPriceCheckResponse.class);
+                    GenericResponseModel<HotelPriceCheckResponse> returnModel = new GenericResponseModel<>(response.head, model);
+                    this.bizCallback.onCompletion(returnModel);
+                }else if ("0001".equals(response.head.res_code)){
+                    FetchError error = new FetchError();
+                    error.localReason = response.head.res_arg;
+                    onError(error);
+                }
             }
 
             @Override

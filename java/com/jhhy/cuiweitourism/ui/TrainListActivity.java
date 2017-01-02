@@ -38,6 +38,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -66,6 +67,7 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
     private PullToRefreshListView pullListView;
     private ListView listView;
     private List<TrainTicketDetailInfo> list = new ArrayList<>();
+    private List<TrainTicketDetailInfo> listCopy = new ArrayList<>();
     private TrainListAdapter adapter;
 
     private RadioGroup bottomRg; //底部筛选组合
@@ -280,6 +282,7 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
                         }else if ("0000".equals(model.headModel.res_code)){
                             trainTime = tempTime;
                             list = model.body;
+                            listCopy.addAll(list);
                             handler.sendEmptyMessage(1);
                             LogUtil.e(TAG,"trainTicketInfo =" + list.toString());
                         }
@@ -346,7 +349,7 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
                         typeTrainPosition = popupWindow.getSelectionTypeTrain();
                         typeSeatPosition = popupWindow.getSelectionTypeSeat();
                         //TODO 重新请求数据
-
+                        getScreenData();
 //                        getInternetData();
                     }
                 }
@@ -358,6 +361,51 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
                 popupWindow.showAtLocation(parent, Gravity.BOTTOM, 0, 0);
                 popupWindow.refreshView(startTimePosition, arrivalTimePosition, typeTrainPosition, typeSeatPosition);
             }
+        }
+    }
+
+    /**
+     * 筛选当前数据
+     */
+    private void getScreenData() {
+        if (list != null && list.size() != 0) {
+            list.clear();
+            //先筛选发车时间
+            if (0 == startTimePosition){
+                list.addAll(listCopy);
+            }else {
+                for (TrainTicketDetailInfo trainTicket : listCopy) {
+                    if (1 == startTimePosition) {
+                        list.add(trainTicket);
+                    } else if (2 == startTimePosition) {
+                        list.add(trainTicket);
+                    } else if (3 == startTimePosition) {
+                        list.add(trainTicket);
+                    } else if (4 == startTimePosition) {
+                        list.add(trainTicket);
+                    }
+                }
+            }
+            //再筛选到达时间
+            List<TrainTicketDetailInfo> listCopyArrivalTime = new ArrayList<>();
+            if (-1 == arrivalTimePosition){
+                listCopyArrivalTime.addAll(list);
+            }else{
+                for (TrainTicketDetailInfo trainTicket: list){
+                    if (1 == arrivalTimePosition){
+                        listCopyArrivalTime.add(trainTicket);
+                    }else if (2 == arrivalTimePosition){
+                        listCopyArrivalTime.add(trainTicket);
+                    }else if (3 == arrivalTimePosition){
+                        listCopyArrivalTime.add(trainTicket);
+                    }else if (4 == arrivalTimePosition){
+                        listCopyArrivalTime.add(trainTicket);
+                    }
+                }
+            }
+            list = listCopyArrivalTime;
+            //筛选车型
+            //筛选席别类型
         }
     }
 
