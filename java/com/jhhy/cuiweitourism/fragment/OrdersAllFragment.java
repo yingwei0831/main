@@ -21,6 +21,12 @@ import com.jhhy.cuiweitourism.adapter.OrderXListViewAdapter;
 import com.jhhy.cuiweitourism.biz.OrderActionBiz;
 import com.jhhy.cuiweitourism.biz.OrdersAllBiz;
 import com.jhhy.cuiweitourism.model.Order;
+import com.jhhy.cuiweitourism.net.biz.HotelActionBiz;
+import com.jhhy.cuiweitourism.net.models.FetchModel.HotelOrderCancelRequest;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelOrderResponse;
+import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.ui.MainActivity;
 import com.jhhy.cuiweitourism.ui.RequestRefundActivity;
 import com.jhhy.cuiweitourism.ui.SelectPaymentActivity;
@@ -253,19 +259,25 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
     @Override
     public void goToArgument(View view, View viewGroup, int position, int which) {
         LogUtil.e(TAG, "position = " + position +", which = " + which);
+        Order order = lists.get(position);
+
         switch (which){
             case R.id.btn_order_cancel: //取消订单
-                OrderActionBiz biz = new OrderActionBiz(getContext(), handler);
-                biz.requestCancelOrder(lists.get(position).getOrderSN());
+                if ("2".equals(order.getTypeId())){ //酒店
+                    cancelHotelOrder(position);
+                }else {
+                    OrderActionBiz biz = new OrderActionBiz(getContext(), handler);
+                    biz.requestCancelOrder(order.getOrderSN());
+                }
                 break;
             case R.id.btn_order_refund: //取消退款
                 OrderActionBiz bizRefund = new OrderActionBiz(getContext(), handler);
-                bizRefund.requestCancelRefund(lists.get(position).getOrderSN());
+                bizRefund.requestCancelRefund(order.getOrderSN());
                 break;
             case R.id.btn_order_comment: //去评价——>进入评论页面
                 Intent intent = new Intent(getContext(), RequestRefundActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("order", lists.get(position));
+                bundle.putSerializable("order", order);
                 bundle.putInt("type", 1);
                 intent.putExtras(bundle);
                 startActivityForResult(intent, REQUEST_COMMENT);
@@ -273,19 +285,36 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
             case R.id.btn_tab3_item_sign_contact: //签约付款
                 Intent intentPay = new Intent(getContext(), SelectPaymentActivity.class);
                 Bundle bundlePay = new Bundle();
-                bundlePay.putSerializable("order", lists.get(position));
+                bundlePay.putSerializable("order", order);
                 intentPay.putExtras(bundlePay);
                 startActivityForResult(intentPay, REQUEST_CODE_PAY);
                 break;
             case R.id.btn_order_go_refund: //退款——>进入申请退款页面
                 Intent intentRequestRefund = new Intent(getContext(), RequestRefundActivity.class);
                 Bundle bundleRefund = new Bundle();
-                bundleRefund.putSerializable("order", lists.get(position));
+                bundleRefund.putSerializable("order", order);
                 bundleRefund.putInt("type", -1);
                 intentRequestRefund.putExtras(bundleRefund);
                 startActivityForResult(intentRequestRefund, REQUEST_REFUND);
                 break;
         }
+    }
+
+    private void cancelHotelOrder(int position) { //直接取消订单或进入订单详情后再取消订单
+        Order order = lists.get(position);
+        HotelActionBiz hotelActionBiz = new HotelActionBiz();
+        HotelOrderCancelRequest request = new HotelOrderCancelRequest(order.getOrderSN(), "", "", "");
+        hotelActionBiz.setHotelOrderCancel(request, new BizGenericCallback<HotelOrderResponse>() {
+            @Override
+            public void onCompletion(GenericResponseModel<HotelOrderResponse> model) {
+
+            }
+
+            @Override
+            public void onError(FetchError error) {
+
+            }
+        });
     }
 
 

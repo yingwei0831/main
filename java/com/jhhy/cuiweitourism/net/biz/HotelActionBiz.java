@@ -9,6 +9,8 @@ import com.jhhy.cuiweitourism.net.models.FetchModel.HotelCityRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelDetailRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelListFetchRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelListRequest;
+import com.jhhy.cuiweitourism.net.models.FetchModel.HotelOrderCancelRequest;
+import com.jhhy.cuiweitourism.net.models.FetchModel.HotelOrderDetailRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelOrderFetch;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelOrderRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelPriceCheckRequest;
@@ -276,6 +278,23 @@ public class HotelActionBiz extends  BasicActionBiz {
             }
         };
         HttpUtils.executeXutils(request, new FetchGenericCallback<>(fetchResponse));
+    }
+
+    /**
+     * 酒店取消订单
+     */
+    public void setHotelOrderCancel(HotelOrderCancelRequest request, BizGenericCallback<HotelOrderResponse> callback){
+        request.code = "Hotel_cancel";
+
+    }
+
+    /**
+     * 酒店订单详情
+     */
+    public void getHotelOrderDetail(HotelOrderDetailRequest request){
+        request.code = "Hotel_orderinfo";
+
+
     }
 
     /**

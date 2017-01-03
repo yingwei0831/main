@@ -13,6 +13,8 @@ import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.biz.OrderActionBiz;
 import com.jhhy.cuiweitourism.model.Order;
 import com.jhhy.cuiweitourism.model.UserContacts;
+import com.jhhy.cuiweitourism.net.biz.HotelActionBiz;
+import com.jhhy.cuiweitourism.net.models.FetchModel.HotelOrderDetailRequest;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
@@ -234,14 +236,33 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
                 type = bundle.getInt("type");
                 typeId = bundle.getString("typeId");
                 LoadingIndicator.show(this, getString(R.string.http_notice));
-                if ("82".equals(typeId)){ //机票
-
-                }else {
+                if ("82".equals(typeId)){ //机票（国内/国际） 详情
+                    getPlaneOrderDetail();
+                }else if ("2".equals(typeId)){ //酒店 详情
+                    getHotelDetail();
+                }
+                else {
                     OrderActionBiz biz = new OrderActionBiz(getApplicationContext(), handler);
                     biz.getOrderDetail(orderSN);
                 }
             }
         }
+    }
+
+    /**
+     * 机票订单详情（国内/国际）
+     */
+    private void getPlaneOrderDetail() {
+
+    }
+
+    /**
+     * 酒店订单详情
+     */
+    private void getHotelDetail() {
+        HotelActionBiz hotelActionBiz = new HotelActionBiz();
+//        HotelOrderDetailRequest request = new HotelOrderDetailRequest();
+//        hotelActionBiz.getHotelOrderDetail();
     }
 
     private int REQUEST_REFUND = 1501; //申请退款

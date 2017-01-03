@@ -4,6 +4,13 @@ package com.jhhy.cuiweitourism.net.models.ResponseModel;
  * Created by jiahe008 on 2017/1/3.
  */
 public class HotelOrderResponse {
+//    酒店取消订单
+//    <ErrorCode>0</ErrorCode>
+//    <!--0 成功，否则均失败-->
+//    <ErrorMsg>错误</ErrorMsg>
+//    <!--取消失败的失败原因-->
+
+//    酒店下订单
 //    {"head":{"res_code":"0000","res_msg":"success","res_arg":"获取成功"},
 //     "body":{
 //          "ErrorCode":"0",
@@ -31,6 +38,7 @@ public class HotelOrderResponse {
 
     private String ErrorCode;
     private String ErrorMsg;
+
     private String OrderNo;
     private String PlatOrderNo;
     private String CancelTime;
