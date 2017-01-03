@@ -94,11 +94,10 @@ public class PopupWindowScreenTrain extends PopupWindow implements OnClickListen
 
     /**
      * 第二次进入窗口，要显示之前选择的数据
-     * @param startTimePosition
-     * @param arrivalTimePosition
-     * @param typeTrainPosition
-     * @param typeTrainPosition
-     * @param typeSeatPosition
+     * @param startTimePosition 出发时间位置
+     * @param arrivalTimePosition 到达时间位置
+     * @param typeTrainPosition 车型
+     * @param typeSeatPosition 席别类型
      */
     public void refreshView(int startTimePosition, int arrivalTimePosition, int typeTrainPosition, int typeSeatPosition){
         initFirstListView();

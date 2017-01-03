@@ -17,7 +17,8 @@
             android:id="@+id/tv_ticket_item_train_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="G15"/>
+            android:text="G15"
+            android:textColor="@color/colorGrayDark"/>
         <TextView
             android:id="@+id/tv_ticket_item_train_start_time"
             android:layout_width="wrap_content"
@@ -33,7 +34,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="北京南"
-            android:drawableLeft="@mipmap/icon_train_light"/>
+            android:drawableLeft="@mipmap/icon_train_light"
+            android:textColor="@color/colorGrayDark"/>
 
 
     </LinearLayout>
@@ -48,7 +50,8 @@
             android:id="@+id/tv_ticket_item_train_consuming_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="04小时55分"/>
+            android:text="04小时55分"
+            android:textColor="@color/colorGrayDark"/>
         <TextView
             android:id="@+id/tv_ticket_item_train_arrival_time"
             android:layout_width="wrap_content"
@@ -64,7 +67,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="上海虹桥"
-            android:drawableLeft="@mipmap/icon_train_light"/>
+            android:drawableLeft="@mipmap/icon_train_light"
+            android:textColor="@color/colorGrayDark"/>
     </LinearLayout>
 
     <LinearLayout
@@ -87,12 +91,14 @@
             android:layout_height="wrap_content"
             android:text="商务座"
             android:paddingTop="6dp"
-            android:paddingBottom="6dp"/>
+            android:paddingBottom="6dp"
+            android:textColor="@color/colorGrayDark"/>
         <TextView
             android:id="@+id/tv_ticket_item_train_ticket_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="14张"
+            android:textColor="@color/colorGrayDark"
             />
     </LinearLayout>
 
