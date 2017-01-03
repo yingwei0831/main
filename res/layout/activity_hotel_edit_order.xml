@@ -24,7 +24,6 @@
                 android:layout_height="wrap_content"
                 android:background="@android:color/white"
                 android:padding="16dp"
-                android:text="北京鸿坤国际大酒店"
                 android:textColor="@android:color/black"
                 android:textSize="16sp" />
             <!--整体横向布局-->
@@ -59,7 +58,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:paddingLeft="8dp"
-                            android:text="豪华客房" />
+                            />
 
                     </LinearLayout>
 
@@ -125,13 +124,83 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_toRightOf="@+id/tv_room_price_unit"
-                        android:text="1158"
+                        android:text="0"
                         android:textColor="@color/colorTab1RecommendForYouMoney"
                         android:textSize="18sp" />
                 </RelativeLayout>
 
             </LinearLayout>
+            <!--入住人-->
+            <LinearLayout
+                android:id="@+id/layout_train_add_contacts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <!--添加入住人-->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@android:color/white"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp">
 
+                    <TextView
+                        android:id="@+id/tv_train_passenger_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="入住人"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp"
+                        android:layout_centerVertical="true"/>
+
+                    <TextView
+                        android:id="@+id/tv_plane_add_passenger"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="12dp"
+                        android:paddingTop="12dp"
+                        android:layout_alignParentRight="true"
+                        android:drawableLeft="@mipmap/icon_add_passenger"
+                        android:drawablePadding="6dp"
+                        android:text="添加入住人"
+                        android:textColor="@color/colorActionBar"
+                        android:textSize="16sp"
+                        android:visibility="visible"/>
+                </RelativeLayout>
+                <!--此处是动态添加乘车人-->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1.2px"
+                    android:background="@color/colorLineGray2"/>
+                <com.jhhy.cuiweitourism.view.MyListView
+                    android:id="@+id/list_plane_contacts"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@android:color/white"
+                    android:divider="@color/colorLineGray2"
+                    android:dividerHeight="1.2px"
+                    />
+
+            </LinearLayout>
+            <EditText
+                android:id="@+id/et_hotel_order_notice"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:hint="@string/hotel_order_notice"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:textSize="14sp"
+                android:background="@android:color/white"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:textColorHint="@color/colorGrayDark"
+                android:layout_marginTop="10dp"
+                android:gravity="top"
+                />
             <RelativeLayout
                 android:id="@+id/layout_select_room_number"
                 android:layout_width="match_parent"
@@ -248,6 +317,9 @@
 
         </LinearLayout>
     </ScrollView>
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1.2px"
+        android:background="@color/colorLineGray2"/>
     <include layout="@layout/layout_bottom_edit_order" />
 </LinearLayout>

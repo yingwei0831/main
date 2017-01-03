@@ -365,9 +365,14 @@ private List<ADInfo> infos = new ArrayList<ADInfo>();
             @Override
             public void onError(FetchError error) {
                 if (error.localReason != null){
-                    ToastUtil.show(getApplicationContext(), error.localReason);
+//                    ToastUtil.show(getApplicationContext(), error.localReason);
                 }else{
-                    ToastUtil.show(getApplicationContext(), "请求酒店品牌信息失败，请重试");
+//                    ToastUtil.show(getApplicationContext(), "请求酒店品牌信息失败，请重试");
+                }
+                brand = true;
+                if (facility && businessDistrict && district && viewSpot){
+                    search();
+                    resetValue();
                 }
                 LogUtil.e(TAG, "getBrand " + error);
             }

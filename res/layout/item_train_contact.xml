@@ -2,6 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
     >
 
     <ImageView
@@ -31,18 +33,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="4dp"
-            android:paddingTop="12dp"
+            android:paddingTop="4dp"
             android:text="姓名"
-            android:textColor="@android:color/black"/>
+            android:textColor="@android:color/black"
+            android:textColorHint="@color/colorGrayDark"
+            />
 
         <TextView
             android:id="@+id/tv_contact_card_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="12dp"
+            android:paddingBottom="4dp"
             android:paddingTop="4dp"
             android:textColor="@android:color/black"
-            android:text="身份证：111222199909092222" />
+            android:text="身份证：111222199909092222"
+            android:textColorHint="@color/colorGrayDark"
+            />
     </LinearLayout>
 
     <ImageView

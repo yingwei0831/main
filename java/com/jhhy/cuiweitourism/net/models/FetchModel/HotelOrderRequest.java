@@ -18,7 +18,7 @@ public class HotelOrderRequest extends BasicFetchModel {
      * RoomTypeId : 0001
      * RoomTypeName : 豪华大床房(无窗)
      * RatePlanId : 400934
-     * RatePlanName : 含双早
+     * RatePlanName : 含双早                   ProductID
      * ArrivalDate : 2016-12-15
      * DepartureDate : 2016-12-20
      * PassengerType : All                      必填；入住类型: All=统一价； Chinese =内宾价； OtherForeign =外宾价； HongKong =港澳台客人价 Japanese=日本客人价
@@ -84,6 +84,44 @@ public class HotelOrderRequest extends BasicFetchModel {
     private String IsGuarantee;
     private String imgurl;
     private List<RoomBean> rooms;
+
+    public HotelOrderRequest(String uid, String hotelId, String hotelName, String hotelAddress, String hotelCityCode, String hotelCityName, String roomTypeId, String roomTypeName, String ratePlanId, String ratePlanName, String arrivalDate, String departureDate, String passengerType, String paymentType, String numberOfRooms, String numberOfPassengers, String earliestArrivalTime, String latestArrivalTime, String currencyCode, String totalPrice, String passengerIPAddress, String isGuaranteeOrCharged, String confirmationType, String noteToHotel, String noteToSuppler, String isNeedInvoice, ContactBean contact, String daysPrice, String daysBasePrice, String daysBreakfast, String basePrice, String planType, String travelType, String isGuarantee, String imgurl) {
+        this.uid = uid;
+        HotelId = hotelId;
+        HotelName = hotelName;
+        HotelAddress = hotelAddress;
+        HotelCityCode = hotelCityCode;
+        HotelCityName = hotelCityName;
+        RoomTypeId = roomTypeId;
+        RoomTypeName = roomTypeName;
+        RatePlanId = ratePlanId;
+        RatePlanName = ratePlanName;
+        ArrivalDate = arrivalDate;
+        DepartureDate = departureDate;
+        PassengerType = passengerType;
+        PaymentType = paymentType;
+        NumberOfRooms = numberOfRooms;
+        NumberOfPassengers = numberOfPassengers;
+        EarliestArrivalTime = earliestArrivalTime;
+        LatestArrivalTime = latestArrivalTime;
+        CurrencyCode = currencyCode;
+        TotalPrice = totalPrice;
+        PassengerIPAddress = passengerIPAddress;
+        IsGuaranteeOrCharged = isGuaranteeOrCharged;
+        ConfirmationType = confirmationType;
+        NoteToHotel = noteToHotel;
+        NoteToSuppler = noteToSuppler;
+        IsNeedInvoice = isNeedInvoice;
+        Contact = contact;
+        DaysPrice = daysPrice;
+        DaysBasePrice = daysBasePrice;
+        DaysBreakfast = daysBreakfast;
+        BasePrice = basePrice;
+        PlanType = planType;
+        TravelType = travelType;
+        IsGuarantee = isGuarantee;
+        this.imgurl = imgurl;
+    }
 
     public String getUid() {
         return uid;
@@ -373,7 +411,7 @@ public class HotelOrderRequest extends BasicFetchModel {
         this.rooms = rooms;
     }
 
-    public static class ContactBean {
+    public static class ContactBean  extends BasicFetchModel {
         /**
          * Name : 张天明
          * Mobile : 13859684587
@@ -381,6 +419,11 @@ public class HotelOrderRequest extends BasicFetchModel {
 
         private String Name;
         private String Mobile;
+
+        public ContactBean(String name, String mobile) {
+            Name = name;
+            Mobile = mobile;
+        }
 
         public String getName() {
             return Name;
@@ -399,7 +442,7 @@ public class HotelOrderRequest extends BasicFetchModel {
         }
     }
 
-    public static class RoomBean {
+    public static class RoomBean  extends BasicFetchModel {
         /**
          * p : [{"Name":"cheng/feng","Mobile":"15210656933"},{"Name":"cheng/fengs","Mobile":"15210956933"}]
          * RoomNum : 1
@@ -424,14 +467,21 @@ public class HotelOrderRequest extends BasicFetchModel {
             this.p = p;
         }
 
-        public static class PassengerBean {
+        public static class PassengerBean  extends BasicFetchModel {
             /**
              * Name : cheng/feng
              * Mobile : 15210656933
+             * Gender : 必填，Female 女，Maile 男, Unknown 保密
              */
 
             private String Name;
+//            private String Gender;
             private String Mobile;
+
+            public PassengerBean(String name, String mobile) {
+                Name = name;
+                Mobile = mobile;
+            }
 
             public String getName() {
                 return Name;

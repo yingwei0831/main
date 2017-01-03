@@ -84,6 +84,7 @@ import java.util.Map;
                             JSONArray jsonArray1 = new JSONArray();
                             for (Object aryObj1: (List)aryObj){
                                 if (aryObj1 instanceof List){
+
                                 }else if (aryObj1 instanceof BasicFetchModel) {
                                     JSONObject modelJsonObj = toFieldJsonObject(((BasicFetchModel)aryObj1).toMapObject());
                                     jsonArray1.put(modelJsonObj);

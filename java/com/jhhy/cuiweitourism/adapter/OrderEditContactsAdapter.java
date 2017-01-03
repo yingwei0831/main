@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.OnItemTextViewClick;
 import com.jhhy.cuiweitourism.R;
+import com.jhhy.cuiweitourism.net.models.FetchModel.HotelOrderRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketOrderInternationalRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.TrainTicketOrderFetch;
 
@@ -22,6 +23,8 @@ public class OrderEditContactsAdapter extends MyBaseAdapter {
     private OnItemTextViewClick listener;
     private int type;
 
+    private int number; //为了酒店选择联系人
+
     public OrderEditContactsAdapter(Context ct, List list, OnItemTextViewClick listener) {
         super(ct, list);
         this.listener = listener;
@@ -29,6 +32,19 @@ public class OrderEditContactsAdapter extends MyBaseAdapter {
 
     public void setType(int type){
         this.type = type;
+    }
+
+    public void setCount(int count){
+        this.number = count;
+    }
+
+    @Override
+    public int getCount() {
+        if (type == 3){
+            return number;
+        }else {
+            return super.getCount();
+        }
     }
 
     @Override
@@ -60,13 +76,32 @@ public class OrderEditContactsAdapter extends MyBaseAdapter {
             }
         });
 
+        final View clickViewName = holder.tvName;
+        holder.tvName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.onItemTextViewClick(i, clickViewName, 0);
+            }
+        });
         if (type == 1){
             PlaneTicketOrderInternationalRequest.PassengersBean item = (PlaneTicketOrderInternationalRequest.PassengersBean) getItem(i);
             if (item != null) {
                 holder.tvName.setText(item.getName());
                 holder.tvID.setText(item.getCardNo());
             }
-        }else {
+        }else if (type == 3){ //酒店
+            if (i < list.size()){
+                HotelOrderRequest.RoomBean.PassengerBean hotelPassenger = (HotelOrderRequest.RoomBean.PassengerBean) getItem(i);
+                if (hotelPassenger != null){
+                    holder.tvName.setText(hotelPassenger.getName());
+                }
+            }else{
+                holder.tvName.setHint(context.getString(R.string.hotel_passenger_name_hint));
+                holder.tvName.setText("");
+            }
+            holder.tvID.setVisibility(View.GONE);
+        }
+        else {
             TrainTicketOrderFetch.TicketInfo info = (TrainTicketOrderFetch.TicketInfo) getItem(i);
             if (info != null) {
                 holder.tvName.setText(info.getPsgName());

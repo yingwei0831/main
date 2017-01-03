@@ -26,7 +26,7 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
     private String TAG = getClass().getSimpleName();
     private String orderSN;
     private int type = -1; //0:1:2:3:4:5:
-    private String typeId; //1.线路、2.酒店、3租车、8签证、14私人定制、202活动
+    private String typeId; //type 0.全部订单、1.线路、14私人定制、202活动、     2.酒店、8签证、82机票、80火车票
     private Order order;
 
     private TextView tvOrderTitle;
@@ -234,8 +234,12 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
                 type = bundle.getInt("type");
                 typeId = bundle.getString("typeId");
                 LoadingIndicator.show(this, getString(R.string.http_notice));
-                OrderActionBiz biz = new OrderActionBiz(getApplicationContext(), handler);
-                biz.getOrderDetail(orderSN);
+                if ("82".equals(typeId)){ //机票
+
+                }else {
+                    OrderActionBiz biz = new OrderActionBiz(getApplicationContext(), handler);
+                    biz.getOrderDetail(orderSN);
+                }
             }
         }
     }

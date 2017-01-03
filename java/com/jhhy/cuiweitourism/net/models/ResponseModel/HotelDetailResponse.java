@@ -687,7 +687,7 @@ public class HotelDetailResponse {
         private String Name;
         private String Price;
         private String IsOwn;
-//        private String Meals;
+        private String Meals;
         private String IsAssure;
         private String IsBooking;
         private String IsSpecial;
@@ -774,13 +774,13 @@ public class HotelDetailResponse {
             this.IsOwn = IsOwn;
         }
 
-//        public String getMeals() {
-//            return Meals;
-//        }
-//
-//        public void setMeals(String Meals) {
-//            this.Meals = Meals;
-//        }
+        public String getMeals() {
+            return Meals;
+        }
+
+        public void setMeals(String Meals) {
+            this.Meals = Meals;
+        }
 
         public String getIsAssure() {
             return IsAssure;

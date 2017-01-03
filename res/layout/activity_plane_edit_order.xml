@@ -229,7 +229,7 @@
                     android:textSize="16sp"
                     android:textColor="@color/colorActionBar" />
             </RelativeLayout>
-            <!--联系人-->
+            <!--乘机人-->
             <LinearLayout
                 android:id="@+id/layout_train_add_contacts"
                 android:layout_width="match_parent"

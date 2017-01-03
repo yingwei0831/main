@@ -70,6 +70,7 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
     private List<HotelDetailResponse.HotelProductBean> listProducts = new ArrayList<>();
     private List<HotelDetailResponse.HotelProductBean> listProductsCopy = new ArrayList<>();
     private int mPosition; //列表中第几个Room的item
+    public static HotelDetailResponse.HotelProductBean hotelProduct = null;
     private HotelDetailResponse.HotelProductBean roomItem; //选中的某个Room的某个Product
     private HotelPriceCheckResponse priceCheck; //数据校验返回结果
 
@@ -357,10 +358,14 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
         roomItem = listProducts.get(mPosition);
         if ("1".equals(roomItem.getIsBooking())){
             LoadingIndicator.show(HotelDetailActivity.this, getString(R.string.http_notice));
-            String earlierCheckInDate = "";
+            String earlierCheckInDate = ""; //最早到店时间，最晚到店时间
             if (Utils.getCurrentTimeYMD().equals(checkInDate)){
                 Calendar c = Calendar.getInstance();
-                earlierCheckInDate = String.format(Locale.getDefault(), "%s %d%s", checkInDate, c.get(Calendar.HOUR_OF_DAY)+1, ":00:00");
+                if (c.get(Calendar.HOUR_OF_DAY) <23 ) {
+                    earlierCheckInDate = String.format(Locale.getDefault(), "%s %d%s", checkInDate, c.get(Calendar.HOUR_OF_DAY) + 1, ":00:00");
+                }else{
+                    earlierCheckInDate = String.format(Locale.getDefault(), "%s %s", Utils.getTimeStrYMD(System.currentTimeMillis() + 24 * 60 * 60 * 1000), "00:30:00"); //第二天凌晨入住
+                }
             }else{
                 earlierCheckInDate = String.format(Locale.getDefault(), "%s %s", checkInDate, "08:00:00");
             }
@@ -376,6 +381,7 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
                         ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);
                     }else if ("0000".equals(model.headModel.res_code)){
                         priceCheck = model.body;
+                        popupWindow.dismiss(); //选择房间消失
                         setHotelOrder(mPosition);
                     }
                 }
@@ -402,8 +408,11 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
         bundle.putString("checkInDate", checkInDate);
         bundle.putString("checkOutDate", checkOutDate);
         bundle.putInt("stayDays", stayDays);
-        bundle.putInt("position", position); //房间列表中第几个
+        bundle.putInt("number", number);
+//        bundle.putInt("position", position); //房间列表中第几个
+        hotelProduct = listProducts.get(position);
         bundle.putParcelable("selectCity", selectCity);
+        listProducts.get(position);
         intent.putExtras(bundle);
         startActivityForResult(intent, EDIT_HOTEL_ORDER);
     }
@@ -412,8 +421,8 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
     private int positionMeal = 1;
     private int positionBedType = 1;
 
-    private String screenMeal = "";
-    private String screenBedType = "";
+//    private String screenMeal = "";
+//    private String screenBedType = "";
 
     private void showPopupRoomScreen() {
         if (popHotelRoomScreen == null){
@@ -432,38 +441,52 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
         popHotelRoomScreen.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
-//                int positionMealNew = popHotelRoomScreen.getPositionMeal();
-//                int positionBedTypeNew = popHotelRoomScreen.getPositionBedType();
-//                if (positionMeal != positionMealNew && positionBedType != positionBedTypeNew){ //有改变
-//                    positionMeal = positionMealNew;
-//                    positionBedType = positionBedTypeNew;
-//                    listProducts.clear();
-//                    List<HotelDetailResponse.HotelProductBean> listProductsTemp = new ArrayList<HotelDetailResponse.HotelProductBean>();
-//                    //TODO 对当前数据进行房型筛选
-//                    for (HotelDetailResponse.HotelProductBean product : listProductsCopy){
-//                        if (positionMeal == 1){ //不限
-//                            listProducts.add(product);
-//                        } else { //含单早
-//                            if (product.getName().contains("含单早")){
-//                                listProducts.add(product);
-//                            }
-//                        }
-//                    }
-//                    for (HotelDetailResponse.HotelProductBean product : listProducts){
-//                        if (1 == positionBedType){
-//                            listProductsTemp.add(product);
-//                        }else{
-//                            //
-//                            listProductsTemp.add(product);
-//                        }
-//                    }
-//                    listProducts.clear();
-//                    listProducts.addAll(listProductsTemp);
-//                    listProductsTemp.clear();
-//                    listProductsTemp = null;
-//                    adapter.setData(listProducts);
-//                    adapter.notifyDataSetChanged();
-//                }
+                int positionMealNew = popHotelRoomScreen.getPositionMeal();
+                int positionBedTypeNew = popHotelRoomScreen.getPositionBedType();
+                if (positionMeal != positionMealNew || positionBedType != positionBedTypeNew){ //有改变
+                    positionMeal = positionMealNew;
+                    positionBedType = positionBedTypeNew;
+                    listProducts.clear();
+                    List<HotelDetailResponse.HotelProductBean> listProductsTemp = new ArrayList<HotelDetailResponse.HotelProductBean>();
+                    //TODO 对当前数据进行房型筛选
+                    //早餐
+                    for (HotelDetailResponse.HotelProductBean product : listProductsCopy){
+                        if (positionMeal == 1){ //不限
+                            listProducts.add(product);
+                        } else { //含单早
+                            if (positionMeal  == 2 || 3 == positionMeal){ //含早餐 //单份早餐
+                                if (product.getMeals().contains("无早") || product.getMeals().contains("不含早") || product.getName().contains("无早") || product.getName().contains("不含早")){
+
+                                }else{
+                                    listProducts.add(product);
+                                }
+                            }else if (4 == positionMeal) { //双份早餐
+                                if (product.getMeals().contains("含双早") || product.getMeals().contains("含三早") || product.getName().contains("含双早") || product.getName().contains("含三早")){
+                                    listProducts.add(product);
+                                }
+                            }
+                        }
+                    }
+                    //床型
+                    for (HotelDetailResponse.HotelProductBean product : listProducts){
+                        if (1 == positionBedType){
+                            listProductsTemp.add(product);
+                        }else{
+                            //不限，大床，双床，三张床
+                            if (2 == positionBedType && product.getBedType().contains("大床")){
+                                listProductsTemp.add(product);
+                            }else if (3 == positionBedType && product.getBedType().contains("双床")){
+                                listProductsTemp.add(product);
+                            }
+                        }
+                    }
+                    listProducts.clear();
+                    listProducts.addAll(listProductsTemp);
+                    listProductsTemp.clear();
+                    listProductsTemp = null;
+                    adapter.setData(listProducts);
+                    adapter.notifyDataSetChanged();
+                }
             }
         });
     }
@@ -535,6 +558,46 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
         ivReduce.setOnClickListener(this);
         ivAdd.setOnClickListener(this);
         btnReserveOrder.setOnClickListener(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        TAG = null;
+        hotelID = null;
+        hotelBiz = null;
+        hotelDetail = null;
+        hotelListView = null;
+        listView = null;
+        adapter = null;
+        if (listRooms != null){
+            listRooms.clear();
+            listRooms = null;
+        }
+        if (listProducts != null){
+            listProducts.clear();
+            listProducts = null;
+        }
+        if (listProductsCopy != null){
+            listProductsCopy.clear();
+            listProductsCopy = null;
+        }
+        hotelProduct = null;
+        roomItem = null;
+        priceCheck = null;
+        ivCollection = null;
+        ivMainImgs = null;
+        tvHotelName = null;
+        tvHotelLevel = null;
+        tvHotelImgs = null;
+        layoutAddress = null;
+        layoutOpening = null;
+        tvHotelAddress = null;
+        tvOpening = null;
+        tvCheckInDate = null;
+        tvCheckInDays = null;
+        tvScreenRoom = null;
+        selectCity = null;
     }
 
 }

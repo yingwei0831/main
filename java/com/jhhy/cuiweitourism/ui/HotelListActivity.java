@@ -85,8 +85,8 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
     private String isApartment = "0";   //是否公寓；1是0否
     private String brandName = "";  	//酒店品牌编号
     private String facilities = "";     //设施ID 多个设施用逗号,隔开
-    private String sortBy = "G";         //排序项: 价格P/星级S/好评G
-    private String sortType = "D";       //排序顺序:升序A 降序 D
+    private String sortBy = "P";         //排序项: 价格P/星级S/好评G
+    private String sortType = "A";       //排序顺序:升序A 降序 D
 
     private int brandNamePosition ;
     private int facilitiesPosition;

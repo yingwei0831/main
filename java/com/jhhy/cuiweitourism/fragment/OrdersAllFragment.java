@@ -41,7 +41,7 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
     private static final String TYPE = "type";
 
 //    private String title;
-    private String type = "0";
+    private String type = "0"; //type 0.全部订单、1.线路、2.酒店、8签证、14私人定制、202活动、82机票、80火车票
     private boolean refresh; //刷新或加载更多
 
     private PullToRefreshListView pullListView;
@@ -195,14 +195,14 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
 
         adapter = new OrderXListViewAdapter(getContext(), lists, this) {
             @Override
-            public void onOrderItemClick(int position) {
+            public void onOrderItemClick(int position) { //订单详情
 //                if ("1".equals(type)) {
                     Order order = lists.get(position);
                     Intent intent = new Intent(getContext(), Tab4OrderDetailsActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("orderSN", order.getOrderSN());
                     bundle.putInt("type", Integer.parseInt(order.getStatus()));
-                    bundle.putString("typeId", order.getTypeId());
+                    bundle.putString("typeId", order.getTypeId()); //type?
                     intent.putExtras(bundle);
                     startActivityForResult(intent, REQUEST_CODE_DETAIL);
 //                }

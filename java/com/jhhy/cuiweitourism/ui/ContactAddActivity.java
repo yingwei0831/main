@@ -133,6 +133,10 @@ public class ContactAddActivity extends BaseActionBarActivity {
             ToastCommon.toastShortShow(getApplicationContext(), null, "必填项不能为空");
             return;
         }
+//        if (){ //名字中含有数字，返回
+//            ToastCommon.toastShortShow(getApplicationContext(), null, "名字中不能含有无效字符");
+//            return;
+//        }
         if (commit) return;
         commit = true;
         LoadingIndicator.show(ContactAddActivity.this, getString(R.string.http_notice));

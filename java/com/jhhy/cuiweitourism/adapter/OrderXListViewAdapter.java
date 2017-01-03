@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.ArgumentOnClick;
@@ -87,56 +88,64 @@ public abstract class OrderXListViewAdapter extends BaseAdapter implements IOrde
         }
 
         Order order = (Order) getItem(position);
-        if("1".equals(order.getStatus())){ //等待付款——>取消订单，签约付款
-            holder.tvOrderStatus.setText(context.getString(R.string.fragment_mine_wait_pay));
+        if ("2".equals(order.getTypeId())){ //酒店，可以取消订单
+            holder.tvOrderStatus.setText(context.getString(R.string.fragment_mine_hotel_reserve)); //预订成功
             holder.btnOrderCancelPayment.setVisibility(View.GONE); //取消退款
             holder.btnOrderComment.setVisibility(View.GONE); //去评价
-            holder.btnOrderPayment.setVisibility(View.VISIBLE); //签约付款
+            holder.btnOrderPayment.setVisibility(View.GONE); //签约付款
             holder.btnOrderCancel.setVisibility(View.VISIBLE); //取消订单
             holder.btnGoRefund.setVisibility(View.GONE); //退款
-        }else if("0".equals(order.getStatus())) { //正在退款——>取消退款
-            holder.tvOrderStatus.setText(context.getString(R.string.tab3_order_item_wait_refund));
-            holder.btnOrderCancelPayment.setVisibility(View.VISIBLE); //取消退款
-            holder.btnOrderComment.setVisibility(View.GONE); //去评价
-            holder.btnOrderPayment.setVisibility(View.GONE); //签约付款
-            holder.btnOrderCancel.setVisibility(View.GONE); //取消订单
-            holder.btnGoRefund.setVisibility(View.GONE); //退款
-        } else if("5".equals(order.getStatus())){ //交易完成（待评价，已完成）
-            holder.btnOrderCancelPayment.setVisibility(View.GONE); //取消退款
-            holder.btnOrderPayment.setVisibility(View.GONE); //签约付款
-            holder.btnOrderCancel.setVisibility(View.GONE); //取消订单
-            if("0".equals(order.getStatusComment())){ //待评价
-                holder.tvOrderStatus.setText(context.getString(R.string.tab3_order_item_wait_comment));
-                holder.btnOrderComment.setVisibility(View.VISIBLE); //去评价
-                holder.btnGoRefund.setVisibility(View.GONE); //退款
-            } else {
-                holder.tvOrderStatus.setText(context.getString(R.string.tab3_order_item_already_comment));
+        }else {
+            if ("1".equals(order.getStatus())) { //等待付款——>取消订单，签约付款
+                holder.tvOrderStatus.setText(context.getString(R.string.fragment_mine_wait_pay));
+                holder.btnOrderCancelPayment.setVisibility(View.GONE); //取消退款
                 holder.btnOrderComment.setVisibility(View.GONE); //去评价
+                holder.btnOrderPayment.setVisibility(View.VISIBLE); //签约付款
+                holder.btnOrderCancel.setVisibility(View.VISIBLE); //取消订单
                 holder.btnGoRefund.setVisibility(View.GONE); //退款
+            } else if ("0".equals(order.getStatus())) { //正在退款——>取消退款
+                holder.tvOrderStatus.setText(context.getString(R.string.tab3_order_item_wait_refund));
+                holder.btnOrderCancelPayment.setVisibility(View.VISIBLE); //取消退款
+                holder.btnOrderComment.setVisibility(View.GONE); //去评价
+                holder.btnOrderPayment.setVisibility(View.GONE); //签约付款
+                holder.btnOrderCancel.setVisibility(View.GONE); //取消订单
+                holder.btnGoRefund.setVisibility(View.GONE); //退款
+            } else if ("5".equals(order.getStatus())) { //交易完成（待评价，已完成）
+                holder.btnOrderCancelPayment.setVisibility(View.GONE); //取消退款
+                holder.btnOrderPayment.setVisibility(View.GONE); //签约付款
+                holder.btnOrderCancel.setVisibility(View.GONE); //取消订单
+                if ("0".equals(order.getStatusComment())) { //待评价
+                    holder.tvOrderStatus.setText(context.getString(R.string.tab3_order_item_wait_comment));
+                    holder.btnOrderComment.setVisibility(View.VISIBLE); //去评价
+                    holder.btnGoRefund.setVisibility(View.GONE); //退款
+                } else {
+                    holder.tvOrderStatus.setText(context.getString(R.string.tab3_order_item_already_comment));
+                    holder.btnOrderComment.setVisibility(View.GONE); //去评价
+                    holder.btnGoRefund.setVisibility(View.GONE); //退款
+                }
+            } else if ("3".equals(order.getStatus())) { //已取消，不显示
+                holder.tvOrderStatus.setText(context.getString(R.string.tab3_order_item_already_cancel));
+                holder.btnOrderCancelPayment.setVisibility(View.GONE); //取消退款
+                holder.btnOrderComment.setVisibility(View.GONE); //去评价
+                holder.btnOrderPayment.setVisibility(View.GONE); //签约付款
+                holder.btnOrderCancel.setVisibility(View.GONE);
+                holder.btnGoRefund.setVisibility(View.GONE); //退款
+            } else if ("4".equals(order.getStatus())) { //已退款，不显示
+                holder.tvOrderStatus.setText(context.getString(R.string.tab3_order_item_already_refund));
+                holder.btnOrderCancelPayment.setVisibility(View.GONE); //取消退款
+                holder.btnOrderComment.setVisibility(View.GONE); //去评价
+                holder.btnOrderPayment.setVisibility(View.GONE); //签约付款
+                holder.btnOrderCancel.setVisibility(View.GONE);
+                holder.btnGoRefund.setVisibility(View.GONE); //退款
+            } else if ("2".equals(order.getStatus())) { //付款成功——>申请退款
+                holder.tvOrderStatus.setText(context.getString(R.string.tab3_order_item_payde));
+                holder.btnGoRefund.setVisibility(View.VISIBLE); //退款
+                holder.btnOrderCancelPayment.setVisibility(View.GONE); //取消退款
+                holder.btnOrderComment.setVisibility(View.GONE); //去评价
+                holder.btnOrderPayment.setVisibility(View.GONE); //签约付款
+                holder.btnOrderCancel.setVisibility(View.GONE);
             }
-        } else if ("3".equals(order.getStatus())){ //已取消，不显示
-            holder.tvOrderStatus.setText(context.getString(R.string.tab3_order_item_already_cancel));
-            holder.btnOrderCancelPayment.setVisibility(View.GONE); //取消退款
-            holder.btnOrderComment.setVisibility(View.GONE); //去评价
-            holder.btnOrderPayment.setVisibility(View.GONE); //签约付款
-            holder.btnOrderCancel.setVisibility(View.GONE);
-            holder.btnGoRefund.setVisibility(View.GONE); //退款
-        } else if ("4".equals(order.getStatus()) ){ //已退款，不显示
-            holder.tvOrderStatus.setText(context.getString(R.string.tab3_order_item_already_refund));
-            holder.btnOrderCancelPayment.setVisibility(View.GONE); //取消退款
-            holder.btnOrderComment.setVisibility(View.GONE); //去评价
-            holder.btnOrderPayment.setVisibility(View.GONE); //签约付款
-            holder.btnOrderCancel.setVisibility(View.GONE);
-            holder.btnGoRefund.setVisibility(View.GONE); //退款
-        } else if ("2".equals(order.getStatus())){ //付款成功——>申请退款
-            holder.tvOrderStatus.setText(context.getString(R.string.tab3_order_item_payde));
-            holder.btnGoRefund.setVisibility(View.VISIBLE); //退款
-            holder.btnOrderCancelPayment.setVisibility(View.GONE); //取消退款
-            holder.btnOrderComment.setVisibility(View.GONE); //去评价
-            holder.btnOrderPayment.setVisibility(View.GONE); //签约付款
-            holder.btnOrderCancel.setVisibility(View.GONE);
         }
-
         final View finalConvertView = view;
 
         //取消订单

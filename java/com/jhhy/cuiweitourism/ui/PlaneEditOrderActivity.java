@@ -360,7 +360,7 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
                 adapter.setData(listContact);
                 adapter.notifyDataSetChanged();
                 break;
-            case R.id.iv_contact_view_detail: //详情
+            case R.id.iv_contact_view_detail: //详情/更换联系人
 //                ToastUtil.show(getApplicationContext(), "详情");
                 break;
 
