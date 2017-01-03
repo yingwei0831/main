@@ -5,6 +5,7 @@ import android.os.Handler;
 
 import com.jhhy.cuiweitourism.net.models.FetchModel.NullArrayFetchModel;
 import com.jhhy.cuiweitourism.net.models.FetchModel.TrainOrderListFetch;
+import com.jhhy.cuiweitourism.net.models.FetchModel.TrainOrderRefundRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.TrainStationFetch;
 import com.jhhy.cuiweitourism.net.models.FetchModel.TrainStopsFetch;
 import com.jhhy.cuiweitourism.net.models.FetchModel.TrainTicketFetch;
@@ -42,7 +43,6 @@ public class TrainTicketActionBiz extends BasicActionBiz {
     /**
      *  火车票
      */
-
     public void trainTicketInfo(TrainTicketFetch fetch, BizGenericCallback<ArrayList<TrainTicketDetailInfo>> callback) {
         fetch.code = "Train_index";
 
@@ -109,7 +109,6 @@ public class TrainTicketActionBiz extends BasicActionBiz {
     /**
      *  火车站
      */
-
     public void trainStationInfo(BizGenericCallback<ArrayList<TrainStationInfo>> callback){
         NullArrayFetchModel fetchModel = new NullArrayFetchModel();
         fetchModel.code = "Train_station";
@@ -170,7 +169,6 @@ public class TrainTicketActionBiz extends BasicActionBiz {
     /**
      *  火车票订单提交,下单到平台
      */
-
     public void trainTicketOrderSubmit(TrainTicketOrderFetch fetch, BizGenericCallback<TrainTicketOrderInfo> callback){
         fetch.code = "Train_traininto";
         FetchGenericResponse<TrainTicketOrderInfo> fetchResponse = new FetchGenericResponse<TrainTicketOrderInfo>(callback) {
@@ -192,16 +190,16 @@ public class TrainTicketActionBiz extends BasicActionBiz {
     /**
      *  火车票订单查询 Order_searchtrainorder
      */
-//    public void trainTicketOrderQuery(TrainOrderListFetch fetch, BizGenericCallback<> callback){
-//        fetch.code = "Order_searchtrainorder";
-//
-//    }
+    public void trainTicketOrderQuery(TrainOrderListFetch fetch){
+        fetch.code = "Order_searchtrainorder";
+
+    }
 
     /**
      *  火车票退票 Order_refund
      */
-    public void trainTicketCancel(){
-
+    public void trainTicketCancel(TrainOrderRefundRequest request){
+        request.code = "Order_refund";
     }
 
 }
