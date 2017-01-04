@@ -26,6 +26,7 @@
         android:paddingBottom="6dp"
         android:paddingLeft="2dp"
         android:gravity="center_vertical"
+        android:textColor="@color/colorGrayDark"
         />
     <RelativeLayout
         android:paddingBottom="8dp"
@@ -41,6 +42,7 @@
             android:drawableLeft="@mipmap/icon_location_gray"
             android:paddingLeft="2dp"
             android:gravity="center_vertical"
+            android:textColor="@color/colorGrayDark"
             />
         <TextView
             android:id="@+id/tv_visa_price_unit"
@@ -68,6 +70,7 @@
             android:layout_height="wrap_content"
             android:text="起"
             android:layout_alignParentRight="true"
+            android:textColor="@color/colorGrayDark"
             />
     </RelativeLayout>
 </LinearLayout>

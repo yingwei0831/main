@@ -8,6 +8,7 @@ import com.jhhy.cuiweitourism.net.models.FetchModel.VisaCountry;
 import com.jhhy.cuiweitourism.net.models.FetchModel.VisaDetail;
 import com.jhhy.cuiweitourism.net.models.FetchModel.VisaHot;
 import com.jhhy.cuiweitourism.net.models.FetchModel.VisaHotCountry;
+import com.jhhy.cuiweitourism.net.models.FetchModel.VisaOrderRequest;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.BasicResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchResponseModel;
@@ -15,9 +16,11 @@ import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.VisaClassification;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.VisaCountryInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.VisaDetailInfo;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.VisaDetailInfoKey;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.VisaHotCountryInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.VisaHotInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.VisaMaterial;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.VisaOrderResponse;
 import com.jhhy.cuiweitourism.net.netcallback.BizCallback;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.netcallback.FetchCallBack;
@@ -25,6 +28,7 @@ import com.jhhy.cuiweitourism.net.netcallback.FetchGenericCallback;
 import com.jhhy.cuiweitourism.net.netcallback.FetchGenericResponse;
 import com.jhhy.cuiweitourism.net.netcallback.FetchResponse;
 import com.jhhy.cuiweitourism.net.netcallback.HttpUtils;
+import com.jhhy.cuiweitourism.net.utils.LogUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,7 +49,7 @@ public class VisaActionBiz extends BasicActionBiz {
 //    public VisaActionBiz(Context context, Handler handler) {
 //        super(context, handler);
 //    }
-
+    private static final String TAG = "VisaActionBiz";
     public VisaActionBiz() {
         super();
     }
@@ -146,8 +150,13 @@ public class VisaActionBiz extends BasicActionBiz {
         final FetchGenericResponse<VisaDetailInfo> fetchResponse = new FetchGenericResponse<VisaDetailInfo>(callBack) {
             @Override
             public void onCompletion(FetchResponseModel response) {
+                response.body = response.body.replace("'", "\"");
+                LogUtil.e(TAG, response.body);
 //                ArrayList<String> array = parseJsonTotwoLevelArray(response);
-                ArrayList<Object> array = parseJsonToObject(response, ArrayList.class);
+                VisaDetailInfoKey visaInfo = parseJsonToObject(response, VisaDetailInfoKey.class);
+
+//                ArrayList<Object> array = parseJsonToObject(response, ArrayList.class);
+                ArrayList<Object> array = (ArrayList<Object>) visaInfo.getVisaInfo();
                 VisaDetailInfo visaDetailInfo = new VisaDetailInfo();
                 visaDetailInfo.visaId = (String) array.get(0);
                 visaDetailInfo.visaName = (String) array.get(1);
@@ -220,6 +229,27 @@ public class VisaActionBiz extends BasicActionBiz {
             }
         };
         HttpUtils.executeXutils(visaDetail, new FetchGenericCallback(fetchResponse));
+    }
+
+    /**
+     * 签证下单
+     */
+    public void setVisaOrder(VisaOrderRequest request, BizGenericCallback<VisaOrderResponse> callback){
+        request.code = "Visa_visaorder";
+        FetchGenericResponse<VisaOrderResponse> response = new FetchGenericResponse<VisaOrderResponse>(callback) {
+            @Override
+            public void onCompletion(FetchResponseModel response) {
+                VisaOrderResponse model = parseJsonToObject(response, VisaOrderResponse.class);
+                GenericResponseModel<VisaOrderResponse> responseModel = new GenericResponseModel<>(response.head, model);
+                this.bizCallback.onCompletion(responseModel);
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                this.bizCallback.onError(error);
+            }
+        };
+        HttpUtils.executeXutils(request, new FetchGenericCallback<>(response));
     }
 }
 

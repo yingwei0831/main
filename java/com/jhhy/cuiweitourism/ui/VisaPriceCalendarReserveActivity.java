@@ -101,6 +101,12 @@ public class VisaPriceCalendarReserveActivity extends BaseActivity implements Vi
     }
 
     private void setupView() {
+        ImageView ivLeft = (ImageView) findViewById(R.id.title_main_tv_left_location);
+        ivLeft.setOnClickListener(this);
+
+        TextView tvTitle = (TextView) findViewById(R.id.tv_title_inner_travel);
+        tvTitle.setText("选择签证需求日期");
+
         calendar = (KCalendar) findViewById(R.id.calendar);
         tvCurrentDate = (TextView) findViewById(R.id.tv_calendar_month);
         ivLastMonth = (ImageView) findViewById(R.id.imgv_calendar_last_month);
@@ -206,6 +212,9 @@ public class VisaPriceCalendarReserveActivity extends BaseActivity implements Vi
     @Override
     public void onClick(View view) {
         switch (view.getId()){
+            case R.id.title_main_tv_left_location:
+                finish();
+                break;
             case R.id.imgv_calendar_last_month: //上个月
                 calendar.lastMonth();
                 break;
