@@ -1,7 +1,6 @@
 package com.jhhy.cuiweitourism.popupwindows;
 
-
-import android.app.Activity;
+import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.view.Gravity;
 import android.view.View;
@@ -27,10 +26,12 @@ import java.util.Set;
 
 import cn.jeesoft.ArrayDataDemo;
 
-
+/**
+ * 国内机票筛选 起飞时间，机场，机型，航空公司
+ */
 public class PopupWindowScreenPlane extends PopupWindow implements OnClickListener {
 
-    private Activity mActivity;
+    private Context context;
     private String TAG = PopupWindowScreenPlane.class.getSimpleName();
 
     private ListView listViewFirst; //主
@@ -40,18 +41,17 @@ public class PopupWindowScreenPlane extends PopupWindow implements OnClickListen
     private InnerTravelTripDaysListViewAdapter secondAdapter1; //从
 
     private List<String> firstList; //主
-    private List<String> secondListStartTime; //从：发车时段
+    private List<String> secondListStartTime; //从：起飞时间
 
-    private List<String> secondListArrivalTime = new ArrayList<>(); //到达时段
-    private List<String> secondListTrainType = new ArrayList<>(); //车型
-    private List<String> secondListSeatType = new ArrayList(); //席别类型
-//    private Map<String, String> secondListSeatType; // = new HashMap<>(); //席别类型
+    private List<String> secondListAirport = new ArrayList<>(); //机场
+    private List<String> secondListPlaneType = new ArrayList<>(); //机型
+    private List<String> secondListAirCompany = new ArrayList(); //航空公司
 
     private LinearLayout layoutStartTime; //从：出发时间
-    private RelativeLayout layoutStartTime1; //最早出发时间
-    private RelativeLayout layoutStartTime2; //最晚出发时间
-    private TextView tvEarlyTime;
-    private TextView tvLaterTime;
+//    private RelativeLayout layoutStartTime1; //最早出发时间
+//    private RelativeLayout layoutStartTime2; //最晚出发时间
+//    private TextView tvEarlyTime;
+//    private TextView tvLaterTime;
 
     private TextView tvCancel; //取消
     private TextView tvConfirm; //确认
@@ -59,23 +59,19 @@ public class PopupWindowScreenPlane extends PopupWindow implements OnClickListen
     private boolean isClear;
 
     private int selectionStartTime = 0;
-    private int selectionArrivalTime = -1; //到达时间
-    private int selectionTypeTrain = -1; //车型
-    private int selectionTypeSeat = -1; //席别类型
-
-//    private String sort = "";
-//    private String day = "";
-//    private String price = "";
+    private int selectionAirport = 0; //机场
+    private int selectionPlaneType = 0; //车型
+    private int selectionCompany = 0; //航空公司
 
     private boolean commit;
 
-    public PopupWindowScreenPlane(Activity activity, View parent) {
-        super(activity);
-        mActivity = activity;
-        View view = View.inflate(activity, R.layout.inner_travel_popupwindow, null);
-        view.startAnimation(AnimationUtils.loadAnimation(activity, R.anim.fade_ins));
+    public PopupWindowScreenPlane(Context context) {
+        super(context);
+        this.context = context;
+        View view = View.inflate(context, R.layout.inner_travel_popupwindow, null);
+        view.startAnimation(AnimationUtils.loadAnimation(context, R.anim.fade_ins));
         LinearLayout ll_popup = (LinearLayout) view.findViewById(R.id.ll_popup);
-        ll_popup.startAnimation(AnimationUtils.loadAnimation(activity, R.anim.push_bottom_in_2));
+        ll_popup.startAnimation(AnimationUtils.loadAnimation(context, R.anim.push_bottom_in_2));
 
         setWidth(LayoutParams.MATCH_PARENT);
         setHeight(LayoutParams.MATCH_PARENT);
@@ -83,7 +79,7 @@ public class PopupWindowScreenPlane extends PopupWindow implements OnClickListen
         setFocusable(true);
         setOutsideTouchable(true);
         setContentView(view);
-        showAtLocation(parent, Gravity.BOTTOM, 0, 0);
+//        showAtLocation(parent, Gravity.BOTTOM, 0, 0);
         update();
 
         initView(view);
@@ -94,42 +90,32 @@ public class PopupWindowScreenPlane extends PopupWindow implements OnClickListen
 
     /**
      * 第二次进入窗口，要显示之前选择的数据
-     * @param startTimePosition
-     * @param arrivalTimePosition
-     * @param typeTrainPosition
-     * @param typeTrainPosition
-     * @param typeSeatPosition
+     * @param startTimePosition 起飞时间
+     * @param innerAirport      机场
+     * @param innerPlaneType    机型
+     * @param innerCompany      航空公司
      */
-    public void refreshView(int startTimePosition, int arrivalTimePosition, int typeTrainPosition, int typeSeatPosition){
-        initFirstListView();
-        if (startTimePosition != -1) {
-            selectionStartTime = startTimePosition;
-        } else {
-            selectionStartTime = 0;
-        }
-        if (arrivalTimePosition != -1){
-            selectionArrivalTime = arrivalTimePosition;
-        }
-        if (typeTrainPosition != -1){
-            selectionTypeTrain = typeTrainPosition;
-        }
-        if (typeSeatPosition != -1) {
-            selectionTypeSeat = typeSeatPosition;
-        }
+    public void refreshView(int startTimePosition, int innerAirport, int innerPlaneType, int innerCompany){
+        firstAdapter.setSelectPosition(0);
+        listViewFirst.setAdapter(firstAdapter);
 
-//        if (tag == 1){
-            secondAdapter1.setSelectPosition(selectionStartTime);
-//        } else if (tag == 2) {
-//            secondAdapter1.setSelectPosition(selectionArrivalTime);
-//        }else if (tag == 4){
-//            secondAdapter1.setSelectPosition(selectionTypeSeat);
-//        }
+        commit = false;
+
+        selectionStartTime = startTimePosition;
+
+        selectionAirport = innerAirport;
+
+        selectionPlaneType = innerPlaneType;
+
+        selectionCompany = innerCompany;
+
+        secondAdapter1.setSelectPosition(selectionStartTime);
         secondAdapter1.notifyDataSetChanged();
     }
 
 
     private void initFirstListView() {
-        firstAdapter = new InnerTravelFirstListViewAdapter(mActivity, firstList);
+        firstAdapter = new InnerTravelFirstListViewAdapter(context, firstList);
 
         firstAdapter.setSelectPosition(0);
         listViewFirst.setAdapter(firstAdapter);
@@ -138,7 +124,7 @@ public class PopupWindowScreenPlane extends PopupWindow implements OnClickListen
         listViewFirst.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                updataListView(position);
+                updateListView(position);
             }
         });
 
@@ -146,18 +132,17 @@ public class PopupWindowScreenPlane extends PopupWindow implements OnClickListen
 
     private void initSecondListView(int position) {
 //        if (1 == tag) {
-            secondAdapter1 = new InnerTravelTripDaysListViewAdapter(mActivity, secondListStartTime);
+            secondAdapter1 = new InnerTravelTripDaysListViewAdapter(context, secondListStartTime);
             secondAdapter1.setSelectPosition(position);
-//        }
-//        else if (2 == tag) {
-//            secondAdapter1 = new InnerTravelTripDaysListViewAdapter(mActivity, secondListArrivalTime);
+//        } else if (2 == tag) {
+//            secondAdapter1 = new InnerTravelTripDaysListViewAdapter(context, secondListArrivalTime);
 //            secondAdapter1.setSelectPosition(selectionArrivalTime);
 //        } else if (3 == tag) {
-//            secondAdapter1 = new InnerTravelTripDaysListViewAdapter(mActivity, secondListTrainType);
-//            secondAdapter1.setSelectPosition(selectionTypeTrain);
+//            secondAdapter1 = new InnerTravelTripDaysListViewAdapter(context, secondListTrainType);
+//            secondAdapter1.setSelectPosition(selectionPlaneType);
 //        } else if (4 == tag) {
-//            secondAdapter1 = new InnerTravelTripDaysListViewAdapter(mActivity, secondListSeatType);
-//            secondAdapter1.setSelectPosition(selectionTypeSeat);
+//            secondAdapter1 = new InnerTravelTripDaysListViewAdapter(context, secondListSeatType);
+//            secondAdapter1.setSelectPosition(selectionCompany);
 //        }
 
         listViewSecond.setAdapter(secondAdapter1);
@@ -165,7 +150,7 @@ public class PopupWindowScreenPlane extends PopupWindow implements OnClickListen
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 LogUtil.e(TAG, "position = " + position);
-                updataListView2(position);
+                updateListView2(position);
             }
         });
 //        initThirdListView(position);
@@ -173,59 +158,58 @@ public class PopupWindowScreenPlane extends PopupWindow implements OnClickListen
 
     /**
      * 第一级ListViewItem单击事件,更新第二级listView
-     * @param position
+     * @param position 第一级listView的位置
      */
-    private void updataListView(int position) {
+    private void updateListView(int position) {
         firstAdapter.setSelectPosition(position);
         firstAdapter.notifyDataSetChanged();
         //更新第二ListView
         if (0 == position) { //发车时段
             secondAdapter1.setData(secondListStartTime);
             secondAdapter1.setSelectPosition(selectionStartTime);
-            secondAdapter1.notifyDataSetChanged();
+
             listViewSecond.smoothScrollToPosition(selectionStartTime);
         } else if (1 == position) { //到达时段
-            secondAdapter1.setData(secondListArrivalTime);
-            secondAdapter1.setSelectPosition(selectionArrivalTime);
-            secondAdapter1.notifyDataSetChanged();
-            listViewSecond.smoothScrollToPosition(selectionArrivalTime);
-        } else if (2 == position) { //车型
-            secondAdapter1.setData(secondListTrainType);
-            secondAdapter1.setSelectPosition(selectionTypeTrain);
-            secondAdapter1.notifyDataSetChanged();
-            listViewSecond.smoothScrollToPosition(selectionTypeTrain);
-        }else if (3 == position) { //席别类型
-            secondAdapter1.setData(secondListSeatType);
-            secondAdapter1.setSelectPosition(selectionTypeSeat);
-            secondAdapter1.notifyDataSetChanged();
-            listViewSecond.smoothScrollToPosition(selectionTypeSeat);
-        }
+            secondAdapter1.setData(secondListAirport);
+            secondAdapter1.setSelectPosition(selectionAirport);
 
+            listViewSecond.smoothScrollToPosition(selectionAirport);
+        } else if (2 == position) { //车型
+            secondAdapter1.setData(secondListPlaneType);
+            secondAdapter1.setSelectPosition(selectionPlaneType);
+
+            listViewSecond.smoothScrollToPosition(selectionPlaneType);
+        }else if (3 == position) { //席别类型
+            secondAdapter1.setData(secondListAirCompany);
+            secondAdapter1.setSelectPosition(selectionCompany);
+
+            listViewSecond.smoothScrollToPosition(selectionCompany);
+        }
+        secondAdapter1.notifyDataSetChanged();
     }
 
     /**
      * 第二级ListViewItem单击事件
-     * position 第一级ListView的位置
+     * position 第二级ListView的位置
      */
-    private void updataListView2(int position) {
+    private void updateListView2(int position) {
         LogUtil.e(TAG, "isClear = " + isClear + ", position = " + position);
         if (isClear) {
             isClear = false;
         }
 
-        if (mActivity.getResources().getString(R.string.train_screen_start_time).equals(firstAdapter.getCurrentPositionItem())) { //发车时段
+        if (context.getResources().getString(R.string.plane_screen_start_time).equals(firstAdapter.getCurrentPositionItem())) { //发车时段
             selectionStartTime = position;
-        } else if (mActivity.getResources().getString(R.string.train_screen_arrival_time).equals(firstAdapter.getCurrentPositionItem())) { //到达时段
-            selectionArrivalTime = position;
-        } else if (mActivity.getResources().getString(R.string.train_screen_type_train).equals(firstAdapter.getCurrentPositionItem())) { //车型
-            selectionTypeTrain = position;
-        } else if (mActivity.getResources().getString(R.string.train_screen_type_seat).equals(firstAdapter.getCurrentPositionItem())) { //席别类型
-            selectionTypeSeat = position;
+        } else if (context.getResources().getString(R.string.plane_screen_from_airport).equals(firstAdapter.getCurrentPositionItem())) { //到达时段
+            selectionAirport= position;
+        } else if (context.getResources().getString(R.string.plane_screen_aircraft_model).equals(firstAdapter.getCurrentPositionItem())) { //车型
+            selectionPlaneType = position;
+        } else if (context.getResources().getString(R.string.plane_screen_airline_company).equals(firstAdapter.getCurrentPositionItem())) { //席别类型
+            selectionCompany = position;
         }
         secondAdapter1.setSelectPosition(position);
         secondAdapter1.notifyDataSetChanged();
         listViewSecond.smoothScrollToPosition(position);
-//        }
     }
 
     private void initView(View view) {
@@ -238,19 +222,18 @@ public class PopupWindowScreenPlane extends PopupWindow implements OnClickListen
         listViewSecond.setVisibility(View.VISIBLE);
         layoutStartTime = (LinearLayout) view.findViewById(R.id.layout_second_start_time);
         layoutStartTime.setVisibility(View.GONE);
-        layoutStartTime1 = (RelativeLayout) view.findViewById(R.id.layout_start_time_1);
-        layoutStartTime2 = (RelativeLayout) view.findViewById(R.id.layout_start_time_2);
-
-        tvEarlyTime = (TextView) view.findViewById(R.id.inner_trip_start_time_1);
-        tvLaterTime = (TextView) view.findViewById(R.id.inner_trip_start_time_2);
+//        layoutStartTime1 = (RelativeLayout) view.findViewById(R.id.layout_start_time_1);
+//        layoutStartTime2 = (RelativeLayout) view.findViewById(R.id.layout_start_time_2);
+//        tvEarlyTime = (TextView) view.findViewById(R.id.inner_trip_start_time_1);
+//        tvLaterTime = (TextView) view.findViewById(R.id.inner_trip_start_time_2);
     }
 
     private void initData() {
         firstList = new ArrayList<>();
-        firstList.add(mActivity.getString(R.string.plane_screen_start_time));
-        firstList.add(mActivity.getString(R.string.plane_screen_from_airport));
-        firstList.add(mActivity.getString(R.string.plane_screen_aircraft_model));
-        firstList.add(mActivity.getString(R.string.plane_screen_airline_company));
+        firstList.add(context.getString(R.string.plane_screen_start_time));
+        firstList.add(context.getString(R.string.plane_screen_from_airport));
+        firstList.add(context.getString(R.string.plane_screen_aircraft_model));
+        firstList.add(context.getString(R.string.plane_screen_airline_company));
 
         secondListStartTime = new ArrayList<>();
         secondListStartTime.add("不限");
@@ -259,28 +242,11 @@ public class PopupWindowScreenPlane extends PopupWindow implements OnClickListen
         secondListStartTime.add("下午 (14:00~18:00)");
         secondListStartTime.add("晚上 (18:00~24:00)");
 
-        secondListArrivalTime.add("不限");
-        secondListArrivalTime.add("00:00~06:00");
-        secondListArrivalTime.add("06:00~12:00");
-        secondListArrivalTime.add("12:00~18:00");
-        secondListArrivalTime.add("18:00~24:00");
+        secondListAirport.add("不限");
 
-        secondListTrainType.add("不限");
-        secondListTrainType.add("动车/高铁");
-        secondListTrainType.add("普通");
+        secondListPlaneType.add("不限");
 
-        secondListSeatType = getList(ArrayDataDemo.getSeat(1).keySet());
-    }
-
-    //将map中key取出放入List
-    private List<String> getList(Set<String> seat){
-        List<String> seatList = new ArrayList<>();
-        Iterator it = seat.iterator();
-        while (it.hasNext()){
-            String s = (String) it.next();
-            seatList.add(s);
-        }
-        return seatList;
+        secondListAirCompany.add("不限");
     }
 
     private void addListener() {
@@ -311,23 +277,23 @@ public class PopupWindowScreenPlane extends PopupWindow implements OnClickListen
         isClear = true;
 
         selectionStartTime = 0;
-        selectionArrivalTime = -1;
-        selectionTypeTrain = -1;
-        selectionTypeSeat = -1;
+        selectionAirport = 0;
+        selectionPlaneType = 0;
+        selectionCompany = 0;
 
 
-        if (mActivity.getResources().getString(R.string.train_screen_start_time).equals(firstAdapter.getCurrentPositionItem())) { //发车时段
+        if (context.getResources().getString(R.string.train_screen_start_time).equals(firstAdapter.getCurrentPositionItem())) { //发车时段
             selectionStartTime = 0;
             secondAdapter1.setSelectPosition(selectionStartTime); //默认排序，0
-        } else if (mActivity.getResources().getString(R.string.train_screen_arrival_time).equals(firstAdapter.getCurrentPositionItem())) { //到达时段
-            selectionArrivalTime = -1;
-            secondAdapter1.setSelectPosition(selectionArrivalTime);
-        } else if (mActivity.getResources().getString(R.string.train_screen_type_train).equals(firstAdapter.getCurrentPositionItem())) { //车型
-            selectionTypeTrain = -1;
-            secondAdapter1.setSelectPosition(selectionTypeTrain);
-        }else if (mActivity.getResources().getString(R.string.train_screen_type_seat).equals(firstAdapter.getCurrentPositionItem())) { //席别类型
-            selectionTypeSeat = -1;
-            secondAdapter1.setSelectPosition(selectionTypeSeat);
+        } else if (context.getResources().getString(R.string.train_screen_arrival_time).equals(firstAdapter.getCurrentPositionItem())) { //到达时段
+            selectionAirport = -1;
+            secondAdapter1.setSelectPosition(selectionAirport);
+        } else if (context.getResources().getString(R.string.train_screen_type_train).equals(firstAdapter.getCurrentPositionItem())) { //车型
+            selectionPlaneType = -1;
+            secondAdapter1.setSelectPosition(selectionPlaneType);
+        }else if (context.getResources().getString(R.string.train_screen_type_seat).equals(firstAdapter.getCurrentPositionItem())) { //席别类型
+            selectionCompany = -1;
+            secondAdapter1.setSelectPosition(selectionCompany);
         }
         secondAdapter1.notifyDataSetChanged();
         listViewSecond.smoothScrollToPosition(0);
@@ -341,19 +307,19 @@ public class PopupWindowScreenPlane extends PopupWindow implements OnClickListen
         return commit;
     }
 
-    public int getStartTime(){
+    public int getSelectionStartTime() {
         return selectionStartTime;
     }
 
-    public int getSelectionArrivalTime() {
-        return selectionArrivalTime;
+    public int getSelectionAirport() {
+        return selectionAirport;
     }
 
-    public int getSelectionTypeTrain() {
-        return selectionTypeTrain;
+    public int getSelectionPlaneType() {
+        return selectionPlaneType;
     }
 
-    public int getSelectionTypeSeat() {
-        return selectionTypeSeat;
+    public int getSelectionCompany() {
+        return selectionCompany;
     }
 }

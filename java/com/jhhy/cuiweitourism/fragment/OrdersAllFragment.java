@@ -152,6 +152,7 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
         getInternetData();
         lists.clear();
         adapter.setData(lists);
+        adapter.setType(Integer.parseInt(type));
     }
     private void addListener() {
         pullListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
@@ -202,18 +203,22 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
         adapter = new OrderXListViewAdapter(getContext(), lists, this) {
             @Override
             public void onOrderItemClick(int position) { //订单详情
-//                if ("1".equals(type)) {
-                    Order order = lists.get(position);
+                Order order = lists.get(position);
+                if ("2".equals(order.getTypeId()) && "0".equals(type)){ //酒店，在这里没有详情，没有操作，只显示
+                    ToastCommon.toastShortShow(getContext(), null, "请选择酒店订单，再进入详细信息页");
+                } else {
                     Intent intent = new Intent(getContext(), Tab4OrderDetailsActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("orderSN", order.getOrderSN());
-                    bundle.putInt("type", Integer.parseInt(order.getStatus()));
-                    bundle.putString("typeId", order.getTypeId()); //type?
+                    bundle.putInt("type", Integer.parseInt(order.getStatus())); //订单状态
+                    bundle.putString("typeId", order.getTypeId()); //订单类型
+                    bundle.putString("sanfangorderno", order.getSanfangorderno()); //酒店，签证，国内机票，国际机票，火车票
                     intent.putExtras(bundle);
                     startActivityForResult(intent, REQUEST_CODE_DETAIL);
-//                }
+                }
             }
         };
+        adapter.setType(Integer.parseInt(type));
         pullListView.setAdapter(adapter);
     }
 

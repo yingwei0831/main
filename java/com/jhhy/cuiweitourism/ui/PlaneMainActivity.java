@@ -201,16 +201,22 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
             bundle.putSerializable("fromCity", fromCity);
             bundle.putSerializable("toCity", toCity);
             bundle.putString("dateFrom", dateFrom);
-            bundle.putString("traveltype", traveltype);
-//            bundle.putInt("type", type); //单程，往返
-            if (type == 2) { //往返
-                if (TextUtils.isEmpty(dateReturn)){
-                    ToastUtil.show(getApplicationContext(), "请选择返程日期");
-                    return;
-                }
-                LogUtil.e(TAG, "dateReturn = " + dateReturn);
-                bundle.putString("dateReturn", dateReturn);
-            }
+//            bundle.putString("traveltype", traveltype);
+            bundle.putString("traveltype", "OW"); //此处说不要返程了！
+
+            LogUtil.e(TAG, "dateFrom = " + dateFrom +", dateReturn = " + dateReturn);
+//            if (type == 2) { //往返
+//                if (TextUtils.isEmpty(dateReturn)){
+//                    ToastUtil.show(getApplicationContext(), "请选择返程日期");
+//                    return;
+//                }
+//                //判断返程日期与出发日期之间相差天数>0
+//                if (Utils.getDiff(dateFrom.substring(0, dateFrom.indexOf(" ")), dateReturn.substring(0, dateReturn.indexOf(" "))) < 0){ //可能购买当天往返的机票
+//                    ToastUtil.show(getApplicationContext(), "返程日期必须在出发日期之后");
+//                    return;
+//                }
+//                bundle.putString("dateReturn", dateReturn);
+//            }
             intent.putExtras(bundle);
             startActivityForResult(intent, VIEW_PLANE_LIST);
         } else { //国际机票
@@ -224,6 +230,11 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
             if (type == 2) { //往返，询价
                 if (TextUtils.isEmpty(dateReturn)){
                     ToastUtil.show(getApplicationContext(), "返程日期不能为空");
+                    return;
+                }
+                //判断返程日期与出发日期之间相差天数>0
+                if (Utils.getDiff(dateFrom.substring(0, dateFrom.indexOf(" ")), dateReturn.substring(0, dateReturn.indexOf(" "))) < 0){ //可能购买当天往返的机票
+                    ToastUtil.show(getApplicationContext(), "返程日期必须在出发日期之后");
                     return;
                 }
                 LogUtil.e(TAG, "dateReturn = " + dateReturn);

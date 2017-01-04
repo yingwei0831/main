@@ -27,8 +27,9 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
 
     private String TAG = getClass().getSimpleName();
     private String orderSN;
-    private int type = -1; //0:1:2:3:4:5:
-    private String typeId; //type 0.全部订单、1.线路、14私人定制、202活动、     2.酒店、8签证、82机票、80火车票
+    private int type = -1; //0:1:2:3:4:5:   订单状态
+    private String typeId; //订单类型   type 0.全部订单、1.线路、14私人定制、202活动、     2.酒店、8签证、82机票、80火车票
+    private String sanfangorderno; //订单第三方id
     private Order order;
 
     private TextView tvOrderTitle;
@@ -235,6 +236,7 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
                 orderSN = bundle.getString("orderSN");
                 type = bundle.getInt("type");
                 typeId = bundle.getString("typeId");
+                sanfangorderno = bundle.getString("sanfangorderno");
                 LoadingIndicator.show(this, getString(R.string.http_notice));
                 if ("82".equals(typeId)){ //机票（国内/国际） 详情
                     getPlaneOrderDetail();
@@ -261,6 +263,7 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
      */
     private void getHotelDetail() {
         HotelActionBiz hotelActionBiz = new HotelActionBiz();
+
 //        HotelOrderDetailRequest request = new HotelOrderDetailRequest();
 //        hotelActionBiz.getHotelOrderDetail();
     }

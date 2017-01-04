@@ -438,6 +438,21 @@ public class Utils {
         }
         return minute > 0;
     }
+    //起飞时间，到达时间
+    public static boolean getEqualMinutePoint(String beginDateStr, String endDateStr){
+        SimpleDateFormat format = new java.text.SimpleDateFormat("HHmm");
+        Date beginDate= null;
+        Date endDate= null;
+        long minute = 0; //分钟数
+        try {
+            beginDate = format.parse(beginDateStr);
+            endDate = format.parse(endDateStr);
+            minute = (endDate.getTime() - beginDate.getTime()) / (60*1000);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return minute > 0;
+    }
     /**
      * 获取连个时间的分钟差
      * @param beginDateStr yyyy-MM-dd HH:mm

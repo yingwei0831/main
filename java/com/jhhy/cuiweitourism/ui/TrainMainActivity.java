@@ -303,8 +303,8 @@ public class TrainMainActivity extends BaseActionBarActivity implements View.OnT
                     Map.Entry<String, String> entry = (Map.Entry<String, String>) it.next();
                     if (typeTrain.equals(entry.getKey())) {
                         codeTrain = entry.getValue();
-//                    trainTicket.setTraintype(codeTrain);
-                        trainTicket.setTraintype("");
+//                        trainTicket.setTraintype(codeTrain);
+                        trainTicket.setTraintype(typeTrain);
                         break;
                     }
                 }
@@ -324,7 +324,8 @@ public class TrainMainActivity extends BaseActionBarActivity implements View.OnT
                             Map.Entry<String, String> entryInner = (Map.Entry<String, String>) valueInner.next();
                             if (typeSeat.equals(entryInner.getKey())) {
                                 codeSeat = entryInner.getValue();
-                                trainTicket.setTrainseattype(codeSeat);
+//                                trainTicket.setTrainseattype(codeSeat);
+                                trainTicket.setTrainseattype(typeSeat); //二等座
                                 break;
                             }
                         }
@@ -333,7 +334,9 @@ public class TrainMainActivity extends BaseActionBarActivity implements View.OnT
                 }
             }
         }
-        LogUtil.e(TAG, "typeTrain = " + typeTrain + ", codeTrain = " + ", typeSeat = " + typeSeat +", " +", codeSeat = " +codeSeat);
+        LogUtil.e(TAG, "typeTrain = " + typeTrain + ", codeTrain = " + codeTrain + ", typeSeat = " + typeSeat +", " +", codeSeat = " +codeSeat);
+        trainTicket.setTraintype(typeTrain);
+        trainTicket.setTrainseattype(typeSeat);
         Intent intent = new Intent(getApplicationContext(), TrainListActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable("ticket", trainTicket);

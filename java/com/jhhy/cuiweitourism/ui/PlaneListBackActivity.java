@@ -79,6 +79,9 @@ public class PlaneListBackActivity extends BaseActionBarActivity implements  Ada
     private String dateReturn; //返程日期
     private String traveltype; //航程类型 OW（单程） RT（往返）
 
+    private PlaneTicketInfoOfChina.FlightInfo flight; //去程航班
+    private int positionSeat; //去程舱位
+
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -114,6 +117,10 @@ public class PlaneListBackActivity extends BaseActionBarActivity implements  Ada
         toCity = (PlaneTicketCityInfo) bundle.getSerializable("toCity");
         dateFrom = bundle.getString("dateFrom");
         traveltype = bundle.getString("traveltype");
+
+        flight = (PlaneTicketInfoOfChina.FlightInfo) bundle.getSerializable("flight");
+        positionSeat = bundle.getInt("positionSeat");
+
         if ("RT".equals(traveltype)){ //往返
             dateReturn = bundle.getString("dateReturn");
         }
@@ -160,7 +167,7 @@ public class PlaneListBackActivity extends BaseActionBarActivity implements  Ada
             }
         });
 
-        adapter = new PlaneListAdapter(getApplicationContext(), list, fromCity, toCity, 1);
+        adapter = new PlaneListAdapter(getApplicationContext(), list, toCity, fromCity, 1);
         listView.setAdapter(adapter);
 
         rbScreen = (RadioButton) findViewById(R.id.rb_plane_screen);
@@ -276,15 +283,18 @@ public class PlaneListBackActivity extends BaseActionBarActivity implements  Ada
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         //生成订单，去程+返程
-        Intent intent = new Intent(getApplicationContext(), PlaneItemInfoActivity.class);
+        Intent intent = new Intent(getApplicationContext(), PlaneItemInfoBackActivity.class);
         Bundle bundle = new Bundle();
-        PlaneTicketInfoOfChina.FlightInfo flight = list.get((int) l);
-//        bundle.putSerializable("flight", flight); //去程
-        bundle.putSerializable("flight1", flight); //返程
+        bundle.putSerializable("flight", flight); //去程
+        bundle.putInt("positionSeat", positionSeat);
+
+        bundle.putSerializable("flightBack", list.get((int) l)); //返程
+
         bundle.putString("dateFrom", dateFrom);
         bundle.putSerializable("fromCity", fromCity);
         bundle.putSerializable("toCity", toCity);
         bundle.putString("traveltype", traveltype);
+        bundle.putString("dateReturn", dateReturn);
         intent.putExtras(bundle);
         startActivityForResult(intent, VIEW_TRAIN_ITEM); //查看某趟列车
     }

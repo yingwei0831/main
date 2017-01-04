@@ -46,21 +46,21 @@ public class TrainTicketDetailInfo implements Serializable{
     }
 
 
-    public String trainNum;//"车次",
-    public String trainTypeName; //"车次类型名称",
-    public String trainTypeCode; //"车次类型代码",
+    public String trainNum;             //"车次",
+    public String trainTypeName;        //"车次类型名称",
+    public String trainTypeCode;        //"车次类型代码",
 
-    public String departureStation;//"出发站",
-    public String departureDate;//"出发日期(yyyy-MM-dd)",
-    public String departureTime;//"出发时间(HH:mm)",
-    public String arrivalStation;//"到达站",
-    public String arrivalDate;//"到达日期(yyyy-MM-dd)",
-    public String arrivalTime;//"到达时间(HH:mm)",
-    public String duration;//"历时(分钟)",
-    public String startingStation;//"始发站",
-    public String startingTime;//"始发时间(HH:mm)",
-    public String terminus;//"终点站",
-    public String terminalTime;//"终点时间(HH:mm)",
+    public String departureStation;     //"出发站",
+    public String departureDate;        //"出发日期(yyyy-MM-dd)",
+    public String departureTime;        //"出发时间(HH:mm)",
+    public String arrivalStation;       //"到达站",
+    public String arrivalDate;          //"到达日期(yyyy-MM-dd)",
+    public String arrivalTime;          //"到达时间(HH:mm)",
+    public String duration;             //"历时(分钟)",
+    public String startingStation;      //"始发站",
+    public String startingTime;         //"始发时间(HH:mm)",
+    public String terminus;             //"终点站",
+    public String terminalTime;         //"终点时间(HH:mm)",
     public String numberOfRemainingSeats;//"剩余座位张数(不包含无座)",
     public ArrayList<SeatInfo> seatInfoArray = new ArrayList<SeatInfo>();
 

@@ -35,9 +35,19 @@ public class Order implements Serializable{
     private String startaddress; //订单：租车订单
     private String endaddress; //订单：租车订单
 
+    private String sanfangorderno; //第三方订单号；国内机票支付过了就有，国际机票只有买到机票才有，签证没有，酒店下订单后就有
+
     //isneedpiao,dingnum,childnum,oldnum,ispay,needjifen,status,jifentprice,youke,lvyoubi,
 
     public Order() {
+    }
+
+    public String getSanfangorderno() {
+        return sanfangorderno;
+    }
+
+    public void setSanfangorderno(String sanfangorderno) {
+        this.sanfangorderno = sanfangorderno;
     }
 
     public String getStartaddress() {

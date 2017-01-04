@@ -32,6 +32,7 @@ import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketInfoOfChina;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainTicketDetailInfo;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
+import com.jhhy.cuiweitourism.popupwindows.PopupWindowScreenPlane;
 import com.jhhy.cuiweitourism.popupwindows.PopupWindowScreenTrain;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.utils.Utils;
@@ -46,7 +47,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class PlaneListActivity extends BaseActionBarActivity implements  AdapterView.OnItemClickListener //,RadioGroup.OnCheckedChangeListener
+public class PlaneListActivity extends BaseActionBarActivity implements  AdapterView.OnItemClickListener, PopupWindow.OnDismissListener //,RadioGroup.OnCheckedChangeListener
 {
 
     private String TAG = "PlaneListActivity";
@@ -60,6 +61,7 @@ public class PlaneListActivity extends BaseActionBarActivity implements  Adapter
     private PullToRefreshListView pullListView;
     private ListView listView;
     private List<PlaneTicketInfoOfChina.FlightInfo> list = new ArrayList<>();
+    private List<PlaneTicketInfoOfChina.FlightInfo> listCopy = new ArrayList<>();
     private PlaneListAdapter adapter;
 
     private PlaneTicketInfoOfChina info; //查询得到的航班信息
@@ -231,9 +233,59 @@ public class PlaneListActivity extends BaseActionBarActivity implements  Adapter
         }
     }
 
-    //筛选
-    private void screen() {
+    //筛选飞机列表 起飞时间，机场，机型，航空公司
+    private PopupWindowScreenPlane popupScreenPlane;
+    private int startTimePosition;  //起飞时间
+    private int innerAirport;       //机场
+    private int innerPlaneType;     //机型
+    private int innerCompany;       //航空公司
 
+    private void screen() {
+        if (popupScreenPlane == null){
+            popupScreenPlane = new PopupWindowScreenPlane(getApplicationContext());
+            popupScreenPlane.setOnDismissListener(this);
+        }
+        if (popupScreenPlane.isShowing()){
+            popupScreenPlane.dismiss();
+        }else{
+            popupScreenPlane.showAtLocation(rbScreen, Gravity.BOTTOM, 0, 0);
+            popupScreenPlane.refreshView(startTimePosition, innerAirport, innerPlaneType, innerCompany);
+        }
+    }
+
+    @Override
+    public void onDismiss() {
+        boolean commit = popupScreenPlane.getCommit();
+        LogUtil.e(TAG, "commit = " + commit);
+        if (commit){
+            //提交
+            //分别筛选,再查时间和价格是否排序
+            startTimePosition  = popupScreenPlane.getSelectionStartTime();
+            innerAirport    = popupScreenPlane.getSelectionAirport();
+            innerPlaneType  = popupScreenPlane.getSelectionPlaneType();
+            innerCompany    = popupScreenPlane.getSelectionCompany();
+
+            list.clear();
+
+            if (startTimePosition == 0){ //不限
+                list.addAll(listCopy);
+            } else {
+                for (PlaneTicketInfoOfChina.FlightInfo flightInfo: listCopy) {
+                    if (1 == startTimePosition && Utils.getEqualMinutePoint(flightInfo.depTime, "1200")) { //上午 00:00-12:00
+                        list.add(flightInfo);
+                    } else if (2 == startTimePosition && !Utils.getEqualMinutePoint(flightInfo.depTime, "1200") && Utils.getEqualMinutePoint(flightInfo.depTime, "1400")) { //中午
+                        list.add(flightInfo);
+                    } else if (3 == startTimePosition && !Utils.getEqualMinutePoint(flightInfo.depTime, "1400") && Utils.getEqualMinutePoint(flightInfo.depTime, "1800")) { //下午
+                        list.add(flightInfo);
+                    } else if (4 == startTimePosition && !Utils.getEqualMinutePoint(flightInfo.depTime, "1800") && Utils.getEqualMinutePoint(flightInfo.depTime, "2400")) { //晚上
+                        list.add(flightInfo);
+                    }
+                }
+            }
+
+            adapter.setData(list);
+            adapter.notifyDataSetChanged();
+        }
     }
 
     private void setRbBg() {
@@ -255,56 +307,18 @@ public class PlaneListActivity extends BaseActionBarActivity implements  Adapter
     }
 
 
-//    @Override
-//    public void onCheckedChanged(RadioGroup radioGroup, int i) {
-//        switch (i){
-//            case R.id.rb_train_screen: //筛选
-//                screenTrain();
-//                break;
-//            case R.id.rb_train_start_time: //出发时间
-//                sortByStartTime();
-//                adapter.setData(list);
-//                adapter.notifyDataSetChanged();
-//                break;
-//            case R.id.rb_train_time_consuming: //耗时
-//                sortByConsuming();
-//                adapter.setData(list);
-//                adapter.notifyDataSetChanged();
-//                break;
-//            case R.id.rb_train_arrival_time: //到达时间
-//                sortByArrivalTime();
-//                adapter.setData(list);
-//                adapter.notifyDataSetChanged();
-//                break;
-//        }
-//    }
-
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        if ("RT".equals(traveltype)){ //进入选返程
-            Intent intent = new Intent(getApplicationContext(), PlaneListBackActivity.class);
-            Bundle bundle = new Bundle();
-            PlaneTicketInfoOfChina.FlightInfo flight = list.get((int) l);
-            bundle.putSerializable("flight", flight);
-            bundle.putString("dateFrom", dateFrom);
-            bundle.putSerializable("fromCity", fromCity);
-            bundle.putSerializable("toCity", toCity);
-            bundle.putString("traveltype", traveltype);
-            bundle.putString("dateReturn", dateReturn);
-            intent.putExtras(bundle);
-            startActivityForResult(intent, VIEW_TRAIN_ITEM); //查看某趟航班
-        }else {
-            Intent intent = new Intent(getApplicationContext(), PlaneItemInfoActivity.class);
-            Bundle bundle = new Bundle();
-            PlaneTicketInfoOfChina.FlightInfo flight = list.get((int) l);
-            bundle.putSerializable("flight", flight);
-            bundle.putString("dateFrom", dateFrom);
-            bundle.putSerializable("fromCity", fromCity);
-            bundle.putSerializable("toCity", toCity);
-            bundle.putString("traveltype", traveltype);
-            intent.putExtras(bundle);
-            startActivityForResult(intent, VIEW_TRAIN_ITEM); //查看某趟航班
-        }
+        Intent intent = new Intent(getApplicationContext(), PlaneItemInfoActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("flight", list.get((int) l));
+        bundle.putString("dateFrom", dateFrom);
+        bundle.putSerializable("fromCity", fromCity);
+        bundle.putSerializable("toCity", toCity);
+        bundle.putString("traveltype", traveltype);
+        bundle.putString("dateReturn", dateReturn);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, VIEW_TRAIN_ITEM); //查看某趟航班
     }
 
     private int VIEW_TRAIN_ITEM = 7546; //查看某趟列车
@@ -415,6 +429,7 @@ public class PlaneListActivity extends BaseActionBarActivity implements  Adapter
                         }else if ("0000".equals(model.headModel.res_code)){
                             info = model.body;
                             list = info.returnInfo.flightItems.flights;
+                            listCopy.addAll(list);
                             handler.sendEmptyMessage(1);
                             LogUtil.e(TAG,"planeTicketInfoInChina =" + info.toString());
                         }
@@ -458,7 +473,5 @@ public class PlaneListActivity extends BaseActionBarActivity implements  Adapter
         String dateOk = simpleDateFormat.format(newDate2);
         return dateOk;
     }
-
-
 
 }

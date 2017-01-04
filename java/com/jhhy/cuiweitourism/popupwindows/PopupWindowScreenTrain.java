@@ -63,9 +63,7 @@ public class PopupWindowScreenTrain extends PopupWindow implements OnClickListen
     private int selectionTypeTrain = -1; //车型
     private int selectionTypeSeat = -1; //席别类型
 
-//    private String sort = "";
-//    private String day = "";
-//    private String price = "";
+    private String trainSeatType = "";
 
     private boolean commit;
 
@@ -220,6 +218,7 @@ public class PopupWindowScreenTrain extends PopupWindow implements OnClickListen
             selectionTypeTrain = position;
         } else if (mActivity.getResources().getString(R.string.train_screen_type_seat).equals(firstAdapter.getCurrentPositionItem())) { //席别类型
             selectionTypeSeat = position;
+            trainSeatType = secondListSeatType.get(position);
         }
         secondAdapter1.setSelectPosition(position);
         secondAdapter1.notifyDataSetChanged();
@@ -354,5 +353,9 @@ public class PopupWindowScreenTrain extends PopupWindow implements OnClickListen
 
     public int getSelectionTypeSeat() {
         return selectionTypeSeat;
+    }
+
+    public String getTrainSeatType() {
+        return trainSeatType;
     }
 }

@@ -80,8 +80,12 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
     private PlaneTicketCityInfo toCity; //到达城市
     private String dateFrom; //出发日期
     private PlaneTicketInfoOfChina.FlightInfo flight; //航班信息
-
     private PlaneTicketInfoOfChina.SeatItemInfo seatInfo; //选择的座位信息
+
+    private String traveltype; //航程类型 OW（单程） RT（往返）
+    private String dateReturn; //返程日期
+    private PlaneTicketInfoOfChina.FlightInfo flightBack; //返程航班
+    private PlaneTicketInfoOfChina.SeatItemInfo seatInfoBack; //返程舱位座位
 
     private int priceDelayCost; //航班延误险价格
     private int priceAccidentCost; //航空意外险价格
@@ -196,6 +200,14 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
             dateFrom = bundle.getString("dateFrom");
             int positionSeat = bundle.getInt("positionSeat");
             seatInfo = flight.getSeatItems().get(positionSeat);
+
+            traveltype = bundle.getString("traveltype");
+            if ("RT".equals(traveltype)){
+                dateReturn = bundle.getString("dateReturn");
+                flightBack = (PlaneTicketInfoOfChina.FlightInfo) bundle.getSerializable("flightBack");
+                int positionSeatBack = bundle.getInt("positionSeatBack");
+                seatInfoBack = flightBack.getSeatItems().get(positionSeatBack);
+            }
         }
     }
 

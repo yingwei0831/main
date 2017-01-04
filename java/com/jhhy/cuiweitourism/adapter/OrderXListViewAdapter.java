@@ -31,12 +31,17 @@ public abstract class OrderXListViewAdapter extends BaseAdapter implements IOrde
     private List<Order> lists;
     private LayoutInflater inflater;
     private ArgumentOnClick onClick;
+    private int type = 1; //0：全部订单
 
     public OrderXListViewAdapter(Context context, List<Order> lists, ArgumentOnClick onClick){
         inflater = LayoutInflater.from(context);
         this.onClick = onClick;
         this.context = context;
         this.lists = lists;
+    }
+
+    public void setType(int type){
+        this.type = type;
     }
 
     public void setData(List<Order> lists){
@@ -69,7 +74,7 @@ public abstract class OrderXListViewAdapter extends BaseAdapter implements IOrde
         OrderViewHolder holder = null;
         if(view == null){
             holder = new OrderViewHolder();
-            view = inflater.inflate(R.layout.tab3_listview_item, null, false);
+            view = inflater.inflate(R.layout.tab3_listview_item, null);
             holder.tvOrderStatus = (TextView) view.findViewById(R.id.tv_order_status);
             holder.tvOrderTime = (TextView) view.findViewById(R.id.tv_order_time);
             holder.tvOrderTitle = (TextView) view.findViewById(R.id.tv_order_title);
@@ -95,6 +100,9 @@ public abstract class OrderXListViewAdapter extends BaseAdapter implements IOrde
             holder.btnOrderPayment.setVisibility(View.GONE); //签约付款
             holder.btnOrderCancel.setVisibility(View.VISIBLE); //取消订单
             holder.btnGoRefund.setVisibility(View.GONE); //退款
+            if (type == 0){
+                holder.btnOrderCancel.setVisibility(View.GONE); //取消订单:全部订单不给酒店做任何操作
+            }
         }else {
             if ("1".equals(order.getStatus())) { //等待付款——>取消订单，签约付款
                 holder.tvOrderStatus.setText(context.getString(R.string.fragment_mine_wait_pay));
@@ -192,7 +200,7 @@ public abstract class OrderXListViewAdapter extends BaseAdapter implements IOrde
                 onClick.goToArgument(finalConvertView, viewGroup, position, idGoRefund);
             }
         });
-        LogUtil.e(TAG, "order = " + order);
+
         //单击item，进入详情
         view.setOnClickListener(new View.OnClickListener() {
             @Override

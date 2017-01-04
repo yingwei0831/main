@@ -638,6 +638,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/ActionBarTheme" />
         <activity
+            android:name=".ui.PlaneItemInfoBackActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/ActionBarTheme" />
+
+        <activity
             android:name=".ui.PlaneItemInfoInternationalActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"

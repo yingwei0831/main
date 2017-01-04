@@ -298,27 +298,27 @@ public class PlaneTicketInfoOfChina implements Serializable{
 
     //TODO 第二层 航班详细信息
     public class FlightInfo implements Serializable{
-        //"airportTax": 50,     //成人基建费
-        //"arriModifyTime": "", //降落修正时间
+        //"airportTax": 50,         //成人基建费
+        //"arriModifyTime": "",     //降落修正时间
         //"arriTime": "0930",
         //"codeShare": false,
-        //"depTime": "0805",
+        //"depTime": "0805",        // 起飞时间
         //"dstCity": "DLC",
-        //"dstJetquay": "--",   //到达航站楼
+        //"dstJetquay": "--",       //到达航站楼
         //"flightNo": "CZ6132",
-        //"fuelTax": 0,     //成人燃油费
+        //"fuelTax": 0,             //成人燃油费
         //"isElectronicTicket": true, //是否电子客票
         //"link": "DS#",
-        //"meal": "true", //餐食标识
+        //"meal": "true",           //餐食标识
         //"orgCity": "PEK",
-        //"orgJetquay": "T2",   //始发航站楼
-        //"param1": "2016-11-17",   //抵达日期
+        //"orgJetquay": "T2",       //始发航站楼
+        //"param1": "2016-11-17",   //抵达日期  格式：yyyy-MM-dd
         //"param2": "0.0",
         //"param3": "0.0",
-        //"planeType": "321",
-        //"seatItems": [], //舱位信息
+        //"planeType": "321",       // 机型 除CR2、CRJ、EMB、ERJ、MA6 5种小机型没有机场建设费，其他机型收取机场建设费
+        //"seatItems": [],          //舱位信息
         //"shareNum": "",
-        //"stopnum": 0  //经停次数
+        //"stopnum": 0              //经停次数
 
         public String airportTax;
         public String arriModifyTime;

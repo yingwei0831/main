@@ -56,8 +56,8 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
     private String trainLowPrice; //最低价格
     private String trainTime; //出发时间
     private String tempTime; //出发时间
-    private String trainType; //列车类型
-    private String seatType; //座位类型
+    private String trainType;   //列车类型
+    private String seatType = "";    //座位类型
 
     private TextView tvPreDay; //前一天
     private TextView tvNextDay; //后一天
@@ -100,6 +100,7 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
                     break;
                 case 1:
                     tvCurrentDay.setText(trainTime);
+                    getScreenData();
                     adapter.setData(list);
                     adapter.notifyDataSetChanged();
                     break;
@@ -126,12 +127,29 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
         }
         if (ticket.getTraintype() == null){
             trainType = "";
+        }else {
+            trainType = ticket.getTraintype();
         }
         if (ticket.getTrainseattype() == null){
             seatType = "";
+        }else{
+            seatType = ticket.getTrainseattype();
         }
         trainTime = ticket.getTraveltime();
         LogUtil.e(TAG, "ticket = " + ticket);
+
+//          车次类型:    G:"高铁",C:"城际",D:"动车",      Z:"直达",T:"特快",K:"快速",P:"普通",O:"其他"
+//          座位类型：   SZ:0(商务座),TZ:1(特等座),R1:2(一等座),R2:3(二等座),GW:4(高级软卧),RW:5(软卧),YW:6(硬卧),RZ:7(软座),YZ:8(硬座),WZ:9(无座),OT:10(其他)
+        //车型：     不限，高铁/动车，普通
+        //席别类型： 不限，商务座，特等座，一等座，二等座，高级软卧，软卧，硬卧，软座，硬座，无座，其他
+        LogUtil.e(TAG, "trainType = " + trainType +", seatType = " + seatType);
+        if (trainType.contains("普通车")){
+            typeTrainPosition = 2;
+        }else if (trainType.contains("高铁/动车")){
+            typeTrainPosition = 1;
+        }else if (trainType.contains("不限")){
+            typeTrainPosition = 0;
+        }
     }
 
     @Override
@@ -269,7 +287,8 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
             @Override
             public void run() {
                 super.run();
-                TrainTicketFetch fetch = new TrainTicketFetch(ticket.getFromstation(), ticket.getArrivestation(), tempTime.substring(0, tempTime.indexOf(" ")), trainCode, trainType, seatType, trainLowPrice);
+//                TrainTicketFetch fetch = new TrainTicketFetch(ticket.getFromstation(), ticket.getArrivestation(), tempTime.substring(0, tempTime.indexOf(" ")), trainCode, trainType, seatType, trainLowPrice);
+                TrainTicketFetch fetch = new TrainTicketFetch(ticket.getFromstation(), ticket.getArrivestation(), tempTime.substring(0, tempTime.indexOf(" ")),   trainCode, "",        "",       trainLowPrice);
                 trainBiz.trainTicketInfo(fetch, new BizGenericCallback<ArrayList<TrainTicketDetailInfo>>() {
                     @Override
                     public void onCompletion(GenericResponseModel<ArrayList<TrainTicketDetailInfo>> model) {
@@ -310,31 +329,6 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
 
     }
 
-
-//    @Override
-//    public void onCheckedChanged(RadioGroup radioGroup, int i) {
-//        switch (i){
-//            case R.id.rb_train_screen: //筛选
-//                screenTrain();
-//                break;
-//            case R.id.rb_train_start_time: //出发时间
-//                sortByStartTime();
-//                adapter.setData(list);
-//                adapter.notifyDataSetChanged();
-//                break;
-//            case R.id.rb_train_time_consuming: //耗时
-//                sortByConsuming();
-//                adapter.setData(list);
-//                adapter.notifyDataSetChanged();
-//                break;
-//            case R.id.rb_train_arrival_time: //到达时间
-//                sortByArrivalTime();
-//                adapter.setData(list);
-//                adapter.notifyDataSetChanged();
-//                break;
-//        }
-//    }
-
     //筛选列车
     private void screenTrain() {
         if (popupWindow == null) {
@@ -348,9 +342,9 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
                         arrivalTimePosition = popupWindow.getSelectionArrivalTime();
                         typeTrainPosition = popupWindow.getSelectionTypeTrain();
                         typeSeatPosition = popupWindow.getSelectionTypeSeat();
-                        //TODO 重新请求数据
                         getScreenData();
-//                        getInternetData();
+                        adapter.setData(list);
+                        adapter.notifyDataSetChanged();
                     }
                 }
             });
@@ -373,39 +367,81 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
             //先筛选发车时间
             if (0 == startTimePosition){
                 list.addAll(listCopy);
-            }else {
+            } else {
                 for (TrainTicketDetailInfo trainTicket : listCopy) {
-                    if (1 == startTimePosition) {
+                    if (1 == startTimePosition && Utils.getEqualMinute(trainTicket.departureTime, "06:00")) { //时间
                         list.add(trainTicket);
-                    } else if (2 == startTimePosition) {
+                    } else if (2 == startTimePosition && !Utils.getEqualMinute(trainTicket.departureTime, "06:00") && Utils.getEqualMinute(trainTicket.departureTime, "12:00")) { //
                         list.add(trainTicket);
-                    } else if (3 == startTimePosition) {
+                    } else if (3 == startTimePosition && !Utils.getEqualMinute(trainTicket.departureTime, "12:00") && Utils.getEqualMinute(trainTicket.departureTime, "18:00")) {
                         list.add(trainTicket);
-                    } else if (4 == startTimePosition) {
+                    } else if (4 == startTimePosition && !Utils.getEqualMinute(trainTicket.departureTime, "18:00") && Utils.getEqualMinute(trainTicket.departureTime, "24:00")) {
                         list.add(trainTicket);
                     }
                 }
             }
+
             //再筛选到达时间
             List<TrainTicketDetailInfo> listCopyArrivalTime = new ArrayList<>();
-            if (-1 == arrivalTimePosition){
+            if (-1 == arrivalTimePosition || 0 == arrivalTimePosition){
                 listCopyArrivalTime.addAll(list);
             }else{
                 for (TrainTicketDetailInfo trainTicket: list){
-                    if (1 == arrivalTimePosition){
+                    if (1 == arrivalTimePosition && Utils.getEqualMinute(trainTicket.arrivalTime, "06:00")){
                         listCopyArrivalTime.add(trainTicket);
-                    }else if (2 == arrivalTimePosition){
+                    }else if (2 == arrivalTimePosition  && !Utils.getEqualMinute(trainTicket.arrivalTime, "06:00") && Utils.getEqualMinute(trainTicket.arrivalTime, "12:00")){
                         listCopyArrivalTime.add(trainTicket);
-                    }else if (3 == arrivalTimePosition){
+                    }else if (3 == arrivalTimePosition  && !Utils.getEqualMinute(trainTicket.arrivalTime, "12:00") && Utils.getEqualMinute(trainTicket.arrivalTime, "18:00")){
                         listCopyArrivalTime.add(trainTicket);
-                    }else if (4 == arrivalTimePosition){
+                    }else if (4 == arrivalTimePosition  && !Utils.getEqualMinute(trainTicket.arrivalTime, "18:00") && Utils.getEqualMinute(trainTicket.arrivalTime, "24:00")){
                         listCopyArrivalTime.add(trainTicket);
                     }
                 }
             }
-            list = listCopyArrivalTime;
+            list.clear();
+            list.addAll(listCopyArrivalTime);
+            listCopyArrivalTime.clear();
+
             //筛选车型
             //筛选席别类型
+//          车次类型:    G:"高铁",C:"城际",D:"动车",      Z:"直达",T:"特快",K:"快速",P:"普通",O:"其他"
+//          座位类型：   SZ:0(商务座),TZ:1(特等座),R1:2(一等座),R2:3(二等座),GW:4(高级软卧),RW:5(软卧),YW:6(硬卧),RZ:7(软座),YZ:8(硬座),WZ:9(无座),OT:10(其他)
+            //车型：     不限，高铁/动车，普通
+            //席别类型： 不限，商务座，特等座，一等座，二等座，高级软卧，软卧，硬卧，软座，硬座，无座，其他
+            if (typeTrainPosition == -1 || typeTrainPosition == 0) { //不限
+                listCopyArrivalTime.addAll(list);
+            } else {
+                for (TrainTicketDetailInfo trainTicket : list) {
+                    if (1 == typeTrainPosition && ("G".equals(trainTicket.trainTypeCode) || "C".equals(trainTicket.trainTypeCode) || "D".equals(trainTicket.trainTypeCode))) { //高铁/动车
+                        listCopyArrivalTime.add(trainTicket);
+                    } else if (2 == typeTrainPosition && !("G".equals(trainTicket.trainTypeCode) || "C".equals(trainTicket.trainTypeCode) || "D".equals(trainTicket.trainTypeCode))) { //普通
+                        listCopyArrivalTime.add(trainTicket);
+                    }
+                }
+            }
+            list.clear();
+            list.addAll(listCopyArrivalTime);
+            listCopyArrivalTime.clear();
+
+//            String seatType = "";
+            if (popupWindow != null) {
+                seatType = popupWindow.getTrainSeatType(); //二等座
+            }
+            if (seatType.length() != 0){
+                for (TrainTicketDetailInfo trainTicket : list) {
+                    ArrayList<TrainTicketDetailInfo.SeatInfo> seats = trainTicket.seatInfoArray;
+                    for (TrainTicketDetailInfo.SeatInfo seatInfo : seats) {
+                        if (seatType.equals(seatInfo.seatName)) {
+                            listCopyArrivalTime.add(trainTicket);
+                            break;
+                        }
+                    }
+                }
+                list.clear();
+                list.addAll(listCopyArrivalTime);
+                listCopyArrivalTime.clear();
+            }
+            listCopyArrivalTime = null;
         }
     }
 
@@ -472,29 +508,6 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
 
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        Intent intent = new Intent(getApplicationContext(), TrainListItemInfoActivity.class);
-        Bundle bundle = new Bundle();
-        TrainTicketDetailInfo item = list.get((int) l);
-        bundle.putSerializable("detail", item);
-        bundle.putString("startDate", trainTime);
-        intent.putExtras(bundle);
-        startActivityForResult(intent, VIEW_TRAIN_ITEM); //查看某趟列车
-    }
-
-    private int VIEW_TRAIN_ITEM = 7546; //查看某趟列车
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == VIEW_TRAIN_ITEM){ //有可能订票了
-            if (resultCode == RESULT_OK){
-
-            }
-        }
-    }
-
     private boolean sortStartTimeIncrease = true; //从早到晚,出发时间（默认从早到晚）
     private boolean sortConsumingIncrease = false; //耗时，从短到长
     private boolean sortArrivalTimeIncrease = false; //到达时间，从早到晚
@@ -540,7 +553,7 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
     * @param day  日期，格式为String："2013-9-3";
     * @param dayAddNum 增加天数 格式为int;
     * @return
-            */
+    */
     private String getDateStr(String day, int dayAddNum) {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         Date nowDate = null;
@@ -555,6 +568,29 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
         return dateOk;
     }
 
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        Intent intent = new Intent(getApplicationContext(), TrainListItemInfoActivity.class);
+        Bundle bundle = new Bundle();
+        TrainTicketDetailInfo item = list.get((int) l);
+        bundle.putSerializable("detail", item);
+        bundle.putString("startDate", trainTime);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, VIEW_TRAIN_ITEM); //查看某趟列车
+    }
+
+    private int VIEW_TRAIN_ITEM = 7546; //查看某趟列车
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == VIEW_TRAIN_ITEM){ //有可能订票了
+            if (resultCode == RESULT_OK){
+
+            }
+        }
+    }
 
 
 }
