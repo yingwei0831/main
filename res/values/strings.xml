@@ -175,6 +175,7 @@
     <string name="tab3_order_item_wait_comment">待评价</string>
     <string name="tab3_order_item_already_comment">已完成</string>
     <string name="tab3_order_item_already_cancel">已取消</string>
+    <string name="tab3_order_item_already_out">已失效</string>
     <string name="tab3_order_item_already_refund">已退款</string>
     <string name="tab3_order_item_payde">付款成功</string>
 

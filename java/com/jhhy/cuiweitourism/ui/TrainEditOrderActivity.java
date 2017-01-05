@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.jhhy.cuiweitourism.OnItemTextViewClick;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.OrderEditContactsAdapter;
+import com.jhhy.cuiweitourism.model.User;
 import com.jhhy.cuiweitourism.model.UserContacts;
 import com.jhhy.cuiweitourism.net.biz.TrainTicketActionBiz;
 import com.jhhy.cuiweitourism.net.models.FetchModel.TrainTicketOrderFetch;
@@ -32,6 +33,7 @@ import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.popupwindows.PopTrainSeatType;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
+import com.jhhy.cuiweitourism.utils.SharedPreferencesUtils;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.jhhy.cuiweitourism.utils.Utils;
 import com.jhhy.cuiweitourism.view.MyListView;
@@ -226,8 +228,12 @@ public class TrainEditOrderActivity extends AppCompatActivity implements View.On
                     intent.putExtras(bundle);
                     startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_SELECT_CONTACT);
                 } else {
-                    ToastUtil.show(getApplicationContext(), getString(R.string.logged_notice));
-
+//                    ToastUtil.show(getApplicationContext(), getString(R.string.logged_notice));
+                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("type", 2);
+                    intent.putExtras(bundle);
+                    startActivityForResult(intent, REQUEST_LOGIN);
                 }
                 break;
             case R.id.btn_edit_order_pay: //立即支付
@@ -275,6 +281,8 @@ public class TrainEditOrderActivity extends AppCompatActivity implements View.On
 
     }
 
+    private int REQUEST_LOGIN = 2913; //请求登录
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -296,6 +304,18 @@ public class TrainEditOrderActivity extends AppCompatActivity implements View.On
             }else if (requestCode == Consts.REQUEST_CODE_RESERVE_PAY){ //去支付，支付成功
                 setResult(RESULT_OK);
                 finish();
+            }else if (requestCode == REQUEST_LOGIN) { //登录成功
+                User user = (User) data.getExtras().getSerializable(Consts.KEY_REQUEST);
+                if (user != null) {
+                    MainActivity.logged = true;
+                    MainActivity.user = user;
+                    SharedPreferencesUtils sp = SharedPreferencesUtils.getInstance(getApplicationContext());
+                    sp.saveUserId(user.getUserId());
+                }
+            }
+        }else{
+            if (requestCode == REQUEST_LOGIN) { //登录
+                ToastUtil.show(getApplicationContext(), "登录失败");
             }
         }
     }

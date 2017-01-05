@@ -61,7 +61,7 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
     private TextView tvTravelIconNotice; //账户共xxx个旅游币，本次使用xxx个旅游币折扣
     private TextView tvTravelIconCount;
 
-    private LinearLayout layoutBottomAction; //详情请求成功，则显示
+    private LinearLayout layoutBottomAction; //先隐藏，详情请求成功，则显示
     private TextView tvPrice; //订单总价
     private Button btnAction;
 
@@ -399,7 +399,7 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
         }else if ("12".equals(body.getStatus())){
             tvOrderStatus.setText("已确认"); //取消订单：担保规则给出订单是否可取消
             btnAction.setVisibility(View.VISIBLE);
-            btnAction.setText("取消订单");
+            btnAction.setText("申请退款");
         }else if ("13".equals(body.getStatus())){
             tvOrderStatus.setText("入住中");
         }else if ("14".equals(body.getStatus())){
