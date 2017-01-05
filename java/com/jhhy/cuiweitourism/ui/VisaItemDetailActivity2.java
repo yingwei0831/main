@@ -18,10 +18,12 @@ import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.VisaDetailMaterialAdapter;
 import com.jhhy.cuiweitourism.model.VisaDetail;
 import com.jhhy.cuiweitourism.net.biz.VisaActionBiz;
+import com.jhhy.cuiweitourism.net.models.FetchModel.VisaOrderRequest;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.VisaDetailInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.VisaMaterial;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.VisaOrderResponse;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
@@ -341,8 +343,8 @@ public class VisaItemDetailActivity2 extends BaseActivity implements View.OnClic
 //            case R.id.tv_visa_detail_share: //分享
 //                break;
             case R.id.btn_visa_detail_reserve: //立即预定
-                ToastUtil.show(getApplicationContext(), "赞无预定");
-//                toReserve();
+//                ToastUtil.show(getApplicationContext(), "赞无预定");
+                toReserve();
                 break;
         }
     }
