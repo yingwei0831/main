@@ -6,6 +6,7 @@ import android.os.Handler;
 import com.jhhy.cuiweitourism.net.models.FetchModel.NullArrayFetchModel;
 import com.jhhy.cuiweitourism.net.models.FetchModel.TrainOrderListFetch;
 import com.jhhy.cuiweitourism.net.models.FetchModel.TrainOrderRefundRequest;
+import com.jhhy.cuiweitourism.net.models.FetchModel.TrainOrderToOtherPlatRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.TrainStationFetch;
 import com.jhhy.cuiweitourism.net.models.FetchModel.TrainStopsFetch;
 import com.jhhy.cuiweitourism.net.models.FetchModel.TrainTicketFetch;
@@ -188,7 +189,26 @@ public class TrainTicketActionBiz extends BasicActionBiz {
     }
 
     /**
-     *  火车票订单查询 Order_searchtrainorder
+     * 火车票提交订单，下单到第三方平台
+     */
+    public void trainTicketOrderSetPlatform(TrainOrderToOtherPlatRequest fetch, BizGenericCallback<Object> callback){ //{"head":{"code":"Order_trainorder"},"field":{"ordersn":"80088342783810"}} //已经支付
+        fetch.code = "Order_trainorder";
+        FetchGenericResponse<Object> fetchResponse = new FetchGenericResponse<Object>(callback) {
+            @Override
+            public void onCompletion(FetchResponseModel response) {
+                this.bizCallback.onCompletion(new GenericResponseModel<Object>(response.head, null));
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                this.bizCallback.onError(error);
+            }
+        };
+        HttpUtils.executeXutils(fetch, new FetchGenericCallback<>(fetchResponse));
+    }
+
+    /**
+     *  火车票订单查询
      */
     public void trainTicketOrderQuery(TrainOrderListFetch fetch){
         fetch.code = "Order_searchtrainorder";
@@ -196,7 +216,7 @@ public class TrainTicketActionBiz extends BasicActionBiz {
     }
 
     /**
-     *  火车票退票 Order_refund
+     *  火车票退票
      */
     public void trainTicketCancel(TrainOrderRefundRequest request){
         request.code = "Order_refund";

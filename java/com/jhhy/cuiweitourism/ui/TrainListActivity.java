@@ -134,6 +134,9 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
             seatType = "";
         }else{
             seatType = ticket.getTrainseattype();
+            if ("不限".equals(seatType)){
+                seatType = "";
+            }
         }
         trainTime = ticket.getTraveltime();
         LogUtil.e(TAG, "ticket = " + ticket);
@@ -143,13 +146,14 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
         //车型：     不限，高铁/动车，普通
         //席别类型： 不限，商务座，特等座，一等座，二等座，高级软卧，软卧，硬卧，软座，硬座，无座，其他
         LogUtil.e(TAG, "trainType = " + trainType +", seatType = " + seatType);
-        if (trainType.contains("普通车")){
+        if (trainType.contains("普通")){
             typeTrainPosition = 2;
         }else if (trainType.contains("高铁/动车")){
             typeTrainPosition = 1;
         }else if (trainType.contains("不限")){
             typeTrainPosition = 0;
         }
+        LogUtil.e(TAG, "typeTrainPosition = " + typeTrainPosition);
     }
 
     @Override
@@ -364,6 +368,12 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
     private void getScreenData() {
         if (list != null && list.size() != 0) {
             list.clear();
+//            LogUtil.e(TAG, "startTimePosition = " + startTimePosition);
+//            LogUtil.e(TAG, "arrivalTimePosition = " + arrivalTimePosition);
+//            LogUtil.e(TAG, "typeTrainPosition = " + typeTrainPosition);
+//            LogUtil.e(TAG, "seatType = " + seatType);
+//            LogUtil.e(TAG, "listCopy.size = " + listCopy.size());
+//            LogUtil.e(TAG, "list.size = " + list.size());
             //先筛选发车时间
             if (0 == startTimePosition){
                 list.addAll(listCopy);
@@ -380,7 +390,7 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
                     }
                 }
             }
-
+//            LogUtil.e(TAG, "list.size = " + list.size());
             //再筛选到达时间
             List<TrainTicketDetailInfo> listCopyArrivalTime = new ArrayList<>();
             if (-1 == arrivalTimePosition || 0 == arrivalTimePosition){
@@ -401,7 +411,7 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
             list.clear();
             list.addAll(listCopyArrivalTime);
             listCopyArrivalTime.clear();
-
+//            LogUtil.e(TAG, "list.size = " + list.size());
             //筛选车型
             //筛选席别类型
 //          车次类型:    G:"高铁",C:"城际",D:"动车",      Z:"直达",T:"特快",K:"快速",P:"普通",O:"其他"
@@ -422,7 +432,7 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
             list.clear();
             list.addAll(listCopyArrivalTime);
             listCopyArrivalTime.clear();
-
+//            LogUtil.e(TAG, "list.size = " + list.size());
 //            String seatType = "";
             if (popupWindow != null) {
                 seatType = popupWindow.getTrainSeatType(); //二等座
@@ -431,7 +441,7 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
                 for (TrainTicketDetailInfo trainTicket : list) {
                     ArrayList<TrainTicketDetailInfo.SeatInfo> seats = trainTicket.seatInfoArray;
                     for (TrainTicketDetailInfo.SeatInfo seatInfo : seats) {
-                        if (seatType.equals(seatInfo.seatName)) {
+                        if (seatType.equals(seatInfo.seatName) || seatInfo.seatName.contains(seatType)) {
                             listCopyArrivalTime.add(trainTicket);
                             break;
                         }
@@ -442,6 +452,7 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
                 listCopyArrivalTime.clear();
             }
             listCopyArrivalTime = null;
+//            LogUtil.e(TAG, "list.size = " + list.size());
         }
     }
 

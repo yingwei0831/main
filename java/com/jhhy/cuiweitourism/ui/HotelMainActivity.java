@@ -203,6 +203,7 @@ private List<ADInfo> infos = new ArrayList<ADInfo>();
     private void addListener() {
         ivTitleLeft .setOnClickListener(this);
         tvLocation .setOnClickListener(this);
+        tvAddress.setOnClickListener(this);
         layoutCheckIn .setOnClickListener(this);
         layoutCheckOut.setOnClickListener(this);
         btnSearch.setOnClickListener(this);
@@ -217,14 +218,14 @@ private List<ADInfo> infos = new ArrayList<ADInfo>();
                 finish();
                 break;
             case R.id.tv_location_name: //选择位置
-                ToastCommon.toastShortShow(getApplicationContext(), null, "我的酒店，后台没有接口");
-                break;
-            case R.id.tv_location_icon: //定位,选择地址
                 if (listHotelProvince == null) {
                     getProvince();
                 }else{
                     selectCityByUser();
                 }
+                break;
+            case R.id.tv_location_icon: //定位
+                startActivity(new Intent(getApplicationContext(), LocationSourceActivity.class));
                 break;
             case R.id.layout_hotel_check_in: //选择入住日期
                 Intent intentFromDate = new Intent( getApplicationContext(), HotelCalendarActivity.class);

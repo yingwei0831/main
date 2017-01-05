@@ -28,6 +28,8 @@
         android:paddingRight="6dp"
         android:paddingTop="8dp"
         android:textSize="16sp"
+        android:textColor="@android:color/black"
+        android:textColorHint="@color/colorGrayDark"
         />
 
     <TextView
@@ -37,6 +39,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:text="@string/order_refund_notice"
+        android:textColor="@android:color/black"
         android:textSize="16sp" />
 
     <GridView

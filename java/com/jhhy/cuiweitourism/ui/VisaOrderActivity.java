@@ -20,6 +20,7 @@ import com.jhhy.cuiweitourism.biz.VisaBiz;
 import com.jhhy.cuiweitourism.dialog.TourismCoinActivity;
 import com.jhhy.cuiweitourism.model.Invoice;
 import com.jhhy.cuiweitourism.model.Order;
+import com.jhhy.cuiweitourism.model.User;
 import com.jhhy.cuiweitourism.model.UserContacts;
 import com.jhhy.cuiweitourism.model.VisaDetail;
 import com.jhhy.cuiweitourism.net.biz.VisaActionBiz;
@@ -32,6 +33,8 @@ import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
+import com.jhhy.cuiweitourism.utils.SharedPreferencesUtils;
+import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.just.sun.pricecalendar.GroupDeadline;
 import com.just.sun.pricecalendar.ToastCommon;
 
@@ -236,11 +239,19 @@ public class VisaOrderActivity extends BaseActionBarActivity implements OnItemTe
                 goToPay();
                 break;
             case R.id.tv_travel_edit_order_icon: //选择旅游币
-                Intent intent1 = new Intent(getApplicationContext(), TourismCoinActivity.class);
-                Bundle bundle1 = new Bundle();
+                if (MainActivity.logged) {
+                    Intent intent1 = new Intent(getApplicationContext(), TourismCoinActivity.class);
+                    Bundle bundle1 = new Bundle();
 //                bundle1.putString("needScore", detail.getJifentprice()); //本次订单可以用的最多旅游币
-                intent1.putExtras(bundle1);
-                startActivityForResult(intent1, Consts.REQUEST_CODE_RESERVE_SELECT_COIN);
+                    intent1.putExtras(bundle1);
+                    startActivityForResult(intent1, Consts.REQUEST_CODE_RESERVE_SELECT_COIN);
+                }else{
+                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("type", 2);
+                    intent.putExtras(bundle);
+                    startActivityForResult(intent, REQUEST_LOGIN);
+                }
                 break;
             case R.id.tv_travel_edit_order_invoice: //是否需要发票
                 LogUtil.e(TAG, "invoiceTag = " + invoiceTag);
@@ -259,6 +270,8 @@ public class VisaOrderActivity extends BaseActionBarActivity implements OnItemTe
         }
     }
 
+    private int REQUEST_LOGIN = 2913; //请求登录
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -266,6 +279,8 @@ public class VisaOrderActivity extends BaseActionBarActivity implements OnItemTe
         if (resultCode == RESULT_CANCELED){
             if (requestCode == Consts.REQUEST_CODE_RESERVE_PAY){ //订单生成成功，去支付，支付失败
 
+            }else if (requestCode == REQUEST_LOGIN) { //登录
+                ToastUtil.show(getApplicationContext(), "登录失败");
             }
         } else if (resultCode == RESULT_OK){
 //            if (requestCode == Consts.REQUEST_CODE_RESERVE_SELECT_CONTACT){ //选择常用联系人
@@ -324,6 +339,14 @@ public class VisaOrderActivity extends BaseActionBarActivity implements OnItemTe
             } else if (requestCode == Consts.REQUEST_CODE_RESERVE_PAY) { //订单生成成功，去支付成功
                 setResult(RESULT_OK);
                 finish();
+            } else if (requestCode == REQUEST_LOGIN) { //登录成功
+                User user = (User) data.getExtras().getSerializable(Consts.KEY_REQUEST);
+                if (user != null) {
+                    MainActivity.logged = true;
+                    MainActivity.user = user;
+                    SharedPreferencesUtils sp = SharedPreferencesUtils.getInstance(getApplicationContext());
+                    sp.saveUserId(user.getUserId());
+                }
             }
         }
     }
@@ -372,12 +395,23 @@ public class VisaOrderActivity extends BaseActionBarActivity implements OnItemTe
         biz.setVisaOrder(request, new BizGenericCallback<VisaOrderResponse>() {
             @Override
             public void onCompletion(GenericResponseModel<VisaOrderResponse> model) {
-
+                Intent intent = new Intent(getApplicationContext(), SelectPaymentActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("order", model.body);
+                bundle.putInt("type", 22);
+                intent.putExtras(bundle);
+                startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_PAY); //订单生成成功，去支付
+                LoadingIndicator.cancel();
             }
 
             @Override
             public void onError(FetchError error) {
-
+                if (error.localReason != null){
+                    ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
+                }else{
+                    ToastCommon.toastShortShow(getApplicationContext(), null, "预定出错，请重试");
+                }
+                LoadingIndicator.cancel();
             }
         });
 //        VisaBiz biz = new VisaBiz(getApplicationContext(), handler);

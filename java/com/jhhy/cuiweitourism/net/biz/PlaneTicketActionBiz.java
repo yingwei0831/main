@@ -3,12 +3,14 @@ package com.jhhy.cuiweitourism.net.biz;
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
+import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneInternationalOrderDetailRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneOrderOfChinaRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketCityFetch;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketInfoForChinalRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketInfoInternationalRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketInternationalChangeBack;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketInternationalPolicyCheckRequest;
+import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketOfChinaCancelOrderRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketOfChinaChangeBack;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketOrderInternationalRequest;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
@@ -113,6 +115,26 @@ public class PlaneTicketActionBiz extends BasicActionBiz {
             }
         };
         HttpUtils.executeXutils(request, new FetchGenericCallback<>(fetchResponse));
+    }
+
+    /**
+     *  国内机票取消订单
+     */
+    public void planeTicketCancelOrder(PlaneTicketOfChinaCancelOrderRequest fetchRequest, BizGenericCallback<Object> callback){
+        fetchRequest.code = "Fly_cancel";
+        FetchGenericResponse<Object> fetchResponse = new FetchGenericResponse<Object>(callback) {
+            @Override
+            public void onCompletion(FetchResponseModel response) {
+                GenericResponseModel<Object> returnModel = new GenericResponseModel<Object>(response.head, null);
+                this.bizCallback.onCompletion(returnModel);
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                this.bizCallback.onError(error);
+            }
+        };
+        HttpUtils.executeXutils(fetchRequest, new FetchGenericCallback<>(fetchResponse));
     }
 
     /**
@@ -502,12 +524,6 @@ public class PlaneTicketActionBiz extends BasicActionBiz {
     }
 
     /**
-     *  出发城市，到达城市
-     */
-    public void planeTicketDepartureAndReachCity(){
-
-    }
-    /**
      * 国际机票下单
      */
     public void planeTicketOrderInternational(PlaneTicketOrderInternationalRequest request, BizGenericCallback<PlaneOrderOfChinaResponse> callback){
@@ -526,5 +542,13 @@ public class PlaneTicketActionBiz extends BasicActionBiz {
             }
         };
         HttpUtils.executeXutils(request, new FetchGenericCallback<>(fetchResponse));
+    }
+
+    /**
+     * 国际机票订单详情
+     */
+    public void planeTicketInternationalOrderDetail(PlaneInternationalOrderDetailRequest fetch){
+        fetch.code = "Plane_gjinfo";
+        
     }
 }

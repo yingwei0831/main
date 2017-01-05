@@ -490,7 +490,7 @@ public class HotelDetailResponse {
         private String RoomID;
         private String RoomName;
         private String BedType;
-        private String Area;
+//        private String Area;
         private String Capacity;
 //        private HotelRoomImagesBean RoomImages;
         private HotelProductsBean Products;
@@ -520,13 +520,13 @@ public class HotelDetailResponse {
             this.BedType = BedType;
         }
 
-        public String getArea() {
-            return Area;
-        }
+//        public String getArea() {
+//            return Area;
+//        }
 
-        public void setArea(String Area) {
-            this.Area = Area;
-        }
+//        public void setArea(String Area) {
+//            this.Area = Area;
+//        }
 
         public String getCapacity() {
             return Capacity;

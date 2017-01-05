@@ -13,6 +13,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +33,14 @@ import android.widget.TextView;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.biz.OrderActionBiz;
 import com.jhhy.cuiweitourism.model.Order;
+import com.jhhy.cuiweitourism.net.biz.HotelActionBiz;
+import com.jhhy.cuiweitourism.net.models.FetchModel.HotelOrderCancelRequest;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelOrderCancelResponse;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelOrderDetailResponse;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelOrderResponse;
+import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.picture.Bimp;
 import com.jhhy.cuiweitourism.picture.PhotoActivity;
 import com.jhhy.cuiweitourism.picture.TestPicActivity;
@@ -46,12 +56,13 @@ import java.io.IOException;
 
 public class RequestRefundActivity extends BaseActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
 
-    private String TAG = RequestRefundActivity.class.getSimpleName();
-    private int type; //-1:申请退款 1：评论
+    private String TAG = "RequestRefundActivity";
+    private int type; //-1:申请退款 1：评论 2：酒店取消订单
     private Order order;
+    private HotelOrderDetailResponse hotelOrderDetail; //酒店订单详情
 
     private EditText etReason;
-    private TextView tvRefundNotice;
+    private TextView tvRefundNotice; //商家退款说明
     private Button btnCommit;
 
     private GridView gvImages;
@@ -83,6 +94,7 @@ public class RequestRefundActivity extends BaseActivity implements View.OnClickL
             }
         }
     };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,20 +117,25 @@ public class RequestRefundActivity extends BaseActivity implements View.OnClickL
 //        adapter.update();
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        LogUtil.e(TAG, "========== onDestroy =========");
-    }
 
     private void setupView() {
+        TextView tvTitle = (TextView) findViewById(R.id.tv_title_inner_travel);
+        if (type == 2){
+            tvTitle.setText("取消订单");
+        }
         btnCommit = (Button) findViewById(R.id.btn_request_refund_commit);
         tvRefundNotice = (TextView) findViewById(R.id.tv_refund_notice);
         etReason = (EditText) findViewById(R.id.et_reason);
         gvImages = (GridView) findViewById(R.id.gridview_comment_imgs);
         if (type == -1){ //申请退款
             gvImages.setVisibility(View.GONE);
-        }else{ //评论
+        }else if (type == 2){ //酒店取消订单
+            gvImages.setVisibility(View.GONE);
+            tvRefundNotice.setVisibility(View.GONE);
+            etReason.setHint("输入取消订单原因");
+            btnCommit.setText("提交");
+        }
+        else{ //评论
             etReason.setHint("分享你的购买心得");
             tvRefundNotice.setVisibility(View.GONE);
             btnCommit.setText("提交评论");
@@ -143,6 +160,9 @@ public class RequestRefundActivity extends BaseActivity implements View.OnClickL
             if (bundle != null){
                 type = bundle.getInt("type");
                 order = (Order) bundle.getSerializable("order");
+                if (2 == type){
+                    hotelOrderDetail = Tab4OrderDetailsActivity.hotelOrderDetail;
+                }
             }
         }
     }
@@ -150,16 +170,44 @@ public class RequestRefundActivity extends BaseActivity implements View.OnClickL
     @Override
     public void onClick(View view) {
         String remark = etReason.getText().toString();
-        if (remark == null || remark.length() == 0){
+        if (TextUtils.isEmpty(remark)){
             ToastCommon.toastShortShow(getApplicationContext(), null ,getString(R.string.empty_input));
             return;
         }
         if (type == -1){ //申请退款
             OrderActionBiz biz = new OrderActionBiz(getApplicationContext(), handlerMain);
             biz.requestRefund(order.getOrderSN(), remark);
-        }else{ //提交评论
+        } else if (2 == type){ //酒店取消订单
+           cancelHotelOrder(remark);
+        }
+        else{ //提交评论
             commitCommont(remark);
         }
+    }
+
+    /**
+     * 酒店取消（什么标识的订单才能取消）
+     */
+    private void cancelHotelOrder(String remark) {
+        HotelActionBiz hotelActionBiz = new HotelActionBiz();
+        HotelOrderCancelRequest request = new HotelOrderCancelRequest(hotelOrderDetail.getOrderSN(), hotelOrderDetail.getPlatOrderNo(), remark, remark);
+        hotelActionBiz.setHotelOrderCancel(request, new BizGenericCallback<HotelOrderCancelResponse>() {
+            @Override
+            public void onCompletion(GenericResponseModel<HotelOrderCancelResponse> model) {
+                LogUtil.e(TAG, "setHotelOrderCancel: " + model);
+                finish();
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                LogUtil.e(TAG, "setHotelOrderCancel: " + error);
+                if (error.localReason != null){
+                    ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
+                }else{
+                    ToastCommon.toastShortShow(getApplicationContext(), null, "取消订单失败，请重试");
+                }
+            }
+        });
     }
 
     //提交评论
@@ -174,7 +222,7 @@ public class RequestRefundActivity extends BaseActivity implements View.OnClickL
         if (position == Bimp.drr.size()){ //添加图片
             Utils.setKeyboardInvisible(RequestRefundActivity.this);
             selectPicture();
-        }else {
+        } else {
             // 浏览图片，删除图片
             Intent intent = new Intent(getApplicationContext(), PhotoActivity.class);
             intent.putExtra("ID", position);
@@ -504,5 +552,20 @@ public class RequestRefundActivity extends BaseActivity implements View.OnClickL
                 }
             }
         }).start();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        LogUtil.e(TAG, "========== onDestroy =========");
+        hotelOrderDetail = null;
+        etReason= null;
+        tvRefundNotice = null;
+        btnCommit = null;
+        gvImages = null;
+        adapter = null;
+        handlerMain = null;
+        Bimp.drr.clear();
+        Bimp.bmp.clear();
     }
 }

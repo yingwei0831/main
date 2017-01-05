@@ -14,16 +14,23 @@ import com.alipay.sdk.app.PayTask;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.biz.PayActionBiz;
 import com.jhhy.cuiweitourism.model.Order;
+import com.jhhy.cuiweitourism.net.biz.TrainTicketActionBiz;
+import com.jhhy.cuiweitourism.net.models.FetchModel.TrainOrderToOtherPlatRequest;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.ActivityOrderInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.CarRentOrderResponse;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelOrderInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneOrderOfChinaResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainTicketOrderInfo;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.VisaOrderResponse;
+import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.pay.PayResult;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
+import com.just.sun.pricecalendar.ToastCommon;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
@@ -43,7 +50,7 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
     private Button tvAliPay;
     private Button tvWeChatPay;
 
-    private int type; //11:热门活动支付,21:酒店支付, 16:租车订单, 14:国内火车票订单； 15：国内飞机票订单；17：国外
+    private int type; //11:热门活动支付,21:酒店支付, 16:租车订单, 14:国内火车票订单； 15：国内飞机票订单；17：国外; 22：签证
     private ActivityOrderInfo hotInfo; //热门活动订单
     private HotelOrderInfo hotelInfo; //酒店订单
     private TrainTicketOrderInfo trainInfo; //火车票订单
@@ -93,8 +100,12 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
                     // 判断resultStatus 为“9000”则代表支付成功，具体状态码代表含义可参考接口文档
                     if (TextUtils.equals(resultStatus, "9000")) {
                         ToastUtil.show(SelectPaymentActivity.this, "支付成功");
-                        setResult(RESULT_OK);
-                        finish();
+                        if (type== 14){
+                            setTrainOrder(ordersn);
+                        }else {
+                            setResult(RESULT_OK);
+                            finish();
+                        }
                     } else {
                         // 判断resultStatus 为非"9000"则代表可能支付失败
                         // "8000"代表支付结果因为支付渠道原因或者系统原因还在等待支付结果确认，最终交易是否成功以服务端异步通知为准（小概率状态）
@@ -109,6 +120,32 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
             }
         }
     };
+
+    /**
+     * 下单到本平台，再继续下单到第三方平台
+     */
+    private void setTrainOrder(String ordersn) {
+        TrainTicketActionBiz biz = new TrainTicketActionBiz();
+        TrainOrderToOtherPlatRequest request = new TrainOrderToOtherPlatRequest(ordersn);
+        biz.trainTicketOrderSetPlatform(request, new BizGenericCallback<Object>() {
+            @Override
+            public void onCompletion(GenericResponseModel<Object> model) {
+                ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);
+                setResult(RESULT_OK);
+                finish();
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                if (error.localReason != null){
+                    ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason + ", 请联系翠微客服");
+                }else{
+                    ToastCommon.toastShortShow(getApplicationContext(), null, "下单到购票平台出错，请联系翠微客服");
+                }
+                LoadingIndicator.cancel();
+            }
+        });
+    }
 
     private void startPay(final String partner) {
         Runnable payRunnable = new Runnable() {
@@ -159,6 +196,12 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
                 if (trainInfo != null){
                     ordersn = trainInfo.getOrdersn();
                     orderPrice = trainInfo.getPrice();
+                }else{
+                    order = (Order) bundle.getSerializable("order");
+                    if (order != null) {
+                        ordersn = order.getOrderSN();
+                        orderPrice = order.getPrice();
+                    }
                 }
             }else if (type == 15){ //国内机票
                 planeOfChinaInfo = (PlaneOrderOfChinaResponse)bundle.getSerializable("order");
@@ -172,6 +215,13 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
                 if (carRentOrderResponse != null){
                     ordersn = carRentOrderResponse.getOrdersn();
                     orderPrice = carRentOrderResponse.getPrice();
+                }
+            }
+            else if (type == 22){ //签证
+                VisaOrderResponse orderVisa = (VisaOrderResponse) bundle.getSerializable("order");
+                if (orderVisa != null){
+                    ordersn = orderVisa.getOrdersn();
+                    orderPrice = orderVisa.getPrice();
                 }
             }
             else {

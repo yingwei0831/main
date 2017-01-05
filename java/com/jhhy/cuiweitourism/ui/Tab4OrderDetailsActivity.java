@@ -14,7 +14,14 @@ import com.jhhy.cuiweitourism.biz.OrderActionBiz;
 import com.jhhy.cuiweitourism.model.Order;
 import com.jhhy.cuiweitourism.model.UserContacts;
 import com.jhhy.cuiweitourism.net.biz.HotelActionBiz;
+import com.jhhy.cuiweitourism.net.biz.TrainTicketActionBiz;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelOrderDetailRequest;
+import com.jhhy.cuiweitourism.net.models.FetchModel.TrainOrderListFetch;
+import com.jhhy.cuiweitourism.net.models.FetchModel.TrainOrderRefundRequest;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelOrderDetailResponse;
+import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
@@ -35,7 +42,8 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
     private TextView tvOrderTitle;
     private TextView tvOrderSN;
     private TextView tvOrderTime;
-    private TextView tvOrderCount;
+    private TextView tvOrderCount; //人数
+    private TextView tvOrderCountTitle; //
     private TextView tvOrderStatus;
     private TextView tvOrderLinkName;
     private TextView tvOrderLinkMobile;
@@ -53,9 +61,11 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
     private TextView tvTravelIconNotice; //账户共xxx个旅游币，本次使用xxx个旅游币折扣
     private TextView tvTravelIconCount;
 
-    private LinearLayout layoutBottomAction;
-    private TextView tvPrice;
+    private LinearLayout layoutBottomAction; //详情请求成功，则显示
+    private TextView tvPrice; //订单总价
     private Button btnAction;
+
+    public static HotelOrderDetailResponse hotelOrderDetail;
 
     private Handler handler = new Handler() {
         @Override
@@ -67,6 +77,7 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
                     if (msg.arg1 == 1) {
                         order = (Order) msg.obj;
                         if (order != null) {
+                            layoutBottomAction.setVisibility(View.VISIBLE);
                             refreshView();
                         } else {
                             ToastCommon.toastShortShow(getApplicationContext(), null, "订单详情为空");
@@ -103,6 +114,7 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
         tvOrderSN = (TextView) findViewById(R.id.tv_order_sn);
         tvOrderTime = (TextView) findViewById(R.id.tv_order_time);
         tvOrderCount = (TextView) findViewById(R.id.tv_order_count);
+        tvOrderCountTitle = (TextView) findViewById(R.id.tv_order_detail_count_person);
         tvOrderStatus = (TextView) findViewById(R.id.tv_order_status);
         tvOrderLinkName = (TextView) findViewById(R.id.tv_order_link_name);
         tvOrderLinkMobile = (TextView) findViewById(R.id.tv_order_link_mobile);
@@ -120,6 +132,7 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
         tvTravelIconCount = (TextView) findViewById(R.id.tv_order_icon_count);
 
         layoutBottomAction = (LinearLayout) findViewById(R.id.layout_bottom_action);
+        layoutBottomAction.setVisibility(View.GONE);
         tvPrice = (TextView) findViewById(R.id.tv_order_detail_price);
         btnAction = (Button) findViewById(R.id.btn_order_detail_action);
         switch (type) {
@@ -219,7 +232,6 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
             tvTravelIconNotice.setText("账户共" + MainActivity.user.getUserScore() + "个旅游币，本次使用" + order.getUseTravelIcon() + "个旅游币折扣");
             tvTravelIconCount.setText(order.getUseTravelIcon());
         }
-
     }
 
     @Override
@@ -242,6 +254,8 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
                     getPlaneOrderDetail();
                 }else if ("2".equals(typeId)){ //酒店 详情
                     getHotelDetail();
+                }else if ("80".equals(typeId)){ //火车票 详情
+                    getTrainDetail();
                 }
                 else {
                     OrderActionBiz biz = new OrderActionBiz(getApplicationContext(), handler);
@@ -249,6 +263,16 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
                 }
             }
         }
+    }
+
+    /**
+     * 火车票详情
+     */
+    private void getTrainDetail() {
+        //TODO
+        TrainTicketActionBiz biz = new TrainTicketActionBiz();
+        TrainOrderListFetch fetch = new TrainOrderListFetch(orderSN, sanfangorderno);
+//        biz.trainTicketOrderQuery(fetch);
     }
 
     /**
@@ -263,14 +287,30 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
      */
     private void getHotelDetail() {
         HotelActionBiz hotelActionBiz = new HotelActionBiz();
+        HotelOrderDetailRequest request = new HotelOrderDetailRequest(orderSN, sanfangorderno);
+        hotelActionBiz.getHotelOrderDetail(request, new BizGenericCallback<HotelOrderDetailResponse>() {
+            @Override
+            public void onCompletion(GenericResponseModel<HotelOrderDetailResponse> model) {
+                LogUtil.e(TAG, "getHotelOrderDetail: " + model);
+                layoutBottomAction.setVisibility(View.VISIBLE);
+                hotelOrderDetail = model.body;
+                hotelOrderDetail.setOrderSN(orderSN);
+                refreshHotelView(hotelOrderDetail);
+                LoadingIndicator.cancel();
+            }
 
-//        HotelOrderDetailRequest request = new HotelOrderDetailRequest();
-//        hotelActionBiz.getHotelOrderDetail();
+            @Override
+            public void onError(FetchError error) {
+                LogUtil.e(TAG, "getHotelOrderDetail: " + error);
+                if (error.localReason != null){
+                    ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
+                }else{
+                    ToastCommon.toastShortShow(getApplicationContext(), null, "获取酒店订单详情出错，请返回重试");
+                }
+                LoadingIndicator.cancel();
+            }
+        });
     }
-
-    private int REQUEST_REFUND = 1501; //申请退款
-    private int REQUEST_PAY = 1502; //立即付款
-    private int REQUEST_COMMENT = 1505; //去评价
 
     @Override
     public void onClick(View view) {
@@ -279,6 +319,19 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
             case R.id.title_main_tv_left_location:
                 finish();
                 return;
+        }
+
+        if ("2".equals(typeId)){ //酒店 取消订单
+            Intent intent = new Intent(getApplicationContext(), RequestRefundActivity.class);
+            Bundle bundle = new Bundle();
+//            bundle.putSerializable("order", hotelOrderDetail);
+            bundle.putInt("type", 2);
+            intent.putExtras(bundle);
+            startActivityForResult(intent, REQUEST_CANCEL);
+            return;
+        }
+        else if ("80".equals(typeId)){ //火车票 取消订单
+            cancelTrainOrder();
         }
         switch (order.getStatus()) {
             case "0": //正在退款——>取消退款
@@ -316,6 +369,69 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
                 break;
         }
     }
+
+    /**
+     * 取消火车票订单
+     */
+    private void cancelTrainOrder() {
+
+    }
+
+    /**
+     * 酒店订单详情展示
+     */
+    private void refreshHotelView(HotelOrderDetailResponse body) {
+        btnAction.setVisibility(View.GONE);
+//        btnAction.setText("取消订单");
+
+        tvOrderTitle.setText(body.getHotelName());
+        tvOrderSN.setText(body.getPlatOrderNo());
+        tvOrderTime.setText(body.getCreationDate());
+
+        int people = body.getCustomers().getCustomer().size();
+        tvOrderCount.setText(String.valueOf(people));
+        tvOrderCountTitle.setText("入住人数：");
+        tvPrice.setText(body.getTotalPrice());
+        if ("11".equals(body.getStatus())) {
+            tvOrderStatus.setText("已取消");
+        }else if ("10".equals(body.getStatus())){
+            tvOrderStatus.setText("未确认");
+        }else if ("12".equals(body.getStatus())){
+            tvOrderStatus.setText("已确认"); //取消订单：担保规则给出订单是否可取消
+            btnAction.setVisibility(View.VISIBLE);
+            btnAction.setText("取消订单");
+        }else if ("13".equals(body.getStatus())){
+            tvOrderStatus.setText("入住中");
+        }else if ("14".equals(body.getStatus())){
+            tvOrderStatus.setText("正常离店");
+        }else if ("15".equals(body.getStatus())){
+            tvOrderStatus.setText("提前离店");
+        }else if ("16".equals(body.getStatus())){
+            tvOrderStatus.setText("NoShow");
+        }
+        //联系人
+        tvOrderLinkName.setText(body.getContact().getName());
+        tvOrderLinkMobile.setText(body.getContact().getMobile());
+        //入住人
+        List<HotelOrderDetailResponse.CustomerBean> travelers = body.getCustomers().getCustomer();
+        if (travelers != null && travelers.size() != 0) {
+            for (int i = 0; i < people; i++) {
+                TravelerInfoClass traveler = new TravelerInfoClass(getApplicationContext());
+                traveler.setShowView(travelers.get(i));
+                LogUtil.e(TAG, travelers.get(i).toString());
+                layoutTravelers.addView(traveler);
+            }
+        }
+       //发票
+        layoutInvoice.setVisibility(View.GONE);
+        //旅游币
+        layoutTravelIcon.setVisibility(View.GONE);
+    }
+
+    private int REQUEST_REFUND = 1501; //申请退款
+    private int REQUEST_PAY = 1502; //立即付款
+    private int REQUEST_COMMENT = 1505; //去评价
+    private int REQUEST_CANCEL = 1506; //酒店取消订单
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -103,7 +103,30 @@ public abstract class OrderXListViewAdapter extends BaseAdapter implements IOrde
             if (type == 0){
                 holder.btnOrderCancel.setVisibility(View.GONE); //取消订单:全部订单不给酒店做任何操作
             }
-        }else {
+        } else if ("80".equals(order.getTypeId())){ //火车票：可以付款；如果已经付款了，可以取消订单，否则没有取消订单
+            if (order.getSanfangorderno() == null || order.getSanfangorderno().length() == 0){ //未付款，则进行付款
+                if (((order.getAddTime() != null && order.getAddTime().length() != 0 && !"null".equals(order.getAddTime()) && (System.currentTimeMillis() / 1000 - Integer.parseInt(order.getAddTime()) < 15 * 60)))){
+                    holder.tvOrderStatus.setText(context.getString(R.string.fragment_mine_wait_pay));
+                    holder.btnOrderPayment.setVisibility(View.VISIBLE); //签约付款
+                }else{ //不可支付
+                    holder.tvOrderStatus.setText(context.getString(R.string.tab3_order_item_already_cancel));
+                    holder.btnOrderPayment.setVisibility(View.GONE); //签约付款
+                }
+                holder.btnOrderCancelPayment.setVisibility(View.GONE); //取消退款
+                holder.btnOrderComment.setVisibility(View.GONE); //去评价
+
+                holder.btnOrderCancel.setVisibility(View.GONE); //取消订单
+                holder.btnGoRefund.setVisibility(View.GONE); //退款
+            }else{ //已经付款，则申请退款
+                holder.tvOrderStatus.setText(context.getString(R.string.tab3_order_item_payde));
+                holder.btnGoRefund.setVisibility(View.VISIBLE); //退款
+                holder.btnOrderCancelPayment.setVisibility(View.GONE); //取消退款
+                holder.btnOrderComment.setVisibility(View.GONE); //去评价
+                holder.btnOrderPayment.setVisibility(View.GONE); //签约付款
+                holder.btnOrderCancel.setVisibility(View.GONE); //取消订单
+            }
+        }
+        else {
             if ("1".equals(order.getStatus())) { //等待付款——>取消订单，签约付款
                 holder.tvOrderStatus.setText(context.getString(R.string.fragment_mine_wait_pay));
                 holder.btnOrderCancelPayment.setVisibility(View.GONE); //取消退款

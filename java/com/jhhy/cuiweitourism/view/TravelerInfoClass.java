@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.model.UserContacts;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelOrderDetailResponse;
 
 /**
  * Created by jiahe008 on 2016/9/23.
@@ -19,6 +20,7 @@ public class TravelerInfoClass extends LinearLayout{
     private TextView tvName;
     private TextView tvMobile;
     private TextView tvID;
+    private LinearLayout layoutId;
 
     public TravelerInfoClass(Context context) {
         this(context, null);
@@ -38,6 +40,7 @@ public class TravelerInfoClass extends LinearLayout{
         tvName = (TextView) rootView.findViewById(R.id.tv_order_traveler_name);
         tvMobile = (TextView) rootView.findViewById(R.id.tv_order_traveler_mobile);
         tvID = (TextView) rootView.findViewById(R.id.tv_order_traveler_id);
+        layoutId = (LinearLayout) rootView.findViewById(R.id.layout_custom_id);
     }
 
     public void setShowView(UserContacts contacts){
@@ -45,4 +48,11 @@ public class TravelerInfoClass extends LinearLayout{
         tvMobile.setText(contacts.getContactsMobile());
         tvID.setText(contacts.getContactsIdCard());
     }
+     public void setShowView(HotelOrderDetailResponse.CustomerBean contacts){
+        tvName.setText(contacts.getName());
+        tvMobile.setText(contacts.getMobile());
+         layoutId.setVisibility(GONE);
+    }
+
+
 }
