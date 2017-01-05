@@ -408,6 +408,10 @@
                         android:textColor="@color/colorActionBar"
                         android:textSize="16sp" />
                 </RelativeLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1.2px"
+                    android:background="@color/colorLineGray2"/>
                 <!--此处是动态添加乘车人-->
                 <com.jhhy.cuiweitourism.view.MyListView
                     android:id="@+id/list_plane_contacts"

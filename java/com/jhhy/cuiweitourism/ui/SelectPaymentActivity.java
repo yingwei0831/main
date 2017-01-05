@@ -50,7 +50,7 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
     private Button tvAliPay;
     private Button tvWeChatPay;
 
-    private int type; //11:热门活动支付,21:酒店支付, 16:租车订单, 14:国内火车票订单； 15：国内飞机票订单；17：国外; 22：签证
+    private int type; //11:热门活动支付,21:酒店支付, 16:租车订单, 14/18:国内火车票订单； 15：国内飞机票订单；17：国外; 22：签证
     private ActivityOrderInfo hotInfo; //热门活动订单
     private HotelOrderInfo hotelInfo; //酒店订单
     private TrainTicketOrderInfo trainInfo; //火车票订单
@@ -100,7 +100,7 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
                     // 判断resultStatus 为“9000”则代表支付成功，具体状态码代表含义可参考接口文档
                     if (TextUtils.equals(resultStatus, "9000")) {
                         ToastUtil.show(SelectPaymentActivity.this, "支付成功");
-                        if (type== 14){
+                        if (type== 14 || type == 18){
                             setTrainOrder(ordersn);
                         }else {
                             setResult(RESULT_OK);
@@ -196,12 +196,6 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
                 if (trainInfo != null){
                     ordersn = trainInfo.getOrdersn();
                     orderPrice = trainInfo.getPrice();
-                }else{
-                    order = (Order) bundle.getSerializable("order");
-                    if (order != null) {
-                        ordersn = order.getOrderSN();
-                        orderPrice = order.getPrice();
-                    }
                 }
             }else if (type == 15){ //国内机票
                 planeOfChinaInfo = (PlaneOrderOfChinaResponse)bundle.getSerializable("order");
@@ -223,6 +217,13 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
                     ordersn = orderVisa.getOrdersn();
                     orderPrice = orderVisa.getPrice();
                 }
+            }else if (type == 18){
+                order = (Order) bundle.getSerializable("order");
+                if (order != null) {
+                    ordersn = order.getOrderSN();
+                    orderPrice = order.getPrice();
+                }
+
             }
             else {
                 order = (Order) bundle.getSerializable("order");

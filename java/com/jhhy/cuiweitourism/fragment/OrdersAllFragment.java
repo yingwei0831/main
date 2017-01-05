@@ -259,9 +259,11 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
             case R.id.btn_order_cancel: //取消订单
                 if ("2".equals(order.getTypeId())){ //酒店
                     cancelHotelOrder(position);
-                }else if ("80".equals(order.getTypeId())){ //火车票
-                    cancelTrainOrder(order, position);
-                }else if ("82".equals(order.getTypeId())){ //飞机票（国内/国际）
+                }
+//                else if ("80".equals(order.getTypeId())){ //火车票
+//                    cancelTrainOrder(order, position);
+//                }
+                else if ("82".equals(order.getTypeId())){ //飞机票（国内/国际）
                     cancelPlaneOrder(order);
                 }
                 else {
@@ -286,7 +288,7 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
                     Intent intentTrain = new Intent(getContext(), SelectPaymentActivity.class);
                     Bundle bundleTrain = new Bundle();
                     bundleTrain.putSerializable("order", order);
-                    bundleTrain.putInt("type",14);
+                    bundleTrain.putInt("type",18);
                     intentTrain.putExtras(bundleTrain);
                     startActivityForResult(intentTrain, TRAIN_PAY);
                     return;
@@ -298,6 +300,10 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
                 startActivityForResult(intentPay, REQUEST_CODE_PAY);
                 break;
             case R.id.btn_order_go_refund: //退款——>进入申请退款页面
+                if ("80".equals(order.getTypeId())){ //火车票
+                    cancelTrainOrder(order, position);
+                    return;
+                }
                 Intent intentRequestRefund = new Intent(getContext(), RequestRefundActivity.class);
                 Bundle bundleRefund = new Bundle();
                 bundleRefund.putSerializable("order", order);
@@ -341,14 +347,14 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
     }
 
     /**
-     * 取消火车票订单
-     * 未付款订单不可取消
+     * 火车票订单退款
+     * 进入详情页面 可退款
      */
     private void cancelTrainOrder(Order order, int position) {
-        if (order.getSanfangorderno() == null || order.getSanfangorderno().length() == 0){
-            ToastCommon.toastShortShow(getContext(), null, "未付款订单，无法取消");
-            return;
-        }
+//        if (order.getSanfangorderno() == null || order.getSanfangorderno().length() == 0){
+//            ToastCommon.toastShortShow(getContext(), null, "未付款订单，无法取消");
+//            return;
+//        }
         //进入火车票详情再取消订单
         orderDetail(position);
     }
