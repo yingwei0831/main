@@ -243,7 +243,8 @@ public class OrdersAllBiz {
                         order.setPicPath(orderObj.getString(Consts.PIC_PATH_LITPIC));
                         order.setStartaddress(orderObj.getString("startaddress"));
                         order.setEndaddress(orderObj.getString("endaddress"));
-                        order.setSanfangorderno(orderObj.getString("sanfangorderno"));
+                        order.setSanfangorderno1(orderObj.getString("sanfangorderno1"));
+                        order.setSanfangorderno2(orderObj.getString("sanfangorderno2"));
                         lists.add(order);
                     }
                     msg.obj = lists;

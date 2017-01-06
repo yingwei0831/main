@@ -158,14 +158,15 @@ public abstract class OrderXListViewAdapter extends BaseAdapter implements IOrde
                 holder.btnOrderCancel.setVisibility(View.VISIBLE); //取消订单
                 holder.btnGoRefund.setVisibility(View.GONE); //退款
 
-                if ("80".equals(order.getTypeId()) && (order.getSanfangorderno() == null || order.getSanfangorderno().length() == 0)){ //火车票
+                if ("80".equals(order.getTypeId()) &&
+                        (order.getSanfangorderno1() == null || order.getSanfangorderno1().length() == 0 ||
+                        order.getSanfangorderno2() == null || order.getSanfangorderno2().length() == 0)){ //火车票
                     if (order.getAddTime() != null && order.getAddTime().length() != 0 && !"null".equals(order.getAddTime())
                             && (System.currentTimeMillis() / 1000 - Integer.parseInt(order.getAddTime()) < 15 * 60)){ //15分钟之内，可以付款,取消订单
 //                        holder.btnOrderPayment.setVisibility(View.VISIBLE); //签约付款
-                    }else{
-
+                    }else{ //等待取消—>取消订单
+                        holder.tvOrderStatus.setText(context.getString(R.string.fragment_mine_wait_cancel));
                         holder.btnOrderPayment.setVisibility(View.GONE); //签约付款
-                        //取消订单
                     }
                 }
             } else if ("0".equals(order.getStatus())) { //正在退款——>取消退款

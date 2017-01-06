@@ -22,6 +22,7 @@ import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelOrderInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneOrderOfChinaResponse;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainOrderFromPlatformResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainTicketOrderInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.VisaOrderResponse;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
@@ -50,7 +51,7 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
     private Button tvAliPay;
     private Button tvWeChatPay;
 
-    private int type; //11:热门活动支付,21:酒店支付, 16:租车订单, 14/18:国内火车票订单； 15：国内飞机票订单；17：国外; 22：签证
+    private int type; //11:热门活动支付,21:酒店支付, 16:租车订单, 14/18（订单页面中跳过来）:国内火车票订单； 15/19（订单页面进入）：国内飞机票订单；17/20（订单页面进入）：国际飞机票； 22：签证
     private ActivityOrderInfo hotInfo; //热门活动订单
     private HotelOrderInfo hotelInfo; //酒店订单
     private TrainTicketOrderInfo trainInfo; //火车票订单
@@ -125,13 +126,15 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
      * 下单到本平台，再继续下单到第三方平台
      */
     private void setTrainOrder(String ordersn) {
+        LoadingIndicator.show(SelectPaymentActivity.this, getString(R.string.http_notice));
         TrainTicketActionBiz biz = new TrainTicketActionBiz();
         TrainOrderToOtherPlatRequest request = new TrainOrderToOtherPlatRequest(ordersn);
-        biz.trainTicketOrderSetPlatform(request, new BizGenericCallback<Object>() {
+        biz.trainTicketOrderSetPlatform(request, new BizGenericCallback<TrainOrderFromPlatformResponse>() {
             @Override
-            public void onCompletion(GenericResponseModel<Object> model) {
+            public void onCompletion(GenericResponseModel<TrainOrderFromPlatformResponse> model) {
                 ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);
                 setResult(RESULT_OK);
+                LoadingIndicator.cancel();
                 finish();
             }
 
@@ -197,34 +200,33 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
                     ordersn = trainInfo.getOrdersn();
                     orderPrice = trainInfo.getPrice();
                 }
-            }else if (type == 15){ //国内机票
+            }else if (type == 15|| type == 17){ //国内机票/国际飞机票 下单进入
                 planeOfChinaInfo = (PlaneOrderOfChinaResponse)bundle.getSerializable("order");
                 if (planeOfChinaInfo != null){
                     ordersn = planeOfChinaInfo.getOrdersn();
                     orderPrice = String.valueOf(String.format(Locale.getDefault(), "%.2f", planeOfChinaInfo.getTotalprice()));
                 }
             }
-            else if (type == 16 || type == 17){
+            else if (type == 16){
                 CarRentOrderResponse carRentOrderResponse = (CarRentOrderResponse) bundle.getSerializable("order");
                 if (carRentOrderResponse != null){
                     ordersn = carRentOrderResponse.getOrdersn();
                     orderPrice = carRentOrderResponse.getPrice();
                 }
-            }
-            else if (type == 22){ //签证
+            } else if (type == 22){ //签证
                 VisaOrderResponse orderVisa = (VisaOrderResponse) bundle.getSerializable("order");
                 if (orderVisa != null){
                     ordersn = orderVisa.getOrdersn();
                     orderPrice = orderVisa.getPrice();
                 }
-            }else if (type == 18){
-                order = (Order) bundle.getSerializable("order");
-                if (order != null) {
-                    ordersn = order.getOrderSN();
-                    orderPrice = order.getPrice();
-                }
-
             }
+//            else if (type == 18 || type == 19 || type == 20){ //火车票，订单页面进入/国内机票，订单页面进入/国际机票，订单页面进入
+//                order = (Order) bundle.getSerializable("order");
+//                if (order != null) {
+//                    ordersn = order.getOrderSN();
+//                    orderPrice = order.getPrice();
+//                }
+//            }
             else {
                 order = (Order) bundle.getSerializable("order");
                 if (order != null) {
@@ -282,9 +284,9 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
     private void aliPay() {
         LoadingIndicator.show(SelectPaymentActivity.this, getString(R.string.http_notice));
         PayActionBiz biz = new PayActionBiz(getApplicationContext(), handler);
-        if (type == 15){ //国内机票支付
+        if (type == 15 || type == 19){ //国内机票支付
             biz.getPlaneOfChinaPayInfo(MainActivity.user.getUserId(), ordersn);
-        } else if (type == 17){ //国际机票支付
+        } else if (type == 17 || type == 20){ //国际机票支付
             biz.getPlaneInternationalPayInfo(MainActivity.user.getUserId(), ordersn);
         }
         else {

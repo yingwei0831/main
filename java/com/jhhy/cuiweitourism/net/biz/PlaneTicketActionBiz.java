@@ -12,6 +12,7 @@ import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketInternationalChan
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketInternationalPolicyCheckRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketOfChinaCancelOrderRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketOfChinaChangeBack;
+import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketOfChinaOrderRefundRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketOrderInternationalRequest;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchResponseModel;
@@ -118,6 +119,27 @@ public class PlaneTicketActionBiz extends BasicActionBiz {
     }
 
     /**
+     * 国内机票退改签说明
+     */
+    public void planeTicketOfChinaChangeBack(PlaneTicketOfChinaChangeBack request, BizGenericCallback<PlaneTicketOfChinaChangeBackRespond> callback){
+        request.code = "Fly_tuistate";
+        FetchGenericResponse<PlaneTicketOfChinaChangeBackRespond> fetchResponse = new FetchGenericResponse<PlaneTicketOfChinaChangeBackRespond>(callback) {
+            @Override
+            public void onCompletion(FetchResponseModel response) {
+                PlaneTicketOfChinaChangeBackRespond info = parseJsonToObject(response,PlaneTicketOfChinaChangeBackRespond.class);
+                GenericResponseModel<PlaneTicketOfChinaChangeBackRespond> returnModel = new GenericResponseModel<>(response.head, info);
+                this.bizCallback.onCompletion(returnModel);
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                this.bizCallback.onError(error);
+            }
+        };
+        HttpUtils.executeXutils(request, new FetchGenericCallback<>(fetchResponse));
+    }
+
+    /**
      *  国内机票取消订单
      */
     public void planeTicketCancelOrder(PlaneTicketOfChinaCancelOrderRequest fetchRequest, BizGenericCallback<Object> callback){
@@ -138,24 +160,11 @@ public class PlaneTicketActionBiz extends BasicActionBiz {
     }
 
     /**
-     * 国内机票退改签说明
+     * 国内机票退款
      */
-    public void planeTicketOfChinaChangeBack(PlaneTicketOfChinaChangeBack request, BizGenericCallback<PlaneTicketOfChinaChangeBackRespond> callback){
-        request.code = "Fly_tuistate";
-        FetchGenericResponse<PlaneTicketOfChinaChangeBackRespond> fetchResponse = new FetchGenericResponse<PlaneTicketOfChinaChangeBackRespond>(callback) {
-            @Override
-            public void onCompletion(FetchResponseModel response) {
-                PlaneTicketOfChinaChangeBackRespond info = parseJsonToObject(response,PlaneTicketOfChinaChangeBackRespond.class);
-                GenericResponseModel<PlaneTicketOfChinaChangeBackRespond> returnModel = new GenericResponseModel<>(response.head, info);
-                this.bizCallback.onCompletion(returnModel);
-            }
+    public void planeTicketOfChinaRefund(PlaneTicketOfChinaOrderRefundRequest fetch){
+        fetch.code = "Fly_refund";
 
-            @Override
-            public void onError(FetchError error) {
-                this.bizCallback.onError(error);
-            }
-        };
-        HttpUtils.executeXutils(request, new FetchGenericCallback<>(fetchResponse));
     }
 
     /**

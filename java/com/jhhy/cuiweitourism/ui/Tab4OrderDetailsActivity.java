@@ -21,6 +21,7 @@ import com.jhhy.cuiweitourism.net.models.FetchModel.TrainOrderRefundRequest;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelOrderDetailResponse;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainTicketOrderDetailResponse;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
@@ -29,14 +30,16 @@ import com.jhhy.cuiweitourism.view.TravelerInfoClass;
 import com.just.sun.pricecalendar.ToastCommon;
 
 import java.util.List;
+import java.util.Locale;
 
 public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
 
     private String TAG = getClass().getSimpleName();
     private String orderSN;
     private int type = -1; //0:1:2:3:4:5:   订单状态
-    private String typeId; //订单类型   type 0.全部订单、1.线路、14私人定制、202活动、     2.酒店、8签证、82机票、80火车票
-    private String sanfangorderno; //订单第三方id
+    private String typeId; //订单类型   type 0.全部订单、1.线路、14私人定制、202活动、     2.酒店、8签证、82机票、80火车票(接口)
+    private String sanfangorderno1; //订单第三方id
+    private String sanfangorderno2; //订单第三方id
     private Order order;
 
     private TextView tvOrderTitle;
@@ -45,6 +48,8 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
     private TextView tvOrderCount; //人数
     private TextView tvOrderCountTitle; //
     private TextView tvOrderStatus;
+
+    private LinearLayout layoutContact; //联系人
     private TextView tvOrderLinkName;
     private TextView tvOrderLinkMobile;
 
@@ -116,6 +121,7 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
         tvOrderCount = (TextView) findViewById(R.id.tv_order_count);
         tvOrderCountTitle = (TextView) findViewById(R.id.tv_order_detail_count_person);
         tvOrderStatus = (TextView) findViewById(R.id.tv_order_status);
+        layoutContact = (LinearLayout) findViewById(R.id.layout_order_contact);
         tvOrderLinkName = (TextView) findViewById(R.id.tv_order_link_name);
         tvOrderLinkMobile = (TextView) findViewById(R.id.tv_order_link_mobile);
 
@@ -157,7 +163,10 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
         }
         if ("3".equals(typeId)) { //游客信息隐藏
             layoutTravel.setVisibility(View.GONE);
+        }else if ("80".equals(typeId)){
+            layoutContact.setVisibility(View.GONE);
         }
+
     }
 
     private void refreshView() {
@@ -248,7 +257,8 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
                 orderSN = bundle.getString("orderSN");
                 type = bundle.getInt("type");
                 typeId = bundle.getString("typeId");
-                sanfangorderno = bundle.getString("sanfangorderno");
+                sanfangorderno1 = bundle.getString("sanfangorderno1");
+                sanfangorderno2 = bundle.getString("sanfangorderno2");
                 LoadingIndicator.show(this, getString(R.string.http_notice));
                 if ("82".equals(typeId)){ //机票（国内/国际） 详情
                     getPlaneOrderDetail();
@@ -271,8 +281,27 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
     private void getTrainDetail() {
         //TODO
         TrainTicketActionBiz biz = new TrainTicketActionBiz();
-        TrainOrderListFetch fetch = new TrainOrderListFetch(orderSN, sanfangorderno);
-//        biz.trainTicketOrderQuery(fetch);
+        TrainOrderListFetch fetch = new TrainOrderListFetch(sanfangorderno1, sanfangorderno2);
+        biz.trainTicketOrderQuery(fetch, new BizGenericCallback<TrainTicketOrderDetailResponse>() {
+            @Override
+            public void onCompletion(GenericResponseModel<TrainTicketOrderDetailResponse> model) {
+                LogUtil.e(TAG, "getHotelOrderDetail: " + model);
+
+                refreshTrainView(model.body);
+                LoadingIndicator.cancel();
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                LogUtil.e(TAG, "trainTicketOrderQuery: " + error);
+                if (error.localReason != null){
+                    ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
+                }else{
+                    ToastCommon.toastShortShow(getApplicationContext(), null, "获取火车票订单详情出错，请返回重试");
+                }
+                LoadingIndicator.cancel();
+            }
+        });
     }
 
     /**
@@ -287,7 +316,7 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
      */
     private void getHotelDetail() {
         HotelActionBiz hotelActionBiz = new HotelActionBiz();
-        HotelOrderDetailRequest request = new HotelOrderDetailRequest(orderSN, sanfangorderno);
+        HotelOrderDetailRequest request = new HotelOrderDetailRequest(orderSN, sanfangorderno1);
         hotelActionBiz.getHotelOrderDetail(request, new BizGenericCallback<HotelOrderDetailResponse>() {
             @Override
             public void onCompletion(GenericResponseModel<HotelOrderDetailResponse> model) {
@@ -378,6 +407,22 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
     }
 
     /**
+     * 火车票订单展示
+     */
+    private void refreshTrainView(TrainTicketOrderDetailResponse body) {
+        tvOrderTitle.setText(String.format(Locale.getDefault(), "%s—%s", body.getTicketInfo().getFromStation(), body.getTicketInfo().getToStation()));
+        tvOrderSN.setText(body.getPlatOrderNo());
+        tvOrderTime.setText(body.getTBookTime());
+
+        int people = body.getTicketInfo().getPassengers().getPassenger().size();
+        tvOrderCount.setText(String.format(Locale.getDefault(), "%d人", people));
+        tvOrderCountTitle.setText("乘车人数：");
+        tvPrice.setText(body.getTktSumPrice());
+        tvOrderStatus.setText(body.getStatus());
+
+    }
+
+    /**
      * 酒店订单详情展示
      */
     private void refreshHotelView(HotelOrderDetailResponse body) {
@@ -389,7 +434,7 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
         tvOrderTime.setText(body.getCreationDate());
 
         int people = body.getCustomers().getCustomer().size();
-        tvOrderCount.setText(String.valueOf(people));
+        tvOrderCount.setText(String.format(Locale.getDefault(), "%d人", people));
         tvOrderCountTitle.setText("入住人数：");
         tvPrice.setText(body.getTotalPrice());
         if ("11".equals(body.getStatus())) {

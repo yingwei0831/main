@@ -225,12 +225,13 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
         }
         else {
             if ("80".equals(order.getTypeId())){ //火车票详情
-                if (order.getSanfangorderno() == null || order.getSanfangorderno().length() == 0){
+                if (order.getSanfangorderno1() == null || order.getSanfangorderno1().length() == 0 ||
+                        order.getSanfangorderno2() == null || order.getSanfangorderno2().length() == 0){
                     ToastCommon.toastShortShow(getContext(), null, "订单未支付，无详情");
                     return;
                 }
             }else if ("82".equals(order.getTypeId())){ //机票详情
-
+                //TODO 国内机票详情，国际机票详情
                 return;
             }
             Intent intent = new Intent(getContext(), Tab4OrderDetailsActivity.class);
@@ -238,7 +239,8 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
             bundle.putSerializable("orderSN", order.getOrderSN());
             bundle.putInt("type", Integer.parseInt(order.getStatus())); //订单状态
             bundle.putString("typeId", order.getTypeId()); //订单类型
-            bundle.putString("sanfangorderno", order.getSanfangorderno()); //酒店，签证，国内机票，国际机票，火车票
+            bundle.putString("sanfangorderno1", order.getSanfangorderno1()); //酒店，签证，国内机票，国际机票，火车票
+            bundle.putString("sanfangorderno2", order.getSanfangorderno2()); //酒店，签证，国内机票，国际机票，火车票
             intent.putExtras(bundle);
             startActivityForResult(intent, REQUEST_CODE_DETAIL);
         }
@@ -267,8 +269,7 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
                     cancelPlaneOrder(order);
                 }
                 else {
-                    OrderActionBiz biz = new OrderActionBiz(getContext(), handler);
-                    biz.requestCancelOrder(order.getOrderSN());
+                    cancelOrder(order);
                 }
                 break;
             case R.id.btn_order_refund: //取消退款
@@ -276,21 +277,33 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
                 bizRefund.requestCancelRefund(order.getOrderSN());
                 break;
             case R.id.btn_order_comment: //去评价——>进入评论页面
-                Intent intent = new Intent(getContext(), RequestRefundActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("order", order);
-                bundle.putInt("type", 1);
-                intent.putExtras(bundle);
-                startActivityForResult(intent, REQUEST_COMMENT);
+                refund(order, 1, REQUEST_COMMENT);
                 break;
-            case R.id.btn_tab3_item_sign_contact: //签约付款
-                if ("80".equals(order.getTypeId())){
+            case R.id.btn_tab3_item_sign_contact: //签约付款（酒店不付款，签证顺延）
+                if ("80".equals(order.getTypeId())){ //火车票
                     Intent intentTrain = new Intent(getContext(), SelectPaymentActivity.class);
                     Bundle bundleTrain = new Bundle();
                     bundleTrain.putSerializable("order", order);
                     bundleTrain.putInt("type",18);
                     intentTrain.putExtras(bundleTrain);
                     startActivityForResult(intentTrain, TRAIN_PAY);
+                    return;
+                }else if ("82".equals(order.getTypeId())){ //飞机票
+                    if ("国内机票".equals(order.getProductName())){ //国内机票
+                        Intent intentInner = new Intent(getContext(), SelectPaymentActivity.class);
+                        Bundle bundleInner = new Bundle();
+                        bundleInner.putSerializable("order", order);
+                        bundleInner.putInt("type",15);
+                        intentInner.putExtras(bundleInner);
+                        startActivityForResult(intentInner, Consts.REQUEST_CODE_RESERVE_PAY); //订单生成成功，去支付
+                    }else if ("国际机票".equals(order.getProductName())){ //国际机票
+                        Intent intentOuter = new Intent(getContext(), SelectPaymentActivity.class);
+                        Bundle bundleOuter = new Bundle();
+                        bundleOuter.putSerializable("order", order);
+                        bundleOuter.putInt("type", 20);
+                        intentOuter.putExtras(bundleOuter);
+                        startActivityForResult(intentOuter, Consts.REQUEST_CODE_RESERVE_PAY); //订单生成成功，去支付
+                    }
                     return;
                 }
                 Intent intentPay = new Intent(getContext(), SelectPaymentActivity.class);
@@ -302,16 +315,39 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
             case R.id.btn_order_go_refund: //退款——>进入申请退款页面
                 if ("80".equals(order.getTypeId())){ //火车票
                     cancelTrainOrder(order, position);
-                    return;
+                }else if ("82".equals(order.getTypeId())){ //机票
+                    refundPlaneTicket(order);
+                }else {
+                    refund(order, -1, REQUEST_REFUND);
                 }
-                Intent intentRequestRefund = new Intent(getContext(), RequestRefundActivity.class);
-                Bundle bundleRefund = new Bundle();
-                bundleRefund.putSerializable("order", order);
-                bundleRefund.putInt("type", -1);
-                intentRequestRefund.putExtras(bundleRefund);
-                startActivityForResult(intentRequestRefund, REQUEST_REFUND);
                 break;
         }
+    }
+
+    private void refund(Order order, int value, int request_refund) {
+        Intent intentRequestRefund = new Intent(getContext(), RequestRefundActivity.class);
+        Bundle bundleRefund = new Bundle();
+        bundleRefund.putSerializable("order", order);
+        bundleRefund.putInt("type", value);
+        intentRequestRefund.putExtras(bundleRefund);
+        startActivityForResult(intentRequestRefund, request_refund);
+    }
+
+    /**
+     * 机票申请退款
+     */
+    private void refundPlaneTicket(Order order) {
+        if ("国内机票".equals(order.getProductName())){ //国内机票
+            //TODO 进入详情，才可申请退款(目前国内机票详情没有接口)
+
+        }else if ("国际机票".equals(order.getProductName())){ //国际机票
+            refund(order, -1, REQUEST_REFUND);
+        }
+    }
+
+    private void cancelOrder(Order order) {
+        OrderActionBiz biz = new OrderActionBiz(getContext(), handler);
+        biz.requestCancelOrder(order.getOrderSN());
     }
 
     /**
@@ -319,7 +355,7 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
      */
     private void cancelPlaneOrder(Order order) {
         if ("国际机票".equals(order.getProductName())){
-            ToastCommon.toastShortShow(getContext(), null, "取消国际机票订单暂不支持");
+            cancelOrder(order); //通用
         }else if ("国内机票".equals(order.getProductName())){
             //如果支付了，退款
             //如果未支付，取消订单
@@ -329,7 +365,7 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
                 @Override
                 public void onCompletion(GenericResponseModel<Object> model) {
                     ToastCommon.toastShortShow(getContext(), null, model.headModel.res_arg); //model.body = null;
-                    //刷新
+                    //通知全部刷新
                     getData(type);
                 }
 

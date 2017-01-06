@@ -143,6 +143,7 @@
             </LinearLayout>
             <!--联系人信息-->
             <LinearLayout
+                android:id="@+id/layout_order_contact"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"

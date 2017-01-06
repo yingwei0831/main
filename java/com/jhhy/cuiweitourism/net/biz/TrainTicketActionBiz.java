@@ -14,9 +14,11 @@ import com.jhhy.cuiweitourism.net.models.FetchModel.TrainTicketOrderFetch;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainOrderFromPlatformResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainStationInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainStopsInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainTicketDetailInfo;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainTicketOrderDetailResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainTicketOrderInfo;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.netcallback.FetchGenericCallback;
@@ -191,12 +193,13 @@ public class TrainTicketActionBiz extends BasicActionBiz {
     /**
      * 火车票提交订单，下单到第三方平台
      */
-    public void trainTicketOrderSetPlatform(TrainOrderToOtherPlatRequest fetch, BizGenericCallback<Object> callback){ //{"head":{"code":"Order_trainorder"},"field":{"ordersn":"80088342783810"}} //已经支付
+    public void trainTicketOrderSetPlatform(TrainOrderToOtherPlatRequest fetch, BizGenericCallback<TrainOrderFromPlatformResponse> callback){ //{"head":{"code":"Order_trainorder"},"field":{"ordersn":"80088342783810"}} //已经支付
         fetch.code = "Order_trainorder";
-        FetchGenericResponse<Object> fetchResponse = new FetchGenericResponse<Object>(callback) {
+        FetchGenericResponse<TrainOrderFromPlatformResponse> fetchResponse = new FetchGenericResponse<TrainOrderFromPlatformResponse>(callback) {
             @Override
             public void onCompletion(FetchResponseModel response) {
-                this.bizCallback.onCompletion(new GenericResponseModel<Object>(response.head, null));
+                TrainOrderFromPlatformResponse model = parseJsonToObject(response, TrainOrderFromPlatformResponse.class);
+                this.bizCallback.onCompletion(new GenericResponseModel<TrainOrderFromPlatformResponse>(response.head, model));
             }
 
             @Override
@@ -210,9 +213,21 @@ public class TrainTicketActionBiz extends BasicActionBiz {
     /**
      *  火车票订单查询
      */
-    public void trainTicketOrderQuery(TrainOrderListFetch fetch){
+    public void trainTicketOrderQuery(TrainOrderListFetch fetch, BizGenericCallback<TrainTicketOrderDetailResponse> callback){
         fetch.code = "Order_searchtrainorder";
+        FetchGenericResponse<TrainTicketOrderDetailResponse> fetchResponse = new FetchGenericResponse<TrainTicketOrderDetailResponse>(callback) {
+            @Override
+            public void onCompletion(FetchResponseModel response) {
+                TrainTicketOrderDetailResponse model = parseJsonToObject(response, TrainTicketOrderDetailResponse.class);
+                this.bizCallback.onCompletion(new GenericResponseModel<TrainTicketOrderDetailResponse>(response.head, model));
+            }
 
+            @Override
+            public void onError(FetchError error) {
+                this.bizCallback.onError(error);
+            }
+        };
+        HttpUtils.executeXutils(fetch, new FetchGenericCallback<>(fetchResponse));
     }
 
     /**
