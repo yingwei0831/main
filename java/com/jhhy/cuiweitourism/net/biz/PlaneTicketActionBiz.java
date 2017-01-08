@@ -14,6 +14,7 @@ import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketOfChinaCancelOrde
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketOfChinaChangeBack;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketOfChinaOrderRefundRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketOrderInternationalRequest;
+import com.jhhy.cuiweitourism.net.models.FetchModel.TrainOrderToOtherPlatRequest;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
@@ -25,6 +26,7 @@ import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketInfoOfChina;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketInternationalPolicyCheckResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketInternationalPolicyResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketOfChinaChangeBackRespond;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketOfChinaCommitPlatformResponse;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.netcallback.FetchGenericCallback;
 import com.jhhy.cuiweitourism.net.netcallback.FetchGenericResponse;
@@ -116,6 +118,44 @@ public class PlaneTicketActionBiz extends BasicActionBiz {
             }
         };
         HttpUtils.executeXutils(request, new FetchGenericCallback<>(fetchResponse));
+    }
+
+    /**
+     * 国内飞机票提交到第三方平台
+     */
+    public void planeTicketCommitToPlat(TrainOrderToOtherPlatRequest fetch, BizGenericCallback<PlaneTicketOfChinaCommitPlatformResponse> callback){
+        fetch.code = "Fly_orderhandle";
+        FetchGenericResponse<PlaneTicketOfChinaCommitPlatformResponse> fetchResponse = new FetchGenericResponse<PlaneTicketOfChinaCommitPlatformResponse>(callback) {
+            @Override
+            public void onCompletion(FetchResponseModel response) {
+                this.bizCallback.onCompletion(new GenericResponseModel<>(response.head, parseJsonToObject(response, PlaneTicketOfChinaCommitPlatformResponse.class)));
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                this.bizCallback.onError(error);
+            }
+        };
+        HttpUtils.executeXutils(fetch, new FetchGenericCallback<>(fetchResponse));
+    }
+
+    /**
+     * 国内机票，第三方平台支付
+     */
+    public void planeTicketPayByCuiwei(TrainOrderToOtherPlatRequest fetch, BizGenericCallback<Object> callback){
+        fetch.code = "Fly_bookpay";
+        FetchGenericResponse<Object> fetchResponse = new FetchGenericResponse<Object>(callback) {
+            @Override
+            public void onCompletion(FetchResponseModel response) {
+                this.bizCallback.onCompletion(new GenericResponseModel<>(response.head, null));
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                this.bizCallback.onError(error);
+            }
+        };
+        HttpUtils.executeXutils(fetch, new FetchGenericCallback<>(fetchResponse));
     }
 
     /**

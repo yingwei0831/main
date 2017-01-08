@@ -102,5 +102,17 @@
             android:textSize="16sp"
             android:textColor="@android:color/black"
             android:textColorHint="@android:color/black"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="提交订单"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:minHeight="0dp"
+            android:paddingTop="14dp"
+            android:paddingBottom="14dp"
+            android:background="@drawable/bg_btn_pressed_selector"
+            android:visibility="gone"
+            />
     </LinearLayout>
 </LinearLayout>

@@ -4,14 +4,17 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.biz.OrderActionBiz;
 import com.jhhy.cuiweitourism.model.Order;
+import com.jhhy.cuiweitourism.model.TypeBean;
 import com.jhhy.cuiweitourism.model.UserContacts;
 import com.jhhy.cuiweitourism.net.biz.HotelActionBiz;
 import com.jhhy.cuiweitourism.net.biz.TrainTicketActionBiz;
@@ -26,9 +29,12 @@ import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
+import com.jhhy.cuiweitourism.utils.ToastUtil;
+import com.jhhy.cuiweitourism.utils.Utils;
 import com.jhhy.cuiweitourism.view.TravelerInfoClass;
 import com.just.sun.pricecalendar.ToastCommon;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -54,6 +60,7 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
     private TextView tvOrderLinkMobile;
 
     private View layoutTravel; //游客信息布局
+    private TextView tvTravelTitle; //乘客信息
     private LinearLayout layoutTravelers; //游客信息，根据游客数量创建
 
     private LinearLayout layoutInvoice; //发票信息，如果没有发票，则不显示
@@ -71,6 +78,8 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
     private Button btnAction;
 
     public static HotelOrderDetailResponse hotelOrderDetail;
+    private TrainTicketOrderDetailResponse trainOrderDetail;
+    private ArrayList<TypeBean> mList = new ArrayList<>();
 
     private Handler handler = new Handler() {
         @Override
@@ -126,6 +135,7 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
         tvOrderLinkMobile = (TextView) findViewById(R.id.tv_order_link_mobile);
 
         layoutTravel = findViewById(R.id.layout_travelers);
+        tvTravelTitle = (TextView) findViewById(R.id.tv_order_passenger);
         layoutTravelers = (LinearLayout) findViewById(R.id.layout_order_detail_visitors);
         layoutInvoice = (LinearLayout) findViewById(R.id.layout_invoice);
         tvInvoiceTitle = (TextView) findViewById(R.id.tv_invoice_title);
@@ -169,6 +179,9 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
 
     }
 
+    /**
+     * 线路订单详情
+     */
     private void refreshView() {
         tvOrderTitle.setText(order.getProductName());
         tvOrderSN.setText(order.getOrderSN());
@@ -285,9 +298,9 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
         biz.trainTicketOrderQuery(fetch, new BizGenericCallback<TrainTicketOrderDetailResponse>() {
             @Override
             public void onCompletion(GenericResponseModel<TrainTicketOrderDetailResponse> model) {
-                LogUtil.e(TAG, "getHotelOrderDetail: " + model);
-
-                refreshTrainView(model.body);
+                LogUtil.e(TAG, "trainTicketOrderQuery: " + model);
+                trainOrderDetail = model.body;
+                refreshTrainView(trainOrderDetail);
                 LoadingIndicator.cancel();
             }
 
@@ -359,8 +372,9 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
             startActivityForResult(intent, REQUEST_CANCEL);
             return;
         }
-        else if ("80".equals(typeId)){ //火车票 取消订单
-            cancelTrainOrder();
+        else if ("80".equals(typeId)){ //火车票 退票
+            selectPassengers();
+            return;
         }
         switch (order.getStatus()) {
             case "0": //正在退款——>取消退款
@@ -400,19 +414,66 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
     }
 
     /**
-     * 取消火车票订单
+     * 火车票退票：选择要退票的乘客
      */
-    private void cancelTrainOrder() {
+    private void selectPassengers() {
+        Utils.alertBottomWheelOption(this, mList, new Utils.OnWheelViewClick() {
+            @Override
+            public void onClick(View view, int position) {
+//                ToastCommon.toastShortShow(getApplicationContext(), null, trainOrderDetail.getTicketInfo().getPassengers().getPassenger().get(position).getPsgName());
+                cancelTrainOrder(position);
+            }
+        });
+    }
 
+    /**
+     * 火车票订单退票
+     */
+    private void cancelTrainOrder(int position) { //退票要选择的乘车人
+        //根据
+        LoadingIndicator.show(this, getString(R.string.http_notice));
+        TrainTicketActionBiz biz = new TrainTicketActionBiz();
+        TrainOrderRefundRequest request = new TrainOrderRefundRequest(trainOrderDetail.getOrderNo(), trainOrderDetail.getPlatOrderNo(), "part", "");
+        List<TrainOrderRefundRequest.TuipiaorenBean> listPassenger = new ArrayList<>();
+        TrainTicketOrderDetailResponse.PassengerBean passenger = trainOrderDetail.getTicketInfo().getPassengers().getPassenger().get(position);
+        listPassenger.add(new TrainOrderRefundRequest.TuipiaorenBean("1", passenger.getPsgName(), "2", passenger.getCardNo()));
+        request.setTuipiaoren(listPassenger);
+        biz.trainTicketCancel(request, new BizGenericCallback<Object>() {
+            @Override
+            public void onCompletion(GenericResponseModel<Object> model) { //model.body为null
+                LoadingIndicator.cancel();
+                LogUtil.e(TAG, "trainTicketCancel: " + model);
+                ToastUtil.show(getApplicationContext(), "申请退款成功");
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                LoadingIndicator.cancel();
+                LogUtil.e(TAG, "trainTicketCancel: " + error);
+                if (error.localReason != null){
+                    ToastUtil.show(getApplicationContext(), error.localReason);
+                }else{
+                    ToastUtil.show(getApplicationContext(), "申请退票出错，请重试");
+                }
+            }
+        });
     }
 
     /**
      * 火车票订单展示
      */
     private void refreshTrainView(TrainTicketOrderDetailResponse body) {
+        layoutBottomAction.setVisibility(View.VISIBLE);
         tvOrderTitle.setText(String.format(Locale.getDefault(), "%s—%s", body.getTicketInfo().getFromStation(), body.getTicketInfo().getToStation()));
-        tvOrderSN.setText(body.getPlatOrderNo());
+        if (body.getTrainOrderNo() == null || body.getTrainOrderNo().length() == 0 || "null".equals(body.getTradeNo())){
+            tvOrderSN.setText("无");
+        }else {
+            tvOrderSN.setText(body.getTrainOrderNo());
+        }
         tvOrderTime.setText(body.getTBookTime());
+        if ("出票失败已退款".equals(body.getStatus())){
+            btnAction.setVisibility(View.GONE);
+        }
 
         int people = body.getTicketInfo().getPassengers().getPassenger().size();
         tvOrderCount.setText(String.format(Locale.getDefault(), "%d人", people));
@@ -420,6 +481,39 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
         tvPrice.setText(body.getTktSumPrice());
         tvOrderStatus.setText(body.getStatus());
 
+        //联系人
+        layoutContact.setVisibility(View.GONE);
+        //乘客信息
+        tvTravelTitle.setText("乘客信息");
+        List<TrainTicketOrderDetailResponse.PassengerBean> passengers = body.getTicketInfo().getPassengers().getPassenger();
+        if (passengers != null && passengers.size() != 0) {
+            for (int i = 0; i < people; i++) {
+                TrainTicketOrderDetailResponse.PassengerBean passenger = passengers.get(i);
+                mList.add(new TypeBean(i, passenger.getPsgName()));
+                View rootView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.traveler_info, null);
+                TextView tvName = (TextView) rootView.findViewById(R.id.tv_order_traveler_name);
+                TextView tvNameTitle = (TextView) rootView.findViewById(R.id.tv_traveler_name_title);
+                TextView tvMobile = (TextView) rootView.findViewById(R.id.tv_order_traveler_mobile);
+                TextView tvMobileTitle = (TextView) rootView.findViewById(R.id.tv_traveler_phone_title);
+                TextView tvID = (TextView) rootView.findViewById(R.id.tv_order_traveler_id);
+                TextView tvIDTitle = (TextView) rootView.findViewById(R.id.tv_traveler_id_title);
+                tvNameTitle.setText("乘客姓名：");
+                tvName.setText(passenger.getPsgName());
+                tvMobileTitle.setText("车次信息：");
+                tvMobile.setText(String.format(Locale.getDefault(), "%s %s开 %s %s—%s", body.getTicketInfo().getTrainDate(), body.getTicketInfo().getFromTime(), body.getTicketInfo().getTrainCode(), body.getTicketInfo().getFromStation(), body.getTicketInfo().getToStation()));
+                tvIDTitle.setText("座位信息：");
+                if (passenger.getTrainBox() == null || passenger.getTrainBox().length() == 0 || "null".equals(passenger.getTrainBox())){
+                    tvID.setText(String.format(Locale.getDefault(), "%s", body.getTicketInfo().getSeatType()));
+                } else {
+                    tvID.setText(String.format(Locale.getDefault(), "%s车厢 %s %s", passenger.getTrainBox(), passenger.getSeatNo(), body.getTicketInfo().getSeatType()));
+                }
+                layoutTravelers.addView(rootView);
+            }
+        }
+        //发票
+        layoutInvoice.setVisibility(View.GONE);
+        //旅游币
+        layoutTravelIcon.setVisibility(View.GONE);
     }
 
     /**
@@ -467,7 +561,7 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
                 layoutTravelers.addView(traveler);
             }
         }
-       //发票
+        //发票
         layoutInvoice.setVisibility(View.GONE);
         //旅游币
         layoutTravelIcon.setVisibility(View.GONE);

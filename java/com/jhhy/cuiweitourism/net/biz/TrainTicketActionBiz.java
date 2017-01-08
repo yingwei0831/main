@@ -233,8 +233,20 @@ public class TrainTicketActionBiz extends BasicActionBiz {
     /**
      *  火车票退票
      */
-    public void trainTicketCancel(TrainOrderRefundRequest request){
-        request.code = "Order_refund";
+    public void trainTicketCancel(TrainOrderRefundRequest fetch, BizGenericCallback<Object> callback){
+        fetch.code = "Order_refund";
+        FetchGenericResponse<Object> fetchResponse = new FetchGenericResponse<Object>(callback) {
+            @Override
+            public void onCompletion(FetchResponseModel response) {
+                this.bizCallback.onCompletion(new GenericResponseModel<>(response.head, null));
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                this.bizCallback.onError(error);
+            }
+        };
+        HttpUtils.executeXutils(fetch, new FetchGenericCallback<>(fetchResponse));
     }
 
 }

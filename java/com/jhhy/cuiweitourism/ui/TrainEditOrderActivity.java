@@ -292,10 +292,20 @@ public class TrainEditOrderActivity extends AppCompatActivity implements View.On
                 ArrayList<UserContacts> listSelection = bundle.getParcelableArrayList("selection");
                 if (listSelection != null) {
                     for (UserContacts contact : listSelection) {
-                        //判断联系人是否在选，再加入
-                        TrainTicketOrderFetch.TicketInfo contactTrain = new TrainTicketOrderFetch.TicketInfo(
-                                contact.getContactsName(), "2", contact.getContactsIdCard(), "0", seatInfo.seatCode, seatInfo.floorPrice);
-                        listContact.add(contactTrain);
+                        //判断联系人是否在选，再加入联系人列表
+                        if (listContact.size() != 0){
+                            for (TrainTicketOrderFetch.TicketInfo contactSelect : listContact){
+                                if (!contactSelect.getPsgName().equals(contact.getContactsName())){
+                                    TrainTicketOrderFetch.TicketInfo contactTrain = new TrainTicketOrderFetch.TicketInfo(
+                                            contact.getContactsName(), "2", contact.getContactsIdCard(), "0", seatInfo.seatCode, seatInfo.floorPrice);
+                                    listContact.add(contactTrain);
+                                }
+                            }
+                        }else{
+                            TrainTicketOrderFetch.TicketInfo contactTrain = new TrainTicketOrderFetch.TicketInfo(
+                                    contact.getContactsName(), "2", contact.getContactsIdCard(), "0", seatInfo.seatCode, seatInfo.floorPrice);
+                            listContact.add(contactTrain);
+                        }
                     }
                     adapter.setData(listContact);
                     adapter.notifyDataSetChanged();

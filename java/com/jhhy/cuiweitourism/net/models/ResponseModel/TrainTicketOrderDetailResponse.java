@@ -306,6 +306,22 @@ public class TrainTicketOrderDetailResponse {
         public void setPassengers(PassengersBean Passengers) {
             this.Passengers = Passengers;
         }
+
+        @Override
+        public String toString() {
+            return "TicketInfoBean{" +
+                    "FromStation='" + FromStation + '\'' +
+                    ", ToStation='" + ToStation + '\'' +
+                    ", TrainCode='" + TrainCode + '\'' +
+                    ", TrainDate='" + TrainDate + '\'' +
+                    ", FromTime='" + FromTime + '\'' +
+                    ", ToDate='" + ToDate + '\'' +
+                    ", ToTime='" + ToTime + '\'' +
+                    ", SeatType='" + SeatType + '\'' +
+                    ", TrainType='" + TrainType + '\'' +
+                    ", Passengers=" + Passengers +
+                    '}';
+        }
     }
 
     public static class PassengersBean {
@@ -317,6 +333,13 @@ public class TrainTicketOrderDetailResponse {
 
         public void setPassenger(List<PassengerBean> Passenger) {
             this.Passenger = Passenger;
+        }
+
+        @Override
+        public String toString() {
+            return "PassengersBean{" +
+                    "Passenger=" + Passenger +
+                    '}';
         }
     }
 
@@ -464,5 +487,50 @@ public class TrainTicketOrderDetailResponse {
         public void setSeatNo(String SeatNo) {
             this.SeatNo = SeatNo;
         }
+
+        @Override
+        public String toString() {
+            return "PassengerBean{" +
+                    "IsBX='" + IsBX + '\'' +
+                    ", InsPrice='" + InsPrice + '\'' +
+                    ", InsCount='" + InsCount + '\'' +
+                    ", PsgName='" + PsgName + '\'' +
+                    ", CardType='" + CardType + '\'' +
+                    ", CardNo='" + CardNo + '\'' +
+                    ", TicketType='" + TicketType + '\'' +
+                    ", TicketPrice='" + TicketPrice + '\'' +
+                    ", SeatType='" + SeatType + '\'' +
+                    ", PsgNo='" + PsgNo + '\'' +
+                    ", PsgStatus='" + PsgStatus + '\'' +
+                    ", RefundAmount='" + RefundAmount + '\'' +
+                    ", TrainBox='" + TrainBox + '\'' +
+                    ", SeatNo='" + SeatNo + '\'' +
+                    '}';
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "TrainTicketOrderDetailResponse{" +
+                "ErrorCode='" + ErrorCode + '\'' +
+                ", ErrorMsg='" + ErrorMsg + '\'' +
+                ", OrderNo='" + OrderNo + '\'' +
+                ", PlatOrderNo='" + PlatOrderNo + '\'' +
+                ", PlatCode='" + PlatCode + '\'' +
+                ", Status='" + Status + '\'' +
+                ", SettlePrice='" + SettlePrice + '\'' +
+                ", PayTime='" + PayTime + '\'' +
+                ", TktTime='" + TktTime + '\'' +
+                ", TrainOrderNo='" + TrainOrderNo + '\'' +
+                ", TBookTime='" + TBookTime + '\'' +
+                ", OrderType='" + OrderType + '\'' +
+                ", TktSumPrice='" + TktSumPrice + '\'' +
+                ", CounterSumFee='" + CounterSumFee + '\'' +
+                ", InsSumPrice='" + InsSumPrice + '\'' +
+                ", TradeNo='" + TradeNo + '\'' +
+                ", DifferencePrice='" + DifferencePrice + '\'' +
+                ", ActualPrice='" + ActualPrice + '\'' +
+                ", TicketInfo=" + TicketInfo +
+                '}';
     }
 }

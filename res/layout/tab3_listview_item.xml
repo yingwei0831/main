@@ -109,7 +109,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
             android:layout_toLeftOf="@+id/btn_tab3_item_sign_contact"
             android:background="@drawable/bg_tab3_btn_border_cancel_order"
             android:minHeight="0dp"
@@ -136,6 +135,7 @@
             android:paddingTop="4dp"
             android:paddingBottom="4dp"
             android:text="@string/tab3_order_item_sign_contact"
+            android:layout_marginLeft="10dp"
             android:textColor="@color/colorTab1RecommendForYouMoney"
             android:textSize="14sp" />
 

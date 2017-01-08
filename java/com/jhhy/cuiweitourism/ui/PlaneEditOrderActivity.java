@@ -444,7 +444,7 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
                 PlaneOrderOfChinaRequest.SegmentsBean segmentsBean = new PlaneOrderOfChinaRequest.SegmentsBean(flight.dstCity, flight.arriTime, flight.orgCity, dateFrom.substring(0, dateFrom.indexOf(" ")), flight.depTime, flight.flightNo, flight.planeType, seatInfo.seatCode);
                 segments.add(segmentsBean);
 
-                PlaneOrderOfChinaRequest.PnrInfoBean pnrInfoBean = new PlaneOrderOfChinaRequest.PnrInfoBean(flight.airportTax, flight.fuelTax, seatInfo.settlePrice, passengers, segments);
+                PlaneOrderOfChinaRequest.PnrInfoBean pnrInfoBean = new PlaneOrderOfChinaRequest.PnrInfoBean(flight.airportTax, flight.fuelTax, seatInfo.parPrice, passengers, segments);
                 PlaneOrderOfChinaRequest request = new PlaneOrderOfChinaRequest(
                         seatInfo.policyData.policyId, name, mobile, pnrInfoBean, MainActivity.user.getUserId(),
                         seatInfo.policyData.commisionPoint, seatInfo.policyData.commisionMoney, seatInfo.settlePrice);

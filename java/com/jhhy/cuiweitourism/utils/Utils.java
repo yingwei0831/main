@@ -22,20 +22,31 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.util.DisplayMetrics;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 
-import com.jhhy.cuiweitourism.net.utils.LogUtil;
+import com.jhhy.cuiweitourism.R;
+import com.lvfq.pickerview.adapter.ArrayWheelAdapter;
+import com.lvfq.pickerview.lib.WheelView;
 
 import java.lang.reflect.Field;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -731,5 +742,65 @@ public class Utils {
         return cityMap;
     }
 
+    /**
+     * 底部滚轮点击事件回调
+     */
+    public interface OnWheelViewClick {
+        void onClick(View view, int postion);
+    }
 
+    /**
+     * 弹出底部滚轮选择
+     *
+     * @param activity
+     * @param list
+     * @param click
+     */
+    public static void alertBottomWheelOption(Activity activity, ArrayList<?> list, final OnWheelViewClick click) {
+
+        final PopupWindow popupWindow = new PopupWindow();
+
+        View view = LayoutInflater.from(activity).inflate(R.layout.layout_bottom_wheel_option, null);
+        TextView tv_confirm = (TextView) view.findViewById(R.id.title_main_iv_right_telephone);
+        view.findViewById(R.id.tv_clear).setVisibility(View.GONE);
+        final WheelView wv_option = (WheelView) view.findViewById(R.id.wv_option);
+        wv_option.setAdapter(new ArrayWheelAdapter(list));
+        wv_option.setCyclic(false);
+        wv_option.setTextSize(16);
+        tv_confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                popupWindow.dismiss();
+                click.onClick(view, wv_option.getCurrentItem());
+            }
+        });
+
+        view.findViewById(R.id.title_main_tv_left_location).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO: 2016/8/11 0011 取消
+                popupWindow.dismiss();
+            }
+        });
+        view.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                int top = view.findViewById(R.id.ll_container).getTop();
+                if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    int y = (int) motionEvent.getY();
+                    if (y < top) {
+                        popupWindow.dismiss();
+                    }
+                }
+                return true;
+            }
+        });
+        popupWindow.setContentView(view);
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.setFocusable(true);
+        popupWindow.setBackgroundDrawable(new BitmapDrawable());
+        popupWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+        popupWindow.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
+        popupWindow.showAtLocation(((ViewGroup) activity.findViewById(android.R.id.content)).getChildAt(0), Gravity.CENTER, 0, 0);
+    }
 }

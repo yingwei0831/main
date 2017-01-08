@@ -213,12 +213,11 @@
                 android:layout_marginTop="10dp"
                 android:background="@android:color/white"
                 android:orientation="vertical"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:paddingTop="16dp"
+                android:padding="16dp"
                 android:visibility="visible">
 
                 <TextView
+                    android:id="@+id/tv_order_passenger"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="游客信息"

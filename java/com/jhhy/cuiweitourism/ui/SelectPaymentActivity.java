@@ -14,6 +14,7 @@ import com.alipay.sdk.app.PayTask;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.biz.PayActionBiz;
 import com.jhhy.cuiweitourism.model.Order;
+import com.jhhy.cuiweitourism.net.biz.PlaneTicketActionBiz;
 import com.jhhy.cuiweitourism.net.biz.TrainTicketActionBiz;
 import com.jhhy.cuiweitourism.net.models.FetchModel.TrainOrderToOtherPlatRequest;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.ActivityOrderInfo;
@@ -22,6 +23,7 @@ import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelOrderInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneOrderOfChinaResponse;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketOfChinaCommitPlatformResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainOrderFromPlatformResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainTicketOrderInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.VisaOrderResponse;
@@ -51,7 +53,7 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
     private Button tvAliPay;
     private Button tvWeChatPay;
 
-    private int type; //11:热门活动支付,21:酒店支付, 16:租车订单, 14/18（订单页面中跳过来）:国内火车票订单； 15/19（订单页面进入）：国内飞机票订单；17/20（订单页面进入）：国际飞机票； 22：签证
+    private int type; //11:热门活动支付；21:酒店支付； 16:租车订单； 14/18(订单页面中跳过来)：火车票订单； 15/19(订单页面进入)：国内飞机票订单； 17/20(订单页面进入)：国际飞机票； 22：签证
     private ActivityOrderInfo hotInfo; //热门活动订单
     private HotelOrderInfo hotelInfo; //酒店订单
     private TrainTicketOrderInfo trainInfo; //火车票订单
@@ -103,7 +105,10 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
                         ToastUtil.show(SelectPaymentActivity.this, "支付成功");
                         if (type== 14 || type == 18){
                             setTrainOrder(ordersn);
-                        }else {
+                        } else if (type == 15 || type == 19){ //国内飞机票
+                            setPlaneTicketToPlatForm();
+                        }
+                        else {
                             setResult(RESULT_OK);
                             finish();
                         }
@@ -121,34 +126,6 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
             }
         }
     };
-
-    /**
-     * 下单到本平台，再继续下单到第三方平台
-     */
-    private void setTrainOrder(String ordersn) {
-        LoadingIndicator.show(SelectPaymentActivity.this, getString(R.string.http_notice));
-        TrainTicketActionBiz biz = new TrainTicketActionBiz();
-        TrainOrderToOtherPlatRequest request = new TrainOrderToOtherPlatRequest(ordersn);
-        biz.trainTicketOrderSetPlatform(request, new BizGenericCallback<TrainOrderFromPlatformResponse>() {
-            @Override
-            public void onCompletion(GenericResponseModel<TrainOrderFromPlatformResponse> model) {
-                ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);
-                setResult(RESULT_OK);
-                LoadingIndicator.cancel();
-                finish();
-            }
-
-            @Override
-            public void onError(FetchError error) {
-                if (error.localReason != null){
-                    ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason + ", 请联系翠微客服");
-                }else{
-                    ToastCommon.toastShortShow(getApplicationContext(), null, "下单到购票平台出错，请联系翠微客服");
-                }
-                LoadingIndicator.cancel();
-            }
-        });
-    }
 
     private void startPay(final String partner) {
         Runnable payRunnable = new Runnable() {
@@ -288,10 +265,90 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
             biz.getPlaneOfChinaPayInfo(MainActivity.user.getUserId(), ordersn);
         } else if (type == 17 || type == 20){ //国际机票支付
             biz.getPlaneInternationalPayInfo(MainActivity.user.getUserId(), ordersn);
-        }
-        else {
+        } else {
             biz.getPayInfo(ordersn);
         }
+    }
+    /**
+     * 国内机票，下单到第三方平台
+     */
+    private void setPlaneTicketToPlatForm() {
+        TrainOrderToOtherPlatRequest request = new TrainOrderToOtherPlatRequest(ordersn);
+        PlaneTicketActionBiz biz = new PlaneTicketActionBiz();
+        biz.planeTicketCommitToPlat(request, new BizGenericCallback<PlaneTicketOfChinaCommitPlatformResponse>() {
+            @Override
+            public void onCompletion(GenericResponseModel<PlaneTicketOfChinaCommitPlatformResponse> model) {
+                ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);
+//                PlaneTicketOfChinaCommitPlatformResponse ticketPlatform = model.body;
+                payByCuiweiPlat(model.body);
+                LoadingIndicator.cancel();
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                if (error.localReason != null){
+                    ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason + ", 请联系翠微客服");
+                }else{
+                    ToastCommon.toastShortShow(getApplicationContext(), null, "下单到购票平台出错，请联系翠微客服");
+                }
+                LoadingIndicator.cancel();
+            }
+        });
+    }
+
+    /**
+     * 国内机票，翠微平台扣款支付
+     */
+    public void payByCuiweiPlat(PlaneTicketOfChinaCommitPlatformResponse ticketPlatform){
+        PlaneTicketActionBiz biz = new PlaneTicketActionBiz();
+        TrainOrderToOtherPlatRequest request = new TrainOrderToOtherPlatRequest(ordersn);
+        biz.planeTicketPayByCuiwei(request, new BizGenericCallback<Object>() {
+            @Override
+            public void onCompletion(GenericResponseModel<Object> model) {
+                ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);
+                LoadingIndicator.cancel();
+                setResult(RESULT_OK);
+                finish();
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                if (error.localReason != null){
+                    ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason + ", 请联系翠微客服");
+                }else{
+                    ToastCommon.toastShortShow(getApplicationContext(), null, "购票平台支付出错，请联系翠微客服");
+                }
+                LoadingIndicator.cancel();
+            }
+        });
+    }
+
+    /**
+     * 火车票，下单到本平台后，再继续下单到第三方平台
+     */
+    private void setTrainOrder(String ordersn) {
+        LoadingIndicator.show(SelectPaymentActivity.this, "正在下单，请稍后");
+        TrainTicketActionBiz biz = new TrainTicketActionBiz();
+        TrainOrderToOtherPlatRequest request = new TrainOrderToOtherPlatRequest(ordersn);
+        biz.trainTicketOrderSetPlatform(request, new BizGenericCallback<TrainOrderFromPlatformResponse>() {
+            @Override
+            public void onCompletion(GenericResponseModel<TrainOrderFromPlatformResponse> model) {
+                ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);
+                LoadingIndicator.cancel();
+                setResult(RESULT_OK);
+                finish();
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                if (error.localReason != null){
+                    ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason + ", 请联系翠微客服");
+                }else{
+                    ToastCommon.toastShortShow(getApplicationContext(), null, "下单到购票平台出错，请联系翠微客服");
+                }
+                LoadingIndicator.cancel();
+            }
+        });
     }
 
     @Override

@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.model.UserContacts;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelOrderDetailResponse;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainTicketOrderDetailResponse;
 
 /**
  * Created by jiahe008 on 2016/9/23.
@@ -53,6 +54,11 @@ public class TravelerInfoClass extends LinearLayout{
         tvMobile.setText(contacts.getMobile());
          layoutId.setVisibility(GONE);
     }
+//    public void setShowView(TrainTicketOrderDetailResponse.PassengerBean contacts){
+//        tvName.setText(contacts.getName());
+//        tvMobile.setText(contacts.getMobile());
+//         layoutId.setVisibility(GONE);
+//    }
 
 
 }

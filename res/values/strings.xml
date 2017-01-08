@@ -170,7 +170,7 @@
     <string name="tab3_order_item_sign_contact">签约付款</string>
     <string name="tab3_order_item_comment_order">去评价</string>
     <string name="tab3_order_item_refund_order">取消退款</string>
-    <string name="tab3_order_item_go_refund_order">退款</string>
+    <string name="tab3_order_item_go_refund_order">申请退款</string>
     <string name="tab3_order_item_wait_refund">正在退款</string>
     <string name="tab3_order_item_wait_comment">待评价</string>
     <string name="tab3_order_item_already_comment">已完成</string>

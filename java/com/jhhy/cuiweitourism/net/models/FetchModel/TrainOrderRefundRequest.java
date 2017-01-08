@@ -9,10 +9,10 @@ import java.util.List;
 public class TrainOrderRefundRequest extends BasicFetchModel {
 
     /**
-     * OrderNo :
-     * PlatOrderNo :
-     * RefundType : part
-     * tuipiaoren : [{"TktType":"","PsgName":"","CardType":"","CardNo":""},{"TktType":"","PsgName":"","CardType":"","CardNo":""}]
+     * OrderNo : 7010813090026434
+     * PlatOrderNo : EXHC170108130952252
+     * RefundType : part                    订单退票类型  part：部分车票，all：整个订单内车票  默认为 all
+     * tuipiaoren : [{"TktType":"1","PsgName":"姓名","CardType":"2","CardNo":"身份证号"}]
      * Reason :
      */
 
@@ -20,14 +20,14 @@ public class TrainOrderRefundRequest extends BasicFetchModel {
     private String PlatOrderNo;
     private String RefundType;
     private String Reason;
-    /**
-     * TktType :
-     * PsgName :
-     * CardType :
-     * CardNo :
-     */
-
     private List<TuipiaorenBean> tuipiaoren;
+
+    public TrainOrderRefundRequest(String orderNo, String platOrderNo, String refundType, String reason) {
+        OrderNo = orderNo;
+        PlatOrderNo = platOrderNo;
+        RefundType = refundType;
+        Reason = reason;
+    }
 
     public String getOrderNo() {
         return OrderNo;
@@ -70,10 +70,24 @@ public class TrainOrderRefundRequest extends BasicFetchModel {
     }
 
     public static class TuipiaorenBean extends BasicFetchModel{
+        /**
+         * TktType : 1          0 儿童 1 成人
+         * PsgName : 姓名
+         * CardType : 2         1、一代身份证、 2、二代身份证、 3、港澳通行证、 4、台湾通行证、 5、护照
+         * CardNo : 身份证号
+         */
+
         private String TktType;
         private String PsgName;
         private String CardType;
         private String CardNo;
+
+        public TuipiaorenBean(String tktType, String psgName, String cardType, String cardNo) {
+            TktType = tktType;
+            PsgName = psgName;
+            CardType = cardType;
+            CardNo = cardNo;
+        }
 
         public String getTktType() {
             return TktType;
@@ -106,5 +120,16 @@ public class TrainOrderRefundRequest extends BasicFetchModel {
         public void setCardNo(String CardNo) {
             this.CardNo = CardNo;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "TrainOrderRefundRequest{" +
+                "OrderNo='" + OrderNo + '\'' +
+                ", PlatOrderNo='" + PlatOrderNo + '\'' +
+                ", RefundType='" + RefundType + '\'' +
+                ", Reason='" + Reason + '\'' +
+                ", tuipiaoren=" + tuipiaoren +
+                '}';
     }
 }
