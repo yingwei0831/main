@@ -53,7 +53,7 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
     private Button tvAliPay;
     private Button tvWeChatPay;
 
-    private int type; //11:热门活动支付；21:酒店支付； 16:租车订单； 14/18(订单页面中跳过来)：火车票订单； 15/19(订单页面进入)：国内飞机票订单； 17/20(订单页面进入)：国际飞机票； 22：签证
+    private int type; // 11:热门活动支付；21:酒店支付； 16:租车订单； 14/18(订单页面中跳过来)：火车票订单； 15/19(订单页面进入)/23(详情页面进入)：国内飞机票订单； 17/20(订单页面进入)：国际飞机票； 22：签证
     private ActivityOrderInfo hotInfo; //热门活动订单
     private HotelOrderInfo hotelInfo; //酒店订单
     private TrainTicketOrderInfo trainInfo; //火车票订单
@@ -196,8 +196,11 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
                     ordersn = orderVisa.getOrdersn();
                     orderPrice = orderVisa.getPrice();
                 }
+            } else if (type == 23){ //国内机票，详情页面进入
+                ordersn = bundle.getString("ordersn");
+                orderPrice = bundle.getString("orderPrice");
             }
-//            else if (type == 18 || type == 19 || type == 20){ //火车票，订单页面进入/国内机票，订单页面进入/国际机票，订单页面进入
+//            else if (type == 18 || type == 19 || type == 20){ //火车票，订单页面进入；国内机票，订单页面进入；国际机票，订单页面进入
 //                order = (Order) bundle.getSerializable("order");
 //                if (order != null) {
 //                    ordersn = order.getOrderSN();
@@ -261,7 +264,7 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
     private void aliPay() {
         LoadingIndicator.show(SelectPaymentActivity.this, getString(R.string.http_notice));
         PayActionBiz biz = new PayActionBiz(getApplicationContext(), handler);
-        if (type == 15 || type == 19){ //国内机票支付
+        if (type == 15 || type == 19 || type == 23){ //国内机票支付
             biz.getPlaneOfChinaPayInfo(MainActivity.user.getUserId(), ordersn);
         } else if (type == 17 || type == 20){ //国际机票支付
             biz.getPlaneInternationalPayInfo(MainActivity.user.getUserId(), ordersn);

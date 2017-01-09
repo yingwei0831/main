@@ -227,11 +227,24 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
             if ("80".equals(order.getTypeId())){ //火车票详情
                 if (order.getSanfangorderno1() == null || order.getSanfangorderno1().length() == 0 ||
                         order.getSanfangorderno2() == null || order.getSanfangorderno2().length() == 0){
-                    ToastCommon.toastShortShow(getContext(), null, "订单未支付，无详情");
+                    ToastCommon.toastShortShow(getContext(), null, "订单号不存在，无详情");
                     return;
                 }
             }else if ("82".equals(order.getTypeId())){ //机票详情
                 //TODO 国内机票详情，国际机票详情
+                Intent intent = new Intent(getContext(), Tab4OrderDetailsActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("orderSN", order.getOrderSN());
+                bundle.putInt("type", Integer.parseInt(order.getStatus())); //订单状态
+                if ("国内机票".equals(order.getProductName())){ //82
+                    bundle.putString("typeId", order.getTypeId()); //订单类型
+                }else if ("国际机票".equals(order.getProductName())){ //83
+                    bundle.putString("typeId", "83"); //订单类型
+                }
+//                bundle.putString("sanfangorderno1", order.getSanfangorderno1()); //酒店，签证，国内机票，国际机票，火车票
+//                bundle.putString("sanfangorderno2", order.getSanfangorderno2()); //酒店，签证，国内机票，国际机票，火车票
+                intent.putExtras(bundle);
+                startActivityForResult(intent, REQUEST_CODE_DETAIL);
                 return;
             }
             Intent intent = new Intent(getContext(), Tab4OrderDetailsActivity.class);
@@ -293,7 +306,7 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
                         Intent intentInner = new Intent(getContext(), SelectPaymentActivity.class);
                         Bundle bundleInner = new Bundle();
                         bundleInner.putSerializable("order", order);
-                        bundleInner.putInt("type",15);
+                        bundleInner.putInt("type",19);
                         intentInner.putExtras(bundleInner);
                         startActivityForResult(intentInner, Consts.REQUEST_CODE_RESERVE_PAY); //订单生成成功，去支付
                     }else if ("国际机票".equals(order.getProductName())){ //国际机票

@@ -17,13 +17,19 @@ import com.jhhy.cuiweitourism.model.Order;
 import com.jhhy.cuiweitourism.model.TypeBean;
 import com.jhhy.cuiweitourism.model.UserContacts;
 import com.jhhy.cuiweitourism.net.biz.HotelActionBiz;
+import com.jhhy.cuiweitourism.net.biz.PlaneTicketActionBiz;
 import com.jhhy.cuiweitourism.net.biz.TrainTicketActionBiz;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelOrderDetailRequest;
+import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketOfChinaCancelOrderRequest;
+import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketOfChinaOrderRefundRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.TrainOrderListFetch;
 import com.jhhy.cuiweitourism.net.models.FetchModel.TrainOrderRefundRequest;
+import com.jhhy.cuiweitourism.net.models.FetchModel.TrainOrderToOtherPlatRequest;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelOrderDetailResponse;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketCityInfo;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketOrderDetailOfChinaResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainTicketOrderDetailResponse;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.Consts;
@@ -43,7 +49,7 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
     private String TAG = getClass().getSimpleName();
     private String orderSN;
     private int type = -1; //0:1:2:3:4:5:   订单状态
-    private String typeId; //订单类型   type 0.全部订单、1.线路、14私人定制、202活动、     2.酒店、8签证、82机票、80火车票(接口)
+    private String typeId; //订单类型   type 0.全部订单、1.线路、14私人定制、202活动、     2.酒店、8签证、82(国内机票)/83(国际机票)、80火车票(接口)
     private String sanfangorderno1; //订单第三方id
     private String sanfangorderno2; //订单第三方id
     private Order order;
@@ -51,6 +57,7 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
     private TextView tvOrderTitle;
     private TextView tvOrderSN;
     private TextView tvOrderTime;
+    private LinearLayout layoutOrderTime;
     private TextView tvOrderCount; //人数
     private TextView tvOrderCountTitle; //
     private TextView tvOrderStatus;
@@ -80,6 +87,8 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
     public static HotelOrderDetailResponse hotelOrderDetail;
     private TrainTicketOrderDetailResponse trainOrderDetail;
     private ArrayList<TypeBean> mList = new ArrayList<>();
+    private PlaneTicketOrderDetailOfChinaResponse planeTicketOrderDetailOfChina;
+    private int planeTicketOfChinaType = 0; // 1:退款；2:取消订单；3:支付
 
     private Handler handler = new Handler() {
         @Override
@@ -127,6 +136,7 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
         tvOrderTitle = (TextView) findViewById(R.id.tv_order_title);
         tvOrderSN = (TextView) findViewById(R.id.tv_order_sn);
         tvOrderTime = (TextView) findViewById(R.id.tv_order_time);
+        layoutOrderTime = (LinearLayout) findViewById(R.id.layout_order_time);
         tvOrderCount = (TextView) findViewById(R.id.tv_order_count);
         tvOrderCountTitle = (TextView) findViewById(R.id.tv_order_detail_count_person);
         tvOrderStatus = (TextView) findViewById(R.id.tv_order_status);
@@ -273,19 +283,51 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
                 sanfangorderno1 = bundle.getString("sanfangorderno1");
                 sanfangorderno2 = bundle.getString("sanfangorderno2");
                 LoadingIndicator.show(this, getString(R.string.http_notice));
-                if ("82".equals(typeId)){ //机票（国内/国际） 详情
+                if ("82".equals(typeId)) { //机票（国内） 详情
                     getPlaneOrderDetail();
-                }else if ("2".equals(typeId)){ //酒店 详情
+                } else if ("83".equals(typeId)){ //机票（国际）详情
+
+                } else if ("2".equals(typeId)){ //酒店 详情
                     getHotelDetail();
-                }else if ("80".equals(typeId)){ //火车票 详情
+                } else if ("80".equals(typeId)){ //火车票 详情
                     getTrainDetail();
-                }
-                else {
+                } else {
                     OrderActionBiz biz = new OrderActionBiz(getApplicationContext(), handler);
                     biz.getOrderDetail(orderSN);
                 }
             }
         }
+    }
+
+    /**
+     * 机票订单详情（国内）
+     */
+    private void getPlaneOrderDetail() {
+        PlaneTicketActionBiz biz = new PlaneTicketActionBiz();
+        biz.planeTicketOrderDetailOfChina(new TrainOrderToOtherPlatRequest(orderSN), new BizGenericCallback<PlaneTicketOrderDetailOfChinaResponse>() {
+            @Override
+            public void onCompletion(GenericResponseModel<PlaneTicketOrderDetailOfChinaResponse> model) {
+                LogUtil.e(TAG, "planeTicketOrderDetailOfChina: " + model.body);
+                planeTicketOrderDetailOfChina = model.body;
+                try {
+                    refreshPlaneTicketOfChinaView();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                LoadingIndicator.cancel();
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                LogUtil.e(TAG, "planeTicketOrderDetailOfChina: " + error);
+                if (error.localReason != null){
+                    ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
+                }else{
+                    ToastCommon.toastShortShow(getApplicationContext(), null, "获取国内机票订单详情出错，请返回重试");
+                }
+                LoadingIndicator.cancel();
+            }
+        });
     }
 
     /**
@@ -315,13 +357,6 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
                 LoadingIndicator.cancel();
             }
         });
-    }
-
-    /**
-     * 机票订单详情（国内/国际）
-     */
-    private void getPlaneOrderDetail() {
-
     }
 
     /**
@@ -375,6 +410,23 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
         else if ("80".equals(typeId)){ //火车票 退票
             selectPassengers();
             return;
+        } else if ("82".equals(typeId)){ //国内机票
+            //TODO
+            LogUtil.e(TAG, "planeTicketOfChinaType = " + planeTicketOfChinaType);
+            if (planeTicketOfChinaType == 1){ //退款
+                selectPlaneOfChinaPassengers();
+            }else if (planeTicketOfChinaType == 2){ //取消订单
+                planeTicketOfChinaCancelOrder();
+            }else if (planeTicketOfChinaType == 3){ //支付
+                Intent intentPay = new Intent(getApplicationContext(), SelectPaymentActivity.class);
+                Bundle bundlePay = new Bundle();
+                bundlePay.putString("ordersn", orderSN);
+                bundlePay.putString("orderPrice", String.format(Locale.getDefault(), "%.2f", planeTicketOrderDetailOfChina.getReturnX().getPolicyOrder().getPaymentInfo().getTotalPay()));
+                bundlePay.putInt("type", 23);
+                intentPay.putExtras(bundlePay);
+                startActivityForResult(intentPay, REQUEST_PAY);
+            }
+            return;
         }
         switch (order.getStatus()) {
             case "0": //正在退款——>取消退款
@@ -414,6 +466,80 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
     }
 
     /**
+     * 国内机票取消订单
+     */
+    private void planeTicketOfChinaCancelOrder() {
+        PlaneTicketActionBiz biz = new PlaneTicketActionBiz();
+        PlaneTicketOfChinaCancelOrderRequest fetch = new PlaneTicketOfChinaCancelOrderRequest(orderSN, MainActivity.user.getUserId());
+        biz.planeTicketCancelOrder(fetch, new BizGenericCallback<Object>() {
+            @Override
+            public void onCompletion(GenericResponseModel<Object> model) {
+                ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg); //model.body = null;
+                btnAction.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                if (error.localReason != null){
+                    ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
+                }else{
+                    ToastCommon.toastShortShow(getApplicationContext(), null, "取消国内机票订单出错，请重试");
+                }
+                LoadingIndicator.cancel();
+            }
+        });
+    }
+
+    /**
+     * 国内机票申请退款
+     */
+    private void refundPlaneTicketOfChina(int position) {
+        LoadingIndicator.show(this, getString(R.string.http_notice));
+        PlaneTicketActionBiz biz = new PlaneTicketActionBiz();
+        PlaneTicketOfChinaOrderRefundRequest fetch = new PlaneTicketOfChinaOrderRefundRequest(orderSN, MainActivity.user.getUserId(), //planeTicketOrderDetailOfChina.getReturnX().getPolicyOrder().getLiantuoOrderNo()
+                String.format(Locale.getDefault(), "%s-%s",
+                        planeTicketOrderDetailOfChina.getReturnX().getPolicyOrder().getFlightInfoList().get(0).getDepCode(),
+                        planeTicketOrderDetailOfChina.getReturnX().getPolicyOrder().getFlightInfoList().get(0).getArrCode()));
+        List<String> tuipiaoren = new ArrayList<>();
+        tuipiaoren.add(mList.get(position).getName());
+        fetch.setTuipiaoren(tuipiaoren);
+        List<String> ticketNo = new ArrayList<>();
+        ticketNo.add(planeTicketOrderDetailOfChina.getReturnX().getPolicyOrder().getPassengerList().get(position).getTicketNo());
+        fetch.setTicketNo(ticketNo);
+        biz.planeTicketOfChinaRefund(fetch, new BizGenericCallback<Object>() {
+            @Override
+            public void onCompletion(GenericResponseModel<Object> model) {
+                LoadingIndicator.cancel();
+                ToastUtil.show(getApplicationContext(), "申请退票成功");
+                LogUtil.e(TAG, "planeTicketOfChinaRefund: " + model.headModel); //body = null
+                btnAction.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                LoadingIndicator.cancel();
+                if (error.localReason != null){
+                    ToastUtil.show(getApplicationContext(), error.localReason);
+                }else{
+                    ToastUtil.show(getApplicationContext(), "申请退票出错，请重试");
+                }
+                LogUtil.e(TAG, "planeTicketOfChinaRefund: " + error);
+            }
+        });
+    }
+    /**
+     * 火车票退票：选择要退票的乘客
+     */
+    private void selectPlaneOfChinaPassengers() {
+        Utils.alertBottomWheelOption(this, mList, new Utils.OnWheelViewClick() {
+            @Override
+            public void onClick(View view, int position) {
+                refundPlaneTicketOfChina(position);
+            }
+        });
+    }
+
+    /**
      * 火车票退票：选择要退票的乘客
      */
     private void selectPassengers() {
@@ -444,6 +570,7 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
                 LoadingIndicator.cancel();
                 LogUtil.e(TAG, "trainTicketCancel: " + model);
                 ToastUtil.show(getApplicationContext(), "申请退款成功");
+                btnAction.setVisibility(View.GONE);
             }
 
             @Override
@@ -460,6 +587,56 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
     }
 
     /**
+     * 国内机票订单详情
+     */
+    private void refreshPlaneTicketOfChinaView() {
+        layoutBottomAction.setVisibility(View.VISIBLE);
+        String fromAirport = planeTicketOrderDetailOfChina.getReturnX().getPolicyOrder().getFlightInfoList().get(0).getDepCode();
+        String arrivalAirport = planeTicketOrderDetailOfChina.getReturnX().getPolicyOrder().getFlightInfoList().get(0).getArrCode();
+        tvOrderTitle.setText(String.format(Locale.getDefault(), "%s—%s", fromAirport, arrivalAirport));
+        tvOrderSN.setText(planeTicketOrderDetailOfChina.getReturnX().getPolicyOrder().getLiantuoOrderNo());
+        layoutOrderTime.setVisibility(View.GONE);
+
+        int people = planeTicketOrderDetailOfChina.getReturnX().getPolicyOrder().getPassengerList().size();
+        tvOrderCount.setText(String.format(Locale.getDefault(), "%d人", people));
+        tvOrderCountTitle.setText("乘机人数：");
+        tvPrice.setText(String.format(Locale.getDefault(), "%.2f", planeTicketOrderDetailOfChina.getReturnX().getPolicyOrder().getPaymentInfo().getTotalPay()));
+        String status = planeTicketOrderDetailOfChina.getReturnX().getPolicyOrder().getStatus();
+        tvOrderStatus.setText(getOrderStatus(status));
+        //联系人
+        layoutContact.setVisibility(View.GONE);
+        //乘客信息
+        tvTravelTitle.setText("乘客信息：");
+        for (int j = 0; j < people; j++){
+            PlaneTicketOrderDetailOfChinaResponse.PassengerListBean passenger = planeTicketOrderDetailOfChina.getReturnX().getPolicyOrder().getPassengerList().get(j);
+            mList.add(new TypeBean(j, passenger.getName()));
+            View rootView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.traveler_info, null);
+            TextView tvName = (TextView) rootView.findViewById(R.id.tv_order_traveler_name);
+            TextView tvNameTitle = (TextView) rootView.findViewById(R.id.tv_traveler_name_title);
+            TextView tvMobile = (TextView) rootView.findViewById(R.id.tv_order_traveler_mobile);
+            TextView tvMobileTitle = (TextView) rootView.findViewById(R.id.tv_traveler_phone_title);
+            TextView tvID = (TextView) rootView.findViewById(R.id.tv_order_traveler_id);
+            tvNameTitle.setText("乘客姓名：");
+            tvName.setText(passenger.getName());
+//            tvMobileTitle.setVisibility(View.GONE);
+//            tvMobile.setVisibility(View.GONE);
+            List<PlaneTicketOrderDetailOfChinaResponse.FlightInfoListBean> flights = planeTicketOrderDetailOfChina.getReturnX().getPolicyOrder().getFlightInfoList();
+
+            tvMobileTitle.setText("航班信息：");
+            tvMobile.setText(String.format(Locale.getDefault(), "%s %s—%s %s", flights.get(0).getDepDate(),
+                    String.format(Locale.getDefault(), "%s:%s", flights.get(0).getDepTime().substring(0, 2), flights.get(0).getDepTime().substring(2, 4)),
+                    String.format(Locale.getDefault(), "%s:%s", flights.get(0).getArrTime().substring(0, 2), flights.get(0).getArrTime().substring(2, 4)),
+                    flights.get(0).getFlightNo())); //12月19日 12:30-15:50 的联航 KN5605 北京南苑机场-兰州中川机场经停庆阳机场已出票
+            tvID.setText(passenger.getIdentityNo());
+            layoutTravelers.addView(rootView);
+        }
+        //发票
+        layoutInvoice.setVisibility(View.GONE);
+        //旅游币
+        layoutTravelIcon.setVisibility(View.GONE);
+    }
+
+    /**
      * 火车票订单展示
      */
     private void refreshTrainView(TrainTicketOrderDetailResponse body) {
@@ -467,7 +644,7 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
         tvOrderTitle.setText(String.format(Locale.getDefault(), "%s—%s", body.getTicketInfo().getFromStation(), body.getTicketInfo().getToStation()));
         if (body.getTrainOrderNo() == null || body.getTrainOrderNo().length() == 0 || "null".equals(body.getTradeNo())){
             tvOrderSN.setText("无");
-        }else {
+        } else {
             tvOrderSN.setText(body.getTrainOrderNo());
         }
         tvOrderTime.setText(body.getTBookTime());
@@ -594,7 +771,46 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
             }
         }
     }
-
+    private String getOrderStatus(String status) {
+        switch (status){
+            case "NO_SEAT":
+                status = "订座失败";
+                btnAction.setVisibility(View.GONE);
+                break;
+            case "NEW_ORDER":
+                status = "新订单待支付"; //去支付
+                planeTicketOfChinaType = 3;
+                btnAction.setText("签约付款");
+                break;
+            case "ORDER_CANCLED":
+                status = "未支付订单已取消";
+                btnAction.setVisibility(View.GONE);
+                break;
+            case "PAY_SUCCESS":
+                status = "已支付";     //取消订单
+                planeTicketOfChinaType = 2;
+                btnAction.setText("取消订单");
+                break;
+            case "TICKET_SUCCESS":
+                status = "已出票";     //申请退票
+                planeTicketOfChinaType = 1;
+                btnAction.setText("申请退票");
+                break;
+            case "REFUSED_BY_SUPPLY":
+                status = "出票被拒回";
+                btnAction.setVisibility(View.GONE);
+                break;
+            case "ORDER_REFUNDED":
+                status = "订单已退款";
+                btnAction.setVisibility(View.GONE);
+                break;
+            case "OTHER_STATUS":
+                status = "其他状态";
+                btnAction.setVisibility(View.GONE);
+                break;
+        }
+        return status;
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -621,5 +837,10 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
         layoutBottomAction = null;
         tvPrice = null;
         btnAction = null;
+        if (mList != null){
+            mList.clear();
+            mList = null;
+        }
+        planeTicketOrderDetailOfChina = null;
     }
 }

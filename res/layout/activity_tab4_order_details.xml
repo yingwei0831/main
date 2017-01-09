@@ -80,6 +80,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/layout_order_time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -221,7 +222,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="游客信息"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:paddingBottom="16dp"/>
 
                 <LinearLayout
                     android:id="@+id/layout_order_detail_visitors"

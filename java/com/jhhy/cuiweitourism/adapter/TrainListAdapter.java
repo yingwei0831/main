@@ -36,10 +36,12 @@ public class TrainListAdapter extends MyBaseAdapter {
             holder.tvTrainName = (TextView) view.findViewById(R.id.tv_ticket_item_train_name);
             holder.tvTrainFromTime = (TextView) view.findViewById(R.id.tv_ticket_item_train_start_time);
             holder.tvTrainFromStation = (TextView) view.findViewById(R.id.tv_ticket_item_train_start_station);
+            holder.tvFromStationTag = (TextView) view.findViewById(R.id.tv_from_station);
 
             holder.tvConsumingTime = (TextView) view.findViewById(R.id.tv_ticket_item_train_consuming_time);
             holder.tvArrivalTime = (TextView) view.findViewById(R.id.tv_ticket_item_train_arrival_time);
             holder.tvArrivalStation = (TextView) view.findViewById(R.id.tv_ticket_item_train_arrival_name);
+            holder.tvArrivalStationTag = (TextView) view.findViewById(R.id.tv_arrival_station);
 
             holder.tvTicketPrice = (TextView) view.findViewById(R.id.tv_ticket_item_train_price);
             holder.tvSeatType = (TextView) view.findViewById(R.id.tv_ticket_item_train_seat_type);
@@ -54,22 +56,43 @@ public class TrainListAdapter extends MyBaseAdapter {
             holder.tvTrainName.setText(info.trainNum);
             holder.tvTrainFromTime.setText(info.departureTime);
             holder.tvTrainFromStation.setText(info.departureStation);
+            if (info.startingStation.equals(info.departureStation)){ //始
+                holder.tvFromStationTag.setText("始");
+            }else{ //过
+                holder.tvFromStationTag.setText("过");
+            }
             holder.tvConsumingTime.setText(Utils.getDuration(Long.parseLong(info.duration)));
             holder.tvArrivalTime.setText(info.arrivalTime);
             holder.tvArrivalStation.setText(info.arrivalStation);
+            if (info.arrivalStation.equals(info.terminus)){ //终
+                holder.tvArrivalStationTag.setText("终");
+            }else{ //过
+                holder.tvArrivalStationTag.setText("过");
+            }
             ArrayList<TrainTicketDetailInfo.SeatInfo> ticketKinds = info.seatInfoArray;
             Collections.sort(ticketKinds);
-            TrainTicketDetailInfo.SeatInfo seatInfo = ticketKinds.get(0);
+            TrainTicketDetailInfo.SeatInfo seatInfo = null;
+            for (int j = 0; j < ticketKinds.size(); j++){
+                TrainTicketDetailInfo.SeatInfo seat = ticketKinds.get(j);
+                if (Integer.parseInt(seat.seatCount) > 0){
+                    seatInfo = seat;
+                    break;
+                }
+            }
+//            TrainTicketDetailInfo.SeatInfo seatInfo = ticketKinds.get(0);
+            if (seatInfo == null){
+                seatInfo = ticketKinds.get(0);
+            }
             holder.tvTicketPrice.setText(String.format("￥%s", seatInfo.floorPrice));
             holder.tvSeatType.setText(seatInfo.seatName);
-            if (Integer.parseInt(info.numberOfRemainingSeats) == 0){
+            if (Integer.parseInt(seatInfo.seatCount) == 0){
                 holder.tvTicketNumber.setText("无票");
                 holder.tvTicketNumber.setTextColor(Color.RED);
-            }else if (Integer.parseInt(info.numberOfRemainingSeats) <= 9){
-                holder.tvTicketNumber.setText(String.format("仅剩%s张", info.numberOfRemainingSeats));
+            }else if (Integer.parseInt(seatInfo.seatCount) <= 9){
+                holder.tvTicketNumber.setText(String.format("仅剩%s张", seatInfo.seatCount));
                 holder.tvTicketNumber.setTextColor(Color.RED);
             } else {
-                holder.tvTicketNumber.setText(String.format("%s张", info.numberOfRemainingSeats));
+                holder.tvTicketNumber.setText(String.format("%s张", seatInfo.seatCount));
                 holder.tvTicketNumber.setTextColor(Color.GRAY);
             }
         }
@@ -82,10 +105,12 @@ public class TrainListAdapter extends MyBaseAdapter {
         private TextView tvTrainName;
         private TextView tvTrainFromTime;
         private TextView tvTrainFromStation;
+        private TextView tvFromStationTag;
 
         private TextView tvConsumingTime;
         private TextView tvArrivalTime;
         private TextView tvArrivalStation;
+        private TextView tvArrivalStationTag;
 
         private TextView tvTicketPrice;
         private TextView tvSeatType;

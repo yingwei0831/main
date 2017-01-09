@@ -77,7 +77,7 @@ public abstract class PlaneItemInfoListAdapter extends MyBaseAdapter implements 
             String cabinType =  sb.toString().substring(0, sb.length()-1);
 
             holder.tvTypeSeat.setText(cabinType);
-            holder.tvTicketPrice.setText(String.format("￥%s", cabin.baseFare.faceValueTotal)); //票面价 ; 含税总价：hf.cabin.totalFare.taxTotal
+            holder.tvTicketPrice.setText(String.format("￥%s", cabin.totalFare.taxTotal)); //票面价 cabin.baseFare.faceValueTotal ; 含税总价：hf.cabin.totalFare.taxTotal
             holder.tvTaxPrice.setText(String.format("税费：￥%s", cabin.passengerType.taxTypeCodeMap.get("XT").price)); //税费xxx; 含税总价；
         }else{
             PlaneTicketInfoOfChina.SeatItemInfo seatItem = (PlaneTicketInfoOfChina.SeatItemInfo) getItem(i);

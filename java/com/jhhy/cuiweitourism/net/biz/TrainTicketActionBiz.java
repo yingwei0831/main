@@ -10,6 +10,7 @@ import com.jhhy.cuiweitourism.net.models.FetchModel.TrainOrderToOtherPlatRequest
 import com.jhhy.cuiweitourism.net.models.FetchModel.TrainStationFetch;
 import com.jhhy.cuiweitourism.net.models.FetchModel.TrainStopsFetch;
 import com.jhhy.cuiweitourism.net.models.FetchModel.TrainTicketFetch;
+import com.jhhy.cuiweitourism.net.models.FetchModel.TrainTicketNumberCheckRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.TrainTicketOrderFetch;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchResponseModel;
@@ -166,6 +167,25 @@ public class TrainTicketActionBiz extends BasicActionBiz {
             }
         };
 
+        HttpUtils.executeXutils(fetch, new FetchGenericCallback<>(fetchResponse));
+    }
+
+    /**
+     * 火车票验证余票
+     */
+    public void trainTicketCheckCount(TrainTicketNumberCheckRequest fetch, BizGenericCallback<Object> callback){
+        fetch.code = "Train_yanzheng";
+        FetchGenericResponse<Object> fetchResponse = new FetchGenericResponse<Object>(callback) {
+            @Override
+            public void onCompletion(FetchResponseModel response) {
+
+            }
+
+            @Override
+            public void onError(FetchError error) {
+
+            }
+        };
         HttpUtils.executeXutils(fetch, new FetchGenericCallback<>(fetchResponse));
     }
 

@@ -94,6 +94,8 @@ import java.util.Map;
                         }else if (aryObj instanceof BasicFetchModel){
                             JSONObject modelJsonObj = toFieldJsonObject(((BasicFetchModel)aryObj).toMapObject());
                             jsonArray.put(modelJsonObj);
+                        }else if (aryObj instanceof String){
+                            jsonArray.put(aryObj);
                         }
                     }
                     fieldObj.put(key, jsonArray);

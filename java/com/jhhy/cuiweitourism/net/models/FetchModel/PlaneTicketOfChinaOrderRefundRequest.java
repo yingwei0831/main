@@ -22,6 +22,12 @@ public class PlaneTicketOfChinaOrderRefundRequest extends BasicFetchModel {
     private List<String> tuipiaoren;
     private List<String> ticketNo;
 
+    public PlaneTicketOfChinaOrderRefundRequest(String ordersn, String memberid, String segment) {
+        this.ordersn = ordersn;
+        this.memberid = memberid;
+        this.segment = segment;
+    }
+
     public String getOrdersn() {
         return ordersn;
     }
@@ -60,5 +66,16 @@ public class PlaneTicketOfChinaOrderRefundRequest extends BasicFetchModel {
 
     public void setTicketNo(List<String> ticketNo) {
         this.ticketNo = ticketNo;
+    }
+
+    @Override
+    public String toString() {
+        return "PlaneTicketOfChinaOrderRefundRequest{" +
+                "ordersn='" + ordersn + '\'' +
+                ", memberid='" + memberid + '\'' +
+                ", segment='" + segment + '\'' +
+                ", tuipiaoren=" + tuipiaoren +
+                ", ticketNo=" + ticketNo +
+                '}';
     }
 }

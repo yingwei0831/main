@@ -87,6 +87,8 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
     private Drawable consumingTimeDrawable; //初始图片
     private Drawable arrivalTimeDrawable; //初始图片
 
+    private boolean refresh; //点击筛选，变true
+
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -100,9 +102,17 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
                     break;
                 case 1:
                     tvCurrentDay.setText(trainTime);
+//                    LogUtil.e(TAG, "top list.size = " + list.size());
                     getScreenData();
                     adapter.setData(list);
+//                    LogUtil.e(TAG, "top list.size = " + list.size());
                     adapter.notifyDataSetChanged();
+                    if (refresh){
+                        refresh = false;
+                        if (pullListView.isRefreshing()) {
+                            pullListView.onRefreshComplete();
+                        }
+                    }
                     break;
             }
         }
@@ -134,9 +144,7 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
             seatType = "";
         }else{
             seatType = ticket.getTrainseattype();
-            if ("不限".equals(seatType)){
-                seatType = "";
-            }
+            generateSeatType();
         }
         trainTime = ticket.getTraveltime();
         LogUtil.e(TAG, "ticket = " + ticket);
@@ -172,24 +180,19 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
         pullListView = (PullToRefreshListView) findViewById(R.id.list_train_detail);
         //这几个刷新Label的设置
         pullListView.getLoadingLayoutProxy().setLastUpdatedLabel(Utils.getCurrentTime());
-        pullListView.getLoadingLayoutProxy().setPullLabel("PULLLABLE");
-        pullListView.getLoadingLayoutProxy().setRefreshingLabel("refreshingLabel");
-        pullListView.getLoadingLayoutProxy().setReleaseLabel("releaseLabel");
+        pullListView.getLoadingLayoutProxy().setPullLabel("下拉刷新");
+        pullListView.getLoadingLayoutProxy().setRefreshingLabel("正在刷新");
+        pullListView.getLoadingLayoutProxy().setReleaseLabel("松开加载更多");
 
         //上拉、下拉设定
-        pullListView.setMode(PullToRefreshBase.Mode.DISABLED);
+        pullListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
         listView = pullListView.getRefreshableView();
 
         //上拉、下拉监听函数
-        pullListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+        pullListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
             @Override
-            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-
-            }
-
-            @Override
-            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-
+            public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+                refresh();
             }
         });
 
@@ -224,6 +227,11 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
         startTimeDrawable.setBounds(0, 0, startTimeDrawable.getMinimumWidth(), startTimeDrawable.getMinimumHeight());
         consumingTimeDrawable.setBounds(0, 0, consumingTimeDrawable.getMinimumWidth(), consumingTimeDrawable.getMinimumHeight());
         arrivalTimeDrawable.setBounds(0, 0, arrivalTimeDrawable.getMinimumWidth(), arrivalTimeDrawable.getMinimumHeight());
+    }
+
+    private void refresh() {
+        refresh = true;
+        getInternetData();
     }
 
 
@@ -291,20 +299,16 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
             @Override
             public void run() {
                 super.run();
-//                TrainTicketFetch fetch = new TrainTicketFetch(ticket.getFromstation(), ticket.getArrivestation(), tempTime.substring(0, tempTime.indexOf(" ")), trainCode, trainType, seatType, trainLowPrice);
-                TrainTicketFetch fetch = new TrainTicketFetch(ticket.getFromstation(), ticket.getArrivestation(), tempTime.substring(0, tempTime.indexOf(" ")),   trainCode, "",        "",       trainLowPrice);
+//              TrainTicketFetch fetch = new TrainTicketFetch(ticket.getFromstation(), ticket.getArrivestation(), tempTime.substring(0, tempTime.indexOf(" ")), trainCode, trainType, seatType, trainLowPrice);
+                TrainTicketFetch fetch = new TrainTicketFetch(ticket.getFromstation(), ticket.getArrivestation(), tempTime.substring(0, tempTime.indexOf(" ")), trainCode, "",        seatType, trainLowPrice);
                 trainBiz.trainTicketInfo(fetch, new BizGenericCallback<ArrayList<TrainTicketDetailInfo>>() {
                     @Override
                     public void onCompletion(GenericResponseModel<ArrayList<TrainTicketDetailInfo>> model) {
-                        if ("0001".equals(model.headModel.res_code)){
-//                    ToastUtil.show(getApplicationContext(), model.headModel.res_arg);
-                            Message msg = new Message();
-                            msg.what = -1;
-                            msg.obj = model.headModel.res_arg;
-                            handler.sendMessage(msg);
-                        }else if ("0000".equals(model.headModel.res_code)){
+                        if ("0000".equals(model.headModel.res_code)){
                             trainTime = tempTime;
-                            list = model.body;
+                            list.clear();
+                            list.addAll(model.body);
+                            listCopy.clear();
                             listCopy.addAll(list);
                             handler.sendEmptyMessage(1);
                             LogUtil.e(TAG,"trainTicketInfo =" + list.toString());
@@ -346,9 +350,14 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
                         arrivalTimePosition = popupWindow.getSelectionArrivalTime();
                         typeTrainPosition = popupWindow.getSelectionTypeTrain();
                         typeSeatPosition = popupWindow.getSelectionTypeSeat();
-                        getScreenData();
-                        adapter.setData(list);
-                        adapter.notifyDataSetChanged();
+                        seatType = popupWindow.getTrainSeatType(); //二等座
+                        generateSeatType();
+
+                        refresh = true;
+                        getInternetData();
+//                        getScreenData();
+//                        adapter.setData(list);
+//                        adapter.notifyDataSetChanged();
                     }
                 }
             });
@@ -414,10 +423,8 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
 //            LogUtil.e(TAG, "list.size = " + list.size());
             //筛选车型
             //筛选席别类型
-//          车次类型:    G:"高铁",C:"城际",D:"动车",      Z:"直达",T:"特快",K:"快速",P:"普通",O:"其他"
-//          座位类型：   SZ:0(商务座),TZ:1(特等座),R1:2(一等座),R2:3(二等座),GW:4(高级软卧),RW:5(软卧),YW:6(硬卧),RZ:7(软座),YZ:8(硬座),WZ:9(无座),OT:10(其他)
-            //车型：     不限，高铁/动车，普通
-            //席别类型： 不限，商务座，特等座，一等座，二等座，高级软卧，软卧，硬卧，软座，硬座，无座，其他
+//          车次类型:  G:"高铁",C:"城际",D:"动车",      Z:"直达",T:"特快",K:"快速",P:"普通",O:"其他"
+//          车型：     不限，高铁/动车，普通
             if (typeTrainPosition == -1 || typeTrainPosition == 0) { //不限
                 listCopyArrivalTime.addAll(list);
             } else {
@@ -432,27 +439,7 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
             list.clear();
             list.addAll(listCopyArrivalTime);
             listCopyArrivalTime.clear();
-//            LogUtil.e(TAG, "list.size = " + list.size());
-//            String seatType = "";
-            if (popupWindow != null) {
-                seatType = popupWindow.getTrainSeatType(); //二等座
-            }
-            if (seatType.length() != 0){
-                for (TrainTicketDetailInfo trainTicket : list) {
-                    ArrayList<TrainTicketDetailInfo.SeatInfo> seats = trainTicket.seatInfoArray;
-                    for (TrainTicketDetailInfo.SeatInfo seatInfo : seats) {
-                        if (seatType.equals(seatInfo.seatName) || seatInfo.seatName.contains(seatType)) {
-                            listCopyArrivalTime.add(trainTicket);
-                            break;
-                        }
-                    }
-                }
-                list.clear();
-                list.addAll(listCopyArrivalTime);
-                listCopyArrivalTime.clear();
-            }
             listCopyArrivalTime = null;
-//            LogUtil.e(TAG, "list.size = " + list.size());
         }
     }
 
@@ -603,5 +590,32 @@ public class TrainListActivity extends BaseActionBarActivity implements  Adapter
         }
     }
 
+    private void generateSeatType() {
+        if ("不限".equals(seatType)){
+            seatType = "";
+        }else if ("商务座".equals(seatType)){
+            seatType = "SZ";
+        }else if ("特等座".equals(seatType)){
+            seatType = "TZ";
+        }else if ("一等座".equals(seatType)){
+            seatType = "R1";
+        }else if ("二等座".equals(seatType)){
+            seatType = "R2";
+        }else if ("高级软卧".equals(seatType)){
+            seatType = "GW";
+        }else if ("软卧".equals(seatType)){
+            seatType = "RW";
+        }else if ("硬卧".equals(seatType)){
+            seatType = "YW";
+        }else if ("软座".equals(seatType)){
+            seatType = "RZ";
+        }else if ("硬座".equals(seatType)){
+            seatType = "YZ";
+        }else if ("无座".equals(seatType)){
+            seatType = "WZ";
+        }else if ("其他".equals(seatType)){
+            seatType = "OT";
+        }
+    }
 
 }

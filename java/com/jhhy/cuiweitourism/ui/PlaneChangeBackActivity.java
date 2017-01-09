@@ -16,6 +16,8 @@ public class PlaneChangeBackActivity extends BaseActionBarActivity {
 
     private TextView tvRefundTicket; //退票条件
     private TextView tvChangeTicket; //改签条件
+    private TextView tvRefundNoticeTitle; //注意
+    private TextView tvRefundNotice; //不能改签
 
     private String refund;
     private String change;
@@ -44,6 +46,14 @@ public class PlaneChangeBackActivity extends BaseActionBarActivity {
         tvTitle.setText(getString(R.string.plane_flight_change_ticket_title));
         tvRefundTicket = (TextView) findViewById(R.id.tv_plane_ticket_refund);
         tvChangeTicket = (TextView) findViewById(R.id.tv_plane_ticket_change);
+
+        tvRefundNoticeTitle = (TextView) findViewById(R.id.tv_change_notice_title); //注意
+        tvRefundNotice = (TextView) findViewById(R.id.tv_plane_ticket_change_notice); //不能改签
+        if (notice != null){
+            tvRefundNoticeTitle.setVisibility(View.VISIBLE);
+            tvRefundNotice.setVisibility(View.VISIBLE);
+            tvRefundNotice.setText(notice);
+        }
 
         if (change == null || "null".equals(change)){
             tvChangeTicket.setVisibility(View.GONE);
