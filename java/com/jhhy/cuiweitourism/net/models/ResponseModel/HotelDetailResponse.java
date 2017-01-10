@@ -1,5 +1,7 @@
 package com.jhhy.cuiweitourism.net.models.ResponseModel;
 
+import com.jhhy.cuiweitourism.net.models.FetchModel.BasicFetchModel;
+
 import java.util.List;
 
 /**
@@ -385,6 +387,49 @@ public class HotelDetailResponse {
         public void setMeetingFac(String MeetingFac) {
             this.MeetingFac = MeetingFac;
         }
+
+
+        @Override
+        public String toString() {
+            return "HotelBean{" +
+                    "HotelID='" + HotelID + '\'' +
+                    ", Name='" + Name + '\'' +
+                    ", Description='" + Description + '\'' +
+                    ", StartLevel='" + StartLevel + '\'' +
+                    ", Traffic='" + Traffic + '\'' +
+                    ", GoodRate='" + GoodRate + '\'' +
+                    ", ReviewGood='" + ReviewGood + '\'' +
+                    ", ReviewPoor='" + ReviewPoor + '\'' +
+                    ", ReviewCount='" + ReviewCount + '\'' +
+                    ", Score='" + Score + '\'' +
+                    ", MinPrice='" + MinPrice + '\'' +
+                    ", Baidulat='" + Baidulat + '\'' +
+                    ", Baidulon='" + Baidulon + '\'' +
+                    ", InstantConfirmScore='" + InstantConfirmScore + '\'' +
+                    ", InstantConfirmRate='" + InstantConfirmRate + '\'' +
+                    ", BookingSuccessScore='" + BookingSuccessScore + '\'' +
+                    ", BookingSuccessRate='" + BookingSuccessRate + '\'' +
+                    ", ComplaintScore='" + ComplaintScore + '\'' +
+                    ", ComplaintRate='" + ComplaintRate + '\'' +
+                    ", Phone='" + Phone + '\'' +
+                    ", WIFI='" + WIFI + '\'' +
+                    ", Services='" + Services + '\'' +
+                    ", RoomFac='" + RoomFac + '\'' +
+                    ", BusinessZoneID='" + BusinessZoneID + '\'' +
+                    ", BusinessZoneName='" + BusinessZoneName + '\'' +
+                    ", CreditCards='" + CreditCards + '\'' +
+                    ", SupplierCode='" + SupplierCode + '\'' +
+                    ", CityCode='" + CityCode + '\'' +
+                    ", CityName='" + CityName + '\'' +
+                    ", Images=" + Images +
+                    ", Rooms=" + Rooms +
+                    ", Summary='" + Summary + '\'' +
+                    ", ParkingLot='" + ParkingLot + '\'' +
+                    ", CateringFac='" + CateringFac + '\'' +
+                    ", SportsEnterainment='" + SportsEnterainment + '\'' +
+                    ", MeetingFac='" + MeetingFac + '\'' +
+                    '}';
+        }
     }
 
     public static class HotelImagesBean {
@@ -396,6 +441,13 @@ public class HotelDetailResponse {
 
         public void setImage(List<HotelImageBean> Image) {
             this.Image = Image;
+        }
+
+        @Override
+        public String toString() {
+            return "HotelImagesBean{" +
+                    "Image=" + Image +
+                    '}';
         }
     }
     public static class HotelImageBean {
@@ -462,6 +514,18 @@ public class HotelDetailResponse {
         public void setWaterMark(String WaterMark) {
             this.WaterMark = WaterMark;
         }
+
+        @Override
+        public String toString() {
+            return "HotelImageBean{" +
+                    "ImageID='" + ImageID + '\'' +
+                    ", Url='" + Url + '\'' +
+                    ", Type='" + Type + '\'' +
+                    ", Size='" + Size + '\'' +
+                    ", IsCoverImage='" + IsCoverImage + '\'' +
+                    ", WaterMark='" + WaterMark + '\'' +
+                    '}';
+        }
     }
     public static class HotelRoomsBean {
         private List<HotelRoomBean> Room;
@@ -472,6 +536,13 @@ public class HotelDetailResponse {
 
         public void setRoom(List<HotelRoomBean> Room) {
             this.Room = Room;
+        }
+
+        @Override
+        public String toString() {
+            return "HotelRoomsBean{" +
+                    "Room=" + Room +
+                    '}';
         }
     }
 
@@ -559,6 +630,18 @@ public class HotelDetailResponse {
 //        public void setFloor(String Floor) {
 //            this.Floor = Floor;
 //        }
+
+
+        @Override
+        public String toString() {
+            return "HotelRoomBean{" +
+                    "RoomID='" + RoomID + '\'' +
+                    ", RoomName='" + RoomName + '\'' +
+                    ", BedType='" + BedType + '\'' +
+                    ", Capacity='" + Capacity + '\'' +
+                    ", Products=" + Products +
+                    '}';
+        }
     }
 
     public static class HotelRoomImagesBean {
@@ -652,6 +735,13 @@ public class HotelDetailResponse {
         public void setProduct(List<HotelProductBean> Product) {
             this.Product = Product;
         }
+
+        @Override
+        public String toString() {
+            return "HotelProductsBean{" +
+                    "Product=" + Product +
+                    '}';
+        }
     }
 
     public static class HotelProductBean {
@@ -674,7 +764,7 @@ public class HotelDetailResponse {
          * PlanType : 0
          * BookingRules : {"BookingRule":{"BookingRuleId":"247980","TypeCode":"PerRoomPerName","Description":"酒店要求每个房间至少提供一名入住客人的姓名","DateType":"BookDay","StartDate":"2016/5/3 0:00:00","EndDate":"2066/5/3 0:00:00","StartHour":"00:00:00","EndHour":"23:59:00"}}
          * GuranteeRules : []
-         * PrepayRules : []
+         * PrepayRules : {"PrepayRule": {"PrepayRuleId": "1","Description": "预付规则：在16.11.15 到90.02.02期间入住，需要提供信用卡预付全额房费。一经预订成功不可变更/取消。","DateType": "CheckInDay","StartDate": "2016/11/15 0:00:00","EndDate": "2090/2/2 0:00:00","WeekSet": "1,2,3,4,5,6,7,","ChangeRule": "PrepayNoChange","DateNum": "2017/1/10 0:00:00","Time": "18:00","DeductFeesBefore": "0",DeductNumBefore": "0.0","CashScaleFirstAfter": "FristNight","DeductFeesAfter": "1","DeductNumAfter": "0.0","CashScaleFirstBefore": "FristNight","Hour": "24","Hour2": "0"}
          */
 
         private String roomName;
@@ -694,13 +784,13 @@ public class HotelDetailResponse {
         private String OtherService;
         private String PassengerType;
         private String PaymentType;
-        private String InvoiceMode;
+//        private String InvoiceMode;
         private String CurrencyCode;
         private String PlanType;
 //        private HotelBookingRulesBean BookingRules;
 //        private List<String> IsCancel;
 //        private List<String> GuranteeRules;
-        private List<String> PrepayRules;
+        private List<PrepayRule> PrepayRule;
 
         public String getRoomName() {
             return roomName;
@@ -830,13 +920,13 @@ public class HotelDetailResponse {
             this.PaymentType = PaymentType;
         }
 
-        public String getInvoiceMode() {
-            return InvoiceMode;
-        }
+//        public String getInvoiceMode() {
+//            return InvoiceMode;
+//        }
 
-        public void setInvoiceMode(String InvoiceMode) {
-            this.InvoiceMode = InvoiceMode;
-        }
+//        public void setInvoiceMode(String InvoiceMode) {
+//            this.InvoiceMode = InvoiceMode;
+//        }
 
         public String getCurrencyCode() {
             return CurrencyCode;
@@ -870,23 +960,225 @@ public class HotelDetailResponse {
 //            this.IsCancel = IsCancel;
 //        }
 
-//        public List<String> getGuranteeRules() {
-//            return GuranteeRules;
-//        }
-//
-//        public void setGuranteeRules(List<String> GuranteeRules) {
-//            this.GuranteeRules = GuranteeRules;
-//        }
-
-        public List<String> getPrepayRules() {
-            return PrepayRules;
+        public List<HotelDetailResponse.PrepayRule> getPrepayRule() {
+            return PrepayRule;
         }
 
-        public void setPrepayRules(List<String> PrepayRules) {
-            this.PrepayRules = PrepayRules;
+        public void setPrepayRule(List<HotelDetailResponse.PrepayRule> prepayRule) {
+            PrepayRule = prepayRule;
+        }
+
+
+//        public List<PrepayRule> getPrepayRules() {
+//            return PrepayRules;
+//        }
+
+//        public void setPrepayRules(List<PrepayRule> prepayRules) {
+//            PrepayRules = prepayRules;
+//        }
+
+
+        @Override
+        public String toString() {
+            return "HotelProductBean{" +
+                    "roomName='" + roomName + '\'' +
+                    ", roomImgUrl='" + roomImgUrl + '\'' +
+                    ", roomId='" + roomId + '\'' +
+                    ", bedType='" + bedType + '\'' +
+                    ", ProductID='" + ProductID + '\'' +
+                    ", RoomTypeID='" + RoomTypeID + '\'' +
+                    ", Name='" + Name + '\'' +
+                    ", Price='" + Price + '\'' +
+                    ", IsOwn='" + IsOwn + '\'' +
+                    ", Meals='" + Meals + '\'' +
+                    ", IsAssure='" + IsAssure + '\'' +
+                    ", IsBooking='" + IsBooking + '\'' +
+                    ", IsSpecial='" + IsSpecial + '\'' +
+                    ", OtherService='" + OtherService + '\'' +
+                    ", PassengerType='" + PassengerType + '\'' +
+                    ", PaymentType='" + PaymentType + '\'' +
+                    ", CurrencyCode='" + CurrencyCode + '\'' +
+                    ", PlanType='" + PlanType + '\'' +
+                    '}';
         }
     }
 
+    public static class PrepayRule extends BasicFetchModel{
+
+        /**
+         * PrepayRuleId : 1
+         * Description : 预付规则：在16.11.15 到90.02.02期间入住，需要提供信用卡预付全额房费。一经预订成功不可变更/取消。
+         * DateType : CheckInDay
+         * StartDate : 2016/11/15 0:00:00
+         * EndDate : 2090/2/2 0:00:00
+         * WeekSet : 1,2,3,4,5,6,7,
+         * ChangeRule : PrepayNoChange
+         * DateNum : 2017/1/10 0:00:00
+         * Time : 18:00
+         * DeductFeesBefore : 0
+         * DeductNumBefore : 0.0
+         * CashScaleFirstAfter : FristNight
+         * DeductFeesAfter : 1
+         * DeductNumAfter : 0.0
+         * CashScaleFirstBefore : FristNight
+         * Hour : 24
+         * Hour2 : 0
+         */
+
+        private String PrepayRuleId;
+        private String Description;
+        private String DateType;
+        private String StartDate;
+        private String EndDate;
+        private String WeekSet;
+        private String ChangeRule;
+        private String DateNum;
+        private String Time;
+        private String DeductFeesBefore;
+        private String DeductNumBefore;
+        private String CashScaleFirstAfter;
+        private String DeductFeesAfter;
+        private String DeductNumAfter;
+        private String CashScaleFirstBefore;
+        private String Hour;
+        private String Hour2;
+
+        public String getPrepayRuleId() {
+            return PrepayRuleId;
+        }
+
+        public void setPrepayRuleId(String PrepayRuleId) {
+            this.PrepayRuleId = PrepayRuleId;
+        }
+
+        public String getDescription() {
+            return Description;
+        }
+
+        public void setDescription(String Description) {
+            this.Description = Description;
+        }
+
+        public String getDateType() {
+            return DateType;
+        }
+
+        public void setDateType(String DateType) {
+            this.DateType = DateType;
+        }
+
+        public String getStartDate() {
+            return StartDate;
+        }
+
+        public void setStartDate(String StartDate) {
+            this.StartDate = StartDate;
+        }
+
+        public String getEndDate() {
+            return EndDate;
+        }
+
+        public void setEndDate(String EndDate) {
+            this.EndDate = EndDate;
+        }
+
+        public String getWeekSet() {
+            return WeekSet;
+        }
+
+        public void setWeekSet(String WeekSet) {
+            this.WeekSet = WeekSet;
+        }
+
+        public String getChangeRule() {
+            return ChangeRule;
+        }
+
+        public void setChangeRule(String ChangeRule) {
+            this.ChangeRule = ChangeRule;
+        }
+
+        public String getDateNum() {
+            return DateNum;
+        }
+
+        public void setDateNum(String DateNum) {
+            this.DateNum = DateNum;
+        }
+
+        public String getTime() {
+            return Time;
+        }
+
+        public void setTime(String Time) {
+            this.Time = Time;
+        }
+
+        public String getDeductFeesBefore() {
+            return DeductFeesBefore;
+        }
+
+        public void setDeductFeesBefore(String DeductFeesBefore) {
+            this.DeductFeesBefore = DeductFeesBefore;
+        }
+
+        public String getDeductNumBefore() {
+            return DeductNumBefore;
+        }
+
+        public void setDeductNumBefore(String DeductNumBefore) {
+            this.DeductNumBefore = DeductNumBefore;
+        }
+
+        public String getCashScaleFirstAfter() {
+            return CashScaleFirstAfter;
+        }
+
+        public void setCashScaleFirstAfter(String CashScaleFirstAfter) {
+            this.CashScaleFirstAfter = CashScaleFirstAfter;
+        }
+
+        public String getDeductFeesAfter() {
+            return DeductFeesAfter;
+        }
+
+        public void setDeductFeesAfter(String DeductFeesAfter) {
+            this.DeductFeesAfter = DeductFeesAfter;
+        }
+
+        public String getDeductNumAfter() {
+            return DeductNumAfter;
+        }
+
+        public void setDeductNumAfter(String DeductNumAfter) {
+            this.DeductNumAfter = DeductNumAfter;
+        }
+
+        public String getCashScaleFirstBefore() {
+            return CashScaleFirstBefore;
+        }
+
+        public void setCashScaleFirstBefore(String CashScaleFirstBefore) {
+            this.CashScaleFirstBefore = CashScaleFirstBefore;
+        }
+
+        public String getHour() {
+            return Hour;
+        }
+
+        public void setHour(String Hour) {
+            this.Hour = Hour;
+        }
+
+        public String getHour2() {
+            return Hour2;
+        }
+
+        public void setHour2(String Hour2) {
+            this.Hour2 = Hour2;
+        }
+    }
     public static class HotelBookingRulesBean {
         /**
          * BookingRule : {"BookingRuleId":"247980","TypeCode":"PerRoomPerName","Description":"酒店要求每个房间至少提供一名入住客人的姓名","DateType":"BookDay","StartDate":"2016/5/3 0:00:00","EndDate":"2066/5/3 0:00:00","StartHour":"00:00:00","EndHour":"23:59:00"}
@@ -987,5 +1279,12 @@ public class HotelDetailResponse {
         public void setEndHour(String EndHour) {
             this.EndHour = EndHour;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "HotelDetailResponse{" +
+                "Hotel=" + Hotel +
+                '}';
     }
 }

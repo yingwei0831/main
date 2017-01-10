@@ -54,7 +54,7 @@ public class HotelOrderDetailResponse {
 //    private String CancelTime;
     private ContactBean Contact;
     private NightlyRatesBean NightlyRates;
-    private CustomersBean Customers;
+    private List<CustomerBean> Customer;
 //    private String ConfirmationType;
 
 
@@ -226,15 +226,15 @@ public class HotelOrderDetailResponse {
         this.NightlyRates = NightlyRates;
     }
 
-    public CustomersBean getCustomers() {
-        return Customers;
+    public List<CustomerBean> getCustomer() {
+        return Customer;
     }
 
-    public void setCustomers(CustomersBean Customers) {
-        this.Customers = Customers;
+    public void setCustomer(List<CustomerBean> customer) {
+        Customer = customer;
     }
 
-//    public String getConfirmationType() {
+    //    public String getConfirmationType() {
 //        return ConfirmationType;
 //    }
 //
@@ -383,24 +383,7 @@ public class HotelOrderDetailResponse {
                     '}';
         }
     }
-    public static class CustomersBean {
-        private List<CustomerBean> Customer;
 
-        public List<CustomerBean> getCustomer() {
-            return Customer;
-        }
-
-        public void setCustomer(List<CustomerBean> Customer) {
-            this.Customer = Customer;
-        }
-
-        @Override
-        public String toString() {
-            return "CustomersBean{" +
-                    "Customer=" + Customer +
-                    '}';
-        }
-    }
     public static class CustomerBean {
         /**
          * Name : Lll
@@ -533,7 +516,6 @@ public class HotelOrderDetailResponse {
                 ", CreationDate='" + CreationDate + '\'' +
                 ", Contact=" + Contact +
                 ", NightlyRates=" + NightlyRates +
-                ", Customers=" + Customers +
                 '}';
     }
 }

@@ -36,7 +36,7 @@ public class KCalendarDate extends KCalendar {
             //int thisDay = getCalendarDay()
             List<GroupDate> Months = new ArrayList<GroupDate>();
             if(groups.size() == 0){
-                for(int i = 1; i <= 6; i++){
+                for(int i = 1; i <= 8; i++){ //8个月的
                     GroupDeadline currentLine = new GroupDeadline();
                     String dataString = String.format("%d-%02d-%02d",thisYear,i,1);
                     currentLine.setDate(dataString);
@@ -59,7 +59,7 @@ public class KCalendarDate extends KCalendar {
             //如果存在
             if (Months.size() > 0) {
                 if (Months.get(Months.size() - 1).getYear() >= thisYear ||
-                        Months.get(Months.size() - 1).getMonth() >= thisMonth) {//大于本月或者是大于本年
+                        Months.get(Months.size() - 1).getMonth() >= thisMonth) { //大于本月或者是大于本年
 
                     // 改变日历上下顺序
                     if (currentCalendar == firstCalendar) {

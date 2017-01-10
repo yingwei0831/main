@@ -50,6 +50,25 @@ public class PayActionBiz {
         }
     }
 
+    private String CODE_PAY_HOTEL = "Hotel_pay";
+    public void getHotelPayInfo(final String mid, final String ordersn){
+        if (NetworkUtil.checkNetwork(context)) {
+            new Thread() {
+                @Override
+                public void run() {
+                    Map<String, Object> headMap = new HashMap<>();
+                    headMap.put(Consts.KEY_CODE, CODE_PAY_HOTEL);
+                    Map<String, Object> fieldMap = new HashMap<>();
+                    fieldMap.put("memberid", mid);
+                    fieldMap.put("ordersn", ordersn);
+                    HttpUtils.executeXutils(headMap, fieldMap, getPayInfoCallback);
+                }
+            }.start();
+        }else{
+            handler.sendEmptyMessage(Consts.NET_ERROR);
+        }
+    }
+
 //    {"head":{"code":"Fly_pay"},"field":{"memberid":"52","ordersn":"82207348571085"}} 国内机票支付
     private String CODE_PAY_PLANE_OF_CHINA = "Fly_pay";
     public void getPlaneOfChinaPayInfo(final String mid, final String ordersn){

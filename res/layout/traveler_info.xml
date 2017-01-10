@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
     <View
+        android:layout_marginTop="16dp"
         android:layout_width="match_parent"
         android:layout_height="1.2px"
         android:background="@color/colorLineGray2" />
@@ -18,14 +19,18 @@
             android:id="@+id/tv_traveler_name_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="游客姓名：" />
+            android:text="游客姓名："
+            android:textColor="@color/colorGrayDark"
+            />
 
         <TextView
             android:id="@+id/tv_order_traveler_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="2016-08-18-990331" />
+            android:text="2016-08-18-990331"
+            android:textColor="@color/colorGrayDark"
+            />
 
     </LinearLayout>
 
@@ -39,14 +44,18 @@
             android:id="@+id/tv_traveler_phone_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="手机号：" />
+            android:text="手机号码："
+            android:textColor="@color/colorGrayDark"
+            />
 
         <TextView
             android:id="@+id/tv_order_traveler_mobile"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="2016-08-18" />
+            android:text="2016-08-18"
+            android:textColor="@color/colorGrayDark"
+            />
 
     </LinearLayout>
 
@@ -61,15 +70,29 @@
             android:id="@+id/tv_traveler_id_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="证件号码：" />
+            android:text="证件号码："
+            android:textColor="@color/colorGrayDark"
+            />
 
         <TextView
             android:id="@+id/tv_order_traveler_id"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="2成人1儿童" />
+            android:text="2成人1儿童"
+            android:textColor="@color/colorGrayDark"
+            />
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_plane_ticket_no"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="票号：xxxx"
+        android:visibility="gone"
+        android:textColor="@color/colorGrayDark"
+        />
 
 </LinearLayout>

@@ -2,8 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.jhhy.cuiweitourism">
 
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
-
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -203,7 +202,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
-
         <activity
             android:name=".ui.InnerTravelCityActivity"
             android:screenOrientation="portrait"
@@ -538,7 +536,6 @@
             android:launchMode="singleTop"
             android:theme="@style/ActionBarTheme"
             android:windowSoftInputMode="stateHidden|adjustPan" />
-
         <activity
             android:name=".ui.HotelDetailActivity"
             android:launchMode="singleTop"
@@ -582,18 +579,16 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/ActionBarTheme" />
-
         <activity
             android:name=".ui.PlaneListInternationalActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/ActionBarTheme" />
-         <activity
+        <activity
             android:name=".ui.PlaneListInternationalBackActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/ActionBarTheme" />
-
         <activity
             android:name=".ui.TrainEditOrderActivity"
             android:launchMode="singleTop"
@@ -618,8 +613,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/ActionBarTheme"
             android:windowSoftInputMode="adjustPan|stateHidden" />
-
-
         <activity
             android:name=".ui.PlaneInquiryEditOrderActivity"
             android:launchMode="singleTop"
@@ -642,18 +635,16 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/ActionBarTheme" />
-
         <activity
             android:name=".ui.PlaneItemInfoInternationalActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/ActionBarTheme" />
-         <activity
+        <activity
             android:name=".ui.PlaneItemInfoInternationalActivity2"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/ActionBarTheme" />
-
         <activity
             android:name=".ui.PlaneMainActivity"
             android:launchMode="singleTop"
@@ -689,12 +680,11 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/ActionBarTheme" />
-
-        <activity android:name=".ui.PlaneChangeBackActivity"
+        <activity
+            android:name=".ui.PlaneChangeBackActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/ActionBarTheme"
-            />
+            android:theme="@style/ActionBarTheme" />
         <!-- ShareSDK 2、注意： tencent后面的appid要保持和您配置的QQ的appid一致 -->
         <activity
             android:name="com.mob.tools.MobUIShell"
@@ -775,7 +765,7 @@
         <!-- 定位需要的服务 使用2.0的定位需要加上这个 -->
         <service android:name="com.amap.api.location.APSService" />
 
-
+        <activity android:name=".ui.HotelPhotoActivity"></activity>
     </application>
 
 </manifest>

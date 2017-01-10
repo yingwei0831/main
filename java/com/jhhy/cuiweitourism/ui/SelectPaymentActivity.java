@@ -14,14 +14,18 @@ import com.alipay.sdk.app.PayTask;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.biz.PayActionBiz;
 import com.jhhy.cuiweitourism.model.Order;
+import com.jhhy.cuiweitourism.net.biz.HotelActionBiz;
 import com.jhhy.cuiweitourism.net.biz.PlaneTicketActionBiz;
 import com.jhhy.cuiweitourism.net.biz.TrainTicketActionBiz;
+import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketOfChinaCancelOrderRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.TrainOrderToOtherPlatRequest;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.ActivityOrderInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.CarRentOrderResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelOrderInfo;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelOrderResponse;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelOrderToPlatformResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneOrderOfChinaResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketOfChinaCommitPlatformResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainOrderFromPlatformResponse;
@@ -37,6 +41,8 @@ import com.just.sun.pricecalendar.ToastCommon;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Locale;
 
 public class SelectPaymentActivity extends BaseActivity implements View.OnClickListener {
@@ -55,7 +61,7 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
 
     private int type; // 11:热门活动支付；21:酒店支付； 16:租车订单； 14/18(订单页面中跳过来)：火车票订单； 15/19(订单页面进入)/23(详情页面进入)：国内飞机票订单； 17/20(订单页面进入)：国际飞机票； 22：签证
     private ActivityOrderInfo hotInfo; //热门活动订单
-    private HotelOrderInfo hotelInfo; //酒店订单
+    private HotelOrderResponse hotelInfo; //酒店订单
     private TrainTicketOrderInfo trainInfo; //火车票订单
     private PlaneOrderOfChinaResponse planeOfChinaInfo; //飞机票订单
 
@@ -107,6 +113,8 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
                             setTrainOrder(ordersn);
                         } else if (type == 15 || type == 19){ //国内飞机票
                             setPlaneTicketToPlatForm();
+                        } else if (type == 21){ //酒店支付
+                            setHotelOrderToPlatform();
                         }
                         else {
                             setResult(RESULT_OK);
@@ -159,6 +167,7 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             type = bundle.getInt("type");
+            LogUtil.e(TAG, "type = " + type);
             if (type == 11){
                 hotInfo = (ActivityOrderInfo) bundle.getSerializable("order");
                 if (hotInfo != null){
@@ -166,9 +175,9 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
                     orderPrice = hotInfo.getPrice();
                 }
             }else if (type == 21){ //酒店
-                hotelInfo = (HotelOrderInfo) bundle.getSerializable("order");
+                hotelInfo = (HotelOrderResponse) bundle.getSerializable("order");
                 if (hotelInfo != null){
-                    ordersn = hotelInfo.getOrdersn();
+                    ordersn = hotelInfo.getOrder();
                     orderPrice = hotelInfo.getPrice();
                 }
             }else if (type == 14){ //火车票
@@ -268,10 +277,41 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
             biz.getPlaneOfChinaPayInfo(MainActivity.user.getUserId(), ordersn);
         } else if (type == 17 || type == 20){ //国际机票支付
             biz.getPlaneInternationalPayInfo(MainActivity.user.getUserId(), ordersn);
-        } else {
+        } else if (type == 21){ //酒店支付
+            biz.getHotelPayInfo(MainActivity.user.getUserId(), ordersn);
+        }
+        else {
             biz.getPayInfo(ordersn);
         }
     }
+
+    /**
+     * 酒店下订单到第三方平台
+     */
+    private void setHotelOrderToPlatform() {
+        LoadingIndicator.show(SelectPaymentActivity.this, getString(R.string.http_notice));
+        HotelActionBiz biz = new HotelActionBiz();
+        PlaneTicketOfChinaCancelOrderRequest fetch = new PlaneTicketOfChinaCancelOrderRequest(ordersn, MainActivity.user.getUserId());
+        biz.setHotelOrderToPlatform(fetch, new BizGenericCallback<HotelOrderToPlatformResponse>() {
+            @Override
+            public void onCompletion(GenericResponseModel<HotelOrderToPlatformResponse> model) {
+                LogUtil.e(TAG, "setHotelOrderToPlatform: " + model.headModel);
+                ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                LogUtil.e(TAG, "setHotelOrderToPlatform: " + error);
+                if (error.localReason != null){
+                    ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason + ", 请联系翠微客服");
+                }else{
+                    ToastCommon.toastShortShow(getApplicationContext(), null, "下单到购票平台出错，请联系翠微客服");
+                }
+                LoadingIndicator.cancel();
+            }
+        });
+    }
+
     /**
      * 国内机票，下单到第三方平台
      */

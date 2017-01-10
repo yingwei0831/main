@@ -510,13 +510,14 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragment.E
 					JSONObject msg = message.getJSONObjectAttribute("weichat");
 					JSONObject agent = msg.getJSONObject("agent");
 					urlYou = agent.getString("avatar");
-					nickNameYou = agent.getString("userNickname");
+					nickNameYou = agent.getString("callback_user"); //userNickname  callback_user
 
 					Message messageUrl = new Message();
 					messageUrl.obj = "http://kefu.easemob.com/ossimages" + urlYou;
 					handler.sendMessage(messageUrl);
 
 					LogUtil.e(TAG, "receive = " + msg);
+					LogUtil.e(TAG, "nickNameYou = " + nickNameYou + ", urlYou = " + urlYou);
 					titleBar.setTitle(nickNameYou);
 
 				} catch (EaseMobException e) {

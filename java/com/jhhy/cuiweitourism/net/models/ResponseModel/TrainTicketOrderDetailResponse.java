@@ -213,7 +213,9 @@ public class TrainTicketOrderDetailResponse {
          * ToTime : 06:31
          * SeatType : 硬座
          * TrainType :
-         * Passengers : {"Passenger":[{"IsBX":"0","InsPrice":"0","InsCount":"0","PsgName":"李玉生","CardType":"2","CardNo":"211382198908302912","TicketType":"0","TicketPrice":"1.00","SeatType":"8","PsgNo":"1","PsgStatus":"T","RefundAmount":"0.00","TrainBox":"02","SeatNo":"001号"}]}
+         * Passenger : [
+         * {"IsBX":"0","InsPrice":"0","InsCount":"0","PsgName":"李玉生","CardType":"2","CardNo":"211382198908302912","TicketType":"0","TicketPrice":"1.00","SeatType":"8","PsgNo":"1","PsgStatus":"T","RefundAmount":"0.00","TrainBox":"02","SeatNo":"001号"}
+         * ]
          */
 
         private String FromStation;
@@ -225,7 +227,7 @@ public class TrainTicketOrderDetailResponse {
         private String ToTime;
         private String SeatType;
         private String TrainType;
-        private PassengersBean Passengers;
+        private List<PassengerBean> Passenger;
 
         public String getFromStation() {
             return FromStation;
@@ -299,12 +301,12 @@ public class TrainTicketOrderDetailResponse {
             this.TrainType = TrainType;
         }
 
-        public PassengersBean getPassengers() {
-            return Passengers;
+        public List<PassengerBean> getPassengers() {
+            return Passenger;
         }
 
-        public void setPassengers(PassengersBean Passengers) {
-            this.Passengers = Passengers;
+        public void setPassengers(List<PassengerBean> Passengers) {
+            this.Passenger = Passengers;
         }
 
         @Override
@@ -319,26 +321,7 @@ public class TrainTicketOrderDetailResponse {
                     ", ToTime='" + ToTime + '\'' +
                     ", SeatType='" + SeatType + '\'' +
                     ", TrainType='" + TrainType + '\'' +
-                    ", Passengers=" + Passengers +
-                    '}';
-        }
-    }
-
-    public static class PassengersBean {
-        private List<PassengerBean> Passenger;
-
-        public List<PassengerBean> getPassenger() {
-            return Passenger;
-        }
-
-        public void setPassenger(List<PassengerBean> Passenger) {
-            this.Passenger = Passenger;
-        }
-
-        @Override
-        public String toString() {
-            return "PassengersBean{" +
-                    "Passenger=" + Passenger +
+                    ", Passengers=" + Passenger +
                     '}';
         }
     }

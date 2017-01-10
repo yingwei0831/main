@@ -392,8 +392,8 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
         if (popScreen.isShowing()){
             popScreen.dismiss();
         }else{
-            popScreen.refreshView(direct, screenTimePosition, screenAirportPosition, screenAirlinePosition, screenAirCompanyPosition);
             popScreen.showAtLocation(rbScreen, Gravity.BOTTOM, 0, 0);
+            popScreen.refreshView(direct, screenTimePosition, screenAirportPosition, screenAirlinePosition, screenAirCompanyPosition);
         }
 
     }
@@ -451,10 +451,15 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
                 boolean commit = popScreen.isCommit();
                 if (commit) {
                     direct = popScreen.isDirect();
+                    LogUtil.e(TAG, "direct = " + direct); //仅看直飞
                     int newScreenTimePosition = popScreen.getS1();
                     int newScreenAirportPosition = popScreen.getS2();
                     int newScreenAirlinePosition = popScreen.getS3();
                     int newScreenAirCompanyPosition = popScreen.getS4();
+                    LogUtil.e(TAG, "newScreenTimePosition = " + newScreenTimePosition);
+                    LogUtil.e(TAG, "newScreenAirportPosition = " + newScreenAirportPosition);
+                    LogUtil.e(TAG, "newScreenAirlinePosition = " + newScreenAirlinePosition);
+                    LogUtil.e(TAG, "newScreenAirCompanyPosition = " + newScreenAirCompanyPosition);
                     if (newScreenTimePosition != screenTimePosition) {
                         screenTimePosition = newScreenTimePosition;
                     }
@@ -484,7 +489,7 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
                     }
                 }
             }
-            LogUtil.e(TAG, "direct = " + direct + "codeAirport = " + codeAirport + ", codeAirline = " + codeAirline + ", codeAirCompany = " + codeAirCompany);
+            LogUtil.e(TAG, "direct = " + direct + ", codeAirport = " + codeAirport + ", codeAirline = " + codeAirline + ", codeAirCompany = " + codeAirCompany +"。");
             //筛选
             listData = sortScreen();
             //排序
@@ -526,15 +531,17 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
     //筛选5个条件
     private List<PlaneTicketInternationalInfo.PlaneTicketInternationalF> sortScreen() {
         List<PlaneTicketInternationalInfo.PlaneTicketInternationalF> listDirect = new ArrayList<>();
-        for (int i = 0; i < list.size(); i ++){
-            PlaneTicketInternationalInfo.PlaneTicketInternationalF item = list.get(i);
-            //直飞，中转
-            if (direct && "0".equals(item.S1.transferFrequency)) { //直飞
-                listDirect.add(item);
-            } else { //中转
-                listDirect.add(item);
+        if (direct){ //看直飞
+            for (int i = 0; i < list.size(); i ++){
+                PlaneTicketInternationalInfo.PlaneTicketInternationalF item = list.get(i);
+                if ("0".equals(item.S1.transferFrequency)) { //直飞
+                    listDirect.add(item);
+                }
             }
+        }else{ //全部
+            listDirect.addAll(list);
         }
+
         //出发时间
         listDirect = screenTime(listDirect);
         //机场

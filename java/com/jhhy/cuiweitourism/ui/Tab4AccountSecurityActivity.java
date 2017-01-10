@@ -122,13 +122,13 @@ public class Tab4AccountSecurityActivity extends BaseActivity implements View.On
     }
 
     private void logOut() {
+        SharedPreferencesUtils sp = SharedPreferencesUtils.getInstance(getApplicationContext());
+        sp.savePassword(null);
         Bundle bundle = new Bundle();
         bundle.putInt("logout", 1);
         Intent intent = new Intent();
         intent.putExtras(bundle);
         setResult(RESULT_OK, intent);
-        SharedPreferencesUtils sp = SharedPreferencesUtils.getInstance(getApplicationContext());
-        sp.savePassword(null);
         finish();
     }
 }

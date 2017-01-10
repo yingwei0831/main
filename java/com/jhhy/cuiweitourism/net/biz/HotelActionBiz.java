@@ -15,10 +15,12 @@ import com.jhhy.cuiweitourism.net.models.FetchModel.HotelOrderFetch;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelOrderRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelPriceCheckRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelScreenBrandRequest;
+import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketOfChinaCancelOrderRequest;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelDetailResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelOrderCancelResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelOrderDetailResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelOrderResponse;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelOrderToPlatformResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelPositionLocationResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelListResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelPriceCheckResponse;
@@ -262,10 +264,10 @@ public class HotelActionBiz extends  BasicActionBiz {
     }
 
     /**
-     * 酒店下订单
+     * 酒店下单到翠微平台
      */
-    public void setHotelOrder(HotelOrderRequest request, BizGenericCallback<HotelOrderResponse> callback){
-        request.code = "Hotel_order";
+    public void setHotelOrderToCuiwei(HotelOrderRequest fetch, BizGenericCallback<HotelOrderResponse> callback){
+        fetch.code = "Hotel_cuiweiorder";
         FetchGenericResponse<HotelOrderResponse> fetchResponse = new FetchGenericResponse<HotelOrderResponse>(callback) {
             @Override
             public void onCompletion(FetchResponseModel response) {
@@ -279,7 +281,45 @@ public class HotelActionBiz extends  BasicActionBiz {
                 this.bizCallback.onError(error);
             }
         };
-        HttpUtils.executeXutils(request, new FetchGenericCallback<>(fetchResponse));
+        HttpUtils.executeXutils(fetch, new FetchGenericCallback<>(fetchResponse));
+    }
+
+    /**
+     * 酒店支付
+     */
+    public void hotelOrderPay(PlaneTicketOfChinaCancelOrderRequest fetch, BizGenericCallback<Object> callback){
+        fetch.code = "Hotel_pay";
+        FetchGenericResponse<Object> fetchResponse = new FetchGenericResponse<Object>(callback) {
+            @Override
+            public void onCompletion(FetchResponseModel response) {
+                this.bizCallback.onCompletion(new GenericResponseModel<Object>(response.head, response.body)); //parseJsonToObject(response, String.class)
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                this.bizCallback.onError(error);
+            }
+        };
+        HttpUtils.executeXutils(fetch, new FetchGenericCallback<>(fetchResponse));
+    }
+
+    /**
+     * 酒店下订单到第三方平台(支付后调用)
+     */
+    public void setHotelOrderToPlatform(PlaneTicketOfChinaCancelOrderRequest fetch, BizGenericCallback<HotelOrderToPlatformResponse> callback){
+        fetch.code = "Hotel_order";
+        FetchGenericResponse<HotelOrderToPlatformResponse> fetchResponse = new FetchGenericResponse<HotelOrderToPlatformResponse>(callback) {
+            @Override
+            public void onCompletion(FetchResponseModel response) {
+                this.bizCallback.onCompletion(new GenericResponseModel<>(response.head, parseJsonToObject(response, HotelOrderToPlatformResponse.class)));
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                this.bizCallback.onError(error);
+            }
+        };
+        HttpUtils.executeXutils(fetch, new FetchGenericCallback<>(fetchResponse));
     }
 
     /**
@@ -325,6 +365,27 @@ public class HotelActionBiz extends  BasicActionBiz {
     }
 
     /**
+     *  获取酒店详情
+     */
+    public void getHotelDetailInfo(HotelDetailRequest request, BizGenericCallback<HotelDetailResponse> callback){
+        request.code = "Hotel_roominfo";
+        final FetchGenericResponse<HotelDetailResponse> fetchResponse = new FetchGenericResponse<HotelDetailResponse>(callback) {
+            @Override
+            public void onCompletion(FetchResponseModel response) {
+                HotelDetailResponse info = parseJsonToObject(response, HotelDetailResponse.class);
+                GenericResponseModel<HotelDetailResponse> returnModel = new GenericResponseModel<>(response.head,info);
+                this.bizCallback.onCompletion(returnModel);
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                this.bizCallback.onError(error);
+            }
+        };
+        HttpUtils.executeXutils(request, new FetchGenericCallback<>(fetchResponse));
+    }
+
+    /**
      *  获取酒店属性列表
      */
     public void hotelGetPropertiesList(BizGenericCallback<ArrayList<HoutelPropertiesInfo>> callback){
@@ -347,7 +408,6 @@ public class HotelActionBiz extends  BasicActionBiz {
 
         HttpUtils.executeXutils(fetchModel,new FetchGenericCallback<>(fetchResponse));
     }
-
 
     /**
      *  获取酒店列表 废弃
@@ -373,34 +433,9 @@ public class HotelActionBiz extends  BasicActionBiz {
         HttpUtils.executeXutils(request,new FetchGenericCallback<>(fetchResponse));
     }
 
-
     /**
-     *  获取酒店详情
+     *  提交酒店订单(废)
      */
-    public void getHotelDetailInfo(HotelDetailRequest request, BizGenericCallback<HotelDetailResponse> callback){
-        request.code = "Hotel_roominfo";
-
-        final FetchGenericResponse<HotelDetailResponse> fetchResponse = new FetchGenericResponse<HotelDetailResponse>(callback) {
-            @Override
-            public void onCompletion(FetchResponseModel response) {
-                HotelDetailResponse info = parseJsonToObject(response, HotelDetailResponse.class);
-                GenericResponseModel<HotelDetailResponse> returnModel = new GenericResponseModel<>(response.head,info);
-                this.bizCallback.onCompletion(returnModel);
-            }
-
-            @Override
-            public void onError(FetchError error) {
-                this.bizCallback.onError(error);
-            }
-        };
-
-        HttpUtils.executeXutils(request, new FetchGenericCallback<>(fetchResponse));
-    }
-
-    /**
-     *  提交酒店订单
-     */
-
     public void HotelSubmitOrder(HotelOrderFetch fetch, BizGenericCallback<HotelOrderInfo> callback){
         fetch.code = "Order_hotelorder";
         final FetchGenericResponse fetchResponse = new FetchGenericResponse<HotelOrderInfo>(callback) {

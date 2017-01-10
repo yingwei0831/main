@@ -24,6 +24,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 
@@ -385,7 +386,9 @@ public class KCalendar extends ViewFlipper implements
                                     //  txtvPrice.setText("");
                                     //} else
 //                                    if (Integer.parseInt(thisMonths.get(d).getStock()) > 0) { //因为没有人数限制
-                                        txtvPrice.setText("￥" + thisMonths.get(d).getSell_price_adult());
+                                    if (thisMonths.get(d).getSell_price_adult() != null && !"null".equals(thisMonths.get(d).getSell_price_adult())) {
+                                        txtvPrice.setText(String.format(Locale.getDefault(), "￥%s", thisMonths.get(d).getSell_price_adult()));
+                                    }
 //                                    } else {
 //                                        txtvPrice.setText("售罄");
 //                                    }

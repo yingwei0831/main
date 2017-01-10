@@ -1,16 +1,20 @@
 package com.jhhy.cuiweitourism.net.models.ResponseModel;
 
+import java.io.Serializable;
+
 /**
  * Created by jiahe008 on 2017/1/3.
  */
-public class HotelOrderResponse {
+public class HotelOrderResponse implements Serializable{
 //    酒店取消订单
 //    <ErrorCode>0</ErrorCode>
 //    <!--0 成功，否则均失败-->
 //    <ErrorMsg>错误</ErrorMsg>
 //    <!--取消失败的失败原因-->
 
-//    酒店下订单
+//    酒店下订单 modify
+//{"head":{"res_code":"0000","res_msg":"success","res_arg":"下单成功"},"body":{"order":"02202946312540","price":"5268.00"}}
+
 //    {"head":{"res_code":"0000","res_msg":"success","res_arg":"获取成功"},
 //     "body":{
 //          "ErrorCode":"0",
@@ -38,6 +42,9 @@ public class HotelOrderResponse {
 
     private String ErrorCode;
     private String ErrorMsg;
+
+    private String order;
+    private String price;
 
     private String OrderNo;
     private String PlatOrderNo;
@@ -128,11 +135,29 @@ public class HotelOrderResponse {
         PaymentDeadlineTime = paymentDeadlineTime;
     }
 
+    public String getOrder() {
+        return order;
+    }
+
+    public void setOrder(String order) {
+        this.order = order;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
     @Override
     public String toString() {
         return "HotelOrderResponse{" +
                 "ErrorCode='" + ErrorCode + '\'' +
                 ", ErrorMsg='" + ErrorMsg + '\'' +
+                ", order='" + order + '\'' +
+                ", price='" + price + '\'' +
                 ", OrderNo='" + OrderNo + '\'' +
                 ", PlatOrderNo='" + PlatOrderNo + '\'' +
                 ", CancelTime='" + CancelTime + '\'' +

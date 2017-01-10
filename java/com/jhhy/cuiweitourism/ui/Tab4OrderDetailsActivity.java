@@ -340,7 +340,7 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
         biz.trainTicketOrderQuery(fetch, new BizGenericCallback<TrainTicketOrderDetailResponse>() {
             @Override
             public void onCompletion(GenericResponseModel<TrainTicketOrderDetailResponse> model) {
-                LogUtil.e(TAG, "trainTicketOrderQuery: " + model);
+                LogUtil.e(TAG, "trainTicketOrderQuery: " + model.body);
                 trainOrderDetail = model.body;
                 refreshTrainView(trainOrderDetail);
                 LoadingIndicator.cancel();
@@ -561,7 +561,7 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
         TrainTicketActionBiz biz = new TrainTicketActionBiz();
         TrainOrderRefundRequest request = new TrainOrderRefundRequest(trainOrderDetail.getOrderNo(), trainOrderDetail.getPlatOrderNo(), "part", "");
         List<TrainOrderRefundRequest.TuipiaorenBean> listPassenger = new ArrayList<>();
-        TrainTicketOrderDetailResponse.PassengerBean passenger = trainOrderDetail.getTicketInfo().getPassengers().getPassenger().get(position);
+        TrainTicketOrderDetailResponse.PassengerBean passenger = trainOrderDetail.getTicketInfo().getPassengers().get(position);
         listPassenger.add(new TrainOrderRefundRequest.TuipiaorenBean("1", passenger.getPsgName(), "2", passenger.getCardNo()));
         request.setTuipiaoren(listPassenger);
         biz.trainTicketCancel(request, new BizGenericCallback<Object>() {
@@ -616,6 +616,7 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
             TextView tvMobile = (TextView) rootView.findViewById(R.id.tv_order_traveler_mobile);
             TextView tvMobileTitle = (TextView) rootView.findViewById(R.id.tv_traveler_phone_title);
             TextView tvID = (TextView) rootView.findViewById(R.id.tv_order_traveler_id);
+
             tvNameTitle.setText("乘客姓名：");
             tvName.setText(passenger.getName());
 //            tvMobileTitle.setVisibility(View.GONE);
@@ -628,6 +629,11 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
                     String.format(Locale.getDefault(), "%s:%s", flights.get(0).getArrTime().substring(0, 2), flights.get(0).getArrTime().substring(2, 4)),
                     flights.get(0).getFlightNo())); //12月19日 12:30-15:50 的联航 KN5605 北京南苑机场-兰州中川机场经停庆阳机场已出票
             tvID.setText(passenger.getIdentityNo());
+            if (1 == planeTicketOfChinaType) {
+                TextView tvTicketNO = (TextView) rootView.findViewById(R.id.tv_plane_ticket_no);
+                tvTicketNO.setVisibility(View.VISIBLE);
+                tvTicketNO.setText(String.format(Locale.getDefault(), "票号：%s", planeTicketOrderDetailOfChina.getReturnX().getPolicyOrder().getPassengerList().get(0).getTicketNo())); //已出票
+            }
             layoutTravelers.addView(rootView);
         }
         //发票
@@ -652,7 +658,7 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
             btnAction.setVisibility(View.GONE);
         }
 
-        int people = body.getTicketInfo().getPassengers().getPassenger().size();
+        int people = body.getTicketInfo().getPassengers().size();
         tvOrderCount.setText(String.format(Locale.getDefault(), "%d人", people));
         tvOrderCountTitle.setText("乘车人数：");
         tvPrice.setText(body.getTktSumPrice());
@@ -662,10 +668,11 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
         layoutContact.setVisibility(View.GONE);
         //乘客信息
         tvTravelTitle.setText("乘客信息");
-        List<TrainTicketOrderDetailResponse.PassengerBean> passengers = body.getTicketInfo().getPassengers().getPassenger();
+        List<TrainTicketOrderDetailResponse.PassengerBean> passengers = body.getTicketInfo().getPassengers();
         if (passengers != null && passengers.size() != 0) {
             for (int i = 0; i < people; i++) {
                 TrainTicketOrderDetailResponse.PassengerBean passenger = passengers.get(i);
+                LogUtil.e(TAG, "passenger: " + passenger);
                 mList.add(new TypeBean(i, passenger.getPsgName()));
                 View rootView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.traveler_info, null);
                 TextView tvName = (TextView) rootView.findViewById(R.id.tv_order_traveler_name);
@@ -704,7 +711,7 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
         tvOrderSN.setText(body.getPlatOrderNo());
         tvOrderTime.setText(body.getCreationDate());
 
-        int people = body.getCustomers().getCustomer().size();
+        int people = body.getCustomer().size();
         tvOrderCount.setText(String.format(Locale.getDefault(), "%d人", people));
         tvOrderCountTitle.setText("入住人数：");
         tvPrice.setText(body.getTotalPrice());
@@ -729,7 +736,7 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
         tvOrderLinkName.setText(body.getContact().getName());
         tvOrderLinkMobile.setText(body.getContact().getMobile());
         //入住人
-        List<HotelOrderDetailResponse.CustomerBean> travelers = body.getCustomers().getCustomer();
+        List<HotelOrderDetailResponse.CustomerBean> travelers = body.getCustomer();
         if (travelers != null && travelers.size() != 0) {
             for (int i = 0; i < people; i++) {
                 TravelerInfoClass traveler = new TravelerInfoClass(getApplicationContext());

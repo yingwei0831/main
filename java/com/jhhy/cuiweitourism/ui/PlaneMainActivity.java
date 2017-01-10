@@ -195,7 +195,7 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
 
     //搜索
     private void search() {
-        if (typeSearchFrom == 1 && typeSearchTo == 1) { //国内机票,返程则查询两次
+        if ("D".equals(fromCity.getIsdomc()) && "D".equals(toCity.getIsdomc())) { //国内机票,返程则查询两次
             Intent intent = new Intent(getApplicationContext(), PlaneListActivity.class);
             Bundle bundle = new Bundle();
             bundle.putSerializable("fromCity", fromCity);
@@ -326,8 +326,8 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
                     setFromCity(city);
                     return;
                 }
-                typeSearchFrom = bundle.getInt("typeSearch");
-                LogUtil.e(TAG, "selectCity = " + city +", typeSearchFrom = " + typeSearchFrom);
+//                typeSearchFrom = bundle.getInt("typeSearch");
+//                LogUtil.e(TAG, "selectCity = " + city +", typeSearchFrom = " + typeSearchFrom);
                 fromCity = city;
                 tvFromCity.setText(city.getName());
             }
@@ -339,8 +339,8 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
                     setArrivalCity(city);
                     return;
                 }
-                typeSearchTo = bundle.getInt("typeSearch");
-                LogUtil.e(TAG, "selectCity = " + city +", typeSearchTo = " + typeSearchTo);
+//                typeSearchTo = bundle.getInt("typeSearch");
+//                LogUtil.e(TAG, "selectCity = " + city +", typeSearchTo = " + typeSearchTo);
                 toCity = city;
                 tvToCity.setText(city.getName());
             }
@@ -475,8 +475,8 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
     }
 
     private int type = 1; //1：单程 2：往返 3：询价
-    private int typeSearchFrom = 1; //1:国内，2：国外
-    private int typeSearchTo = 1; //1:国内，2：国外
+//    private int typeSearchFrom = 1; //1:国内，2：国外
+//    private int typeSearchTo = 1; //1:国内，2：国外
     private String traveltype = "OW"; //航程类型 OW（单程） RT（往返）
     private boolean inner;
     private boolean outer;

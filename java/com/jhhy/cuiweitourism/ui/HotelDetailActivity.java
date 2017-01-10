@@ -270,6 +270,7 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
         layoutAddress.setOnClickListener(this);
         layoutOpening.setOnClickListener(this);
         tvScreenRoom.setOnClickListener(this);
+        tvHotelImgs.setOnClickListener(this);
     }
 
     @Override
@@ -282,6 +283,9 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
                 }else{
                     ToastUtil.show(getApplicationContext(), "商家未提供联系方式");
                 }
+                break;
+            case R.id.tv_hotel_imgs: //TODO 酒店图片
+
                 break;
 //            case R.id.iv_collection_hotel: //收藏
 //                LoadingIndicator.show(HotelDetailActivity.this, getString(R.string.http_notice));
@@ -375,7 +379,7 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
             hotelBiz.getHotelPriceCheck(request, new BizGenericCallback<HotelPriceCheckResponse>() {
                 @Override
                 public void onCompletion(GenericResponseModel<HotelPriceCheckResponse> model) {
-                    LogUtil.e(TAG, "getHotelPriceCheck: "+model);
+                    LogUtil.e(TAG, "getHotelPriceCheck: "+model.body);
                     LoadingIndicator.cancel();
                     if ("0001".equals(model.headModel.res_code)){
                         ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);

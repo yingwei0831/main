@@ -62,6 +62,7 @@ public class HotelEditOrderActivity extends BaseActionBarActivity implements Pop
     private View parent;
 
     private TextView tvHotelName;
+    private TextView tvHotelPrepayRules; //酒店预付规则
     private TextView tvRoomType;
     private TextView tvCheckInDate;
     private TextView tvCheckOutInfo;
@@ -127,6 +128,11 @@ public class HotelEditOrderActivity extends BaseActionBarActivity implements Pop
             ivTitleRight.setImageResource(R.mipmap.icon_telephone_hollow);
             ivTitleRight.setVisibility(View.VISIBLE);
         }
+        tvHotelPrepayRules = (TextView) findViewById(R.id.tv_hotel_prepay_rules);
+        if (hotelProduct.getPrepayRule() != null && hotelProduct.getPrepayRule().size() != 0) {
+            tvHotelPrepayRules.setText(hotelProduct.getPrepayRule().get(0).getDescription());
+        }
+//        tvTitleRight.setVisibility(View.VISIBLE); //预付规则
 
         tvHotelName = (TextView) findViewById(R.id.tv_hotel_name);
         tvRoomType = (TextView) findViewById(R.id.tv_room_type);
@@ -177,6 +183,9 @@ public class HotelEditOrderActivity extends BaseActionBarActivity implements Pop
     public void onClick(View view) {
         super.onClick(view);
         switch (view.getId()){
+//            case R.id.tv_hotel_reserve_rules: //退订规则
+//
+//                break;
             case R.id.btn_edit_order_pay:
                 gotoPay();
                 break;
@@ -263,17 +272,14 @@ public class HotelEditOrderActivity extends BaseActionBarActivity implements Pop
                 hotelProduct.getPlanType(), "2", "0", hotelProduct.getRoomImgUrl());
 
         request.setRooms(rooms);
-        hotelBiz.setHotelOrder(request, new BizGenericCallback<HotelOrderResponse>() {
+        hotelBiz.setHotelOrderToCuiwei(request, new BizGenericCallback<HotelOrderResponse>() {
             @Override
             public void onCompletion(GenericResponseModel<HotelOrderResponse> model) {
-                if ("0001".equals(model.headModel.res_code)){
-                    ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);
-                }else if ("0000".equals(model.headModel.res_code)){
+                if ("0000".equals(model.headModel.res_code)){
                     HotelOrderResponse orderResponse = model.body;
                     ToastCommon.toastShortShow(getApplicationContext(), null, "提交订单成功");
                     LogUtil.e(TAG,"setHotelOrder =" + orderResponse.toString());
-                    setResult(RESULT_OK);
-                    finish();
+                    hotelOrderPay(orderResponse);
                 }
                 LoadingIndicator.cancel();
             }
@@ -289,6 +295,18 @@ public class HotelEditOrderActivity extends BaseActionBarActivity implements Pop
                 LoadingIndicator.cancel();
             }
         });
+    }
+
+    /**
+     * 酒店订单支付
+     */
+    private void hotelOrderPay(HotelOrderResponse order) {
+        Intent intent = new Intent(getApplicationContext(), SelectPaymentActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("order", order);
+        bundle.putInt("type", 21);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, REQUEST_PAY_HOTEL_ORDER);
     }
 
     private int REQUEST_PAY_HOTEL_ORDER = 6593; //酒店订单支付
