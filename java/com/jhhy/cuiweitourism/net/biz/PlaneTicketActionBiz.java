@@ -629,8 +629,7 @@ public class PlaneTicketActionBiz extends BasicActionBiz {
     /**
      * 国际机票订单详情
      */
-    public void planeTicketInternationalOrderDetail(PlaneInternationalOrderDetailRequest fetch){
-        fetch.code = "Plane_gjinfo";
-        
-    }
+//    public void planeTicketInternationalOrderDetail(PlaneInternationalOrderDetailRequest fetch, ){
+//        fetch.code = "Plane_gjinfo";
+//    }
 }

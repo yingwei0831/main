@@ -165,10 +165,10 @@ public class Tab4AllOrdersActivity extends BaseActivity implements View.OnClickL
         popOrderType.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
-                LogUtil.e(TAG, "------------------onDismiss--------------");
+//                LogUtil.e(TAG, "------------------onDismiss--------------");
                 tvTitle.setCompoundDrawables(null, null, drawableRightDown, null);
                 int newSelection = popOrderType.getCheckButton();
-                LogUtil.e(TAG, "------ selection after = " + newSelection + "-----------");
+                LogUtil.e(TAG, "selection: " + selection + "------ after = " + newSelection + "-------");
                 if (selection == newSelection){
 
                 }else{
@@ -208,6 +208,7 @@ public class Tab4AllOrdersActivity extends BaseActivity implements View.OnClickL
                             tvTitle.setText(typeTitles[7]);
                             break;
                     }
+                    LogUtil.e(TAG, "selection = " + selection +", type = " + type);
                     f1.getData(type);
                     f2.getData(type);
                     f3.getData(type);

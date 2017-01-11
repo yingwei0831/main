@@ -94,23 +94,24 @@ public class PlaneItemInfoInternationalActivity2 extends BaseActionBarActivity {
             tvSeatNo.setVisibility(View.GONE);
         }else{
             tvSeatNo.setVisibility(View.VISIBLE);
-            tvSeatNo.setText(String.format(Locale.getDefault(), "%s张", cabin.passengerType.cabinCount)); //8张
+            tvSeatNo.setText(String.format(Locale.getDefault(), " (%s张)", cabin.passengerType.cabinCount)); //8张
         }
 
-        String[] cabinTypes = cabin.passengerType.airportCabinType.split("/");
-        String[] cabinTypeS1 = cabinTypes[0].split(","); //单程
-        StringBuffer sb = new StringBuffer();
-        for (String cabinType1 : cabinTypeS1) {
-            sb.append(" ").append(PlaneListInternationalActivity.info.R.get(cabinType1)).append(" |");
-        }
-        if ("RT".equals(traveltype)){
-            String[] cabinTypeS2 = cabinTypes[1].split(","); //返程
-            for (String cabinType1 : cabinTypeS2) {
-                sb.append(" ").append(PlaneListInternationalActivity.info.R.get(cabinType1)).append(" |");
-            }
-        }
-        String cabinType =  sb.toString().substring(1, sb.length()-2);
-        tvSeat.setText(cabinType); //经济舱
+//        String[] cabinTypes = cabin.passengerType.airportCabinType.split("/");
+//        String[] cabinTypeS1 = cabinTypes[0].split(","); //单程
+//        StringBuffer sb = new StringBuffer();
+//        for (String cabinType1 : cabinTypeS1) {
+//            sb.append(" ").append(PlaneListInternationalActivity.info.R.get(cabinType1)).append(" |");
+//        }
+//        if ("RT".equals(traveltype)){
+//            String[] cabinTypeS2 = cabinTypes[1].split(","); //返程
+//            for (String cabinType1 : cabinTypeS2) {
+//                sb.append(" ").append(PlaneListInternationalActivity.info.R.get(cabinType1)).append(" |");
+//            }
+//        }
+//        String cabinType =  sb.toString().substring(1, sb.length()-2);
+//        tvSeat.setText(cabinType); //经济舱
+        tvSeat.setText("机票");
 
         listViewS1 = (MyListView) findViewById(R.id.list_plane_detail_s1);
         listS1.addAll(flight.S1.flightInfos);
@@ -173,11 +174,26 @@ public class PlaneItemInfoInternationalActivity2 extends BaseActionBarActivity {
         List<List<PlaneTicketInternationalPolicyCheckRequest.IFlight>>  interFlights = new ArrayList<>();
         List<PlaneTicketInternationalPolicyCheckRequest.IFlight> iFlightsSingle = new ArrayList<>(); //单程
         ArrayList<PlaneTicketInternationalInfo.FlightInfo> iFlightS1 = flight.S1.flightInfos;
+
+        String cabinCodes = cabin.passengerType.airportCabinCode;
+        LogUtil.e(TAG, "cabinCodes: " + cabinCodes);
+        String[] cabinCode = cabinCodes.split("/");
+        String[] cabinCodeS1 = cabinCode[0].split(",");
+        String[] cabinCodeS2 = new String[0];
+        if ("RT".equals(traveltype)){
+            cabinCodeS2 = cabinCode[1].split(",");
+        }
+
+        String cabinTypes = cabin.passengerType.airportCabinType;
+        LogUtil.e(TAG, "cabinTypes: " + cabinTypes);
+        String[] cabinType = cabinTypes.split("/");
+
+
         for (int i = 0; i < iFlightS1.size(); i++){
             PlaneTicketInternationalInfo.FlightInfo flightInfo = iFlightS1.get(i);
             PlaneTicketInternationalPolicyCheckRequest.IFlight iFlight = new PlaneTicketInternationalPolicyCheckRequest.IFlight(String.valueOf(i), "S1",
                     cabin.passengerType.mainCarrierCheck, flightInfo.toDateCheck, flightInfo.toTimeCheck, flightInfo.fromAirportCodeCheck, flightInfo.fromTerminal, flightInfo.airlineCompanyCheck,
-                    cabin.passengerType.airportCabinCode, cabin.passengerType.airportCabinType, flightInfo.fromDateCheck, flightInfo.fromTimeCheck,
+                    cabinCodeS1[i], cabinType[0], flightInfo.fromDateCheck, flightInfo.fromTimeCheck,
                     flightInfo.flightNumberCheck, flightInfo.toAirportCodeCheck, flightInfo.toTermianl);
             iFlightsSingle.add(iFlight);
         }
@@ -188,10 +204,10 @@ public class PlaneItemInfoInternationalActivity2 extends BaseActionBarActivity {
             ArrayList<PlaneTicketInternationalInfo.FlightInfo> iFlightS2 = flight.S2.flightInfos;
             for (int i = 0; i < iFlightS2.size(); i++) {
                 PlaneTicketInternationalInfo.FlightInfo flightInfo = iFlightS2.get(i);
-                LogUtil.e(TAG, flightInfo);
+//                LogUtil.e(TAG, flightInfo);
                 PlaneTicketInternationalPolicyCheckRequest.IFlight iFlight = new PlaneTicketInternationalPolicyCheckRequest.IFlight(String.valueOf(i), "S2",
                         cabin.passengerType.mainCarrierCheck, flightInfo.toDateCheck, flightInfo.toTimeCheck, flightInfo.fromAirportCodeCheck, flightInfo.fromTerminal, flightInfo.airlineCompanyCheck,
-                        cabin.passengerType.airportCabinCode, cabin.passengerType.airportCabinType, flightInfo.fromDateCheck, flightInfo.fromTimeCheck,
+                        cabinCodeS2[i], cabinType[1], flightInfo.fromDateCheck, flightInfo.fromTimeCheck,
                         flightInfo.flightNumberCheck, flightInfo.toAirportCodeCheck, flightInfo.toTermianl);
                 iFlightsMultiply.add(iFlight);
             }
@@ -236,7 +252,8 @@ public class PlaneItemInfoInternationalActivity2 extends BaseActionBarActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (RESULT_OK == resultCode){
             if (requestCode == EDIT_PLANE_ORDER){ //机票订单成功
-
+                setResult(RESULT_OK);
+                finish();
             }
         }
     }

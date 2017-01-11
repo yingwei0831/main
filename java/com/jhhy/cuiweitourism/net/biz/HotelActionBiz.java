@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelCityRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelDetailRequest;
+import com.jhhy.cuiweitourism.net.models.FetchModel.HotelImagesRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelListFetchRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelListRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelOrderCancelRequest;
@@ -14,9 +15,11 @@ import com.jhhy.cuiweitourism.net.models.FetchModel.HotelOrderDetailRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelOrderFetch;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelOrderRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelPriceCheckRequest;
+import com.jhhy.cuiweitourism.net.models.FetchModel.HotelProductPriceRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelScreenBrandRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketOfChinaCancelOrderRequest;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelDetailResponse;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelImagesResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelOrderCancelResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelOrderDetailResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelOrderResponse;
@@ -24,6 +27,7 @@ import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelOrderToPlatformRespo
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelPositionLocationResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelListResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelPriceCheckResponse;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelProductPriceResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelProvinceResponse;
 import com.jhhy.cuiweitourism.net.models.FetchModel.NullArrayFetchModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
@@ -243,6 +247,25 @@ public class HotelActionBiz extends  BasicActionBiz {
     }
 
     /**
+     * 酒店产品价格明细
+     */
+    public void getHotelProductPrice(HotelProductPriceRequest fetch, BizGenericCallback<HotelProductPriceResponse> callback){
+        fetch.code = "Hotel_roomprice";
+        FetchGenericResponse<HotelProductPriceResponse> fetchResponse = new FetchGenericResponse<HotelProductPriceResponse>(callback) {
+            @Override
+            public void onCompletion(FetchResponseModel response) {
+                this.bizCallback.onCompletion(new GenericResponseModel<HotelProductPriceResponse>(response.head, parseJsonToObject(response, HotelProductPriceResponse.class)));
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                this.bizCallback.onError(error);
+            }
+        };
+        HttpUtils.executeXutils(fetch, new FetchGenericCallback<>(fetchResponse));
+    }
+
+    /**
      *数据校验
      */
     public void getHotelPriceCheck(HotelPriceCheckRequest request, BizGenericCallback<HotelPriceCheckResponse> callback){
@@ -383,6 +406,25 @@ public class HotelActionBiz extends  BasicActionBiz {
             }
         };
         HttpUtils.executeXutils(request, new FetchGenericCallback<>(fetchResponse));
+    }
+
+    /**
+     * 查询酒店图片
+     */
+    public void getHotelImages(HotelImagesRequest fetch, BizGenericCallback<HotelImagesResponse> callback){
+        fetch.code = "Hotel_image";
+        FetchGenericResponse<HotelImagesResponse> fetchResponse = new FetchGenericResponse<HotelImagesResponse>(callback) {
+            @Override
+            public void onCompletion(FetchResponseModel response) {
+                this.bizCallback.onCompletion(new GenericResponseModel<HotelImagesResponse>(response.head, parseJsonToObject(response, HotelImagesResponse.class)));
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                this.bizCallback.onError(error);
+            }
+        };
+        HttpUtils.executeXutils(fetch, new FetchGenericCallback<>(fetchResponse));
     }
 
     /**

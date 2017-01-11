@@ -93,17 +93,6 @@ public abstract class OrderXListViewAdapter extends BaseAdapter implements IOrde
         }
 
         Order order = (Order) getItem(position);
-        if ("2".equals(order.getTypeId())){ //酒店，可以取消订单
-            holder.tvOrderStatus.setText(context.getString(R.string.fragment_mine_hotel_reserve)); //预订成功
-            holder.btnOrderCancelPayment.setVisibility(View.GONE); //取消退款
-            holder.btnOrderComment.setVisibility(View.GONE); //去评价
-            holder.btnOrderPayment.setVisibility(View.GONE); //签约付款
-            holder.btnOrderCancel.setVisibility(View.VISIBLE); //取消订单
-            holder.btnGoRefund.setVisibility(View.GONE); //退款
-            if (type == 0){
-                holder.btnOrderCancel.setVisibility(View.GONE); //取消订单:全部订单不给酒店做任何操作
-            }
-        }
 //        else if ("80".equals(order.getTypeId())){ //火车票：可以付款，可以取消订单；如果已经付款了，可以申请退款，否则没有申请退款；
 //            if (order.getSanfangorderno() == null || order.getSanfangorderno().length() == 0){ //未付款，则进行付款
 //                if (((order.getAddTime() != null && order.getAddTime().length() != 0 && !"null".equals(order.getAddTime())
@@ -149,7 +138,7 @@ public abstract class OrderXListViewAdapter extends BaseAdapter implements IOrde
 //            //正在退款——>取消退款
 //            //交易完成——>待评价、已评价
 //        }
-        else {
+//        else {
             if ("1".equals(order.getStatus())) { //等待付款——>取消订单，签约付款
                 holder.tvOrderStatus.setText(context.getString(R.string.fragment_mine_wait_pay));
                 holder.btnOrderCancelPayment.setVisibility(View.GONE); //取消退款
@@ -167,6 +156,10 @@ public abstract class OrderXListViewAdapter extends BaseAdapter implements IOrde
                     }else{ //等待取消—>取消订单
                         holder.tvOrderStatus.setText(context.getString(R.string.fragment_mine_wait_cancel));
                         holder.btnOrderPayment.setVisibility(View.GONE); //签约付款
+                    }
+                }else if ("2".equals(order.getTypeId())){ //酒店，可以取消订单，可以继续付款
+                    if (type == 0){
+                        holder.btnOrderCancel.setVisibility(View.GONE); //取消订单:全部订单不给酒店做任何操作
                     }
                 }
             } else if ("0".equals(order.getStatus())) { //正在退款——>取消退款
@@ -211,7 +204,7 @@ public abstract class OrderXListViewAdapter extends BaseAdapter implements IOrde
                 holder.btnOrderPayment.setVisibility(View.GONE); //签约付款
                 holder.btnOrderCancel.setVisibility(View.GONE);
             }
-        }
+//        }
         final View finalConvertView = view;
 
         //取消订单

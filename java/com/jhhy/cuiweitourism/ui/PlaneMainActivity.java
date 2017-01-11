@@ -137,10 +137,12 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
         fromCity.setName("北京");
         fromCity.setCode("PEK");
         fromCity.setAirportname("北京首都国际机场");
+        fromCity.setIsdomc("D");
         toCity = new PlaneTicketCityInfo();
         toCity.setName("大连");
         toCity.setCode("DLC");
         toCity.setAirportname("大连周水子国际机场");
+        toCity.setIsdomc("D");
     }
 
     @Override
@@ -195,6 +197,7 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
 
     //搜索
     private void search() {
+
         if ("D".equals(fromCity.getIsdomc()) && "D".equals(toCity.getIsdomc())) { //国内机票,返程则查询两次
             Intent intent = new Intent(getApplicationContext(), PlaneListActivity.class);
             Bundle bundle = new Bundle();

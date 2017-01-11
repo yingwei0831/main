@@ -11,6 +11,10 @@ public class PlaneInternationalOrderDetailRequest extends BasicFetchModel{
 
     private String ordersn;
 
+    public PlaneInternationalOrderDetailRequest(String ordersn) {
+        this.ordersn = ordersn;
+    }
+
     public String getOrdersn() {
         return ordersn;
     }

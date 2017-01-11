@@ -1,5 +1,8 @@
 package com.jhhy.cuiweitourism.net.models.ResponseModel;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.jhhy.cuiweitourism.net.models.FetchModel.BasicFetchModel;
 
 import java.util.List;
@@ -450,7 +453,8 @@ public class HotelDetailResponse {
                     '}';
         }
     }
-    public static class HotelImageBean {
+
+    public static class HotelImageBean implements Parcelable {
         /**
          * ImageID : 160774984
          * Url : http://pavo.elongstatic.com/i/Hotel120_120/nw_0005hGia.jpg
@@ -513,6 +517,42 @@ public class HotelDetailResponse {
 
         public void setWaterMark(String WaterMark) {
             this.WaterMark = WaterMark;
+        }
+
+        public static final Parcelable.Creator<HotelImageBean> CREATOR = new Creator<HotelImageBean>() {
+            @Override
+            public HotelImageBean createFromParcel(Parcel in) {
+                return new HotelImageBean(in);
+            }
+
+            @Override
+            public HotelImageBean[] newArray(int size) {
+                return new HotelImageBean[size];
+            }
+        };
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel out, int flag) {
+            out.writeString(ImageID);
+            out.writeString(IsCoverImage);
+            out.writeString(Size);
+            out.writeString(Type);
+            out.writeString(Url);
+            out.writeString(WaterMark);
+        }
+
+        private HotelImageBean(Parcel in){
+            ImageID = in.readString();
+            IsCoverImage = in.readString();
+            Size = in.readString();
+            Type = in.readString();
+            Url = in.readString();
+            WaterMark = in.readString();
         }
 
         @Override

@@ -25,7 +25,7 @@
                 android:background="@color/colorActionBar"
                 android:paddingTop="16dp"
                 android:divider="@color/colorActionBar"
-                android:dividerHeight="6dp"
+                android:dividerHeight="10dp"
                 android:paddingBottom="16dp"
                 />
             <com.jhhy.cuiweitourism.view.MyListView
@@ -33,9 +33,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/colorActionBar"
-                android:paddingTop="16dp"
+                android:paddingTop="20dp"
                 android:divider="@color/colorActionBar"
-                android:dividerHeight="6dp"
+                android:dividerHeight="10dp"
                 android:paddingBottom="16dp"
                 />
 

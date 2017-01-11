@@ -30,12 +30,16 @@ import com.jhhy.cuiweitourism.model.PhoneBean;
 import com.jhhy.cuiweitourism.model.User;
 import com.jhhy.cuiweitourism.net.biz.HotelActionBiz;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelDetailRequest;
+import com.jhhy.cuiweitourism.net.models.FetchModel.HotelImagesRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelPriceCheckRequest;
+import com.jhhy.cuiweitourism.net.models.FetchModel.HotelProductPriceRequest;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelDetailInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelDetailResponse;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelImagesResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelPriceCheckResponse;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelProductPriceResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelProvinceResponse;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.Consts;
@@ -56,7 +60,7 @@ import java.util.Locale;
 
 public class HotelDetailActivity extends BaseActionBarActivity implements AdapterView.OnItemClickListener {
 
-    private String TAG = HotelDetailActivity.class.getSimpleName();
+    private String TAG = "HotelDetailActivity";
     private String hotelID; //
     private int type;
     private HotelActionBiz hotelBiz;
@@ -72,7 +76,7 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
     private int mPosition; //列表中第几个Room的item
     public static HotelDetailResponse.HotelProductBean hotelProduct = null;
     private HotelDetailResponse.HotelProductBean roomItem; //选中的某个Room的某个Product
-    private HotelPriceCheckResponse priceCheck; //数据校验返回结果
+//    private HotelPriceCheckResponse priceCheck; //数据校验返回结果
 
 
     private ImageView ivCollection; //收藏
@@ -246,7 +250,7 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
         tvHotelName = (TextView) headerView.findViewById(R.id.tv_hotel_name);
         tvHotelLevel = (TextView) headerView.findViewById(R.id.tv_hotel_level);
         tvHotelImgs = (TextView) headerView.findViewById(R.id.tv_hotel_imgs);
-
+        LogUtil.e(TAG, "id = " + tvHotelImgs.getId());
         tvHotelAddress = (TextView) headerView.findViewById(R.id.tv_hotel_detail_address);
         tvOpening      = (TextView) headerView.findViewById(R.id.tv_hotel_detail_opening);
         layoutAddress = (RelativeLayout) headerView.findViewById(R.id.layout_hotel_address);
@@ -276,6 +280,7 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
     @Override
     public void onClick(View view) {
         super.onClick(view);
+        LogUtil.e(TAG, "----------onClick---------" + view.getId());
         switch (view.getId()){
             case R.id.title_main_iv_right_telephone:
                 if (hotelDetail.getHotel().getPhone() != null || hotelDetail.getHotel().getPhone().length() != 0) {
@@ -285,7 +290,7 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
                 }
                 break;
             case R.id.tv_hotel_imgs: //TODO 酒店图片
-
+                getHotelImages();
                 break;
 //            case R.id.iv_collection_hotel: //收藏
 //                LoadingIndicator.show(HotelDetailActivity.this, getString(R.string.http_notice));
@@ -307,7 +312,7 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
                 }
                 Intent intent = new Intent(getApplicationContext(), ReGeocoderActivity.class);
                 Bundle bundle = new Bundle();
-                //TODO 将百度地图坐标转换为高德地图坐标
+                // 将百度地图坐标转换为高德地图坐标
                 LatLng latLngFrom = new LatLng(Double.parseDouble(hotelDetail.getHotel().getBaidulat()), Double.parseDouble(hotelDetail.getHotel().getBaidulon())); //百度和高德转换坐标
                 CoordinateConverter converter  = new CoordinateConverter();
                 // CoordType.GPS 待转换坐标类型
@@ -324,7 +329,6 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
                 startActivity(intent);
                 break;
             case R.id.layout_hotel_opening:
-                //TODO 进入酒店详情页
                 if (hotelDetail == null){
                     return;
                 }
@@ -358,6 +362,50 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
         }
     }
 
+    /**
+     * 获取酒店图片，瀑布流展示
+     */
+    private void getHotelImages() {
+        if (hotelDetail == null){
+            return;
+        }
+        showImages((ArrayList<HotelDetailResponse.HotelImageBean>) hotelDetail.getHotel().getImages().getImage());
+//        HotelActionBiz biz = new HotelActionBiz();
+//        HotelImagesRequest fetch = new HotelImagesRequest(hotelDetail.getHotel().getHotelID(), hotelProduct.getRoomId(), "0"); //0：全部图片
+//        biz.getHotelImages(fetch, new BizGenericCallback<HotelImagesResponse>() {
+//            @Override
+//            public void onCompletion(GenericResponseModel<HotelImagesResponse> model) {
+//                LogUtil.e(TAG, "getHotelImages: "+model.body.getImages().getImage());
+//                List<HotelImagesResponse.ImageBean> listImages = model.body.getImages().getImage();
+//                if (listImages != null && listImages.size() != 0) {
+//                    showImages((ArrayList<HotelImagesResponse.ImageBean>) listImages);
+//                }else{
+//                    ToastCommon.toastShortShow(getApplicationContext(), null, "");
+//                }
+//            }
+//
+//            @Override
+//            public void onError(FetchError error) {
+//                if (error.localReason != null){
+//                    ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
+//                }else{
+//                    ToastCommon.toastShortShow(getApplicationContext(), null, "请求酒店数据校验出错，请重试");
+//                }
+//                LogUtil.e(TAG, "getHotelImages: "+error);
+//                LoadingIndicator.cancel();
+//            }
+//        });
+    }
+
+    /**
+     * 进入展示图片页瀑布流
+     */
+    private void showImages(ArrayList<HotelDetailResponse.HotelImageBean> listImages) {
+        Intent intent = new Intent(getApplicationContext(), HotelPhotoActivity.class);
+        intent.putParcelableArrayListExtra("images", listImages);
+        startActivity(intent);
+    }
+
     private void getHotelPrice() {
         roomItem = listProducts.get(mPosition);
         if ("1".equals(roomItem.getIsBooking())){
@@ -373,20 +421,19 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
             }else{
                 earlierCheckInDate = String.format(Locale.getDefault(), "%s %s", checkInDate, "08:00:00");
             }
-            HotelPriceCheckRequest request = new HotelPriceCheckRequest(checkInDate, checkOutDate,
-                    earlierCheckInDate,  String.format(Locale.getDefault(), "%s %s", checkInDate, "23:59:00"), //最早入店时间比当前晚5分钟，最晚入店时间为今天23:59:59，明天凌晨
-                    hotelDetail.getHotel().getHotelID(), roomItem.getRoomTypeID(), roomItem.getProductID(), roomItem.getPrice(), String.valueOf(number));
-            hotelBiz.getHotelPriceCheck(request, new BizGenericCallback<HotelPriceCheckResponse>() {
+            HotelProductPriceRequest fetch = new HotelProductPriceRequest(hotelDetail.getHotel().getHotelID(), checkInDate, checkOutDate, hotelProduct.getRoomId(), hotelProduct.getProductID());
+
+            hotelBiz.getHotelProductPrice(fetch, new BizGenericCallback<HotelProductPriceResponse>() {
                 @Override
-                public void onCompletion(GenericResponseModel<HotelPriceCheckResponse> model) {
+                public void onCompletion(GenericResponseModel<HotelProductPriceResponse> model) {
                     LogUtil.e(TAG, "getHotelPriceCheck: "+model.body);
                     LoadingIndicator.cancel();
                     if ("0001".equals(model.headModel.res_code)){
                         ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);
                     }else if ("0000".equals(model.headModel.res_code)){
-                        priceCheck = model.body;
+                        HotelProductPriceResponse priceCheck = model.body;
                         popupWindow.dismiss(); //选择房间消失
-                        setHotelOrder(mPosition);
+                        setHotelOrder(mPosition, priceCheck.getTotalPrice());
                     }
                 }
 
@@ -395,18 +442,46 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
                     if (error.localReason != null){
                         ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
                     }else{
-                        ToastCommon.toastShortShow(getApplicationContext(), null, "请求酒店数据校验出错，请重试");
+                        ToastCommon.toastShortShow(getApplicationContext(), null, "酒店验价出错，请重试");
                     }
-                    LogUtil.e(TAG, "getHotelPriceCheck: "+error);
+                    LogUtil.e(TAG, "getHotelProductPrice: "+error);
                     LoadingIndicator.cancel();
                 }
             });
+//            HotelPriceCheckRequest request = new HotelPriceCheckRequest(checkInDate, checkOutDate,
+//                    earlierCheckInDate,  String.format(Locale.getDefault(), "%s %s", checkInDate, "23:59:00"), //最早入店时间比当前晚5分钟，最晚入店时间为今天23:59:59，明天凌晨
+//                    hotelDetail.getHotel().getHotelID(), roomItem.getRoomTypeID(), roomItem.getProductID(), roomItem.getPrice(), String.valueOf(number));
+//            hotelBiz.getHotelPriceCheck(request, new BizGenericCallback<HotelPriceCheckResponse>() {
+//                @Override
+//                public void onCompletion(GenericResponseModel<HotelPriceCheckResponse> model) {
+//                    LogUtil.e(TAG, "getHotelPriceCheck: "+model.body);
+//                    LoadingIndicator.cancel();
+//                    if ("0001".equals(model.headModel.res_code)){
+//                        ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);
+//                    }else if ("0000".equals(model.headModel.res_code)){
+//                        priceCheck = model.body;
+//                        popupWindow.dismiss(); //选择房间消失
+//                        setHotelOrder(mPosition);
+//                    }
+//                }
+//
+//                @Override
+//                public void onError(FetchError error) {
+//                    if (error.localReason != null){
+//                        ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
+//                    }else{
+//                        ToastCommon.toastShortShow(getApplicationContext(), null, "请求酒店数据校验出错，请重试");
+//                    }
+//                    LogUtil.e(TAG, "getHotelPriceCheck: "+error);
+//                    LoadingIndicator.cancel();
+//                }
+//            });
         }else{
             ToastCommon.toastShortShow(getApplicationContext(), null, "当前房间不可预订");
         }
     }
 
-    private void setHotelOrder(int position) {
+    private void setHotelOrder(int position, String totalPrice) {
         Intent intent = new Intent(getApplicationContext(), HotelEditOrderActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString("checkInDate", checkInDate);
@@ -416,6 +491,7 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
 //        bundle.putInt("position", position); //房间列表中第几个
         hotelProduct = listProducts.get(position);
         bundle.putParcelable("selectCity", selectCity);
+        bundle.putString("totalPrice", totalPrice);
         listProducts.get(position);
         intent.putExtras(bundle);
         startActivityForResult(intent, EDIT_HOTEL_ORDER);
@@ -588,7 +664,7 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
         }
         hotelProduct = null;
         roomItem = null;
-        priceCheck = null;
+//        priceCheck = null;
         ivCollection = null;
         ivMainImgs = null;
         tvHotelName = null;

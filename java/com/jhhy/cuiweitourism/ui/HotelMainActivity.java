@@ -256,6 +256,7 @@ private List<ADInfo> infos = new ArrayList<ADInfo>();
     }
 
     private void toHotelList() {
+        LoadingIndicator.show(this, getString(R.string.http_notice));
         getFacilities();
         getBrand();
         //位置选择
@@ -319,17 +320,14 @@ private List<ADInfo> infos = new ArrayList<ADInfo>();
         hotelBiz.hotelScreenFacilities(new BizGenericCallback<HotelScreenFacilities>() {
             @Override
             public void onCompletion(GenericResponseModel<HotelScreenFacilities> model) {
-                if ("0000".equals(model.headModel.res_code)){
-                    facilities.add(new HotelScreenFacilities.FacilityItemBean("不限"));
-                    facilities.addAll(model.body.getItem());
-                    facility = true;
-                    if (brand && businessDistrict && district && viewSpot){
-                        search();
-                        resetValue();
-                    }
-                }else if ("0001".equals(model.headModel.res_code)){
-                    ToastUtil.show(getApplicationContext(), model.headModel.res_arg);
+                facilities.add(new HotelScreenFacilities.FacilityItemBean("不限"));
+                facilities.addAll(model.body.getItem());
+                facility = true;
+                if (brand && businessDistrict && district && viewSpot){
+                    search();
+                    resetValue();
                 }
+                LogUtil.e(TAG, "getFacilities " + model.body);
             }
 
             @Override
@@ -349,18 +347,14 @@ private List<ADInfo> infos = new ArrayList<ADInfo>();
         hotelBiz.hotelScreenBrand(request, new BizGenericCallback<HotelScreenBrandResponse>() {
             @Override
             public void onCompletion(GenericResponseModel<HotelScreenBrandResponse> model) {
-                if ("0000".equals(model.headModel.res_code)){
-                    listBrand.add(new HotelScreenBrandResponse.BrandItemBean("不限"));
-                    listBrand.addAll(model.body.getItem());
-                    brand = true;
-                    if (facility && businessDistrict && district && viewSpot){
-                        search();
-                        resetValue();
-                    }
-                }else if ("0001".equals(model.headModel.res_code)){
-                    ToastUtil.show(getApplicationContext(), model.headModel.res_arg);
+                listBrand.add(new HotelScreenBrandResponse.BrandItemBean("不限"));
+                listBrand.addAll(model.body.getItem());
+                brand = true;
+                if (facility && businessDistrict && district && viewSpot){
+                    search();
+                    resetValue();
                 }
-                LogUtil.e(TAG, "getBrand ----------onCompletion----------");
+                LogUtil.e(TAG, "hotelScreenBrand " + model.body);
             }
 
             @Override
@@ -375,7 +369,7 @@ private List<ADInfo> infos = new ArrayList<ADInfo>();
                     search();
                     resetValue();
                 }
-                LogUtil.e(TAG, "getBrand " + error);
+                LogUtil.e(TAG, "hotelScreenBrand " + error);
             }
         });
     }
@@ -385,18 +379,14 @@ private List<ADInfo> infos = new ArrayList<ADInfo>();
         hotelBiz.getHotelLocationBusinessDistrict(request, new BizGenericCallback<HotelPositionLocationResponse>() {
             @Override
             public void onCompletion(GenericResponseModel<HotelPositionLocationResponse> model) {
-                if ("0000".equals(model.headModel.res_code)){
-                    listBusinessDistrict.add(new HotelPositionLocationResponse.HotelDistrictItemBean("不限"));
-                    listBusinessDistrict.addAll(model.body.getItem());
-                    businessDistrict = true;
-                    if (facility && brand && viewSpot && district){
-                        search();
-                        resetValue();
-                    }
-                }else if ("0001".equals(model.headModel.res_code)){
-                    ToastUtil.show(getApplicationContext(), model.headModel.res_arg);
+                listBusinessDistrict.add(new HotelPositionLocationResponse.HotelDistrictItemBean("不限"));
+                listBusinessDistrict.addAll(model.body.getItem());
+                businessDistrict = true;
+                if (facility && brand && viewSpot && district){
+                    search();
+                    resetValue();
                 }
-                LogUtil.e(TAG, "getBusinessDistrict ----------onCompletion----------");
+                LogUtil.e(TAG, "getHotelLocationBusinessDistrict " + model.body);
             }
 
             @Override
@@ -406,7 +396,7 @@ private List<ADInfo> infos = new ArrayList<ADInfo>();
                 }else{
                     ToastUtil.show(getApplicationContext(), "请求商业区信息失败，请重试");
                 }
-                LogUtil.e(TAG, "getBusinessDistrict " + error);
+                LogUtil.e(TAG, "getHotelLocationBusinessDistrict " + error);
             }
         });
     }
@@ -416,18 +406,14 @@ private List<ADInfo> infos = new ArrayList<ADInfo>();
         hotelBiz.getHotelLocationDistrict(request, new BizGenericCallback<HotelPositionLocationResponse>() {
             @Override
             public void onCompletion(GenericResponseModel<HotelPositionLocationResponse> model) {
-                if ("0000".equals(model.headModel.res_code)){
-                    listDistrict.add(new HotelPositionLocationResponse.HotelDistrictItemBean("不限"));
-                    listDistrict.addAll(model.body.getItem());
-                    district = true;
-                    if (facility && brand && businessDistrict && viewSpot){
-                        search();
-                        resetValue();
-                    }
-                }else if ("0001".equals(model.headModel.res_code)){
-                    ToastUtil.show(getApplicationContext(), model.headModel.res_arg);
+                listDistrict.add(new HotelPositionLocationResponse.HotelDistrictItemBean("不限"));
+                listDistrict.addAll(model.body.getItem());
+                district = true;
+                if (facility && brand && businessDistrict && viewSpot){
+                    search();
+                    resetValue();
                 }
-                LogUtil.e(TAG, "getDistrict ----------onCompletion----------");
+                LogUtil.e(TAG, "getHotelLocationDistrict " + model.body);
             }
 
             @Override
@@ -437,7 +423,7 @@ private List<ADInfo> infos = new ArrayList<ADInfo>();
                 }else{
                     ToastUtil.show(getApplicationContext(), "请求行政区信息失败，请重试");
                 }
-                LogUtil.e(TAG, "getDistrict " + error);
+                LogUtil.e(TAG, "getHotelLocationDistrict " + error);
             }
         });
     }
@@ -447,18 +433,14 @@ private List<ADInfo> infos = new ArrayList<ADInfo>();
         hotelBiz.getHotelLocationViewSpot(request, new BizGenericCallback<HotelPositionLocationResponse>() {
             @Override
             public void onCompletion(GenericResponseModel<HotelPositionLocationResponse> model) {
-                if ("0000".equals(model.headModel.res_code)){
-                    listViewSpot.add(new HotelPositionLocationResponse.HotelDistrictItemBean("不限"));
-                    listViewSpot.addAll(model.body.getItem());
-                    viewSpot = true;
-                    if (brand && facility && businessDistrict && district){
-                        search();
-                        resetValue();
-                    }
-                }else if ("0001".equals(model.headModel.res_code)){
-                    ToastUtil.show(getApplicationContext(), model.headModel.res_arg);
+                listViewSpot.add(new HotelPositionLocationResponse.HotelDistrictItemBean("不限"));
+                listViewSpot.addAll(model.body.getItem());
+                viewSpot = true;
+                if (brand && facility && businessDistrict && district){
+                    search();
+                    resetValue();
                 }
-                LogUtil.e(TAG, "getViewSpot ----------onCompletion----------");
+                LogUtil.e(TAG, "getHotelLocationViewSpot " + model.body);
             }
 
             @Override
@@ -468,7 +450,7 @@ private List<ADInfo> infos = new ArrayList<ADInfo>();
                 }else{
                     ToastUtil.show(getApplicationContext(), "请求景点信息失败，请重试");
                 }
-                LogUtil.e(TAG, "getViewSpot " + error);
+                LogUtil.e(TAG, "getHotelLocationViewSpot " + error);
             }
         });
     }

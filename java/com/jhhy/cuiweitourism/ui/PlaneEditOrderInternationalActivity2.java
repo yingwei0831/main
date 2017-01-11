@@ -103,6 +103,8 @@ public class PlaneEditOrderInternationalActivity2 extends AppCompatActivity impl
     private PlaneTicketInternationalPolicyResponse checkResponse; //验价返回数据
     private PlaneOrderOfChinaResponse info; //提交订单，返回，格式与国内相同
 
+    private ArrayList listContact = new ArrayList(); //联系人
+
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -258,13 +260,26 @@ public class PlaneEditOrderInternationalActivity2 extends AppCompatActivity impl
         planeBiz = new PlaneTicketActionBiz();
 
         interFlights = new ArrayList<>();
+
+        String cabinCodes = cabin.passengerType.airportCabinCode;
+        LogUtil.e(TAG, "cabinCodes: " + cabinCodes);
+        String[] cabinCode = cabinCodes.split("/");
+        String[] cabinCodeS1 = cabinCode[0].split(",");
+        String[] cabinCodeS2 = new String[0];
+        if ("RT".equals(travelType)){
+            cabinCodeS2 = cabinCode[1].split(",");
+        }
+        String cabinTypes = cabin.passengerType.airportCabinType;
+        LogUtil.e(TAG, "cabinTypes: " + cabinTypes);
+        String[] cabinType = cabinTypes.split("/");
+
         List<PlaneTicketInternationalPolicyCheckRequest.IFlight> iFlightsSingle = new ArrayList<>(); //单程
         ArrayList<PlaneTicketInternationalInfo.FlightInfo> iFlightS1 = flight.S1.flightInfos;
         for (int i = 0; i < iFlightS1.size(); i++){
             PlaneTicketInternationalInfo.FlightInfo flightInfo = iFlightS1.get(i);
             PlaneTicketInternationalPolicyCheckRequest.IFlight iFlight = new PlaneTicketInternationalPolicyCheckRequest.IFlight(String.valueOf(i), "S1",
                     cabin.passengerType.mainCarrierCheck, flightInfo.toDateCheck, flightInfo.toTimeCheck, flightInfo.fromAirportCodeCheck, flightInfo.fromTerminal, flightInfo.airlineCompanyCheck,
-                    cabin.passengerType.airportCabinCode, cabin.passengerType.airportCabinType, flightInfo.fromDateCheck, flightInfo.fromTimeCheck,
+                    cabinCodeS1[i], cabinType[0], flightInfo.fromDateCheck, flightInfo.fromTimeCheck,
                     flightInfo.flightNumberCheck, flightInfo.toAirportCodeCheck, flightInfo.toTermianl);
             iFlightsSingle.add(iFlight);
         }
@@ -278,7 +293,7 @@ public class PlaneEditOrderInternationalActivity2 extends AppCompatActivity impl
                 LogUtil.e(TAG, flightInfo);
                 PlaneTicketInternationalPolicyCheckRequest.IFlight iFlight = new PlaneTicketInternationalPolicyCheckRequest.IFlight(String.valueOf(i), "S2",
                         cabin.passengerType.mainCarrierCheck, flightInfo.toDateCheck, flightInfo.toTimeCheck, flightInfo.fromAirportCodeCheck, flightInfo.fromTerminal, flightInfo.airlineCompanyCheck,
-                        cabin.passengerType.airportCabinCode, cabin.passengerType.airportCabinType, flightInfo.fromDateCheck, flightInfo.fromTimeCheck,
+                        cabinCodeS2[i], cabinType[1], flightInfo.fromDateCheck, flightInfo.fromTimeCheck,
                         flightInfo.flightNumberCheck, flightInfo.toAirportCodeCheck, flightInfo.toTermianl);
                 iFlightsMultiply.add(iFlight);
             }
@@ -363,10 +378,12 @@ public class PlaneEditOrderInternationalActivity2 extends AppCompatActivity impl
     }
 
     private void popShow() {
-        tvPopPlaneInfo.setText(String.format(Locale.getDefault(), "%s%s (%s)",
-                PlaneListInternationalActivity.info.A.get(flight.S1.flightInfos.get(0).airlineCompanyCheck).shortName,
-                flight.S1.flightInfos.get(0).flightNumberCheck,
-                cabinType));
+//        LogUtil.e(TAG, "主承运人：" + cabin.passengerType.mainCarrierCheck);
+//        LogUtil.e(TAG, "主承运人：" + PlaneListInternationalActivity.info.A.get(cabin.passengerType.mainCarrierCheck));
+//        LogUtil.e(TAG, "主承运人：" + PlaneListInternationalActivity.info.A.get(cabin.passengerType.mainCarrierCheck).companyName);
+        tvPopPlaneInfo.setText(String.format(Locale.getDefault(), "%s",
+                PlaneListInternationalActivity.info.A.get(cabin.passengerType.mainCarrierCheck).companyName
+        ));
 
         tvPopPriceAdult.setText(String.format(Locale.getDefault(), "￥%.2f", Float.parseFloat(cabin.baseFare.faceValueTotal)));
         tvPopNumberAdult.setText(String.format(Locale.getDefault(), "x %d人", listContact.size()));
@@ -377,7 +394,7 @@ public class PlaneEditOrderInternationalActivity2 extends AppCompatActivity impl
         tvPopNumberPassenger.setText(String.format(Locale.getDefault(), "x %d", listContact.size()));
     }
 
-    private TextView tvPopPlaneInfo; //飞机信息
+    private TextView tvPopPlaneInfo; //主承运人信息
     private TextView tvPopPriceAdult; //成人价格
     private TextView tvPopNumberAdult; //成人数量
     private TextView tvPopPriceAdditional; //机建燃油费
@@ -424,6 +441,8 @@ public class PlaneEditOrderInternationalActivity2 extends AppCompatActivity impl
                 calculateTotalPrice();
             }else if (requestCode == Consts.REQUEST_CODE_RESERVE_PAY){ //去支付，支付成功
                 LogUtil.e(TAG, "订单支付成功");
+                setResult(RESULT_OK);
+                finish();
             }else if (requestCode == REQUEST_LOGIN) { //登录成功
                 User user = (User) data.getExtras().getSerializable(Consts.KEY_REQUEST);
                 if (user != null) {
@@ -450,8 +469,6 @@ public class PlaneEditOrderInternationalActivity2 extends AppCompatActivity impl
         }
         tvPriceTotal.setText(String.format(Locale.getDefault(), "%.2f", listContact.size() * (Float.parseFloat(cabin.totalFare.taxTotal) + acPrice + dcPrice)));
     }
-
-    private ArrayList<PlaneTicketOrderInternationalRequest.PassengersBean> listContact = new ArrayList<>(); //乘车人列表
 
     @Override
     public void onItemTextViewClick(int position, View view, int id) {
@@ -615,8 +632,8 @@ public class PlaneEditOrderInternationalActivity2 extends AppCompatActivity impl
     @Override
     protected void onRestart() {
         super.onRestart();
-        LogUtil.e(TAG, "data = " + PlaneItemInfoInternationalActivity2.checkResponseData);
-        LogUtil.e(TAG, "data = " + checkResponse);
+//        LogUtil.e(TAG, "data = " + PlaneItemInfoInternationalActivity2.checkResponseData);
+//        LogUtil.e(TAG, "data = " + checkResponse);
     }
 
     @Override

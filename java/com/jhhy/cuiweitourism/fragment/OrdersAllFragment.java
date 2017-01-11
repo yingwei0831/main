@@ -222,8 +222,7 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
         Order order = lists.get(position);
 //        if ("2".equals(order.getTypeId()) && "0".equals(type)){ //酒店，在这里没有详情，没有操作，只显示
 //            ToastCommon.toastShortShow(getContext(), null, "请选择酒店订单，再进入详细信息页");
-//        }
-//        else {
+//        } else {
             if ("80".equals(order.getTypeId())){ //火车票详情
                 if (order.getSanfangorderno1() == null || order.getSanfangorderno1().length() == 0 ||
                         order.getSanfangorderno2() == null || order.getSanfangorderno2().length() == 0){
@@ -231,32 +230,42 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
                     return;
                 }
             }else if ("82".equals(order.getTypeId())){ //机票详情
-                //TODO 国内机票详情，国际机票详情
-                Intent intent = new Intent(getContext(), Tab4OrderDetailsActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("orderSN", order.getOrderSN());
-                bundle.putInt("type", Integer.parseInt(order.getStatus())); //订单状态
-                if ("国内机票".equals(order.getProductName())){ //82
-                    bundle.putString("typeId", order.getTypeId()); //订单类型
-                }else if ("国际机票".equals(order.getProductName())){ //83
-                    bundle.putString("typeId", "83"); //订单类型
-                }
-//                bundle.putString("sanfangorderno1", order.getSanfangorderno1()); //酒店，签证，国内机票，国际机票，火车票
-//                bundle.putString("sanfangorderno2", order.getSanfangorderno2()); //酒店，签证，国内机票，国际机票，火车票
-                intent.putExtras(bundle);
-                startActivityForResult(intent, REQUEST_CODE_DETAIL);
+                getPlaneTicketDetail(order);
                 return;
             }
-            Intent intent = new Intent(getContext(), Tab4OrderDetailsActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("orderSN", order.getOrderSN());
-            bundle.putInt("type", Integer.parseInt(order.getStatus())); //订单状态
+        getOrderDetail(order);
+    }
+
+    /**
+     * 普通订单详情
+     */
+    private void getOrderDetail(Order order) {
+        Intent intent = new Intent(getContext(), Tab4OrderDetailsActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("orderSN", order.getOrderSN());
+        bundle.putInt("type", Integer.parseInt(order.getStatus())); //订单状态
+        bundle.putString("typeId", order.getTypeId()); //订单类型
+        bundle.putString("sanfangorderno1", order.getSanfangorderno1()); //酒店，签证，国内机票，国际机票，火车票
+        bundle.putString("sanfangorderno2", order.getSanfangorderno2()); //酒店，签证，国内机票，国际机票，火车票
+        intent.putExtras(bundle);
+        startActivityForResult(intent, REQUEST_CODE_DETAIL);
+    }
+
+    /**
+     * 国内机票详情，国际机票详情
+     */
+    private void getPlaneTicketDetail(Order order) {
+        Intent intent = new Intent(getContext(), Tab4OrderDetailsActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("orderSN", order.getOrderSN());
+        bundle.putInt("type", Integer.parseInt(order.getStatus())); //订单状态
+        if ("国内机票".equals(order.getProductName())){ //82
             bundle.putString("typeId", order.getTypeId()); //订单类型
-            bundle.putString("sanfangorderno1", order.getSanfangorderno1()); //酒店，签证，国内机票，国际机票，火车票
-            bundle.putString("sanfangorderno2", order.getSanfangorderno2()); //酒店，签证，国内机票，国际机票，火车票
-            intent.putExtras(bundle);
-            startActivityForResult(intent, REQUEST_CODE_DETAIL);
-//        }
+        }else if ("国际机票".equals(order.getProductName())){ //83
+            bundle.putString("typeId", "83"); //订单类型
+        }
+        intent.putExtras(bundle);
+        startActivityForResult(intent, REQUEST_CODE_DETAIL);
     }
 
     /**
@@ -292,36 +301,26 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
             case R.id.btn_order_comment: //去评价——>进入评论页面
                 refund(order, 1, REQUEST_COMMENT);
                 break;
-            case R.id.btn_tab3_item_sign_contact: //签约付款（酒店不付款，签证顺延）
-                if ("80".equals(order.getTypeId())){ //火车票
-                    Intent intentTrain = new Intent(getContext(), SelectPaymentActivity.class);
-                    Bundle bundleTrain = new Bundle();
-                    bundleTrain.putSerializable("order", order);
-                    bundleTrain.putInt("type",18);
-                    intentTrain.putExtras(bundleTrain);
-                    startActivityForResult(intentTrain, TRAIN_PAY);
-                    return;
-                }else if ("82".equals(order.getTypeId())){ //飞机票
-                    if ("国内机票".equals(order.getProductName())){ //国内机票
-                        Intent intentInner = new Intent(getContext(), SelectPaymentActivity.class);
-                        Bundle bundleInner = new Bundle();
-                        bundleInner.putSerializable("order", order);
-                        bundleInner.putInt("type",19);
-                        intentInner.putExtras(bundleInner);
-                        startActivityForResult(intentInner, Consts.REQUEST_CODE_RESERVE_PAY); //订单生成成功，去支付
-                    }else if ("国际机票".equals(order.getProductName())){ //国际机票
-                        Intent intentOuter = new Intent(getContext(), SelectPaymentActivity.class);
-                        Bundle bundleOuter = new Bundle();
-                        bundleOuter.putSerializable("order", order);
-                        bundleOuter.putInt("type", 20);
-                        intentOuter.putExtras(bundleOuter);
-                        startActivityForResult(intentOuter, Consts.REQUEST_CODE_RESERVE_PAY); //订单生成成功，去支付
-                    }
-                    return;
-                }
+            case R.id.btn_tab3_item_sign_contact: //签约付款（签证顺延）
                 Intent intentPay = new Intent(getContext(), SelectPaymentActivity.class);
                 Bundle bundlePay = new Bundle();
-                bundlePay.putSerializable("order", order);
+                if ("80".equals(order.getTypeId())){ //火车票
+                    bundlePay.putSerializable("order", order);
+                    bundlePay.putInt("type",18);
+                }else if ("82".equals(order.getTypeId())){ //飞机票
+                    if ("国内机票".equals(order.getProductName())){ //国内机票
+                        bundlePay.putSerializable("order", order);
+                        bundlePay.putInt("type",19);
+                    }else if ("国际机票".equals(order.getProductName())){ //国际机票
+                        bundlePay.putSerializable("order", order);
+                        bundlePay.putInt("type", 20);
+                    }
+                }else if ("2".equals(order.getTypeId())){ //酒店
+                    bundlePay.putSerializable("order", order);
+                    bundlePay.putInt("type", 24);
+                }else{
+                    bundlePay.putSerializable("order", order);
+                }
                 intentPay.putExtras(bundlePay);
                 startActivityForResult(intentPay, REQUEST_CODE_PAY);
                 break;
@@ -335,6 +334,12 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
                 }
                 break;
         }
+    }
+
+    /**
+     * 普通订单付款
+     */
+    private void payOrder(Order order) {
     }
 
     private void refund(Order order, int value, int request_refund) {
@@ -422,7 +427,7 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
     private int REQUEST_REFUND = 1503; //退款按钮，进入申请退款页面
     private int REQUEST_CODE_PAY = 1504; //签约付款
     private int REQUEST_CANCEL = 1505; //酒店取消订单
-    private int TRAIN_PAY = 1506; //15分钟内 付款火车票
+//    private int TRAIN_PAY = 1506; //15分钟内 付款火车票
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -448,12 +453,12 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
 //                getData(type);
                 getContext().sendBroadcast(new Intent(Consts.ACTION_ORDER_UPDATE));
             }
-        }else if (requestCode == TRAIN_PAY){ //火车票付款
-            if (resultCode == Activity.RESULT_OK){
-                getContext().sendBroadcast(new Intent(Consts.ACTION_ORDER_UPDATE));
-            }
         }
-
+//        else if (requestCode == TRAIN_PAY){ //火车票付款
+//            if (resultCode == Activity.RESULT_OK){
+//                getContext().sendBroadcast(new Intent(Consts.ACTION_ORDER_UPDATE));
+//            }
+//        }
     }
 
 }

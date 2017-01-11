@@ -86,8 +86,9 @@ public class HotelEditOrderActivity extends BaseActionBarActivity implements Pop
     private HotelDetailResponse hotelDetail;
 //    private int position;
     private HotelDetailResponse.HotelProductBean hotelProduct;
-    private float totalPrice;
+    private float totalPrice; //订单总价
     private int number; //一共几个房间
+    private String totalPricePre; //总价:这间房在预定期间应该交付的价格，并未计算人数
 
     private TextView tvSelectorContacts; //添加乘客
     private MyListView listViewContacts; //联系人装载布局
@@ -114,6 +115,7 @@ public class HotelEditOrderActivity extends BaseActionBarActivity implements Pop
 //                position = bundle.getInt("position");
                 hotelProduct = HotelDetailActivity.hotelProduct;
                 number = bundle.getInt("number");
+                totalPricePre = bundle.getString("totalPrice");
                 LogUtil.e(TAG, "checkInDate = " + checkInDate +", checkOutDate = " + checkOutDate +", stayDays = " + stayDays +", selectCity = " + selectCity +", number = " + number);
             }
         }
@@ -161,7 +163,7 @@ public class HotelEditOrderActivity extends BaseActionBarActivity implements Pop
         adapter.setType(3);
         adapter.setCount(number);
         listViewContacts.setAdapter(adapter);
-        tvRoomPrice.setText(hotelProduct.getPrice()); //酒店房间单价
+        tvRoomPrice.setText(totalPricePre); //酒店房间单价 hotelProduct.getPrice()
         tvHotelName.setText(hotelDetail.getHotel().getName());
         tvRoomType.setText(hotelProduct.getRoomName());
 
@@ -392,7 +394,7 @@ public class HotelEditOrderActivity extends BaseActionBarActivity implements Pop
      * 计算价格
      */
     private void calculatePrice() {
-        totalPrice = Float.parseFloat(hotelProduct.getPrice()) * number;
+        totalPrice = Float.parseFloat(totalPricePre) * number;
         tvOrderPrice.setText(String.format(Locale.getDefault(), "%.2f", totalPrice)); //订单总价
     }
 
