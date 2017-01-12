@@ -160,11 +160,25 @@ public abstract class OrderXListViewAdapter extends BaseAdapter implements IOrde
                 }else if ("2".equals(order.getTypeId())){ //酒店，可以取消订单，可以继续付款
                     if (type == 0){
                         holder.btnOrderCancel.setVisibility(View.GONE); //取消订单:全部订单不给酒店做任何操作
+                    }else { //15分钟不能再付款
+                        if (!(System.currentTimeMillis() / 1000 - Integer.parseInt(order.getAddTime()) < 15 * 60)){
+                            holder.tvOrderStatus.setText(context.getString(R.string.fragment_mine_wait_cancel));
+                            holder.btnOrderPayment.setVisibility(View.GONE); //签约付款
+                        }
+                    }
+                }else if ("82".equals(order.getTypeId())){ //火车票
+                    if (!(System.currentTimeMillis() / 1000 - Integer.parseInt(order.getAddTime()) < 15 * 60)){
+                        holder.tvOrderStatus.setText(context.getString(R.string.fragment_mine_wait_cancel));
+                        holder.btnOrderPayment.setVisibility(View.GONE); //签约付款
                     }
                 }
             } else if ("0".equals(order.getStatus())) { //正在退款——>取消退款
+                if ("80".equals(order.getTypeId()) || "82".equals(order.getTypeId())){ //火车/机票，没有取消退款
+                    holder.btnOrderCancelPayment.setVisibility(View.GONE); //取消退款
+                }else{
+                    holder.btnOrderCancelPayment.setVisibility(View.VISIBLE); //取消退款
+                }
                 holder.tvOrderStatus.setText(context.getString(R.string.tab3_order_item_wait_refund));
-                holder.btnOrderCancelPayment.setVisibility(View.VISIBLE); //取消退款
                 holder.btnOrderComment.setVisibility(View.GONE); //去评价
                 holder.btnOrderPayment.setVisibility(View.GONE); //签约付款
                 holder.btnOrderCancel.setVisibility(View.GONE); //取消订单
@@ -260,7 +274,7 @@ public abstract class OrderXListViewAdapter extends BaseAdapter implements IOrde
             }
         });
         if (order.getAddTime() != null && !"null".equals(order.getAddTime())) {
-            holder.tvOrderTime.setText(Utils.getTimeStrYMD(Long.parseLong(order.getAddTime()) * 1000));
+            holder.tvOrderTime.setText(Utils.getTimeStr(Long.parseLong(order.getAddTime()) * 1000));
         }else{
             holder.tvOrderTime.setText(order.getAddTime());
         }

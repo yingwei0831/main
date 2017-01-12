@@ -100,7 +100,9 @@ public class PlaneTicketInternationalPolicyCheckRequest extends BasicFetchModel 
         private String OffPoint;
         private String OffPointAT;
 
-        public IFlight(String segmentID, String segmentType, String ticketingCarrier, String arrivalDate, String arrivalTime, String boardPoint, String boardPointAT, String carrier, String classCode, String classRank, String departureDate, String departureTime, String flightNo, String offPoint, String offPointAT) {
+        public IFlight(String segmentID, String segmentType, String ticketingCarrier, String arrivalDate, String arrivalTime, String boardPoint, String boardPointAT,
+                       String carrier, String classCode,
+                       String departureDate, String departureTime, String flightNo, String offPoint, String offPointAT) {
             SegmentID = segmentID;
             SegmentType = segmentType;
             TicketingCarrier = ticketingCarrier;
@@ -110,7 +112,7 @@ public class PlaneTicketInternationalPolicyCheckRequest extends BasicFetchModel 
             BoardPointAT = boardPointAT;
             Carrier = carrier;
             ClassCode = classCode;
-            ClassRank = classRank;
+
             DepartureDate = departureDate;
             DepartureTime = departureTime;
             FlightNo = flightNo;

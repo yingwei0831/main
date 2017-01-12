@@ -153,11 +153,35 @@ public class PlaneEditOrderInternationalActivity extends AppCompatActivity imple
 
         List<PlaneTicketInternationalPolicyCheckRequest.IFlight> iFlightsSingle = new ArrayList<>(); //单程
         ArrayList<PlaneTicketInternationalInfo.FlightInfo> iFlightS1 = flight.S1.flightInfos;
+
+        String cabinCodes = cabin.passengerType.airportCabinCode;
+        LogUtil.e(TAG, "舱位代码 cabinCodes: " + cabinCodes); //J,J,Y/Y,Y,Y
+        String[] cabinCode = cabinCodes.split("/");
+        String[] cabinCodeS1 = cabinCode[0].split(",");
+        String[] cabinCodeS2 = new String[0];
+        if ("RT".equals(travelType)){
+            cabinCodeS2 = cabinCode[1].split(",");
+        }
+
+        String cabinTypes = cabin.passengerType.airportCabinType;
+        LogUtil.e(TAG, "舱位类型 cabinTypes: " + cabinTypes); //B,B,E/E
+        String[] cabinType = cabinTypes.split("/");
+        String[] cabinTypeS1 = cabinType[0].split(",");
+        String[] cabinTypeS2 = new String[0];
+        if ("RT".equals(travelType)){
+            cabinTypeS2 = cabinType[1].split(",");
+        }
+
         for (int i = 0; i < iFlightS1.size(); i++){
             PlaneTicketInternationalInfo.FlightInfo flightInfo = iFlightS1.get(i);
             PlaneTicketInternationalPolicyCheckRequest.IFlight iFlight = new PlaneTicketInternationalPolicyCheckRequest.IFlight(String.valueOf(i), "S1",
                     cabin.passengerType.mainCarrierCheck, flightInfo.toDateCheck, flightInfo.toTimeCheck, flightInfo.fromAirportCodeCheck, flightInfo.toAirportCodeCheck, flightInfo.airlineCompanyCheck,
-                    cabin.passengerType.airportCabinCode, cabin.passengerType.airportCabinType, flightInfo.toDateCheck, flightInfo.toTimeCheck, flightInfo.flightNumberCheck, flightInfo.toAirportCodeCheck, flightInfo.toTermianl);
+                    cabinCodeS1[i], flightInfo.toDateCheck, flightInfo.toTimeCheck, flightInfo.flightNumberCheck, flightInfo.toAirportCodeCheck, flightInfo.toTermianl);
+            if (cabinTypeS1.length > 1){
+                iFlight.setClassRank(cabinTypeS1[i]);
+            }else{
+                iFlight.setClassRank(cabinTypeS1[0]);
+            }
             iFlightsSingle.add(iFlight);
         }
         interFlights.add(iFlightsSingle);
@@ -167,9 +191,14 @@ public class PlaneEditOrderInternationalActivity extends AppCompatActivity imple
             ArrayList<PlaneTicketInternationalInfo.FlightInfo> iFlightS2 = flight.S2.flightInfos;
             for (int i = 0; i < iFlightS2.size(); i++) {
                 PlaneTicketInternationalInfo.FlightInfo flightInfo = iFlightS2.get(i);
-                PlaneTicketInternationalPolicyCheckRequest.IFlight iFlight = new PlaneTicketInternationalPolicyCheckRequest.IFlight(String.valueOf(i), "S1",
+                PlaneTicketInternationalPolicyCheckRequest.IFlight iFlight = new PlaneTicketInternationalPolicyCheckRequest.IFlight(String.valueOf(i), "S2",
                         cabin.passengerType.mainCarrierCheck, flightInfo.toDateCheck, flightInfo.toTimeCheck, flightInfo.fromAirportCodeCheck, flightInfo.toAirportCodeCheck, flightInfo.airlineCompanyCheck,
-                        cabin.passengerType.airportCabinCode, cabin.passengerType.airportCabinType, flightInfo.toDateCheck, flightInfo.toTimeCheck, flightInfo.flightNumberCheck, flightInfo.toAirportCodeCheck, flightInfo.toTermianl);
+                        cabinCodeS2[i], flightInfo.toDateCheck, flightInfo.toTimeCheck, flightInfo.flightNumberCheck, flightInfo.toAirportCodeCheck, flightInfo.toTermianl);
+                if (cabinTypeS2.length > 1){
+                    iFlight.setClassRank(cabinTypeS2[i]);
+                }else{
+                    iFlight.setClassRank(cabinTypeS2[0]);
+                }
                 iFlightsSingle.add(iFlight);
             }
             interFlights.add(iFlightsMultiply);

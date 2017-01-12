@@ -339,10 +339,14 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
                         }else if ("0000".equals(model.headModel.res_code)){
                             if (refresh){
                                 info = null;
-                                listData.clear();
-                                listData = null;
-                                list.clear();
-                                list = null;
+                                if (listData != null) {
+                                    listData.clear();
+                                    listData = null;
+                                }
+                                if (list != null) {
+                                    list.clear();
+                                    list = null;
+                                }
                             }
                             info = model.body;
                             list = new ArrayList<>(info.FMap.values());
@@ -356,16 +360,18 @@ public class PlaneListInternationalActivity extends BaseActionBarActivity implem
 
                     @Override
                     public void onError(FetchError error) {
-                        if (error.localReason != null){
-                            Message msg = new Message();
-                            msg.what = -1;
-                            msg.obj = error.localReason;
-                            handler.sendMessage(msg);
-                        }else{
-                            handler.sendEmptyMessage(-2);
+                        if (handler != null) {
+                            if (error.localReason != null) {
+                                Message msg = new Message();
+                                msg.what = -1;
+                                msg.obj = error.localReason;
+                                handler.sendMessage(msg);
+                            } else {
+                                handler.sendEmptyMessage(-2);
+                            }
+                            LogUtil.e(TAG, "planeTicketInfoInternational: " + error.toString());
+                            LoadingIndicator.cancel();
                         }
-                        LoadingIndicator.cancel();
-                        LogUtil.e(TAG, "planeTicketInfoInternational: " + error.toString());
                     }
                 });
             }

@@ -176,7 +176,7 @@ public class PlaneItemInfoInternationalActivity2 extends BaseActionBarActivity {
         ArrayList<PlaneTicketInternationalInfo.FlightInfo> iFlightS1 = flight.S1.flightInfos;
 
         String cabinCodes = cabin.passengerType.airportCabinCode;
-        LogUtil.e(TAG, "cabinCodes: " + cabinCodes);
+        LogUtil.e(TAG, "舱位代码 cabinCodes: " + cabinCodes); //J,J,Y/Y,Y,Y
         String[] cabinCode = cabinCodes.split("/");
         String[] cabinCodeS1 = cabinCode[0].split(",");
         String[] cabinCodeS2 = new String[0];
@@ -185,16 +185,25 @@ public class PlaneItemInfoInternationalActivity2 extends BaseActionBarActivity {
         }
 
         String cabinTypes = cabin.passengerType.airportCabinType;
-        LogUtil.e(TAG, "cabinTypes: " + cabinTypes);
+        LogUtil.e(TAG, "舱位类型 cabinTypes: " + cabinTypes); //B,B,E/E
         String[] cabinType = cabinTypes.split("/");
-
+        String[] cabinTypeS1 = cabinType[0].split(",");
+        String[] cabinTypeS2 = new String[0];
+        if ("RT".equals(traveltype)){
+            cabinTypeS2 = cabinType[1].split(",");
+        }
 
         for (int i = 0; i < iFlightS1.size(); i++){
             PlaneTicketInternationalInfo.FlightInfo flightInfo = iFlightS1.get(i);
             PlaneTicketInternationalPolicyCheckRequest.IFlight iFlight = new PlaneTicketInternationalPolicyCheckRequest.IFlight(String.valueOf(i), "S1",
                     cabin.passengerType.mainCarrierCheck, flightInfo.toDateCheck, flightInfo.toTimeCheck, flightInfo.fromAirportCodeCheck, flightInfo.fromTerminal, flightInfo.airlineCompanyCheck,
-                    cabinCodeS1[i], cabinType[0], flightInfo.fromDateCheck, flightInfo.fromTimeCheck,
+                    cabinCodeS1[i], flightInfo.fromDateCheck, flightInfo.fromTimeCheck,
                     flightInfo.flightNumberCheck, flightInfo.toAirportCodeCheck, flightInfo.toTermianl);
+            if (cabinTypeS1.length > 1){
+                iFlight.setClassRank(cabinTypeS1[i]);
+            }else{
+                iFlight.setClassRank(cabinTypeS1[0]);
+            }
             iFlightsSingle.add(iFlight);
         }
         interFlights.add(iFlightsSingle);
@@ -207,8 +216,13 @@ public class PlaneItemInfoInternationalActivity2 extends BaseActionBarActivity {
 //                LogUtil.e(TAG, flightInfo);
                 PlaneTicketInternationalPolicyCheckRequest.IFlight iFlight = new PlaneTicketInternationalPolicyCheckRequest.IFlight(String.valueOf(i), "S2",
                         cabin.passengerType.mainCarrierCheck, flightInfo.toDateCheck, flightInfo.toTimeCheck, flightInfo.fromAirportCodeCheck, flightInfo.fromTerminal, flightInfo.airlineCompanyCheck,
-                        cabinCodeS2[i], cabinType[1], flightInfo.fromDateCheck, flightInfo.fromTimeCheck,
+                        cabinCodeS2[i], flightInfo.fromDateCheck, flightInfo.fromTimeCheck,
                         flightInfo.flightNumberCheck, flightInfo.toAirportCodeCheck, flightInfo.toTermianl);
+                if (cabinTypeS2.length > 1){
+                    iFlight.setClassRank(cabinTypeS2[i]);
+                }else{
+                    iFlight.setClassRank(cabinTypeS2[0]);
+                }
                 iFlightsMultiply.add(iFlight);
             }
             interFlights.add(iFlightsMultiply);
@@ -283,7 +297,7 @@ public class PlaneItemInfoInternationalActivity2 extends BaseActionBarActivity {
             airRulesRQBeanList.add(airRulesRQBean);
         }
         if ("RT".equals(traveltype)){
-            for (int i = 0; i < flight.S1.flightInfos.size(); i++) {
+            for (int i = 0; i < flight.S2.flightInfos.size(); i++) {
                 PlaneTicketInternationalInfo.FlightInfo flightItem = flight.S2.flightInfos.get(i);
                 PlaneTicketInternationalChangeBack.AirRulesRQBean airRulesRQBean =
                         new PlaneTicketInternationalChangeBack.AirRulesRQBean(flightItem.fromDateCheck, flightItem.fromTimeCheck,

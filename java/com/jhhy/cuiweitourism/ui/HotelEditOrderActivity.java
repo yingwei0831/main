@@ -265,12 +265,13 @@ public class HotelEditOrderActivity extends BaseActionBarActivity implements Pop
             rooms.add(room);
         }
         HotelOrderRequest request = new HotelOrderRequest(MainActivity.user.getUserId(),
-                HotelDetailActivity.hotelDetail.getHotel().getHotelID(), HotelDetailActivity.hotelDetail.getHotel().getName(), HotelDetailActivity.hotelDetail.getHotel().getTraffic(), HotelDetailActivity.hotelDetail.getHotel().getCityCode(), HotelDetailActivity.hotelDetail.getHotel().getCityName(),
+                HotelDetailActivity.hotelDetail.getHotel().getHotelID(), HotelDetailActivity.hotelDetail.getHotel().getName(),
+                HotelDetailActivity.hotelDetail.getHotel().getTraffic(), HotelDetailActivity.hotelDetail.getHotel().getCityCode(), HotelDetailActivity.hotelDetail.getHotel().getCityName(),
                 hotelProduct.getRoomTypeID(), hotelProduct.getRoomName(), hotelProduct.getProductID(), hotelProduct.getName(),
-                checkInDate, checkOutDate, "Chinese", "SelfPay", String.valueOf(number), String.valueOf(listContact.size()), earlierCheckInDate, String.format(Locale.getDefault(), "%s %s", checkInDate, "23:59:00"),
-                "RMB", hotelProduct.getPrice(), getMyIP(), "FALSE", "NotAllowedConfirm", etHotelNotice.getText().toString(), etHotelNotice.getText().toString(),
+                checkInDate, checkOutDate, "Chinese", "Prepay", String.valueOf(number), String.valueOf(listContact.size()), earlierCheckInDate, String.format(Locale.getDefault(), "%s %s", checkInDate, "23:59:00"), //Chinese，Prepay
+                "RMB", hotelProduct.getPrice(), getMyIP(), "FALSE", "NotAllowedConfirm", etHotelNotice.getText().toString(), etHotelNotice.getText().toString(), //totalPrice 单价
                 "false", //发票
-                new HotelOrderRequest.ContactBean(name, mobile), hotelProduct.getPrice(), hotelProduct.getPrice(), hotelProduct.getMeals(), hotelProduct.getPrice(),
+                new HotelOrderRequest.ContactBean(name, mobile), hotelProduct.getPrice(), hotelProduct.getPrice(), hotelProduct.getMeals(), hotelProduct.getPrice(), //basePrice
                 hotelProduct.getPlanType(), "2", "0", hotelProduct.getRoomImgUrl());
 
         request.setRooms(rooms);

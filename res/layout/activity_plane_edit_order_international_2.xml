@@ -33,7 +33,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/colorActionBar"
-                android:paddingTop="20dp"
+                android:paddingTop="24dp"
                 android:divider="@color/colorActionBar"
                 android:dividerHeight="10dp"
                 android:paddingBottom="16dp"

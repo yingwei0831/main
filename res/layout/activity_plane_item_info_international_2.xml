@@ -27,7 +27,7 @@
             android:background="@color/colorActionBar"
             android:divider="@color/colorActionBar"
             android:dividerHeight="10dp"
-            android:paddingTop="20dp"
+            android:paddingTop="24dp"
             />
 
     </LinearLayout>

@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.model.UserContacts;
+import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketOrderInternationalRequest;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelOrderDetailResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainTicketOrderDetailResponse;
 
@@ -54,11 +55,9 @@ public class TravelerInfoClass extends LinearLayout{
         tvMobile.setText(contacts.getMobile());
          layoutId.setVisibility(GONE);
     }
-//    public void setShowView(TrainTicketOrderDetailResponse.PassengerBean contacts){
-//        tvName.setText(contacts.getName());
-//        tvMobile.setText(contacts.getMobile());
-//         layoutId.setVisibility(GONE);
+//    public void setShowView(PlaneTicketOrderInternationalRequest.PassengersBean contacts){
+//        tvName.setText(contacts.getName()); //姓名
+//        tvMobile.setText(contacts.getCardType()); //证件类型，证件号
+//        tvID.setText(contacts.getCardNo()); //
 //    }
-
-
 }

@@ -190,7 +190,7 @@
 
     <string name="fragment_mine_all_orders">全部订单</string>
     <string name="fragment_mine_wait_pay">等待付款</string>
-    <string name="fragment_mine_wait_cancel">等待取消</string>
+    <string name="fragment_mine_wait_cancel">待取消</string>
     <string name="fragment_mine_hotel_reserve">预订成功</string>
     <string name="fragment_mine_wait_comment">待点评</string>
     <string name="fragment_mine_wait_refund">待退款</string>

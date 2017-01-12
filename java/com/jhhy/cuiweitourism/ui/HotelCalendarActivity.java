@@ -138,7 +138,7 @@ public class HotelCalendarActivity extends BaseActivity implements View.OnClickL
                         long diff = Utils.getDiff(hotelInDate, dateFormat);
                         LogUtil.e(TAG, "相差天数：diff = " + diff);
                         List<String> dates = new ArrayList<>();
-                        if (diff <= 28 && diff > 0){
+                        if (diff <= 20 && diff > 0){
                             //本月，加下个月 将字符串转为毫秒？
                             long time = Utils.getTime(hotelInDate);
                             dates.add(hotelInDate);
@@ -148,6 +148,7 @@ public class HotelCalendarActivity extends BaseActivity implements View.OnClickL
                             }
                             LogUtil.e(TAG, "相差天数：dates = " + dates);
                         } else {
+                            ToastCommon.toastShortShow(getApplicationContext(), null, "最长可选20天");
                             return;
                         }
 //                        toYear  = yearCalendar;

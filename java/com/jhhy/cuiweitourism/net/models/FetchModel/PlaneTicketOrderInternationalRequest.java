@@ -17,6 +17,8 @@ public class PlaneTicketOrderInternationalRequest extends BasicFetchModel{
      * BalanceMoney : 1023.0
      * PlatformType : P
      * TravelType : OW
+     * from : PEK
+     * to : BKK
      * InterFlights : [[{"SegmentID":"0","SegmentType":"S1","TicketingCarrier":"MU","ArrivalDate":"2016-12-03","ArrivalTime":"00:00","BoardPoint":"PEK","BoardPointAT":"","Carrier":"MU","ClassCode":"V","ClassRank":"E","DepartureDate":"2016-12-02","DepartureTime":"19:10","FlightNo":"MU9801","OffPoint":"BKK","OffPointAT":""}]]
      * Passengers : [{"Name":"ba/wang","PsgType":"1","CardType":"2","CardNo":"E1301230122","MobilePhone":"13264349337","Fare":"1100","ShouldPay":"1023.0","Sex":"M","BirthDay":"1980-03-07","Country":"CN","TaxAmount":"428"}]
      */
@@ -29,11 +31,14 @@ public class PlaneTicketOrderInternationalRequest extends BasicFetchModel{
     private String AccountLevel;
     private String BalanceMoney;
     private String PlatformType;
+    private String from;
+    private String to;
     private String TravelType;
     private List<List<PlaneTicketInternationalPolicyCheckRequest.IFlight>> InterFlights; //单程1条，往返2条
     private List<PassengersBean> Passengers;
 
-    public PlaneTicketOrderInternationalRequest(String uid, String linkman, String linktel, String policyId, String platCode, String accountLevel, String balanceMoney, String platformType, String travelType, List<List<PlaneTicketInternationalPolicyCheckRequest.IFlight>> interFlights, List<PassengersBean> passengers) {
+    public PlaneTicketOrderInternationalRequest(String uid, String linkman, String linktel, String policyId, String platCode, String accountLevel, String balanceMoney, String platformType, String travelType,
+                                                String from, String to, List<List<PlaneTicketInternationalPolicyCheckRequest.IFlight>> interFlights, List<PassengersBean> passengers) {
         this.uid = uid;
         this.linkman = linkman;
         this.linktel = linktel;
@@ -43,8 +48,26 @@ public class PlaneTicketOrderInternationalRequest extends BasicFetchModel{
         BalanceMoney = balanceMoney;
         PlatformType = platformType;
         TravelType = travelType;
+        this.from = from;
+        this.to = to;
         InterFlights = interFlights;
         Passengers = passengers;
+    }
+
+    public String getFrom() {
+        return from;
+    }
+
+    public void setFrom(String from) {
+        this.from = from;
+    }
+
+    public String getTo() {
+        return to;
+    }
+
+    public void setTo(String to) {
+        this.to = to;
     }
 
     public String getUid() {
@@ -263,6 +286,23 @@ public class PlaneTicketOrderInternationalRequest extends BasicFetchModel{
 
         public void setTaxAmount(String TaxAmount) {
             this.TaxAmount = TaxAmount;
+        }
+
+        @Override
+        public String toString() {
+            return "PassengersBean{" +
+                    "Name='" + Name + '\'' +
+                    ", PsgType='" + PsgType + '\'' +
+                    ", CardType='" + CardType + '\'' +
+                    ", CardNo='" + CardNo + '\'' +
+                    ", MobilePhone='" + MobilePhone + '\'' +
+                    ", Fare='" + Fare + '\'' +
+                    ", ShouldPay='" + ShouldPay + '\'' +
+                    ", Sex='" + Sex + '\'' +
+                    ", BirthDay='" + BirthDay + '\'' +
+                    ", Country='" + Country + '\'' +
+                    ", TaxAmount='" + TaxAmount + '\'' +
+                    '}';
         }
     }
 

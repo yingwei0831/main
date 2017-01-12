@@ -20,6 +20,7 @@ import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneOrderOfChinaResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketCityInfo;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketDetailInternationalResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketInternationalChangeBackRespond;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketInternationalInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketInfoOfChina;
@@ -629,7 +630,19 @@ public class PlaneTicketActionBiz extends BasicActionBiz {
     /**
      * 国际机票订单详情
      */
-//    public void planeTicketInternationalOrderDetail(PlaneInternationalOrderDetailRequest fetch, ){
-//        fetch.code = "Plane_gjinfo";
-//    }
+    public void planeTicketInternationalOrderDetail(PlaneInternationalOrderDetailRequest fetch, BizGenericCallback<PlaneTicketDetailInternationalResponse> callback){
+        fetch.code = "Plane_gjinfo";
+        FetchGenericResponse<PlaneTicketDetailInternationalResponse> fetchResponse = new FetchGenericResponse<PlaneTicketDetailInternationalResponse>(callback) {
+            @Override
+            public void onCompletion(FetchResponseModel response) {
+                this.bizCallback.onCompletion(new GenericResponseModel<PlaneTicketDetailInternationalResponse>(response.head, parseJsonToObject(response, PlaneTicketDetailInternationalResponse.class)));
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                this.bizCallback.onError(error);
+            }
+        };
+        HttpUtils.executeXutils(fetch, new FetchGenericCallback<>(fetchResponse));
+    }
 }

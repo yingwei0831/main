@@ -291,6 +291,17 @@ public class Utils {
     }
 
     /**
+     * 给定分钟数，返回XX时XX分
+     * @param minutes
+     * @return
+     */
+    public static String getPeriod(String minutes){
+        int minute = Integer.parseInt(minutes);
+        int hour = minute / 60;
+        minute = minute % 60;
+        return String.format(Locale.getDefault(), "%d时%02d分", hour, minute);
+    }
+    /**
      * 格式：yyyy-MM-dd 周六
      * @return 2016-12-30 周五
      */
@@ -313,11 +324,11 @@ public class Utils {
      * @param time 时间毫秒值
      * @return 格式化后的时间字符串
      */
-//    public static String getTimeStr(long time){
-//        Date date = new Date(time);
-//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
-//        return format.format(date);
-//    }
+    public static String getTimeStr(long time){
+        Date date = new Date(time);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
+        return format.format(date);
+    }
 
     /**
      * @param time 毫秒

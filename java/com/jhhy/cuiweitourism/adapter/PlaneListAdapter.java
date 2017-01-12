@@ -91,7 +91,7 @@ public class PlaneListAdapter extends MyBaseAdapter {
         }else{
             holder = (ViewHolder) view.getTag();
         }
-        if (type == 1) {
+        if (type == 1) { //国内机票
             PlaneTicketInfoOfChina.FlightInfo flight = (PlaneTicketInfoOfChina.FlightInfo) getItem(i);
             if (flight != null) {
                 holder.tvStartTime.setText(String.format("%s:%s", flight.depTime.substring(0, 2), flight.depTime.substring(2)));
@@ -105,13 +105,13 @@ public class PlaneListAdapter extends MyBaseAdapter {
                 holder.tvPlaneClass.setText(seat.getSeatMsg());
                 holder.tvPlaneInfo.setText(String.format("%s %s", seat.getFlightNo(), flight.planeType));
             }
-        }else if (type == 2){
+        }else if (type == 2){ //国际机票
             PlaneTicketInternationalInfo.PlaneTicketInternationalF flight = (PlaneTicketInternationalInfo.PlaneTicketInternationalF) getItem(i);
             if (flight != null){
 
                 PlaneTicketInternationalInfo.PlaneTicketInternationalHF hf = PlaneListInternationalActivity.info.HMap.get(flight.F);
 
-                LogUtil.e(TAG, "舱位代码：" + hf.cabin.passengerType.airportCabinType); // 舱位代码：B,B,F   E/E
+                LogUtil.e(TAG, "舱位代码：" + hf.cabin.passengerType.airportCabinType); // 舱位代码：B,B,F   E/E,B,B
                 String[] cabinTypes = hf.cabin.passengerType.airportCabinType.split("/");
                 LogUtil.e(TAG, "舱位代码：size = " + cabinTypes.length + "; " + Arrays.toString(cabinTypes));
 
@@ -141,7 +141,8 @@ public class PlaneListAdapter extends MyBaseAdapter {
                                 PlaneListInternationalActivity.info.J.get(s2.flightInfos.get(0).flightTypeCheck).typeName,
                                 sb.toString().substring(0, sb.toString().lastIndexOf(" ")))); //飞机/舱位 MU5003空客A320(J)|经济舱(R) 中转显示全部舱位类型
                     }
-                    holder.tvConsumingTimeReturn.setText(Utils.getDiffMinuteStr(String.format("%s %s", s2.fromDate, s2.fromTime), String.format("%s %s", s2.toDate, s2.toTime))); //耗时
+//                    holder.tvConsumingTimeReturn.setText(Utils.getDiffMinuteStr(String.format("%s %s", s2.fromDate, s2.fromTime), String.format("%s %s", s2.toDate, s2.toTime))); //耗时
+                    holder.tvConsumingTimeReturn.setText(Utils.getPeriod(s2.flightPeriodTotal)); //耗时 分钟—>xx时xx分
                     holder.tvFromAirportReturn.setText(String.format("%s%s", PlaneListInternationalActivity.info.P.get(s2.fromAirportCode).fullName, s2.fromAirportName)); //起飞机场/航站楼
                     holder.tvArrivalAirportReturn.setText(String.format("%s%s", PlaneListInternationalActivity.info.P.get(s2.toAirportCode).fullName, s2.toAirportName)); //起飞机场/航站楼
                 }else{
@@ -173,7 +174,8 @@ public class PlaneListAdapter extends MyBaseAdapter {
                             PlaneListInternationalActivity.info.J.get(s1.flightInfos.get(0).flightTypeCheck).typeName,
                             sb.toString().substring(0, sb.toString().length() - 2))); //飞机/舱位 MU5003空客A320(J)|经济舱(R) 中转,取第一个显示
                 }
-                holder.tvConsumingTime.setText(Utils.getDiffMinuteStr(String.format("%s %s", s1.fromDate, s1.fromTime), String.format("%s %s", s1.toDate, s1.toTime))); //耗时
+//                holder.tvConsumingTime.setText(Utils.getDiffMinuteStr(String.format("%s %s", s1.fromDate, s1.fromTime), String.format("%s %s", s1.toDate, s1.toTime))); //耗时
+                holder.tvConsumingTime.setText(Utils.getPeriod(s1.flightPeriodTotal));
                 holder.tvFromAirport.setText(String.format("%s%s", PlaneListInternationalActivity.info.P.get(s1.fromAirportCode).fullName, s1.fromAirportName)); //起飞机场/航站楼
                 holder.tvArrivalAirport.setText(String.format("%s%s", PlaneListInternationalActivity.info.P.get(s1.toAirportCode).fullName, s1.toAirportName)); //起飞机场/航站楼
 

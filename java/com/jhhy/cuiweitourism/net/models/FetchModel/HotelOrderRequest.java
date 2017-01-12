@@ -21,7 +21,7 @@ public class HotelOrderRequest extends BasicFetchModel {
      * RatePlanName : 含双早                   ProductID
      * ArrivalDate : 2016-12-15
      * DepartureDate : 2016-12-20
-     * PassengerType : All                      必填；入住类型: All=统一价； Chinese =内宾价； OtherForeign =外宾价； HongKong =港澳台客人价 Japanese=日本客人价
+     * PassengerType : Chinese                  必填；入住类型: All=统一价； Chinese =内宾价； OtherForeign =外宾价； HongKong =港澳台客人价 Japanese=日本客人价
      * PaymentType : SelfPay                    必填；付款方式: SelfPay-前台自付、Prepay-预付
      * NumberOfRooms : 1                        必填；房间数量，每一订单房间数量最好不要超过5间
      * NumberOfPassengers : 2                   旅客人数
