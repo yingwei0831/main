@@ -185,6 +185,7 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
             for (HotelDetailResponse.HotelProductBean productBean: products){
                 productBean.setRoomName(roomBean.getRoomName());
                 productBean.setRoomImgUrl(imageUrl);
+//                LogUtil.e(TAG, "roomBean.getRoomID() = " + roomBean.getRoomID());
                 productBean.setRoomId(roomBean.getRoomID());
                 productBean.setBedType(roomBean.getBedType());
                 listProducts.add(productBean);
@@ -421,17 +422,23 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
             }else{
                 earlierCheckInDate = String.format(Locale.getDefault(), "%s %s", checkInDate, "08:00:00");
             }
-            HotelProductPriceRequest fetch = new HotelProductPriceRequest(hotelDetail.getHotel().getHotelID(), checkInDate, checkOutDate, hotelProduct.getRoomId(), hotelProduct.getProductID());
+            HotelProductPriceRequest fetch = new HotelProductPriceRequest(hotelDetail.getHotel().getHotelID(),
+                    checkInDate, checkOutDate, roomItem.getRoomId(), roomItem.getProductID());
 
             hotelBiz.getHotelProductPrice(fetch, new BizGenericCallback<HotelProductPriceResponse>() {
                 @Override
                 public void onCompletion(GenericResponseModel<HotelProductPriceResponse> model) {
-                    LogUtil.e(TAG, "getHotelPriceCheck: "+model.body);
+                    LogUtil.e(TAG, "getHotelPriceCheck: " + model.body);
                     LoadingIndicator.cancel();
                     if ("0001".equals(model.headModel.res_code)){
                         ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);
                     }else if ("0000".equals(model.headModel.res_code)){
                         HotelProductPriceResponse priceCheck = model.body;
+                        if ("null".equals(priceCheck.getTotalPrice()) ||  priceCheck.getTotalPrice()== null){
+                            ToastCommon.toastShortShow(getApplicationContext(), null, "验价失败，请重试");
+//                            popupWindow.dismiss(); //选择房间消失
+                            return;
+                        }
                         popupWindow.dismiss(); //选择房间消失
                         setHotelOrder(mPosition, priceCheck.getTotalPrice());
                     }

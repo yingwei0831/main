@@ -97,7 +97,8 @@
             android:drawableTop="@mipmap/icon_screen_train"
             android:gravity="center"
             android:text="筛选"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            android:visibility="gone"/>
 
         <RadioGroup
             android:id="@+id/rg_plane_list"

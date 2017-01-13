@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.OnItemTextViewClick;
 import com.jhhy.cuiweitourism.R;
+import com.jhhy.cuiweitourism.model.UserContacts;
+import com.jhhy.cuiweitourism.net.models.FetchModel.ActivityOrder;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelOrderRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketOrderInternationalRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.TrainTicketOrderFetch;
@@ -40,7 +42,7 @@ public class OrderEditContactsAdapter extends MyBaseAdapter {
 
     @Override
     public int getCount() {
-        if (type == 3){
+        if (type == 3 || type == 4){
             return number;
         }else {
             return super.getCount();
@@ -50,17 +52,26 @@ public class OrderEditContactsAdapter extends MyBaseAdapter {
     @Override
     public View getView(final int i, View view, ViewGroup viewGroup) {
         ViewHolder holder = null;
-        if (view == null){
-            view = LayoutInflater.from(context).inflate(R.layout.item_train_contact, null);
-            holder = new ViewHolder();
-            holder. ivTrash = (ImageView) view.findViewById(R.id.iv_train_trash);
-            holder. ivDetail = (ImageView) view.findViewById(R.id.iv_contact_view_detail);
-            holder.tvName = (TextView) view.findViewById(R.id.tv_contact_name);
-            holder.tvID = (TextView) view.findViewById(R.id.tv_contact_card_id);
-            view.setTag(holder);
-        }else{
-            holder = (ViewHolder) view.getTag();
-        }
+//        if (type == 4){
+//            if (view == null){
+//                view = LayoutInflater.from(context).inflate(R.layout.layout_traveler, null);
+//                holder.tvName = (TextView) view.findViewById(R.id.tv_travel_edit_order_name);
+//                view.setTag(holder);
+//            }else{
+//                holder = (ViewHolder) view.getTag();
+//            }
+//        }else {
+            if (view == null) {
+                view = LayoutInflater.from(context).inflate(R.layout.item_train_contact, null);
+                holder = new ViewHolder();
+                holder.ivTrash = (ImageView) view.findViewById(R.id.iv_train_trash);
+                holder.ivDetail = (ImageView) view.findViewById(R.id.iv_contact_view_detail);
+                holder.tvName = (TextView) view.findViewById(R.id.tv_contact_name);
+                holder.tvID = (TextView) view.findViewById(R.id.tv_contact_card_id);
+                view.setTag(holder);
+            } else {
+                holder = (ViewHolder) view.getTag();
+            }
         final View clickViewT = holder.ivTrash;
         holder.ivTrash.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,6 +108,17 @@ public class OrderEditContactsAdapter extends MyBaseAdapter {
                 }
             }else{
                 holder.tvName.setHint(context.getString(R.string.hotel_passenger_name_hint));
+                holder.tvName.setText("");
+            }
+            holder.tvID.setVisibility(View.GONE);
+        }else if (type == 4){ //热门活动
+            if (i < list.size()) {
+                ActivityOrder.Contact traveller = (ActivityOrder.Contact) getItem(i);
+                if (traveller != null) {
+                    holder.tvName.setText(traveller.getTourername());
+                }
+            }else{
+                holder.tvName.setHint(context.getString(R.string.hot_passenger_name_hint));
                 holder.tvName.setText("");
             }
             holder.tvID.setVisibility(View.GONE);

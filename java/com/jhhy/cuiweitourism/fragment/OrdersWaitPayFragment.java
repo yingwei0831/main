@@ -21,11 +21,17 @@ import com.jhhy.cuiweitourism.adapter.OrderXListViewAdapter;
 import com.jhhy.cuiweitourism.biz.OrderActionBiz;
 import com.jhhy.cuiweitourism.biz.OrdersAllBiz;
 import com.jhhy.cuiweitourism.model.Order;
+import com.jhhy.cuiweitourism.net.biz.PlaneTicketActionBiz;
+import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketOfChinaCancelOrderRequest;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
+import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.ui.MainActivity;
 import com.jhhy.cuiweitourism.ui.SelectPaymentActivity;
 import com.jhhy.cuiweitourism.ui.Tab4OrderDetailsActivity;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
+import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.jhhy.cuiweitourism.utils.Utils;
 import com.just.sun.pricecalendar.ToastCommon;
@@ -189,17 +195,58 @@ public class OrdersWaitPayFragment extends Fragment implements ArgumentOnClick {
              */
             @Override
             public void onOrderItemClick(int position) {
-                Order order = lists.get(position);
-                Intent intent = new Intent(getContext(), Tab4OrderDetailsActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("orderSN", order.getOrderSN());
-                bundle.putInt("type", Integer.parseInt(order.getStatus()));
-                bundle.putString("typeId", order.getTypeId());
-                intent.putExtras(bundle);
-                startActivityForResult(intent, REQUEST_CODE_ORDER_DETAIL);
+                orderDetail(position);
             }
         };
         pullListView.setAdapter(adapter);
+    }
+
+    private void orderDetail(int position) {
+        Order order = lists.get(position);
+
+        if ("80".equals(order.getTypeId())){ //火车票详情
+            if (order.getSanfangorderno1() == null || order.getSanfangorderno1().length() == 0 ||
+                    order.getSanfangorderno2() == null || order.getSanfangorderno2().length() == 0){
+                ToastCommon.toastShortShow(getContext(), null, "订单号不存在，无详情");
+                return;
+            }
+        }else if ("82".equals(order.getTypeId())){ //机票详情
+            getPlaneTicketDetail(order);
+            return;
+        }
+        getOrderDetail(order);
+    }
+
+    /**
+     * 国内机票详情，国际机票详情
+     */
+    private void getPlaneTicketDetail(Order order) {
+        Intent intent = new Intent(getContext(), Tab4OrderDetailsActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("orderSN", order.getOrderSN());
+        bundle.putInt("type", Integer.parseInt(order.getStatus())); //订单状态
+        if ("国内机票".equals(order.getProductName())){ //82
+            bundle.putString("typeId", order.getTypeId()); //订单类型
+        }else if ("国际机票".equals(order.getProductName())){ //83
+            bundle.putString("typeId", "83"); //订单类型
+        }
+        intent.putExtras(bundle);
+        startActivityForResult(intent, REQUEST_CODE_ORDER_DETAIL);
+    }
+
+    /**
+     * 普通订单详情
+     */
+    private void getOrderDetail(Order order) {
+        Intent intent = new Intent(getContext(), Tab4OrderDetailsActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("orderSN", order.getOrderSN());
+        bundle.putInt("type", Integer.parseInt(order.getStatus())); //订单状态
+        bundle.putString("typeId", order.getTypeId()); //订单类型
+        bundle.putString("sanfangorderno1", order.getSanfangorderno1()); //酒店，签证，国内机票，国际机票，火车票
+        bundle.putString("sanfangorderno2", order.getSanfangorderno2()); //酒店，签证，国内机票，国际机票，火车票
+        intent.putExtras(bundle);
+        startActivityForResult(intent, REQUEST_CODE_ORDER_DETAIL);
     }
 
     private int REQUEST_CODE_ORDER_DETAIL = 1501; //订单详情
@@ -231,18 +278,84 @@ public class OrdersWaitPayFragment extends Fragment implements ArgumentOnClick {
      */
     @Override
     public void goToArgument(View view, View viewGroup, int position, int which) {
+        Order order = lists.get(position);
         switch (which){
             case R.id.btn_tab3_item_sign_contact: //签约付款
-                Intent intent = new Intent(getContext(), SelectPaymentActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("order", lists.get(position));
-                intent.putExtras(bundle);
-                startActivityForResult(intent, REQUEST_CODE_PAY);
+                Intent intentPay = new Intent(getContext(), SelectPaymentActivity.class);
+                Bundle bundlePay = new Bundle();
+                if ("80".equals(order.getTypeId())){ //火车票
+                    bundlePay.putSerializable("order", order);
+                    bundlePay.putInt("type",18);
+                }else if ("82".equals(order.getTypeId())){ //飞机票
+                    if ("国内机票".equals(order.getProductName())){ //国内机票
+                        bundlePay.putSerializable("order", order);
+                        bundlePay.putInt("type",19);
+                    }else if ("国际机票".equals(order.getProductName())){ //国际机票
+                        bundlePay.putSerializable("order", order);
+                        bundlePay.putInt("type", 20);
+                    }
+                }else if ("2".equals(order.getTypeId())){ //酒店
+                    bundlePay.putSerializable("order", order);
+                    bundlePay.putInt("type", 24);
+                }else{
+                    bundlePay.putSerializable("order", order);
+                }
+                intentPay.putExtras(bundlePay);
+                startActivityForResult(intentPay, REQUEST_CODE_PAY);
                 break;
             case R.id.btn_order_cancel: //取消订单
-                OrderActionBiz biz = new OrderActionBiz(getContext(), handler);
-                biz.requestCancelOrder(lists.get(position).getOrderSN());
+                if ("2".equals(order.getTypeId())){ //酒店
+                    cancelHotelOrder(position);
+                } else if ("82".equals(order.getTypeId())){ //飞机票（国内/国际）
+                    cancelPlaneOrder(order);
+                } else {
+                    cancelOrder(order);
+                }
                 break;
+        }
+    }
+
+    private void cancelOrder(Order order) {
+        OrderActionBiz biz = new OrderActionBiz(getContext(), handler);
+        biz.requestCancelOrder(order.getOrderSN());
+    }
+
+    /**
+     * 取消酒店订单
+     */
+    private void cancelHotelOrder(int position) { //进入订单详情后再取消订单
+        orderDetail(position);
+    }
+
+    /**
+     * 取消机票订单
+     */
+    private void cancelPlaneOrder(Order order) {
+        if ("国际机票".equals(order.getProductName())){
+            cancelOrder(order); //通用
+        }else if ("国内机票".equals(order.getProductName())){
+            //如果支付了，退款
+            //如果未支付，取消订单
+            PlaneTicketActionBiz biz = new PlaneTicketActionBiz();
+            PlaneTicketOfChinaCancelOrderRequest fetch = new PlaneTicketOfChinaCancelOrderRequest(order.getOrderSN(), MainActivity.user.getUserId());
+            biz.planeTicketCancelOrder(fetch, new BizGenericCallback<Object>() {
+                @Override
+                public void onCompletion(GenericResponseModel<Object> model) {
+                    ToastCommon.toastShortShow(getContext(), null, model.headModel.res_arg); //model.body = null;
+                    //通知全部刷新
+                    getData(type);
+                }
+
+                @Override
+                public void onError(FetchError error) {
+                    if (error.localReason != null){
+                        ToastCommon.toastShortShow(getContext(), null, error.localReason);
+                    }else{
+                        ToastCommon.toastShortShow(getContext(), null, "取消国内机票订单出错，请重试");
+                    }
+                    LoadingIndicator.cancel();
+                }
+            });
         }
     }
 

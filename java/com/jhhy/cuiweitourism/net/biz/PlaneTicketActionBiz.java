@@ -8,6 +8,7 @@ import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneOrderOfChinaRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketCityFetch;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketInfoForChinalRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketInfoInternationalRequest;
+import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketInquiryRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketInternationalChangeBack;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketInternationalPolicyCheckRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketOfChinaCancelOrderRequest;
@@ -635,7 +636,26 @@ public class PlaneTicketActionBiz extends BasicActionBiz {
         FetchGenericResponse<PlaneTicketDetailInternationalResponse> fetchResponse = new FetchGenericResponse<PlaneTicketDetailInternationalResponse>(callback) {
             @Override
             public void onCompletion(FetchResponseModel response) {
-                this.bizCallback.onCompletion(new GenericResponseModel<PlaneTicketDetailInternationalResponse>(response.head, parseJsonToObject(response, PlaneTicketDetailInternationalResponse.class)));
+                this.bizCallback.onCompletion(new GenericResponseModel<>(response.head, parseJsonToObject(response, PlaneTicketDetailInternationalResponse.class)));
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                this.bizCallback.onError(error);
+            }
+        };
+        HttpUtils.executeXutils(fetch, new FetchGenericCallback<>(fetchResponse));
+    }
+
+    /**
+     * 机票询价
+     */
+    public void planeTicketInquiry(PlaneTicketInquiryRequest fetch, BizGenericCallback<Object> callback){
+        fetch.code = "Publics_xunjia";
+        FetchGenericResponse<Object> fetchResponse = new FetchGenericResponse<Object>(callback) {
+            @Override
+            public void onCompletion(FetchResponseModel response) {
+                this.bizCallback.onCompletion(new GenericResponseModel<Object>(response.head, null));
             }
 
             @Override

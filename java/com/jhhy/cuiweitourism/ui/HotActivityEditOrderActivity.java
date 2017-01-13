@@ -22,12 +22,14 @@ import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.OnItemTextViewClick;
 import com.jhhy.cuiweitourism.R;
+import com.jhhy.cuiweitourism.adapter.OrderEditContactsAdapter;
 import com.jhhy.cuiweitourism.model.Invoice;
 import com.jhhy.cuiweitourism.model.Order;
 import com.jhhy.cuiweitourism.model.User;
 import com.jhhy.cuiweitourism.model.UserContacts;
 import com.jhhy.cuiweitourism.net.biz.ActivityActionBiz;
 import com.jhhy.cuiweitourism.net.models.FetchModel.ActivityOrder;
+import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketOrderInternationalRequest;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.ActivityHotDetailInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.ActivityOrderInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
@@ -39,6 +41,7 @@ import com.jhhy.cuiweitourism.utils.LinkSpanWrapper;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.utils.SharedPreferencesUtils;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
+import com.jhhy.cuiweitourism.view.MyListView;
 import com.just.sun.pricecalendar.ToastCommon;
 
 import java.util.ArrayList;
@@ -75,7 +78,9 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
     private EditText etContactMail;
     private EditText etContactRemark;
 
-    private LinearLayout layoutTravelersInfo;
+//    private LinearLayout layoutTravelersInfo;
+    private MyListView listViewContact; //游客列表
+    private OrderEditContactsAdapter adapter;
     private TextView tvTravelers;
     private TextView tvSelectTraveler; //常用联系人
     private LinearLayout layoutTravelers; //动态添加游客
@@ -171,8 +176,10 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
         etContactMail = (EditText) findViewById(R.id.et_travel_edit_order_contact_mail);
         etContactRemark = (EditText) findViewById(R.id.et_travel_edit_order_contact_remark);
 
-        layoutTravelersInfo = (LinearLayout) findViewById(R.id.layout_travelers);
+//        layoutTravelersInfo = (LinearLayout) findViewById(R.id.layout_travelers);
 //        layoutTravelersInfo.setVisibility(View.GONE);
+        listViewContact = (MyListView) findViewById(R.id.list_plane_contacts);
+
         tvTravelers = (TextView) findViewById(R.id.tv_travel_edit_order_travelers);
         tvSelectTraveler = (TextView) findViewById(R.id.tv_travel_edit_order_select_traveler);
         layoutTravelers = (LinearLayout) findViewById(R.id.layout_traveler);
@@ -216,7 +223,7 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
         tvPriceTotal.setText(String.valueOf(priceTotal));
         btnPay = (Button) findViewById(R.id.btn_edit_order_pay); //去往立即支付
 
-        calculateContacts(); //计算游客
+//        calculateContacts(); //计算游客
 
         //TODO 这个为什么是不能动的？
         tvFromCity.setText("北京");
@@ -234,43 +241,59 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
         tvSelectFromCity.setText(hotActivityDetail.getCfcity());
         tvTitle.setText(hotActivityDetail.getTitle());
         tvNumber.setText(String.valueOf(count)+"人");
+
+        adapter = new OrderEditContactsAdapter(getApplicationContext(), listHotContact, this);
+        adapter.setType(4);
+        adapter.setCount(count);
+        listViewContact.setAdapter(adapter);
     }
 
-    private void calculateContacts() {
-        addContacts(count);
-    }
+//    private void calculateContacts() {
+//        addContacts(count);
+//    }
 
-    private void addContacts(int addNumber) {
-        for (int i = 0; i < addNumber; i++) {
-            addContact(i);
-        }
-    }
+//    private void addContacts(int addNumber) {
+//        for (int i = 0; i < addNumber; i++) {
+//            addContact(i);
+//        }
+//    }
 
-    private void addContact(int addNumber) {
-        View viewCustom = LayoutInflater.from(getApplicationContext()).inflate(R.layout.layout_traveler, null);
-        final TextView tvName = (TextView) viewCustom.findViewById(R.id.tv_travel_edit_order_name);
-        final int j = addNumber - 1;
-        viewCustom.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onItemTextViewClick(j, tvName, tvName.getId());
-            }
-        });
-        layoutTravelers.addView(viewCustom);
-    }
+//    private void addContact(int addNumber) {
+//        View viewCustom = LayoutInflater.from(getApplicationContext()).inflate(R.layout.layout_traveler, null);
+//        final TextView tvName = (TextView) viewCustom.findViewById(R.id.tv_travel_edit_order_name);
+//        final int j = addNumber - 1;
+//        viewCustom.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                onItemTextViewClick(j, tvName, tvName.getId());
+//            }
+//        });
+//        layoutTravelers.addView(viewCustom);
+//    }
 
     int position = -1; //点击的联系人布局中的位置
     boolean childClick = false; //是否点击了联系人列表
 
     @Override
     public void onItemTextViewClick(int position, View textView, int id) { //如果是单个的联系人，则只能选择一个
-        childClick = true;
-        this.position = position;
-        Intent intent = new Intent(getApplicationContext(), SelectCustomActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putInt("number", 1);
-        intent.putExtras(bundle);
-        startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_SELECT_CONTACT);
+        switch (textView.getId()){
+            case R.id.tv_contact_name:
+                childClick = true;
+                this.position = position;
+                Intent intent = new Intent(getApplicationContext(), SelectCustomActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putInt("number", 1);
+                intent.putExtras(bundle);
+                startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_SELECT_CONTACT);
+                break;
+            case R.id.iv_train_trash:
+                if (listHotContact.size() != 0) {
+                    listHotContact.remove(position);
+                    adapter.setData(listHotContact);
+                    adapter.notifyDataSetChanged();
+                }
+                break;
+        }
     }
 
     private void addListener() {
@@ -299,7 +322,7 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
                     childClick = false;
                     Intent intent = new Intent(getApplicationContext(), SelectCustomActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putInt("number", count);
+                    bundle.putInt("number", count - listHotContact.size());
                     intent.putExtras(bundle);
                     startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_SELECT_CONTACT);
                 }else{
@@ -310,7 +333,6 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
                     startActivityForResult(intent, REQUEST_LOGIN);
                 }
                 break;
-
             case R.id.btn_edit_order_pay: //去付款
                 goToPay();
                 break;
@@ -358,37 +380,26 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
                     SharedPreferencesUtils sp = SharedPreferencesUtils.getInstance(getApplicationContext());
                     sp.saveUserId(user.getUserId());
                 }
-            }else
-            if (requestCode == Consts.REQUEST_CODE_RESERVE_SELECT_CONTACT){ //选择常用联系人
+            }else if (requestCode == Consts.REQUEST_CODE_RESERVE_SELECT_CONTACT){ //选择常用联系人
                 Bundle bundle = data.getExtras();
                 ArrayList<UserContacts> listSelection = bundle.getParcelableArrayList("selection");
-                if (childClick){ //如果是单个的联系人，则只能选择一个
-                    if (listHotContact.size() != 0){
-                        if (listHotContact.size() < position){
-                            listHotContact.remove(position);
+                if (listSelection != null) {
+                    for (UserContacts cont : listSelection) { //选择的游客
+                        if (childClick){
+                            if (position != -1){
+                                if (listHotContact.size() > position) {
+                                    listHotContact.remove(position);
+                                    checkAndAddContact(cont);
+                                }else {
+                                    checkDouble(cont);
+                                }
+                            }
+                        }else {
+                            checkAndAddContact(cont);
                         }
-                        //添加联系人
-                        UserContacts cont = listSelection.get(0);
-                        ActivityOrder.Contact contact = new ActivityOrder.Contact(cont.getContactsName(), cont.getContactsIdCard(), cont.getContactsMobile());
-                        listHotContact.add(contact);
-                        //显示name
-                        RelativeLayout traveler = (RelativeLayout) layoutTravelers.getChildAt(position);
-                        TextView tvName = (TextView) traveler.getChildAt(traveler.getChildCount() - 1);
-                        tvName.setText(listSelection.get(0).getContactsName());
                     }
-                    childClick = false;
-                    position = -1;
-                }else{ //如果是选择联系人，则可以选择多个
-                    listHotContact.clear();
-                    for (int i = 0; i < listSelection.size(); i++){
-                        UserContacts cont = listSelection.get(i);
-                        ActivityOrder.Contact contact = new ActivityOrder.Contact(cont.getContactsName(), cont.getContactsIdCard(), cont.getContactsMobile());
-                        listHotContact.add(contact);
-
-                        RelativeLayout traveler = (RelativeLayout) layoutTravelers.getChildAt(i);
-                        TextView tvName = (TextView) traveler.getChildAt(traveler.getChildCount() - 1 );
-                        tvName.setText(cont.getContactsName());
-                    }
+                    adapter.setData(listHotContact);
+                    adapter.notifyDataSetChanged();
                 }
             }
 //            else if (requestCode == Consts.REQUEST_CODE_RESERVE_SELECT_COIN){ //选择旅游币
@@ -425,6 +436,26 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
                 finish();
             }
 
+        }
+    }
+
+    private void checkAndAddContact(UserContacts cont) {
+        if (listHotContact.size() == 0){
+            ActivityOrder.Contact contactTrain =
+                    new ActivityOrder.Contact(cont.getContactsName(), cont.getContactsIdCard(), cont.getContactsMobile());
+            listHotContact.add(contactTrain);
+        } else {
+            checkDouble(cont);
+        }
+    }
+
+    private void checkDouble(UserContacts cont) {
+        for (ActivityOrder.Contact contact : listHotContact) { //检验当前游客中是否包含所选择的游客
+            if (!cont.getContactsName().equals(contact.getTourername())) {
+                ActivityOrder.Contact contactTrain =
+                        new ActivityOrder.Contact(cont.getContactsName(), cont.getContactsIdCard(), cont.getContactsMobile());
+                listHotContact.add(contactTrain);
+            }
         }
     }
 

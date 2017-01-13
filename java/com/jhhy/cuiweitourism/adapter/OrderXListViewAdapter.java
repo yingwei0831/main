@@ -158,13 +158,13 @@ public abstract class OrderXListViewAdapter extends BaseAdapter implements IOrde
                         holder.btnOrderPayment.setVisibility(View.GONE); //签约付款
                     }
                 }else if ("2".equals(order.getTypeId())){ //酒店，可以取消订单，可以继续付款
+                    if (!(System.currentTimeMillis() / 1000 - Integer.parseInt(order.getAddTime()) < 15 * 60)){ //15分钟不能再付款,但是也不能取消订单
+                        holder.tvOrderStatus.setText(context.getString(R.string.fragment_mine_already_cancel));
+                        holder.btnOrderPayment.setVisibility(View.GONE); //签约付款
+                        holder.btnOrderCancel.setVisibility(View.GONE); //取消订单
+                    }
                     if (type == 0){
                         holder.btnOrderCancel.setVisibility(View.GONE); //取消订单:全部订单不给酒店做任何操作
-                    }else { //15分钟不能再付款
-                        if (!(System.currentTimeMillis() / 1000 - Integer.parseInt(order.getAddTime()) < 15 * 60)){
-                            holder.tvOrderStatus.setText(context.getString(R.string.fragment_mine_wait_cancel));
-                            holder.btnOrderPayment.setVisibility(View.GONE); //签约付款
-                        }
                     }
                 }else if ("82".equals(order.getTypeId())){ //火车票
                     if (!(System.currentTimeMillis() / 1000 - Integer.parseInt(order.getAddTime()) < 15 * 60)){

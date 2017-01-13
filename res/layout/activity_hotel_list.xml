@@ -57,6 +57,8 @@
             android:id="@+id/activity_hot_activity_list_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:divider="@color/colorLineGray2"
+            android:dividerHeight="1.2px"
             />
 
     </LinearLayout>

@@ -6,35 +6,48 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.ViewFlipper;
 
 import com.jhhy.cuiweitourism.OnItemTextViewClick;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.PlaneInquiryAdapter;
+import com.jhhy.cuiweitourism.circleviewpager.ViewFactory;
 import com.jhhy.cuiweitourism.dialog.DatePickerActivity;
+import com.jhhy.cuiweitourism.model.ADInfo;
 import com.jhhy.cuiweitourism.model.PlaneInquiry;
+import com.jhhy.cuiweitourism.net.biz.ForeEndActionBiz;
 import com.jhhy.cuiweitourism.net.biz.PlaneTicketActionBiz;
+import com.jhhy.cuiweitourism.net.models.FetchModel.ForeEndAdvertise;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketCityFetch;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.ForeEndAdvertisingPositionInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketCityInfo;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
+import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.jhhy.cuiweitourism.utils.Utils;
 import com.jhhy.cuiweitourism.view.MyListView;
+import com.jhhy.cuiweitourism.view.MyScrollView;
+import com.just.sun.pricecalendar.ToastCommon;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class PlaneMainActivity extends BaseActionBarActivity implements RadioGroup.OnCheckedChangeListener, OnItemTextViewClick {
+public class PlaneMainActivity extends BaseActionBarActivity implements RadioGroup.OnCheckedChangeListener, OnItemTextViewClick ,View.OnTouchListener, GestureDetector.OnGestureListener {
 
     private String TAG = "PlaneMainActivity";
 
@@ -62,12 +75,30 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
     private LinearLayout layoutBtn; //询价btn
     private Button btnInquiry; //询价btn
     private LinearLayout tvAddInquiry; //增加一程询价
-    private LinearLayout layoutInquiryType; //形成类型
+//    private LinearLayout layoutInquiryType; //行程类型
 
     private ArrayList<PlaneInquiry> listInquiry = new ArrayList<>(); //出发城市，目的城市，出发时间
 
     private int bottomSelectionPosition; //底部点击位置
     private PlaneInquiryAdapter adapter;
+
+    private GestureDetector mGestureDetector; // MyScrollView的手势?
+
+    //顶部图片展示
+    private List<ADInfo> infos = new ArrayList<ADInfo>();
+    private ViewFlipper flipper;
+    private LinearLayout layoutPoint;
+    private List<String> imageUrls = new ArrayList<>();
+    private ImageView[] indicators; // 轮播图片数组
+    private int currentPosition = 0; // 轮播当前位置
+
+    private static final int FLING_MIN_DISTANCE = 20;
+    private static final int FLING_MIN_VELOCITY = 0;
+
+    private final int WHEEL = 100; // 转动
+    private final int WHEEL_WAIT = 101; // 等待
+    private boolean isScrolling = false; // 滚动框是否滚动着
+    private long releaseTime = 0; // 手指松开、页面不滚动时间，防止手机松开后短时间进行切换
 
     private Handler handler = new Handler(){
         @Override
@@ -83,6 +114,38 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
                 case -3:
                     ToastUtil.show(getApplicationContext(), "请求国际机场信息出错，请返回重试");
                     break;
+                case WHEEL:
+                    if(flipper.getChildCount() != 0){
+                        if(!isScrolling){
+                            //向前滑向后滑
+                            showNextView();
+                        }
+                    }
+                    releaseTime = System.currentTimeMillis();
+                    handler.removeCallbacks(runnable);
+                    handler.postDelayed(runnable, Consts.TIME_PERIOD);
+                    break;
+                case WHEEL_WAIT:
+                    if(flipper.getChildCount() != 0){
+                        handler.removeCallbacks(runnable);
+                        handler.postDelayed(runnable, Consts.TIME_PERIOD);
+                    }
+                    break;
+            }
+        }
+    };
+
+    private Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            if (!PlaneMainActivity.this.isFinishing()) {
+                long now = System.currentTimeMillis();
+                // 检测上一次滑动时间与本次之间是否有触击(手滑动)操作，有的话等待下次轮播
+                if (now - releaseTime > Consts.TIME_PERIOD - 500) {
+                    handler.sendEmptyMessage(WHEEL);
+                } else {
+                    handler.sendEmptyMessage(WHEEL_WAIT);
+                }
             }
         }
     };
@@ -94,11 +157,13 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
         getInternetData();
         getInternetDataOut();
         LoadingIndicator.show(PlaneMainActivity.this, getString(R.string.http_notice));
+        getBannerData();
     }
 
     @Override
     protected void setupView() {
         super.setupView();
+        imageUrls.add("drawable://" + R.drawable.ic_empty);
         planeBiz = new PlaneTicketActionBiz();
         tvTitle.setText(getString(R.string.tab1_tablelayout_plane));
         radioGroup = (RadioGroup) findViewById(R.id.rg_plane_type);
@@ -115,10 +180,10 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
         layoutBtn = (LinearLayout) findViewById(R.id.layout_inquiry_btn); //查询下一步
         btnInquiry = (Button) findViewById(R.id.btn_train_next_step); //查询下一步
         tvAddInquiry = (LinearLayout) findViewById(R.id.layout_add_one_query); //增加
-        layoutInquiryType = (LinearLayout) findViewById(R.id.layout_inquiry_type); //类型
+//        layoutInquiryType = (LinearLayout) findViewById(R.id.layout_inquiry_type); //行程类型
         layoutPlaneInquiryParent = (MyListView) findViewById(R.id.layout_query_lines); //查询线路列表
         tvAddInquiry.setVisibility(View.GONE);
-        layoutInquiryType.setVisibility(View.GONE);
+//        layoutInquiryType.setVisibility(View.GONE);
         layoutBtn.setVisibility(View.GONE);
         layoutPlaneInquiryParent.setVisibility(View.GONE);
 
@@ -143,6 +208,17 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
         toCity.setCode("DLC");
         toCity.setAirportname("大连周水子国际机场");
         toCity.setIsdomc("D");
+
+        mGestureDetector = new GestureDetector(getApplicationContext(), this);
+        flipper = (ViewFlipper)findViewById(R.id.viewflipper);
+        layoutPoint =(LinearLayout)findViewById(R.id.layout_indicator_point);
+        addImageView(imageUrls.size());
+        addIndicator(imageUrls.size());
+        setIndicator(currentPosition);
+        flipper.setOnTouchListener(this);
+        dianSelect(currentPosition);
+        MyScrollView myScrollView = (MyScrollView)findViewById(R.id.viewflipper_myScrollview);
+        myScrollView.setGestureDetector(mGestureDetector);
     }
 
     @Override
@@ -187,12 +263,29 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
             case R.id.btn_train_next_step: //询价
                 inquiry();
                 break;
-
         }
     }
 
+    /**
+     * 询价
+     */
     private void inquiry() {
-        PlaneInquiryEditOrderActivity.actionStart(getApplicationContext(), null);
+        for (int i = 0; i < listInquiry.size(); i++){
+            PlaneInquiry item = listInquiry.get(i);
+            if (item.getFromCity() == null ){
+                ToastCommon.toastShortShow(getApplicationContext(), null, "出发城市不能为空");
+                return;
+            }else if (item.getArrivalCity() == null){
+                ToastCommon.toastShortShow(getApplicationContext(), null, "目的城市不能为空");
+                return;
+            }else if (item.getFromDate() == null){
+                ToastCommon.toastShortShow(getApplicationContext(), null, "出发时间不能为空");
+                return;
+            }
+        }
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList("listInquiry", listInquiry);
+        PlaneInquiryEditOrderActivity.actionStart(this, bundle);
     }
 
     //搜索
@@ -362,7 +455,7 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
                 layoutBtn.setVisibility(View.GONE);
                 layoutPlaneInquiryParent.setVisibility(View.GONE);
                 tvAddInquiry.setVisibility(View.GONE);
-                layoutInquiryType.setVisibility(View.GONE);
+//                layoutInquiryType.setVisibility(View.GONE);
                 type = 1;
                 traveltype = "OW";
                 break;
@@ -372,7 +465,7 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
                 layoutBtn.setVisibility(View.GONE);
                 layoutPlaneInquiryParent.setVisibility(View.GONE);
                 tvAddInquiry.setVisibility(View.GONE);
-                layoutInquiryType.setVisibility(View.GONE);
+//                layoutInquiryType.setVisibility(View.GONE);
                 type = 2;
                 traveltype = "RT";
                 break;
@@ -381,7 +474,7 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
                 layoutBtn.setVisibility(View.VISIBLE);
                 layoutPlaneInquiryParent.setVisibility(View.VISIBLE);
                 tvAddInquiry.setVisibility(View.VISIBLE);
-                layoutInquiryType.setVisibility(View.VISIBLE);
+//                layoutInquiryType.setVisibility(View.VISIBLE);
                 type = 3;
 //                traveltype = "";
                 break;
@@ -581,6 +674,145 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
         }.start();
     }
 
+    private void showNextView() {
+//        Log.i(TAG, "========showNextView=======向左滑动=======");
+        flipper.setInAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.push_left_in));
+        flipper.setOutAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.push_left_out));
+        flipper.showNext();
+        currentPosition++;
+        if(currentPosition == flipper.getChildCount()){
+            dianUnselect(currentPosition - 1);
+            currentPosition = 0;
+            dianSelect(currentPosition);
+        }else{
+            dianUnselect(currentPosition - 1);
+            dianSelect(currentPosition);
+        }
+//		Log.i(TAG, "==============第"+currentPage+"页==========");
+    }
+
+    private void showPreviousView() {
+//        Log.i(TAG, "========showPreviousView=======向右滑动=======");
+        dianSelect(currentPosition);
+        flipper.setInAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.push_right_in));
+        flipper.setOutAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.push_right_out));
+        flipper.showPrevious();
+        currentPosition--;
+        if(currentPosition == -1){
+            dianUnselect(currentPosition + 1);
+            currentPosition = flipper.getChildCount() - 1;
+            dianSelect(currentPosition);
+        }else{
+            dianUnselect(currentPosition + 1);
+            dianSelect(currentPosition);
+        }
+//		Log.i(TAG, "==============第"+currentPage+"页==========");
+    }
+    /**
+     * 对应被选中的点的图片
+     * @param id
+     */
+    private void dianSelect(int id) {
+        indicators[id].setImageResource(R.drawable.icon_point_pre);
+    }
+    /**
+     * 对应未被选中的点的图片
+     * @param id
+     */
+    private void dianUnselect(int id){
+        indicators[id].setImageResource(R.drawable.icon_point);
+    }
+
+    private void getBannerData() {
+        //广告位
+        ForeEndActionBiz fbiz = new ForeEndActionBiz();
+//        mark:index（首页）、line_index(国内游、出境游)、header（分类上方）、visa_index（签证）、customize_index(个性定制)
+        ForeEndAdvertise ad = new ForeEndAdvertise("visa_index");
+        fbiz.foreEndGetAdvertisingPosition(ad, new BizGenericCallback<ArrayList<ForeEndAdvertisingPositionInfo>>() {
+            @Override
+            public void onCompletion(GenericResponseModel<ArrayList<ForeEndAdvertisingPositionInfo>> model) {
+                if ("0000".equals(model.headModel.res_code)) {
+                    ArrayList<ForeEndAdvertisingPositionInfo> array = model.body;
+                    LogUtil.e(TAG,"foreEndGetAdvertisingPosition =" + array.toString());
+                    refreshViewBanner(array);
+                }else{
+                    ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);
+                }
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                if (error.localReason != null){
+                    ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
+                }else{
+                    ToastCommon.toastShortShow(getApplicationContext(), null, "获取广告位数据出错");
+                }
+                LogUtil.e(TAG, "foreEndGetAdvertisingPosition: " + error.toString());
+            }
+        });
+    }
+
+    private void refreshViewBanner(ArrayList<ForeEndAdvertisingPositionInfo> array) {
+        ArrayList<ADInfo> infosNew = new ArrayList<>();
+//        for (int i = 0; i < array.size(); i++){
+        ForeEndAdvertisingPositionInfo item = array.get(0);
+        ArrayList<String> picList = item.getT();
+        ArrayList<String> linkList = item.getL();
+        for (int j = 0; j < picList.size(); j++){
+            ADInfo ad = new ADInfo();
+            ad.setUrl(picList.get(j));
+            ad.setContent(linkList.get(j));
+            infosNew.add(ad);
+        }
+//        }
+        updateBanner(infosNew);
+    }
+    private void updateBanner(ArrayList<ADInfo> listsBanner) {
+        infos = listsBanner;
+        flipper.removeAllViews();
+        for (int i = 0; i < infos.size(); i++) {
+            flipper.addView(ViewFactory.getImageView(getApplicationContext(), infos.get(i).getUrl()));
+        }
+        addIndicator(infos.size());
+        setIndicator(0);
+        if (infos.size() < 2){
+            return;
+        }
+        handler.postDelayed(runnable, Consts.TIME_PERIOD);
+    }
+    private void addIndicator(int size){
+//        if(indicators == null) {
+        indicators = new ImageView[size];
+//        }
+        layoutPoint.removeAllViews();
+        for (int i = 0; i < size; i++) {
+            View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.view_cycle_viewpager_indicator, null);
+            indicators[i] = (ImageView) view.findViewById(R.id.image_indicator);
+            layoutPoint.addView(view);
+        }
+
+    }
+
+    private void setIndicator(int current){
+        for(int i = 0; i < indicators.length; i++) {
+            if(i == current) {
+                indicators[current].setImageResource(R.drawable.icon_point_pre);
+            }else{
+                indicators[i].setImageResource(R.drawable.icon_point);
+            }
+        }
+    }
+
+    private void addImageView(int length) {
+        for(int i=0; i < length; i++){
+            ADInfo info = new ADInfo();
+            info.setUrl(imageUrls.get(i));
+            info.setContent("图片-->" + i);
+            infos.add(info);
+            flipper.addView(ViewFactory.getImageView(getApplicationContext(), infos.get(i).getUrl()));
+        }
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -619,4 +851,55 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
         context.startActivity(intent);
     }
 
+    @Override
+    public boolean onDown(MotionEvent motionEvent) {
+        return false;
+    }
+
+    @Override
+    public void onShowPress(MotionEvent motionEvent) {
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent motionEvent) {
+        return false;
+    }
+
+    @Override
+    public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
+        return false;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent motionEvent) {
+
+    }
+
+    @Override
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        if (infos.size() < 2){
+            return true;
+        }
+        if(e1.getX() - e2.getX() > FLING_MIN_DISTANCE &&
+                Math.abs(velocityX) > FLING_MIN_VELOCITY){
+//            Log.i(TAG, "==============开始向左滑动了================");
+            showNextView();
+            releaseTime = System.currentTimeMillis();
+            handler.removeCallbacks(runnable);
+            handler.postDelayed(runnable, Consts.TIME_PERIOD);
+        }else if(e2.getX() - e1.getX() > FLING_MIN_DISTANCE &&
+                Math.abs(velocityX) > FLING_MIN_VELOCITY){
+//            Log.i(TAG, "==============开始向右滑动了================");
+            showPreviousView();
+            releaseTime = System.currentTimeMillis();
+            handler.removeCallbacks(runnable);
+            handler.postDelayed(runnable, Consts.TIME_PERIOD);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        return mGestureDetector.onTouchEvent(motionEvent);
+    }
 }

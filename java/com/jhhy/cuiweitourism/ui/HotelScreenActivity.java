@@ -157,23 +157,23 @@ public class HotelScreenActivity extends AppCompatActivity implements View.OnCli
         adapterFirst.notifyDataSetChanged();
         if (7 == type){
             if (0 == position){
-                adapterSecondLocation.setData(HotelMainActivity.listBusinessDistrict);
+                adapterSecondLocation.setData(HotelListActivity.listBusinessDistrict);
                 adapterSecondLocation.setSelection(businessDistrictPosition);
             }else if (1 == position){
-                adapterSecondLocation.setData(HotelMainActivity.listDistrict);
+                adapterSecondLocation.setData(HotelListActivity.listDistrict);
                 adapterSecondLocation.setSelection(districtPosition);
             }else if (2 == position){
-                adapterSecondLocation.setData(HotelMainActivity.listViewSpot);
+                adapterSecondLocation.setData(HotelListActivity.listViewSpot);
                 adapterSecondLocation.setSelection(viewSpot);
             }
             listViewSecond.setAdapter(adapterSecondLocation);
         } else {
             if (0 == position) { //酒店品牌
-                adapterSecondBrand.setData(HotelMainActivity.listBrand);
+                adapterSecondBrand.setData(HotelListActivity.listBrand);
                 adapterSecondBrand.setType(2);
                 listViewSecond.setAdapter(adapterSecondBrand);
             } else if (1 == position) { //设施服务
-                adapterSecondFacility.setData(HotelMainActivity.facilities);
+                adapterSecondFacility.setData(HotelListActivity.listFacilities);
                 adapterSecondFacility.setType(3);
                 adapterSecondFacility.setSelections(facilitySet);
                 listViewSecond.setAdapter(adapterSecondFacility);
@@ -198,13 +198,13 @@ public class HotelScreenActivity extends AppCompatActivity implements View.OnCli
         listViewFirst.setAdapter(adapterFirst);
 
         if (7 ==  type){
-            adapterSecondLocation = new HotelSortListAdapter(getApplicationContext(), HotelMainActivity.listBusinessDistrict);
+            adapterSecondLocation = new HotelSortListAdapter(getApplicationContext(), HotelListActivity.listBusinessDistrict);
             adapterSecondLocation.setType(type);
             adapterSecondLocation.setSelection(businessDistrictPosition);
             listViewSecond.setAdapter(adapterSecondLocation);
         }else {
-            adapterSecondBrand = new HotelSortListAdapter(getApplicationContext(), HotelMainActivity.listBrand);
-            adapterSecondFacility = new HotelSortListAdapter(getApplicationContext(), HotelMainActivity.facilities);
+            adapterSecondBrand = new HotelSortListAdapter(getApplicationContext(), HotelListActivity.listBrand);
+            adapterSecondFacility = new HotelSortListAdapter(getApplicationContext(), HotelListActivity.listFacilities);
             adapterSecondBrand.setType(2);
             adapterSecondBrand.setSelection(0);
             listViewSecond.setAdapter(adapterSecondBrand);
@@ -237,7 +237,7 @@ public class HotelScreenActivity extends AppCompatActivity implements View.OnCli
 //            int facilityPosition = adapterSecondFacility.getSelection();
             String brandName = "";
             if (0 != brandPosition){
-                brandName = HotelMainActivity.listBrand.get(brandPosition).getID();
+                brandName = HotelListActivity.listBrand.get(brandPosition).getID();
             }
             String facilityName = "";
             if (facilitySet.contains(0)){

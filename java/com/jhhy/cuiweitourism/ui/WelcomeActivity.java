@@ -163,7 +163,7 @@ public class WelcomeActivity extends BaseActivity {
      * @param aMapLocation
      */
     private void showLocationMessage(AMapLocation aMapLocation) {
-        ToastUtil.show(getApplicationContext(), "请求定位失败"); //+", "+aMapLocation.getErrorInfo()
+//        ToastUtil.show(getApplicationContext(), "请求定位失败"); //+", "+aMapLocation.getErrorInfo()
     }
     private final String FILE_NAME = "/app_logo.png";
     public static String TEST_IMAGE;

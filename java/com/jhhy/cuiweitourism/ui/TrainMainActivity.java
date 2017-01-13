@@ -600,7 +600,6 @@ public class TrainMainActivity extends BaseActionBarActivity implements View.OnT
 
     @Override
     public void onShowPress(MotionEvent motionEvent) {
-
     }
 
     @Override
@@ -615,7 +614,6 @@ public class TrainMainActivity extends BaseActionBarActivity implements View.OnT
 
     @Override
     public void onLongPress(MotionEvent motionEvent) {
-
     }
 
     @Override

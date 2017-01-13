@@ -24,10 +24,14 @@ import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.HotelListAdapter;
 import com.jhhy.cuiweitourism.net.biz.HotelActionBiz;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelListRequest;
+import com.jhhy.cuiweitourism.net.models.FetchModel.HotelScreenBrandRequest;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelListResponse;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelPositionLocationResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelProvinceResponse;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelScreenBrandResponse;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelScreenFacilities;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.popupwindows.PopupWindowHotelLevel;
@@ -99,12 +103,27 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
 
     private TextView etSearch;
 
+    public static List<HotelScreenFacilities.FacilityItemBean> listFacilities = new ArrayList<>(); //酒店设施服务
+    public static List<HotelScreenBrandResponse.BrandItemBean> listBrand = new ArrayList<>(); //酒店品牌
+
+    public static List<HotelPositionLocationResponse.HotelDistrictItemBean> listBusinessDistrict = new ArrayList<>(); //商业区
+    public static List<HotelPositionLocationResponse.HotelDistrictItemBean> listDistrict = new ArrayList<>(); //行政区
+    public static List<HotelPositionLocationResponse.HotelDistrictItemBean> listViewSpot = new ArrayList<>(); //景点
+
+    private boolean facilityTag;
+    private boolean brandTag;
+    private boolean BusinessDistrictTag;
+    private boolean districtTag;
+    private boolean viewSpotTag;
+
+
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
         }
     };
+    private HotelActionBiz hotelBiz;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,11 +150,12 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
                 }
             }
         }
+        hotelBiz = new HotelActionBiz();
     }
 
     private void getHotelListData(){
         LoadingIndicator.show(HotelListActivity.this, getString(R.string.http_notice));
-        HotelActionBiz hotelBiz = new HotelActionBiz();
+
         HotelListRequest request = new HotelListRequest(selectCity.getCode(), checkInDate, checkOutDate, keyWords, district, downTown, landMark, price, starLevel, isEconomy,
                 isApartment, brandName, "", facilities, String.valueOf(pageTemp), "10", sortBy, sortType);
         hotelBiz.getHotelList(request, new BizGenericCallback<HotelListResponse>() {
@@ -253,18 +273,10 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
                 search();
                 break;
             case R.id.tv_tab1_hot_activity_list_sort_default: //筛选
-                Intent intentScreen = new Intent( getApplicationContext(), HotelScreenActivity.class);
-                startActivityForResult(intentScreen, SELECT_SCREEN);
+                getScreenData();
                 break;
             case R.id.tv_tab1_hot_activity_list_trip_days: //位置区域
-                Intent intentLocation = new Intent( getApplicationContext(), HotelScreenActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putInt("type", 7);
-                bundle.putInt("businessDistrictPosition", businessDistrictPosition);
-                bundle.putInt("districtPosition", districtPosition);
-                bundle.putInt("viewSpot", viewSpot);
-                intentLocation.putExtras(bundle);
-                startActivityForResult(intentLocation, SELECT_LOCATION);
+                getLocationData();
                 break;
             case R.id.tv_tab1_hot_activity_list_start_time: //价格星级
                 showPopupWindowLevel();
@@ -274,6 +286,56 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
                 break;
 
         }
+    }
+
+    /**
+     * 位置区域 商圈，行政区，景点
+     */
+    private void getLocationData() {
+        if (BusinessDistrictTag && districtTag && viewSpotTag){
+            showLocationData();
+        }else {
+            if (listBusinessDistrict.size() == 0) {
+                getBusinessDistrict();
+            }
+            if (listDistrict.size() == 0) {
+                getDistrict();
+            }
+            if (listViewSpot.size() == 0) {
+                getViewSpot();
+            }
+        }
+    }
+    /**
+     * 筛选 酒店品牌，服务设施
+     */
+    private void getScreenData() {
+        if (brandTag && facilityTag){
+            showScreenData();
+        }else{
+            if (listBrand.size() == 0) {
+                getBrand();
+            }
+            if (listFacilities.size() == 0) {
+                getFacilities();
+            }
+        }
+    }
+
+    private void showLocationData(){
+        Intent intentLocation = new Intent( getApplicationContext(), HotelScreenActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("type", 7);
+        bundle.putInt("businessDistrictPosition", businessDistrictPosition);
+        bundle.putInt("districtPosition", districtPosition);
+        bundle.putInt("viewSpot", viewSpot);
+        intentLocation.putExtras(bundle);
+        startActivityForResult(intentLocation, SELECT_LOCATION);
+    }
+
+    private void showScreenData(){
+        Intent intentScreen = new Intent( getApplicationContext(), HotelScreenActivity.class);
+        startActivityForResult(intentScreen, SELECT_SCREEN);
     }
 
     private void search() {
@@ -473,17 +535,17 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
                 districtPosition = bundle.getInt("districtPosition");
                 viewSpot = bundle.getInt("viewSpot");
                 if (0 != businessDistrictPosition){
-                    downTown = HotelMainActivity.listBrand.get(businessDistrictPosition).getID();
+                    downTown = listBrand.get(businessDistrictPosition).getID();
                 }else{
                     downTown = "";
                 }
                 if (0 != districtPosition){
-                    district = HotelMainActivity.listDistrict.get(districtPosition).getID();
+                    district = listDistrict.get(districtPosition).getID();
                 }else {
                     district = "";
                 }
                 if (0 != viewSpot){
-                    landMark = HotelMainActivity.listViewSpot.get(viewSpot).getID();
+                    landMark = listViewSpot.get(viewSpot).getID();
                 }else {
                     landMark = "";
                 }
@@ -543,6 +605,171 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
             return "1000000";
         }
     }
+
+
+    /**
+     * 获取酒店设施
+     */
+    private void getFacilities() {
+        hotelBiz.hotelScreenFacilities(new BizGenericCallback<HotelScreenFacilities>() {
+            @Override
+            public void onCompletion(GenericResponseModel<HotelScreenFacilities> model) {
+                listFacilities.add(new HotelScreenFacilities.FacilityItemBean("不限"));
+                listFacilities.addAll(model.body.getItem());
+                LogUtil.e(TAG, "getFacilities " + model.body);
+                facilityTag = true;
+                if (brandTag){
+                    showScreenData();
+                }
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                if (error.localReason != null){
+//                    ToastUtil.show(getApplicationContext(), error.localReason);
+                }else{
+//                    ToastUtil.show(getApplicationContext(), "请求酒店设施服务信息失败，请返回重试");
+                }
+                LogUtil.e(TAG, "getFacilities " + error);
+                facilityTag = true;
+                if (brandTag){
+                    showScreenData();
+                }
+            }
+        });
+    }
+
+    /**
+     * 获取品牌
+     */
+    private void getBrand(){
+        HotelScreenBrandRequest request = new HotelScreenBrandRequest(selectCity.getCode());
+        hotelBiz.hotelScreenBrand(request, new BizGenericCallback<HotelScreenBrandResponse>() {
+            @Override
+            public void onCompletion(GenericResponseModel<HotelScreenBrandResponse> model) {
+                listBrand.add(new HotelScreenBrandResponse.BrandItemBean("不限"));
+                listBrand.addAll(model.body.getItem());
+                LogUtil.e(TAG, "hotelScreenBrand " + model.body);
+                brandTag = true;
+                if (facilityTag){
+                    showScreenData();
+                }
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                if (error.localReason != null){
+//                    ToastUtil.show(getApplicationContext(), error.localReason);
+                }else{
+//                    ToastUtil.show(getApplicationContext(), "请求酒店品牌信息失败，请重试");
+                }
+                LogUtil.e(TAG, "hotelScreenBrand " + error);
+                brandTag = true;
+                if (facilityTag){
+                    showScreenData();
+                }
+            }
+        });
+    }
+
+    /**
+     * 获取商业区
+     */
+    private void getBusinessDistrict(){ //商业区
+        HotelScreenBrandRequest request = new HotelScreenBrandRequest(selectCity.getCode());
+        hotelBiz.getHotelLocationBusinessDistrict(request, new BizGenericCallback<HotelPositionLocationResponse>() {
+            @Override
+            public void onCompletion(GenericResponseModel<HotelPositionLocationResponse> model) {
+                listBusinessDistrict.add(new HotelPositionLocationResponse.HotelDistrictItemBean("不限"));
+                listBusinessDistrict.addAll(model.body.getItem());
+                LogUtil.e(TAG, "getHotelLocationBusinessDistrict " + model.body);
+                BusinessDistrictTag = true;
+                if (districtTag && viewSpotTag){
+                    showLocationData();
+                }
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                if (error.localReason != null){
+                    ToastUtil.show(getApplicationContext(), error.localReason);
+                }else{
+                    ToastUtil.show(getApplicationContext(), "请求商业区信息失败，请重试");
+                }
+                LogUtil.e(TAG, "getHotelLocationBusinessDistrict " + error);
+                BusinessDistrictTag = true;
+                if (districtTag && viewSpotTag){
+                    showLocationData();
+                }
+            }
+        });
+    }
+
+    /**
+     * 获取行政区
+     */
+    private void getDistrict(){ //行政区
+        HotelScreenBrandRequest request = new HotelScreenBrandRequest(selectCity.getCode());
+        hotelBiz.getHotelLocationDistrict(request, new BizGenericCallback<HotelPositionLocationResponse>() {
+            @Override
+            public void onCompletion(GenericResponseModel<HotelPositionLocationResponse> model) {
+                listDistrict.add(new HotelPositionLocationResponse.HotelDistrictItemBean("不限"));
+                listDistrict.addAll(model.body.getItem());
+                LogUtil.e(TAG, "getHotelLocationDistrict " + model.body);
+                districtTag = true;
+                if (BusinessDistrictTag && viewSpotTag){
+                    showLocationData();
+                }
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                if (error.localReason != null){
+                    ToastUtil.show(getApplicationContext(), error.localReason);
+                }else{
+                    ToastUtil.show(getApplicationContext(), "请求行政区信息失败，请重试");
+                }
+                LogUtil.e(TAG, "getHotelLocationDistrict " + error);
+                districtTag = true;
+                if (BusinessDistrictTag && viewSpotTag){
+                    showLocationData();
+                }
+            }
+        });
+    }
+
+    /**
+     * 获取景点
+     */
+    private void getViewSpot(){ //景点
+        HotelScreenBrandRequest request = new HotelScreenBrandRequest(selectCity.getCode());
+        hotelBiz.getHotelLocationViewSpot(request, new BizGenericCallback<HotelPositionLocationResponse>() {
+            @Override
+            public void onCompletion(GenericResponseModel<HotelPositionLocationResponse> model) {
+                listViewSpot.add(new HotelPositionLocationResponse.HotelDistrictItemBean("不限"));
+                listViewSpot.addAll(model.body.getItem());
+                LogUtil.e(TAG, "getHotelLocationViewSpot " + model.body);
+                viewSpotTag = true;
+                if (BusinessDistrictTag && districtTag){
+                    showLocationData();
+                }
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                if (error.localReason != null){
+                    ToastUtil.show(getApplicationContext(), error.localReason);
+                }else{
+                    ToastUtil.show(getApplicationContext(), "请求景点信息失败，请重试");
+                }
+                LogUtil.e(TAG, "getHotelLocationViewSpot " + error);
+                if (BusinessDistrictTag && districtTag){
+                    showLocationData();
+                }
+            }
+        });
+    }
+
 
     public static void actionStart(Context context, Bundle data){
         Intent intent = new Intent(context, HotelListActivity.class);

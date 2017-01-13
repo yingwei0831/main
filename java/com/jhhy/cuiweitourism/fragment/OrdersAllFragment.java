@@ -47,7 +47,7 @@ import java.util.List;
 
 public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
 
-    private static final String TAG = OrdersAllFragment.class.getSimpleName();
+    private static final String TAG = "OrdersAllFragment";
     private static final String TITLE = "title";
     private static final String TYPE = "type";
 
@@ -232,6 +232,16 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
             }else if ("82".equals(order.getTypeId())){ //机票详情
                 getPlaneTicketDetail(order);
                 return;
+            }else if ("2".equals(order.getTypeId())){ //酒店详情
+                LogUtil.e(TAG, order);
+                if ("1".equals(order.getStatus())){ //未付款
+                    if (!(System.currentTimeMillis() / 1000 - Integer.parseInt(order.getAddTime()) < 15 * 60)){
+                        ToastCommon.toastShortShow(getContext(), null, "未付款订单，已关闭");
+                    }else {
+                        payOrder(order);
+                    }
+                    return;
+                }
             }
         getOrderDetail(order);
     }
@@ -302,27 +312,7 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
                 refund(order, 1, REQUEST_COMMENT);
                 break;
             case R.id.btn_tab3_item_sign_contact: //签约付款（签证顺延）
-                Intent intentPay = new Intent(getContext(), SelectPaymentActivity.class);
-                Bundle bundlePay = new Bundle();
-                if ("80".equals(order.getTypeId())){ //火车票
-                    bundlePay.putSerializable("order", order);
-                    bundlePay.putInt("type",18);
-                }else if ("82".equals(order.getTypeId())){ //飞机票
-                    if ("国内机票".equals(order.getProductName())){ //国内机票
-                        bundlePay.putSerializable("order", order);
-                        bundlePay.putInt("type",19);
-                    }else if ("国际机票".equals(order.getProductName())){ //国际机票
-                        bundlePay.putSerializable("order", order);
-                        bundlePay.putInt("type", 20);
-                    }
-                }else if ("2".equals(order.getTypeId())){ //酒店
-                    bundlePay.putSerializable("order", order);
-                    bundlePay.putInt("type", 24);
-                }else{
-                    bundlePay.putSerializable("order", order);
-                }
-                intentPay.putExtras(bundlePay);
-                startActivityForResult(intentPay, REQUEST_CODE_PAY);
+                payOrder(order);
                 break;
             case R.id.btn_order_go_refund: //退款——>进入申请退款页面
                 if ("80".equals(order.getTypeId())){ //火车票
@@ -336,10 +326,28 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
         }
     }
 
-    /**
-     * 普通订单付款
-     */
     private void payOrder(Order order) {
+        Intent intentPay = new Intent(getContext(), SelectPaymentActivity.class);
+        Bundle bundlePay = new Bundle();
+        if ("80".equals(order.getTypeId())){ //火车票
+            bundlePay.putSerializable("order", order);
+            bundlePay.putInt("type",18);
+        }else if ("82".equals(order.getTypeId())){ //飞机票
+            if ("国内机票".equals(order.getProductName())){ //国内机票
+                bundlePay.putSerializable("order", order);
+                bundlePay.putInt("type",19);
+            }else if ("国际机票".equals(order.getProductName())){ //国际机票
+                bundlePay.putSerializable("order", order);
+                bundlePay.putInt("type", 20);
+            }
+        }else if ("2".equals(order.getTypeId())){ //酒店
+            bundlePay.putSerializable("order", order);
+            bundlePay.putInt("type", 25);
+        }else{
+            bundlePay.putSerializable("order", order);
+        }
+        intentPay.putExtras(bundlePay);
+        startActivityForResult(intentPay, REQUEST_CODE_PAY);
     }
 
     private void refund(Order order, int value, int request_refund) {

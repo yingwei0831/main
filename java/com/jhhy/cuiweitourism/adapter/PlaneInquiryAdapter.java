@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.jhhy.cuiweitourism.OnItemTextViewClick;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.model.PlaneInquiry;
+import com.jhhy.cuiweitourism.net.utils.LogUtil;
 
 import java.util.List;
 
@@ -17,6 +18,8 @@ import java.util.List;
  * Created by jiahe008 on 2016/12/8.
  */
 public class PlaneInquiryAdapter extends MyBaseAdapter {
+
+    private String TAG = "PlaneInquiryAdapter";
 
     private OnItemTextViewClick listener;
 
@@ -78,15 +81,22 @@ public class PlaneInquiryAdapter extends MyBaseAdapter {
         });
 
         PlaneInquiry item = (PlaneInquiry) getItem(position);
+        LogUtil.e(TAG, "item = " + item);
         if (item != null){
             if (item.fromCity != null){
                 holder.tvFromCity.setText(item.fromCity.getName());
+            }else{
+                holder.tvFromCity.setText(context.getString(R.string.tab4_account_certification_gender_notice));
             }
             if (item.arrivalCity != null){
                 holder.tvArrivalCity.setText(item.arrivalCity.getName());
+            }else{
+                holder.tvArrivalCity.setText(context.getString(R.string.tab4_account_certification_gender_notice));
             }
             if (item.fromDate != null){
                 holder.tvFromDate.setText(item.fromDate);
+            }else{
+                holder.tvFromDate.setText(context.getString(R.string.tab4_account_certification_gender_notice));
             }
             holder.tvInquiryNo.setText(String.valueOf(position + 1));
         }

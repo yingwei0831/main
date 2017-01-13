@@ -89,7 +89,7 @@ public class PlaneInfoInternationalAdapter extends MyBaseAdapter {
             PlaneTicketInternationalInfo.FlightInfo flightInfo = (PlaneTicketInternationalInfo.FlightInfo) getItem(i);
 //        LogUtil.e(TAG, "flightInfo = " + flightInfo);
             PlaneTicketInternationalInfo.AircraftTypeInfo airline = PlaneListInternationalActivity.info.J.get(flightInfo.flightTypeCheck);
-            LogUtil.e(TAG, "key = " + flightInfo.flightTypeCheck + ";   " + airline);
+//            LogUtil.e(TAG, "key = " + flightInfo.flightTypeCheck + ";   " + airline);
             String info;
             if (airline.airframe == null || airline.airframe.length() == 0) {
                 info = String.format("%s%s | %s | %s", PlaneListInternationalActivity.info.A.get(flightInfo.airlineCompanyCheck).shortName, flightInfo.flightNumberCheck,

@@ -259,6 +259,10 @@ public class Order implements Serializable{
                 ", useTravelIcon='" + useTravelIcon + '\'' +
                 ", typeId='" + typeId + '\'' +
                 ", productautoid='" + productautoid + '\'' +
+                ", startaddress='" + startaddress + '\'' +
+                ", endaddress='" + endaddress + '\'' +
+                ", sanfangorderno1='" + sanfangorderno1 + '\'' +
+                ", sanfangorderno2='" + sanfangorderno2 + '\'' +
                 '}';
     }
 }

@@ -95,6 +95,7 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
     private PlaneTicketOrderDetailOfChinaResponse planeTicketOrderDetailOfChina; //国内机票详情
     private int planeTicketOfChinaType = 0; // 1:退款；2:取消订单；3:支付
     private PlaneTicketDetailInternationalResponse planeTicketOrderDetailInternational; //国际机票详情
+    private int planeTypeInternational = 0; // 1:支付；2:取消订单
     private MyListView mListViewPlane; //国际/国内机票航段列表
 
     private Handler handler = new Handler() {
@@ -458,20 +459,20 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
             }else if (planeTicketOfChinaType == 2){ //取消订单
                 planeTicketOfChinaCancelOrder();
             }else if (planeTicketOfChinaType == 3){ //支付
-                Intent intentPay = new Intent(getApplicationContext(), SelectPaymentActivity.class);
-                Bundle bundlePay = new Bundle();
-                bundlePay.putString("ordersn", orderSN);
-                bundlePay.putString("orderPrice", String.format(Locale.getDefault(), "%.2f", planeTicketOrderDetailOfChina.getReturnX().getPolicyOrder().getPaymentInfo().getTotalPay()));
-                bundlePay.putInt("type", 23);
-                intentPay.putExtras(bundlePay);
-                startActivityForResult(intentPay, REQUEST_PAY);
+                payOrderPlaneTicket(orderSN, String.format(Locale.getDefault(), "%.2f", planeTicketOrderDetailOfChina.getReturnX().getPolicyOrder().getPaymentInfo().getTotalPay()), 23);
+            }
+            return;
+        }else if ("83".equals(typeId)){ //国际机票
+            if (planeTypeInternational == 1){ //支付
+                payOrderPlaneTicket(orderSN, String.format(Locale.getDefault(), "%s", planeTicketOrderDetailInternational.getPrice()), 24);
+            }else if (2 == planeTypeInternational){ //取消订单
+                cancelOrder();
             }
             return;
         }
         switch (order.getStatus()) {
             case "0": //正在退款——>取消退款
-                OrderActionBiz biz = new OrderActionBiz(getApplicationContext(), handler);
-                biz.requestCancelRefund(order.getOrderSN());
+                cancelOrder();
                 break;
             case "1": //等待付款——>签约付款
                 Intent intentPay = new Intent(getApplicationContext(), SelectPaymentActivity.class);
@@ -503,6 +504,27 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
                 startActivityForResult(intentComment, REQUEST_COMMENT);
                 break;
         }
+    }
+
+    /**
+     * 取消订单
+     */
+    private void cancelOrder() {
+        OrderActionBiz biz = new OrderActionBiz(getApplicationContext(), handler);
+        biz.requestCancelRefund(order.getOrderSN());
+    }
+
+    /**
+     * 机票支付 23国内，24国际
+     */
+    private void payOrderPlaneTicket(String orderSN, String format, int value) {
+        Intent intentPay = new Intent(getApplicationContext(), SelectPaymentActivity.class);
+        Bundle bundlePay = new Bundle();
+        bundlePay.putString("ordersn", orderSN);
+        bundlePay.putString("orderPrice", format);
+        bundlePay.putInt("type", value);
+        intentPay.putExtras(bundlePay);
+        startActivityForResult(intentPay, REQUEST_PAY);
     }
 
     /**
@@ -683,7 +705,7 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
     }
 
     /**
-     * 国际机票订单详情 planeTicketOrderDetailInternational
+     * 国际机票订单详情
      */
     private void refreshPlaneTicketInternationalView() {
         int size = planeTicketOrderDetailInternational.getInfos().getInterFlights().size(); //单程：一个元素；往返：两个元素
@@ -700,6 +722,13 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
 
         tvOrderSN.setText(planeTicketOrderDetailInternational.getOrdersn());
         tvOrderTime.setText(Utils.getTimeStr(Long.parseLong(planeTicketOrderDetailInternational.getAddtime()) * 1000));
+        if (Long.parseLong(planeTicketOrderDetailInternational.getAddtime()) + 15 * 60 < System.currentTimeMillis()/1000) { //时间大于15分钟，只能取消订单，否则可以支付
+            planeTypeInternational = 2; //取消订单
+            btnAction.setVisibility(View.GONE);
+        }else{
+            planeTypeInternational = 1; //支付
+        }
+        layoutBottomAction.setVisibility(View.VISIBLE);
         int people = planeTicketOrderDetailInternational.getInfos().getPassengers().size();
         tvOrderCount.setText(String.format(Locale.getDefault(), "%d人", people));
         tvOrderCountTitle.setText("乘机人数：");
@@ -734,8 +763,6 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
         //旅游币
         layoutTravelIcon.setVisibility(View.GONE);
     }
-
-
 
     /**
      * 火车票订单展示

@@ -97,50 +97,78 @@ public class HotelProductPriceResponse {
             this.Item = Item;
         }
 
-        public static class ItemBean {
-            /**
-             * Date : 2017-02-13    入住日期
-             * IsHave : 无早
-             * IsOwn : 0
-             * Price : 32.4
-             */
-
-            private String Date;
-            private String IsHave;
-            private String IsOwn;
-            private String Price;
-
-            public String getDate() {
-                return Date;
-            }
-
-            public void setDate(String Date) {
-                this.Date = Date;
-            }
-
-            public String getIsHave() {
-                return IsHave;
-            }
-
-            public void setIsHave(String IsHave) {
-                this.IsHave = IsHave;
-            }
-
-            public String getIsOwn() {
-                return IsOwn;
-            }
-
-            public void setIsOwn(String IsOwn) {
-                this.IsOwn = IsOwn;
-            }
-
-            public String getPrice() {
-                return Price;
-            }
-
-            public void setPrice(String Price) {
-                this.Price = Price;
-            }
+        @Override
+        public String toString() {
+            return "PricesBean{" +
+                    "Item=" + Item +
+                    '}';
         }
+    }
+    public static class ItemBean {
+        /**
+         * Date : 2017-02-13    入住日期
+         * IsHave : 无早
+         * IsOwn : 0
+         * Price : 32.4
+         */
+
+        private String Date;
+        private String IsHave;
+        private String IsOwn;
+        private String Price;
+
+        public String getDate() {
+            return Date;
+        }
+
+        public void setDate(String Date) {
+            this.Date = Date;
+        }
+
+        public String getIsHave() {
+            return IsHave;
+        }
+
+        public void setIsHave(String IsHave) {
+            this.IsHave = IsHave;
+        }
+
+        public String getIsOwn() {
+            return IsOwn;
+        }
+
+        public void setIsOwn(String IsOwn) {
+            this.IsOwn = IsOwn;
+        }
+
+        public String getPrice() {
+            return Price;
+        }
+
+        public void setPrice(String Price) {
+            this.Price = Price;
+        }
+
+        @Override
+        public String toString() {
+            return "ItemBean{" +
+                    "Date='" + Date + '\'' +
+                    ", IsHave='" + IsHave + '\'' +
+                    ", IsOwn='" + IsOwn + '\'' +
+                    ", Price='" + Price + '\'' +
+                    '}';
+        }
+    }
+    @Override
+    public String toString() {
+        return "HotelProductPriceResponse{" +
+                "BaseTotalPrice='" + BaseTotalPrice + '\'' +
+                ", DaysBasePrice='" + DaysBasePrice + '\'' +
+                ", DaysBreakfast='" + DaysBreakfast + '\'' +
+                ", DaysPrice='" + DaysPrice + '\'' +
+                ", OtherService='" + OtherService + '\'' +
+                ", Prices=" + Prices +
+                ", TotalPrice='" + TotalPrice + '\'' +
+                '}';
     }
 }

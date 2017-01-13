@@ -73,18 +73,7 @@ public class HotelMainActivity extends BaseActivity implements View.OnClickListe
 
     private HotelActionBiz hotelBiz;
     public static List<HotelProvinceResponse.ProvinceBean> listHotelProvince; //省份
-    public static List<HotelScreenFacilities.FacilityItemBean> facilities = new ArrayList<>(); //酒店设施服务
-    public static List<HotelScreenBrandResponse.BrandItemBean> listBrand = new ArrayList<>(); //酒店品牌
 
-    private boolean facility;
-    private boolean brand;
-    private boolean businessDistrict;
-    private boolean district;
-    private boolean viewSpot;
-
-    public static List<HotelPositionLocationResponse.HotelDistrictItemBean> listBusinessDistrict = new ArrayList<>(); //商业区
-    public static List<HotelPositionLocationResponse.HotelDistrictItemBean> listDistrict = new ArrayList<>(); //行政区
-    public static List<HotelPositionLocationResponse.HotelDistrictItemBean> listViewSpot = new ArrayList<>(); //景点
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -244,7 +233,7 @@ private List<ADInfo> infos = new ArrayList<ADInfo>();
                 startActivityForResult(intentLeftDate, SELECT_CHECK_IN_DATE);
                 break;
             case R.id.btn_commit: //搜索
-                toHotelList();
+                search();
                 break;
             case R.id.btn_to_my_order: //我的订单
 
@@ -253,16 +242,6 @@ private List<ADInfo> infos = new ArrayList<ADInfo>();
                 ToastCommon.toastShortShow(getApplicationContext(), null, "后台没有接口");
                 break;
         }
-    }
-
-    private void toHotelList() {
-        LoadingIndicator.show(this, getString(R.string.http_notice));
-        getFacilities();
-        getBrand();
-        //位置选择
-        getBusinessDistrict();
-        getDistrict();
-        getViewSpot();
     }
 
     private int SELECT_CHECK_IN_DATE = 6524; //选择入住日期
@@ -301,7 +280,6 @@ private List<ADInfo> infos = new ArrayList<ADInfo>();
     }
 
     private void search() {
-        //TODO 酒店品牌
         Intent intentSearch = new Intent(getApplicationContext(), HotelListActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString("checkInDate", checkInDate);
@@ -314,153 +292,6 @@ private List<ADInfo> infos = new ArrayList<ADInfo>();
         }
         intentSearch.putExtras(bundle);
         startActivity(intentSearch);
-    }
-
-    private void getFacilities() {
-        hotelBiz.hotelScreenFacilities(new BizGenericCallback<HotelScreenFacilities>() {
-            @Override
-            public void onCompletion(GenericResponseModel<HotelScreenFacilities> model) {
-                facilities.add(new HotelScreenFacilities.FacilityItemBean("不限"));
-                facilities.addAll(model.body.getItem());
-                facility = true;
-                if (brand && businessDistrict && district && viewSpot){
-                    search();
-                    resetValue();
-                }
-                LogUtil.e(TAG, "getFacilities " + model.body);
-            }
-
-            @Override
-            public void onError(FetchError error) {
-                if (error.localReason != null){
-                    ToastUtil.show(getApplicationContext(), error.localReason);
-                }else{
-                    ToastUtil.show(getApplicationContext(), "请求酒店设施服务信息失败，请返回重试");
-                }
-                LogUtil.e(TAG, "getFacilities " + error);
-            }
-        });
-    }
-
-    private void getBrand(){
-        HotelScreenBrandRequest request = new HotelScreenBrandRequest(selectCity.getCode());
-        hotelBiz.hotelScreenBrand(request, new BizGenericCallback<HotelScreenBrandResponse>() {
-            @Override
-            public void onCompletion(GenericResponseModel<HotelScreenBrandResponse> model) {
-                listBrand.add(new HotelScreenBrandResponse.BrandItemBean("不限"));
-                listBrand.addAll(model.body.getItem());
-                brand = true;
-                if (facility && businessDistrict && district && viewSpot){
-                    search();
-                    resetValue();
-                }
-                LogUtil.e(TAG, "hotelScreenBrand " + model.body);
-            }
-
-            @Override
-            public void onError(FetchError error) {
-                if (error.localReason != null){
-//                    ToastUtil.show(getApplicationContext(), error.localReason);
-                }else{
-//                    ToastUtil.show(getApplicationContext(), "请求酒店品牌信息失败，请重试");
-                }
-                brand = true;
-                if (facility && businessDistrict && district && viewSpot){
-                    search();
-                    resetValue();
-                }
-                LogUtil.e(TAG, "hotelScreenBrand " + error);
-            }
-        });
-    }
-
-    private void getBusinessDistrict(){ //商业区
-        HotelScreenBrandRequest request = new HotelScreenBrandRequest(selectCity.getCode());
-        hotelBiz.getHotelLocationBusinessDistrict(request, new BizGenericCallback<HotelPositionLocationResponse>() {
-            @Override
-            public void onCompletion(GenericResponseModel<HotelPositionLocationResponse> model) {
-                listBusinessDistrict.add(new HotelPositionLocationResponse.HotelDistrictItemBean("不限"));
-                listBusinessDistrict.addAll(model.body.getItem());
-                businessDistrict = true;
-                if (facility && brand && viewSpot && district){
-                    search();
-                    resetValue();
-                }
-                LogUtil.e(TAG, "getHotelLocationBusinessDistrict " + model.body);
-            }
-
-            @Override
-            public void onError(FetchError error) {
-                if (error.localReason != null){
-                    ToastUtil.show(getApplicationContext(), error.localReason);
-                }else{
-                    ToastUtil.show(getApplicationContext(), "请求商业区信息失败，请重试");
-                }
-                LogUtil.e(TAG, "getHotelLocationBusinessDistrict " + error);
-            }
-        });
-    }
-
-    private void getDistrict(){ //行政区
-        HotelScreenBrandRequest request = new HotelScreenBrandRequest(selectCity.getCode());
-        hotelBiz.getHotelLocationDistrict(request, new BizGenericCallback<HotelPositionLocationResponse>() {
-            @Override
-            public void onCompletion(GenericResponseModel<HotelPositionLocationResponse> model) {
-                listDistrict.add(new HotelPositionLocationResponse.HotelDistrictItemBean("不限"));
-                listDistrict.addAll(model.body.getItem());
-                district = true;
-                if (facility && brand && businessDistrict && viewSpot){
-                    search();
-                    resetValue();
-                }
-                LogUtil.e(TAG, "getHotelLocationDistrict " + model.body);
-            }
-
-            @Override
-            public void onError(FetchError error) {
-                if (error.localReason != null){
-                    ToastUtil.show(getApplicationContext(), error.localReason);
-                }else{
-                    ToastUtil.show(getApplicationContext(), "请求行政区信息失败，请重试");
-                }
-                LogUtil.e(TAG, "getHotelLocationDistrict " + error);
-            }
-        });
-    }
-
-    private void getViewSpot(){ //景点
-        HotelScreenBrandRequest request = new HotelScreenBrandRequest(selectCity.getCode());
-        hotelBiz.getHotelLocationViewSpot(request, new BizGenericCallback<HotelPositionLocationResponse>() {
-            @Override
-            public void onCompletion(GenericResponseModel<HotelPositionLocationResponse> model) {
-                listViewSpot.add(new HotelPositionLocationResponse.HotelDistrictItemBean("不限"));
-                listViewSpot.addAll(model.body.getItem());
-                viewSpot = true;
-                if (brand && facility && businessDistrict && district){
-                    search();
-                    resetValue();
-                }
-                LogUtil.e(TAG, "getHotelLocationViewSpot " + model.body);
-            }
-
-            @Override
-            public void onError(FetchError error) {
-                if (error.localReason != null){
-                    ToastUtil.show(getApplicationContext(), error.localReason);
-                }else{
-                    ToastUtil.show(getApplicationContext(), "请求景点信息失败，请重试");
-                }
-                LogUtil.e(TAG, "getHotelLocationViewSpot " + error);
-            }
-        });
-    }
-
-    private void resetValue() {
-        facility = false;
-        brand = false;
-        businessDistrict = false;
-        district = false;
-        viewSpot = false;
     }
 
     private void selectCityByUser() {

@@ -1,5 +1,6 @@
 package com.jhhy.cuiweitourism.ui;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,7 +12,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
+import com.jhhy.cuiweitourism.model.PlaneInquiry;
 import com.jhhy.cuiweitourism.view.MyListView;
+
+import java.util.ArrayList;
 
 /**
  * Created by jiahe008 on 2016/12/8.
@@ -39,6 +43,7 @@ public class PlaneInquiryEditOrderActivity extends BaseActionBarActivity {
     private EditText etLinkEmail; //
 
     private Button btnCommit; //提交订单
+    private ArrayList<PlaneInquiry> listInquiry; //出发城市，目的城市，出发时间
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +77,7 @@ public class PlaneInquiryEditOrderActivity extends BaseActionBarActivity {
         etLinkEmail = (EditText) findViewById(R.id.et_plane_link_email);
 
         btnCommit = (Button) findViewById(R.id.btn_edit_order_commit);
+
     }
 
     @Override
@@ -120,16 +126,22 @@ public class PlaneInquiryEditOrderActivity extends BaseActionBarActivity {
     }
 
     private void getData() {
-
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        if (bundle != null) {
+            listInquiry = bundle.getParcelable("listInquiry");
+        }else{
+            listInquiry = new ArrayList<>();
+        }
     }
 
-    public static void actionStart(Context context, Bundle bundle) {
-        Intent intent = new Intent(context, PlaneInquiryEditOrderActivity.class);
+    public static void actionStart(Activity activity, Bundle bundle) {
+        Intent intent = new Intent(activity, PlaneInquiryEditOrderActivity.class);
         if (bundle != null) {
             intent.putExtras(bundle);
         }
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
+        activity.startActivity(intent);
     }
 
 }

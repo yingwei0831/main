@@ -191,6 +191,7 @@
     <string name="fragment_mine_all_orders">全部订单</string>
     <string name="fragment_mine_wait_pay">等待付款</string>
     <string name="fragment_mine_wait_cancel">待取消</string>
+    <string name="fragment_mine_already_cancel">已关闭</string>
     <string name="fragment_mine_hotel_reserve">预订成功</string>
     <string name="fragment_mine_wait_comment">待点评</string>
     <string name="fragment_mine_wait_refund">待退款</string>
@@ -342,6 +343,7 @@
     <string name="hotel_room_screen_bed_large">大床</string>
     <string name="hotel_room_screen_bed_double">双床</string>
     <string name="hotel_passenger_name_hint">选择入住人姓名</string>
+    <string name="hot_passenger_name_hint">请选择出行人信息</string>
     <string name="hotel_order_notice">其他要求...</string>
 
     <!--火车票-->
