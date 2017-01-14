@@ -1,21 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingBottom="8dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="8dp"
+    android:background="@android:color/white"
+    >
 
     <TextView
+        android:id="@+id/tv_inquiry_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="第一程"/>
+        android:background="@drawable/bg_tab1_radiobutton_recommend_for_you"
+        android:paddingBottom="6dp"
+        android:paddingLeft="14dp"
+        android:paddingRight="14dp"
+        android:paddingTop="6dp"
+        android:text="第一程"
+        android:textColor="@android:color/white" />
 
     <TextView
+        android:id="@+id/tv_inquiry_leg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="北京—上海"/>
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:text="北京—上海"
+        android:textColor="@android:color/black"
+        android:textSize="16sp" />
 
     <TextView
+        android:id="@+id/tv_inquiry_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="2017-01-13"/>
+        android:paddingLeft="10dp"
+        android:text="2017-01-13"
+        android:textColor="@color/colorGrayDark" />
 
 </LinearLayout>

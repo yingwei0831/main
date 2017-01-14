@@ -603,7 +603,7 @@ public class HotelDetailResponse {
         private String BedType;
 //        private String Area;
         private String Capacity;
-//        private HotelRoomImagesBean RoomImages;
+        private List<HotelRoomImageBean> RoomImages;
         private HotelProductsBean Products;
 //        private String Floor;
 
@@ -647,13 +647,13 @@ public class HotelDetailResponse {
             this.Capacity = Capacity;
         }
 
-//        public HotelRoomImagesBean getRoomImages() {
-//            return RoomImages;
-//        }
-//
-//        public void setRoomImages(HotelRoomImagesBean RoomImages) {
-//            this.RoomImages = RoomImages;
-//        }
+        public List<HotelRoomImageBean> getRoomImages() {
+            return RoomImages;
+        }
+
+        public void setRoomImages(List<HotelRoomImageBean> roomImages) {
+            RoomImages = roomImages;
+        }
 
         public HotelProductsBean getProducts() {
             return Products;
@@ -679,20 +679,9 @@ public class HotelDetailResponse {
                     ", RoomName='" + RoomName + '\'' +
                     ", BedType='" + BedType + '\'' +
                     ", Capacity='" + Capacity + '\'' +
+                    ", RoomImages=" + RoomImages +
                     ", Products=" + Products +
                     '}';
-        }
-    }
-
-    public static class HotelRoomImagesBean {
-        private List<HotelRoomImageBean> RoomImage;
-
-        public List<HotelRoomImageBean> getRoomImage() {
-            return RoomImage;
-        }
-
-        public void setRoomImage(List<HotelRoomImageBean> RoomImage) {
-            this.RoomImage = RoomImage;
         }
     }
 
@@ -711,7 +700,7 @@ public class HotelDetailResponse {
         private String Type;
         private String Size;
         private String WaterMark;
-        private List<String> IsCoverImage;
+//        private String IsCoverImage;
 
         public String getImageID() {
             return ImageID;
@@ -753,13 +742,13 @@ public class HotelDetailResponse {
             this.WaterMark = WaterMark;
         }
 
-        public List<String> getIsCoverImage() {
-            return IsCoverImage;
-        }
-
-        public void setIsCoverImage(List<String> IsCoverImage) {
-            this.IsCoverImage = IsCoverImage;
-        }
+//        public String getIsCoverImage() {
+//            return IsCoverImage;
+//        }
+//
+//        public void setIsCoverImage(String IsCoverImage) {
+//            this.IsCoverImage = IsCoverImage;
+//        }
     }
     public static class HotelProductsBean {
         /**

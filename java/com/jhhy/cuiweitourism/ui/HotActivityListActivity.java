@@ -360,12 +360,7 @@ public class HotActivityListActivity extends BaseActivity implements View.OnClic
         activityBiz.activitiesHotGetInfo(hot, new BizGenericCallback<ArrayList<ActivityHotInfo>>() {
             @Override
             public void onCompletion(GenericResponseModel<ArrayList<ActivityHotInfo>> model) {
-                if ("0001".equals(model.headModel.res_code)){
-                    ToastUtil.show(getApplicationContext(), model.headModel.res_arg);
-                    if (loadMore){
-                        page --;
-                    }
-                }else if ("0000".equals(model.headModel.res_code)){
+
                     ArrayList<ActivityHotInfo> array = model.body;
                     if (array == null || array.size() == 0){
                         if (loadMore){
@@ -381,11 +376,12 @@ public class HotActivityListActivity extends BaseActivity implements View.OnClic
                         if (loadMore) {
 //                            loadMore = false;
                             listFreedom.addAll(array);
-                            adapter.addData(array);
+                            adapter.notifyDataSetChanged();
+//                            adapter.addData(array);
                         }
                     }
                     LogUtil.e(TAG,"activitiesHotGetInfo =" + array.toString());
-                }
+
                 LoadingIndicator.cancel();
 //                pullToRefreshListView.onRefreshComplete();
                 complete();

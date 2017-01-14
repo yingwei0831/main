@@ -150,7 +150,8 @@ public class HotelSearchKeyActivity extends BaseActionBarActivity implements Ada
                     if (loadMore){
 //                        page = pageTemp;
                         listHotel.addAll(array);
-                        adapter.addData(array);
+                        adapter.notifyDataSetChanged();
+//                        adapter.addData(array);
                     }
                 }
                 resetValue();

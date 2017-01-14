@@ -47,7 +47,7 @@ import java.util.Locale;
 
 public class SelectPaymentActivity extends BaseActivity implements View.OnClickListener {
 
-    private String TAG = SelectPaymentActivity.class.getSimpleName();
+    private String TAG = "SelectPaymentActivity";
 
     private static final int SDK_PAY_FLAG = 8881; //阿里支付
     private ImageView ivTitleLeft;
@@ -65,6 +65,7 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
     private HotelOrderResponse hotelInfo; //酒店订单
     private TrainTicketOrderInfo trainInfo; //火车票订单
     private PlaneOrderOfChinaResponse planeOfChinaInfo; //飞机票订单
+
 
     private Handler handler = new Handler(){
         @Override
@@ -396,10 +397,14 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
+    protected void onDestroy() {
+        super.onDestroy();
+        ivTitleLeft = null;
+        tvAliPay = null;
+        tvWeChatPay = null;
+        hotInfo = null;
+        hotelInfo = null;
+        trainInfo = null;
+        planeOfChinaInfo = null;
     }
-
-
 }

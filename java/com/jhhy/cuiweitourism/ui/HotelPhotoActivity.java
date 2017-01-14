@@ -20,7 +20,7 @@ import java.util.ArrayList;
 public class HotelPhotoActivity extends BaseActionBarActivity implements NormalRecyclerViewAdapter.onItemClickListener {
 
     RecyclerView cyImages;
-    ArrayList<HotelDetailResponse.HotelImageBean> listImages;
+    ArrayList<String> listImages;
     NormalRecyclerViewAdapter adapter;
 //    {"head":{"code":"Hotel_image"},"field":{"HotelID":"90203350","RoomID":"0001","Count":"0"}}
 
@@ -34,7 +34,7 @@ public class HotelPhotoActivity extends BaseActionBarActivity implements NormalR
     private void getData() {
         Intent intent = getIntent();
         if (intent != null){
-            listImages = intent.getParcelableArrayListExtra("images");
+            listImages = intent.getStringArrayListExtra("images");
         }
     }
 

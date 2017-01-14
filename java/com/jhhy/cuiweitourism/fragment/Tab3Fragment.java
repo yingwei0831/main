@@ -160,7 +160,7 @@ public class Tab3Fragment extends Fragment implements View.OnClickListener {
         popOrderType.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
-                LogUtil.e(TAG, "------------------onDismiss--------------");
+//                LogUtil.e(TAG, "------------------onDismiss--------------");
                 tvTitle.setCompoundDrawables(null, null, drawableRightDown, null);
                 int newSelection = popOrderType.getCheckButton();
                 LogUtil.e(TAG, "------ selection after = " + newSelection + "-----------");
@@ -179,9 +179,11 @@ public class Tab3Fragment extends Fragment implements View.OnClickListener {
                             tvTitle.setText(typeTitles[1]);
                             break;
                         case 2:
+                            type = "82";
                             tvTitle.setText(typeTitles[2]);
                             break;
                         case 3:
+                            type = "80";
                             tvTitle.setText(typeTitles[3]);
                             break;
                         case 4:

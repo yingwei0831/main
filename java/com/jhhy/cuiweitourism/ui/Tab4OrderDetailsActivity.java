@@ -273,6 +273,7 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
             tvTravelIconNotice.setText("账户共" + MainActivity.user.getUserScore() + "个旅游币，本次使用" + order.getUseTravelIcon() + "个旅游币折扣");
             tvTravelIconCount.setText(order.getUseTravelIcon());
         }
+        layoutBottomAction.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -632,7 +633,6 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
                 LoadingIndicator.cancel();
                 LogUtil.e(TAG, "trainTicketCancel: " + model);
                 ToastUtil.show(getApplicationContext(), "申请退款成功");
-//                btnAction.setVisibility(View.GONE);
             }
 
             @Override
@@ -768,6 +768,9 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
      * 火车票订单展示
      */
     private void refreshTrainView(TrainTicketOrderDetailResponse body) {
+        if (type == 0){
+            btnAction.setVisibility(View.GONE);
+        }
         layoutBottomAction.setVisibility(View.VISIBLE);
         tvOrderTitle.setText(String.format(Locale.getDefault(), "%s—%s", body.getTicketInfo().getFromStation(), body.getTicketInfo().getToStation()));
         if (body.getTrainOrderNo() == null || body.getTrainOrderNo().length() == 0 || "null".equals(body.getTradeNo())){
@@ -827,6 +830,7 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
      */
     private void refreshHotelView(HotelOrderDetailResponse body) {
         btnAction.setVisibility(View.GONE);
+        layoutBottomAction.setVisibility(View.VISIBLE);
 //        btnAction.setText("取消订单");
 
         tvOrderTitle.setText(body.getHotelName());
@@ -996,5 +1000,10 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
             mList = null;
         }
         planeTicketOrderDetailOfChina = null;
+        planeTicketOrderDetailInternational = null;
+        mListViewPlane = null;
+        hotelOrderDetail = null;
+        trainOrderDetail = null;
+        layoutOrderTime = null;
     }
 }

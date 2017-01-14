@@ -167,14 +167,19 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
                 }else if ("0000".equals(model.headModel.res_code)){
                     List<HotelListResponse.HotelBean> array = model.body.getHotels().getHotel();
                     LogUtil.e(TAG,"hotelGetInfoList =" + array.toString());
+                    LogUtil.e(TAG, "refresh = " + ", loadMore = " + loadMore);
                     if (refresh){
+                        if (listHotel != null){
+                            listHotel.clear();
+                        }
                         listHotel = array;
                         adapter.setData(listHotel);
                     }
                     if (loadMore){
                         page = pageTemp;
                         listHotel.addAll(array);
-                        adapter.addData(array);
+                        adapter.notifyDataSetChanged();
+//                        adapter.addData(array);
                     }
                 }
                 resetValue();

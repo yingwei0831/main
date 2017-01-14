@@ -81,7 +81,7 @@ public class PlaneInquiryAdapter extends MyBaseAdapter {
         });
 
         PlaneInquiry item = (PlaneInquiry) getItem(position);
-        LogUtil.e(TAG, "item = " + item);
+//        LogUtil.e(TAG, "item = " + item);
         if (item != null){
             if (item.fromCity != null){
                 holder.tvFromCity.setText(item.fromCity.getName());

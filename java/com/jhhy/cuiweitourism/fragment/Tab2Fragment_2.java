@@ -50,7 +50,7 @@ import java.util.List;
 
 public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.IConfigCurrentPagerScroll, TouchPanelLayoutModify.OnViewUpdateListener, View.OnClickListener, AdapterView.OnItemClickListener, View.OnTouchListener, GestureDetector.OnGestureListener {
 
-    private String TAG = Tab2Fragment_2.class.getSimpleName();
+    private String TAG = "Tab2Fragment_2";
 
     //  轮播图片
     private List<ADInfo> infos = new ArrayList<ADInfo>();
@@ -84,7 +84,8 @@ public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.I
     private boolean loadErrorHot; //其中有一个下载失败，则为失败
     private boolean loadErrorBan; //其中有一个下载失败，则为失败
 
-    private Handler handler = new Handler(){
+
+   private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -183,11 +184,6 @@ public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.I
         return mTouchPanelLayout;
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        handler.removeCallbacks(runnable);
-    }
 
     private void getInternetData() {
         imageUrls.add("drawable://" + R.mipmap.travel_icon);
@@ -538,5 +534,37 @@ public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.I
     private void dianUnselect(int id){
         indicators[id].setImageResource(R.drawable.icon_point);
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        handler.removeCallbacks(runnable);
+        if (infos != null){
+            infos.clear();
+            infos = null;
+        }
+        if (listHotRecommend != null){
+            listHotRecommend.clear();
+            listHotRecommend = null;
+        }
+        if (mContent != null){
+            mContent.clear();
+            mContent = null;
+        }
+
+        flipper = null;
+        layoutPoint = null;
+        imageUrls = null;
+        indicators = null;
+        mGestureDetector = null;
+        tvHotRecommendNext = null;
+        gridViewHotRecommend = null;
+        hotAdapter = null;
+        viewPager = null;
+        pagerAdapter = null;
+        bottomFragment1 = null;
+        bottomFragment2 = null;
+    }
+
 
 }

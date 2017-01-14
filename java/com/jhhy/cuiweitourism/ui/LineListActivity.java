@@ -50,7 +50,8 @@ public class LineListActivity extends BaseActionBarActivity {
                             if (loadMore) { //加载更多
                                 loadMore = false;
                                 list.addAll(listNew);
-                                adapter.addData(listNew);
+                                adapter.notifyDataSetChanged();
+//                                adapter.addData(listNew);
                             }
                             if (refresh) { //下拉刷新
                                 refresh = false;

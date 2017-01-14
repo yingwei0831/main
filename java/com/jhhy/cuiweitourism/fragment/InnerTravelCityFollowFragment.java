@@ -136,6 +136,7 @@ public class InnerTravelCityFollowFragment extends Fragment implements AdapterVi
         listView.getLoadingLayoutProxy().setPullLabel("下拉刷新");
         listView.getLoadingLayoutProxy().setRefreshingLabel("正在刷新");
         listView.getLoadingLayoutProxy().setReleaseLabel("松开加载更多");
+        listView.setMode(PullToRefreshBase.Mode.DISABLED);
 
         refreshView = listView.getRefreshableView();
         adapter = new Tab1InnerTravelListViewAdapter(getContext(), list, this);

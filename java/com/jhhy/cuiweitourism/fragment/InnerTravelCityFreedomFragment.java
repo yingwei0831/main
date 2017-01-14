@@ -139,6 +139,7 @@ public class InnerTravelCityFreedomFragment extends Fragment implements AdapterV
         listView.getLoadingLayoutProxy().setPullLabel("下拉刷新");
         listView.getLoadingLayoutProxy().setRefreshingLabel("正在刷新");
         listView.getLoadingLayoutProxy().setReleaseLabel("松开加载更多");
+        listView.setMode(PullToRefreshBase.Mode.DISABLED);
         listView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {

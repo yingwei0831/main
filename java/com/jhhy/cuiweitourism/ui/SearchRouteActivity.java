@@ -91,7 +91,8 @@ public class SearchRouteActivity extends BaseActivity implements View.OnClickLis
                             if (loadMore){
                                 loadMore = false;
                                 mLists.addAll(listNew);
-                                adapter.addData(listNew);
+                                adapter.notifyDataSetChanged();
+//                                adapter.addData(listNew);
                             }
 //                        }else{
 //                            if (loadMore){

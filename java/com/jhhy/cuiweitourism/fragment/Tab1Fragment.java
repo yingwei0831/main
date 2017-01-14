@@ -77,7 +77,7 @@ import java.util.List;
 public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewListener, GestureDetector.OnGestureListener,
         View.OnClickListener, ArgumentOnClick, AdapterView.OnItemClickListener, View.OnTouchListener {
 
-    private static final String TAG = Tab1Fragment.class.getSimpleName();
+    private String TAG = "Tab1Fragment";
 
     //  轮播图片 顶部
     private List<ADInfo> infos = new ArrayList<ADInfo>();
@@ -1173,5 +1173,81 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
             }
             handler.postDelayed(runnableBottom, Consts.TIME_PERIOD);
         }
+    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (infos != null){
+            infos.clear();
+            infos = null;
+        }
+        flipper = null;
+        layoutPoint = null;
+
+        indicators = null;
+        if (imageUrls != null){
+            imageUrls.clear();
+            imageUrls = null;
+        }
+        if (infosBottom != null){
+            infosBottom.clear();
+            infosBottom = null;
+        }
+        if (imageUrlsBottom != null){
+            imageUrlsBottom.clear();
+            imageUrlsBottom = null;
+        }
+        if (lists != null){
+            lists.clear();
+            lists = null;
+        }
+        if (listsInner != null){
+            listsInner.clear();
+            listsInner = null;
+        }
+        if (listsOutside != null){
+            listsOutside.clear();
+            listsOutside = null;
+        }
+        if (listsNearby != null){
+            listsNearby.clear();
+            listsNearby = null;
+        }
+
+        mGestureDetector = null;
+        flipperBottom = null;
+        layoutPointBottom = null;
+        tvMobile = null;
+        tvLocationCity = null;
+        selectCity = null;
+        tvSearchText  = null;
+        ivSearchImg  = null;
+
+
+        tvInnerTravel  = null;
+        tvOutsideTravel  = null;
+        tvPlaneTicket  = null;
+        tvStartActivity  = null;
+        tvRentCar  = null;
+        tvTrain  = null;
+        tvHotel  = null;
+        tvVisa  = null;
+        tvSearchRoute  = null;
+        layoutPersionalizedCustom  = null;
+        layoutHotActivity = null;
+        gridViewRecommend = null;
+        adapter = null;
+
+        tvIndicatorAllBottom = null;
+        tvIndicatorInnerBottom = null;
+        tvIndicatorOutsideBottom = null;
+        layoutTitle = null;
+        layoutTabRecommendForYou = null;
+        layoutTabRecommendForYou2 = null;
+        tvIndicatorAllTop = null;
+        tvIndicatorInnerTop = null;
+        tvIndicatorOutsideTop = null;
+        tvSearchrShop = null;
+        tvTravelInsurance = null;
     }
 }

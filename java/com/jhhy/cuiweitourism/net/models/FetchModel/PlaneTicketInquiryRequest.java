@@ -29,6 +29,17 @@ public class PlaneTicketInquiryRequest extends BasicFetchModel {
     private String youxiang;
     private List<HangduanBean> hangduan;
 
+    public PlaneTicketInquiryRequest(String chengren, String ertong, String cangwei, String qita, String lianxiren, String shouji, String dianhua, String youxiang) {
+        this.chengren = chengren;
+        this.ertong = ertong;
+        this.cangwei = cangwei;
+        this.qita = qita;
+        this.lianxiren = lianxiren;
+        this.shouji = shouji;
+        this.dianhua = dianhua;
+        this.youxiang = youxiang;
+    }
+
     public String getChengren() {
         return chengren;
     }
@@ -111,6 +122,12 @@ public class PlaneTicketInquiryRequest extends BasicFetchModel {
         private String chuafachengshi;
         private String daodachengshi;
         private String chufariqi;
+
+        public HangduanBean(String chuafachengshi, String daodachengshi, String chufariqi) {
+            this.chuafachengshi = chuafachengshi;
+            this.daodachengshi = daodachengshi;
+            this.chufariqi = chufariqi;
+        }
 
         public String getChuafachengshi() {
             return chuafachengshi;

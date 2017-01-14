@@ -1,350 +1,407 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorLineGray3">
-
-    <LinearLayout
+    android:orientation="vertical">
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <!--询价航班列表-->
-        <com.jhhy.cuiweitourism.view.MyListView
-            android:id="@+id/list_view_inquiry"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/white" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        >
 
         <LinearLayout
-            android:id="@+id/layout_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:orientation="vertical">
-            <!--成人-->
-            <RelativeLayout
-                android:layout_width="wrap_content"
+            <!--询价航班列表-->
+            <com.jhhy.cuiweitourism.view.MyListView
+                android:id="@+id/list_view_inquiry"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@android:color/white" />
+
+            <LinearLayout
+                android:id="@+id/layout_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
+                <!--成人-->
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    >
+
+                    <TextView
+                        android:id="@+id/tv_adult_notice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="成人"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
+
+
+                    <ImageView
+                        android:id="@+id/tv_price_calendar_number_reduce"
+                        android:layout_width="38dp"
+                        android:layout_height="34dp"
+                        android:layout_alignBottom="@+id/tv_price_calendar_number"
+                        android:layout_alignTop="@+id/tv_price_calendar_number"
+                        android:layout_toLeftOf="@+id/tv_price_calendar_number"
+                        android:background="@drawable/bg_iv_price_calendar_left_border"
+                        android:scaleType="centerInside"
+                        android:src="@mipmap/icon_reduce"
+
+                        />
+
+                    <TextView
+                        android:id="@+id/tv_price_calendar_number"
+                        android:layout_width="38dp"
+                        android:layout_height="34dp"
+                        android:layout_marginLeft="-1dp"
+                        android:layout_marginRight="-1dp"
+                        android:layout_toLeftOf="@+id/tv_price_calendar_number_add"
+                        android:background="@drawable/bg_tv_price_calendar_number_border"
+                        android:gravity="center"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp" />
+
+                    <ImageView
+                        android:id="@+id/tv_price_calendar_number_add"
+                        android:layout_width="38dp"
+                        android:layout_height="34dp"
+                        android:layout_alignBottom="@+id/tv_price_calendar_number"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignTop="@+id/tv_price_calendar_number"
+                        android:background="@drawable/bg_iv_price_calendar_right_border"
+                        android:padding="12dp"
+                        android:scaleType="centerInside"
+                        android:src="@mipmap/icon_plus" />
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1.2px"
+                    android:background="@color/colorLineGray2" />
+                <!--儿童-->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    >
+
+                    <TextView
+                        android:id="@+id/tv_child_notice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="儿童"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
+
+
+                    <ImageView
+                        android:id="@+id/tv_price_calendar_number_reduce_child"
+                        android:layout_width="38dp"
+                        android:layout_height="34dp"
+                        android:layout_alignBottom="@+id/tv_price_calendar_number_child"
+                        android:layout_alignTop="@+id/tv_price_calendar_number_child"
+                        android:layout_toLeftOf="@+id/tv_price_calendar_number_child"
+                        android:background="@drawable/bg_iv_price_calendar_left_border"
+                        android:scaleType="centerInside"
+                        android:src="@mipmap/icon_reduce" />
+                    <!--android:paddingTop="12dp"-->
+                    <!--android:paddingBottom="12dp"-->
+                    <!--android:paddingLeft="20dp"-->
+                    <!--android:paddingRight="20dp"-->
+                    <TextView
+                        android:id="@+id/tv_price_calendar_number_child"
+                        android:layout_width="38dp"
+                        android:layout_height="34dp"
+                        android:layout_marginLeft="-1dp"
+                        android:layout_marginRight="-1dp"
+                        android:layout_toLeftOf="@+id/tv_price_calendar_number_add_child"
+                        android:background="@drawable/bg_tv_price_calendar_number_border"
+                        android:gravity="center"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp" />
+
+                    <ImageView
+                        android:id="@+id/tv_price_calendar_number_add_child"
+                        android:layout_width="38dp"
+                        android:layout_height="34dp"
+                        android:layout_alignBottom="@+id/tv_price_calendar_number_child"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignTop="@+id/tv_price_calendar_number_child"
+                        android:background="@drawable/bg_iv_price_calendar_right_border"
+                        android:padding="12dp"
+                        android:scaleType="centerInside"
+                        android:src="@mipmap/icon_plus" />
+
+                </RelativeLayout>
+            </LinearLayout>
+            <!--舱位等级-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:background="@android:color/white"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
                 >
-
                 <TextView
-                    android:id="@+id/tv_adult_notice"
+                    android:id="@+id/tv_cabin_level_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="成人"
+                    android:paddingBottom="12dp"
+                    android:paddingTop="12dp"
+                    android:text="@string/plane_flight_cabin_level"
                     android:textColor="@android:color/black"
-                    android:textSize="16sp" />
-
-
-                <ImageView
-                    android:id="@+id/tv_price_calendar_number_reduce"
-                    android:layout_width="38dp"
-                    android:layout_height="34dp"
-                    android:layout_alignBottom="@+id/tv_price_calendar_number"
-                    android:layout_alignTop="@+id/tv_price_calendar_number"
-                    android:layout_toLeftOf="@+id/tv_price_calendar_number"
-                    android:background="@drawable/bg_iv_price_calendar_left_border"
-                    android:scaleType="centerInside"
-                    android:src="@mipmap/icon_reduce"
-
+                    android:textSize="16sp"
                     />
 
                 <TextView
-                    android:id="@+id/tv_price_calendar_number"
-                    android:layout_width="38dp"
-                    android:layout_height="34dp"
-                    android:layout_marginLeft="-1dp"
-                    android:layout_marginRight="-1dp"
-                    android:layout_toLeftOf="@+id/tv_price_calendar_number_add"
-                    android:background="@drawable/bg_tv_price_calendar_number_border"
-                    android:gravity="center"
+                    android:id="@+id/tv_cabin_level"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:drawableRight="@mipmap/arrow_right_dark"
+                    android:paddingBottom="12dp"
+                    android:paddingTop="12dp"
+                    android:gravity="right"
+                    android:hint="@string/tab4_account_certification_gender_notice"
                     android:textColor="@android:color/black"
-                    android:textSize="18sp" />
+                    android:textColorHint="@color/colorGrayDark"
+                    android:textSize="16sp"
+                    android:drawablePadding="16dp"/>
+            </LinearLayout>
 
-                <ImageView
-                    android:id="@+id/tv_price_calendar_number_add"
-                    android:layout_width="38dp"
-                    android:layout_height="34dp"
-                    android:layout_alignBottom="@+id/tv_price_calendar_number"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignTop="@+id/tv_price_calendar_number"
-                    android:background="@drawable/bg_iv_price_calendar_right_border"
-                    android:padding="12dp"
-                    android:scaleType="centerInside"
-                    android:src="@mipmap/icon_plus" />
-
-            </RelativeLayout>
-
-            <View
+            <EditText
+                android:id="@+id/et_inquiry_remark"
                 android:layout_width="match_parent"
-                android:layout_height="1.2px"
-                android:background="@color/colorLineGray2" />
-            <!--儿童-->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="120dp"
+                android:layout_marginTop="10dp"
                 android:background="@android:color/white"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
+                android:hint="@string/plane_flight_inquiry_remark"
+                android:paddingBottom="10dp"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                >
+                android:paddingTop="10dp"
+                android:textColorHint="@android:color/darker_gray"
+                android:gravity="start|top"
+                android:textSize="14sp"
+                android:textColor="@android:color/black"/>
 
-                <TextView
-                    android:id="@+id/tv_child_notice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="儿童"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp" />
-
-
-                <ImageView
-                    android:id="@+id/tv_price_calendar_number_reduce_child"
-                    android:layout_width="38dp"
-                    android:layout_height="34dp"
-                    android:layout_alignBottom="@+id/tv_price_calendar_number_child"
-                    android:layout_alignTop="@+id/tv_price_calendar_number_child"
-                    android:layout_toLeftOf="@+id/tv_price_calendar_number_child"
-                    android:background="@drawable/bg_iv_price_calendar_left_border"
-                    android:scaleType="centerInside"
-                    android:src="@mipmap/icon_reduce" />
-                <!--android:paddingTop="12dp"-->
-                <!--android:paddingBottom="12dp"-->
-                <!--android:paddingLeft="20dp"-->
-                <!--android:paddingRight="20dp"-->
-                <TextView
-                    android:id="@+id/tv_price_calendar_number_child"
-                    android:layout_width="38dp"
-                    android:layout_height="34dp"
-                    android:layout_marginLeft="-1dp"
-                    android:layout_marginRight="-1dp"
-                    android:layout_toLeftOf="@+id/tv_price_calendar_number_add_child"
-                    android:background="@drawable/bg_tv_price_calendar_number_border"
-                    android:gravity="center"
-                    android:textColor="@android:color/black"
-                    android:textSize="18sp" />
-
-                <ImageView
-                    android:id="@+id/tv_price_calendar_number_add_child"
-                    android:layout_width="38dp"
-                    android:layout_height="34dp"
-                    android:layout_alignBottom="@+id/tv_price_calendar_number_child"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignTop="@+id/tv_price_calendar_number_child"
-                    android:background="@drawable/bg_iv_price_calendar_right_border"
-                    android:padding="12dp"
-                    android:scaleType="centerInside"
-                    android:src="@mipmap/icon_plus" />
-
-            </RelativeLayout>
-        </LinearLayout>
-        <!--舱位等级-->
-        <TextView
-            android:id="@+id/tv_cabin_level"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@android:color/white"
-            android:drawablePadding="16dp"
-            android:drawableRight="@mipmap/arrow_right_dark"
-            android:paddingBottom="12dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:paddingTop="12dp"
-            android:text="@string/plane_flight_cabin_level"
-            android:textColor="@android:color/black"
-            android:textSize="16sp" />
-
-        <EditText
-            android:id="@+id/et_inquiry_remark"
-            android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:layout_marginTop="10dp"
-            android:background="@android:color/white"
-            android:hint="@string/plane_flight_inquiry_remark"
-            android:paddingBottom="10dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:paddingTop="10dp"
-            android:textColorHint="@android:color/darker_gray"
-            android:gravity="start|top"
-            android:textSize="14sp"
-            android:textColor="@android:color/black"/>
-
-        <!--联系人-->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@android:color/white"
-            android:orientation="vertical">
             <!--联系人-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="联系人姓名："
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:text="*"
-                    android:textColor="@android:color/holo_red_light" />
-
-                <EditText
-                    android:id="@+id/et_plane_order_link_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:background="@android:color/white"
-                    android:gravity="center_vertical"
-                    android:hint="必填"
-                    android:inputType="text"
-                    android:maxLines="1"
-                    android:paddingBottom="16dp"
-                    android:paddingTop="16dp"
-                    android:textColorHint="@android:color/darker_gray"
-                    android:textSize="14sp" />
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1.2px"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:background="@color/colorLineGray2" />
-            <!--手机号码-->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/line_inner_order_contact"
-                    android:text="手机号码："
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:text="*"
-                    android:textColor="@android:color/holo_red_light" />
-
-                <EditText
-                    android:id="@+id/et_plane_link_mobile"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:background="@android:color/white"
-                    android:gravity="center_vertical"
-                    android:hint="必填"
-                    android:inputType="number"
-                    android:maxLength="11"
-                    android:maxLines="1"
-                    android:paddingBottom="16dp"
-                    android:paddingTop="16dp"
-                    android:textColorHint="@android:color/darker_gray"
-                    android:textSize="14sp" />
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1.2px"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:background="@color/colorLineGray2" />
-            <!--email-->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/line_inner_order_contact"
-                    android:text="e_mail:"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp" />
-
-                <EditText
-                    android:id="@+id/et_plane_link_email"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:background="@android:color/white"
-                    android:gravity="center_vertical"
-                    android:hint="选填"
-                    android:maxLength="11"
-                    android:maxLines="1"
-                    android:paddingBottom="16dp"
-                    android:paddingTop="16dp"
-                    android:inputType="textEmailAddress"
-                    android:textColorHint="@android:color/darker_gray"
-                    android:textSize="14sp" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="46dp"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal">
-
-            <View
-                android:id="@+id/view_line_plane_inquiry"
-                android:layout_width="match_parent"
-                android:layout_height="1.2px"
-                android:background="@color/colorLineGray2" />
-
-            <TextView
-                android:id="@+id/tv_plane_inquiry_notice"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/view_line_plane_inquiry"
-                android:layout_toLeftOf="@+id/btn_edit_order_commit"
+                android:layout_marginTop="10dp"
                 android:background="@android:color/white"
-                android:gravity="center_vertical"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:text="@string/plane_flight_inquiry_notice"
-                android:textColor="@android:color/holo_red_light" />
+                android:orientation="vertical">
+                <!--联系人-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp">
 
-            <Button
-                android:id="@+id/btn_edit_order_commit"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignParentRight="true"
-                android:layout_below="@+id/view_line_plane_inquiry"
-                android:background="@drawable/bg_btn_edit_order_selector"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"
-                android:text="@string/plane_flight_inquiry_commit"
-                android:textColor="@android:color/white"
-                android:textSize="16sp" />
-        </RelativeLayout>
-    </LinearLayout>
-</ScrollView>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="联系人姓名："
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:text="*"
+                        android:textColor="@android:color/holo_red_light" />
+
+                    <EditText
+                        android:id="@+id/et_plane_order_link_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:background="@android:color/white"
+                        android:gravity="center_vertical"
+                        android:hint="必填"
+                        android:inputType="text"
+                        android:maxLines="1"
+                        android:paddingBottom="16dp"
+                        android:paddingTop="16dp"
+                        android:textColorHint="@android:color/darker_gray"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1.2px"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:background="@color/colorLineGray2" />
+                <!--手机号码-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/line_inner_order_contact"
+                        android:text="手机号码："
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:text="*"
+                        android:textColor="@android:color/holo_red_light" />
+
+                    <EditText
+                        android:id="@+id/et_plane_link_mobile"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:background="@android:color/white"
+                        android:gravity="center_vertical"
+                        android:hint="必填"
+                        android:inputType="number"
+                        android:maxLength="11"
+                        android:maxLines="1"
+                        android:paddingBottom="16dp"
+                        android:paddingTop="16dp"
+                        android:textColorHint="@android:color/darker_gray"
+                        android:textSize="14sp" />
+                </LinearLayout>
+                <!--联系电话-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/line_inner_order_contact"
+                        android:text="联系电话："
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
+
+                    <EditText
+                        android:id="@+id/et_plane_link_tel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:background="@android:color/white"
+                        android:gravity="center_vertical"
+                        android:hint="选填"
+                        android:inputType="number"
+                        android:maxLength="11"
+                        android:maxLines="1"
+                        android:paddingBottom="16dp"
+                        android:paddingTop="16dp"
+                        android:textColorHint="@android:color/darker_gray"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1.2px"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:background="@color/colorLineGray2" />
+                <!--email-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/line_inner_order_contact"
+                        android:text="e_mail:"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
+
+                    <EditText
+                        android:id="@+id/et_plane_link_email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:background="@android:color/white"
+                        android:gravity="center_vertical"
+                        android:hint="选填"
+                        android:maxLength="11"
+                        android:maxLines="1"
+                        android:paddingBottom="16dp"
+                        android:paddingTop="16dp"
+                        android:inputType="textEmailAddress"
+                        android:textColorHint="@android:color/darker_gray"
+                        android:textSize="14sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <View
+            android:id="@+id/view_line_plane_inquiry"
+            android:layout_width="match_parent"
+            android:layout_height="1.2px"
+            android:background="@color/colorLineGray2" />
+
+        <TextView
+            android:id="@+id/tv_plane_inquiry_notice"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/view_line_plane_inquiry"
+            android:layout_toLeftOf="@+id/btn_edit_order_commit"
+            android:background="@android:color/white"
+            android:gravity="center_vertical"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:text="@string/plane_flight_inquiry_notice"
+            android:textColor="@android:color/holo_red_light" />
+
+        <Button
+            android:id="@+id/btn_edit_order_commit"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/view_line_plane_inquiry"
+            android:background="@drawable/bg_btn_edit_order_selector"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:text="@string/plane_flight_inquiry_commit"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+    </RelativeLayout>
+</LinearLayout>
+

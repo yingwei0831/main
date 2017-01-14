@@ -19,6 +19,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -54,7 +55,7 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
         , View.OnClickListener
 {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
+    private String TAG = "MainActivity";
 
 //    private RadioGroup radioGroup;
     private RadioButton rb1;
@@ -417,13 +418,21 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
         context.startActivity(intent);
     }
 
+    private long exitTime=0;
+
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        LoginBiz biz = new LoginBiz(null, null);
-        biz.logout(null);
-        logged = false;
-        unregisterReceiver(receiver);
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
+            if((System.currentTimeMillis()-exitTime) > 2000){
+                ToastUtil.showShortToast(getApplicationContext(), "再按一次退出程序");
+                exitTime = System.currentTimeMillis();
+            } else {
+//                System.exit(0);
+                 finish();
+            }
+            return true;
+        }
+        return true;
     }
 
     private NetWorkReceiver receiver;
@@ -662,5 +671,29 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         i.setDataAndType(Uri.parse("file://" + apkfile.toString()), "application/vnd.android.package-archive");
         startActivity(i);
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        LoginBiz biz = new LoginBiz(null, null);
+        biz.logout(null);
+        logged = false;
+        unregisterReceiver(receiver);
+
+        rb1 = null;
+        rb2 = null;
+        rb3 = null;
+        rb4 = null;
+        mContent = null;
+        tab1Fragment = null;
+        tab2Fragment_2 = null;
+        tab3Fragment = null;
+        tab4Fragment2 = null;
+        user = null;
+        receiver = null;
+        mProgress = null;
+        mDownloadDialog = null;
     }
 }

@@ -25,7 +25,7 @@ import java.util.List;
  */
 public abstract class OrderXListViewAdapter extends BaseAdapter implements IOrderItemClick {
 
-    private String TAG = getClass().getSimpleName();
+    private String TAG = "OrderXListViewAdapter";
 
     private Context context;
     private List<Order> lists;
@@ -173,7 +173,7 @@ public abstract class OrderXListViewAdapter extends BaseAdapter implements IOrde
                     }
                 }
             } else if ("0".equals(order.getStatus())) { //正在退款——>取消退款
-                if ("80".equals(order.getTypeId()) || "82".equals(order.getTypeId())){ //火车/机票，没有取消退款
+                if ("80".equals(order.getTypeId()) || "82".equals(order.getTypeId()) || "2".equals(order.getTypeId())){ //火车/机票/酒店，没有取消退款
                     holder.btnOrderCancelPayment.setVisibility(View.GONE); //取消退款
                 }else{
                     holder.btnOrderCancelPayment.setVisibility(View.VISIBLE); //取消退款

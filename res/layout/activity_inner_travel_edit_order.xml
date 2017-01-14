@@ -580,7 +580,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:checked="true"
-                        android:textColor="@android:color/black" />
+                        android:textColor="@android:color/black"
+                        android:button="@drawable/bg_check_box"
+                        />
 
                     <TextView
                         android:id="@+id/tv_travel_edit_order_deal"

@@ -38,14 +38,14 @@ public class NormalRecyclerViewAdapter<T> extends RecyclerView.Adapter<NormalRec
     @Override
     public void onBindViewHolder(NormalImageHolder holder, int position) {
         ViewGroup.LayoutParams params = holder.mPicture.getLayoutParams();
-        String url = ((HotelDetailResponse.HotelImageBean)list.get(position)).getUrl();
+        String url = (String) list.get(position);
         String imageUrl = url.substring(url.indexOf("/i/")+3, url.lastIndexOf("/"));
         String sizeStr = imageUrl.replaceAll("[^(0-9_)]", ""); //replace("[^a-zA-Z]", "")
         String[] size = sizeStr.split("_");
         params.height = Integer.parseInt(size[1]);
         holder.mPicture.setLayoutParams(params);
 
-        ImageLoaderUtil.getInstance(mContext).displayImage(((HotelDetailResponse.HotelImageBean)list.get(position)).getUrl(), holder.mPicture);
+        ImageLoaderUtil.getInstance(mContext).displayImage((String) list.get(position), holder.mPicture);
         setUpEvent(holder);
     }
 

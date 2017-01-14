@@ -180,12 +180,16 @@
             android:textSize="16sp" />
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="#EFF2F7"/>
+
     <com.jhhy.cuiweitourism.view.MyScrollView
         android:id="@+id/viewflipper_myScrollview2"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_marginBottom="12dp"
-        android:layout_marginTop="12dp"
         android:visibility="visible">
 
         <FrameLayout

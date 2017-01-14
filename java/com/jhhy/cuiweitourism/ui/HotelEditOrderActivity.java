@@ -86,7 +86,7 @@ public class HotelEditOrderActivity extends BaseActionBarActivity implements Pop
     private HotelDetailResponse hotelDetail;
 //    private int position;
     private HotelDetailResponse.HotelProductBean hotelProduct;
-    private float totalPrice; //订单总价
+    private String totalPrice; //订单总价
     private int number; //一共几个房间
     private String totalPricePre; //总价:这间房在预定期间应该交付的价格，并未计算人数
 
@@ -269,7 +269,7 @@ public class HotelEditOrderActivity extends BaseActionBarActivity implements Pop
                 HotelDetailActivity.hotelDetail.getHotel().getTraffic(), HotelDetailActivity.hotelDetail.getHotel().getCityCode(), HotelDetailActivity.hotelDetail.getHotel().getCityName(),
                 hotelProduct.getRoomTypeID(), hotelProduct.getRoomName(), hotelProduct.getProductID(), hotelProduct.getName(),
                 checkInDate, checkOutDate, "Chinese", "Prepay", String.valueOf(number), String.valueOf(listContact.size()), earlierCheckInDate, String.format(Locale.getDefault(), "%s %s", checkInDate, "23:59:00"), //Chinese，Prepay
-                "RMB", hotelProduct.getPrice(), getMyIP(), "FALSE", "NotAllowedConfirm", etHotelNotice.getText().toString(), etHotelNotice.getText().toString(), //totalPrice 单价
+                "RMB", totalPrice, getMyIP(), "FALSE", "NotAllowedConfirm", etHotelNotice.getText().toString(), etHotelNotice.getText().toString(), //totalPrice 单价/总价
                 "false", //发票
                 new HotelOrderRequest.ContactBean(name, mobile), hotelProduct.getPrice(), hotelProduct.getPrice(), hotelProduct.getMeals(), hotelProduct.getPrice(), //basePrice
                 hotelProduct.getPlanType(), "2", "0", hotelProduct.getRoomImgUrl());
@@ -395,8 +395,8 @@ public class HotelEditOrderActivity extends BaseActionBarActivity implements Pop
      * 计算价格
      */
     private void calculatePrice() {
-        totalPrice = Float.parseFloat(totalPricePre) * number;
-        tvOrderPrice.setText(String.format(Locale.getDefault(), "%.2f", totalPrice)); //订单总价
+        totalPrice = String.format(Locale.getDefault(), "%.2f", Float.parseFloat(totalPricePre) * number);
+        tvOrderPrice.setText(totalPrice); //订单总价
     }
 
     /**

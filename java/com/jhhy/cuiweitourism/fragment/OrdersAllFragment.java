@@ -366,8 +366,9 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
         if ("国内机票".equals(order.getProductName())){ //国内机票
             //TODO 进入详情，才可申请退款(目前国内机票详情没有接口)
 
-        }else if ("国际机票".equals(order.getProductName())){ //国际机票
-            refund(order, -1, REQUEST_REFUND);
+        }else if ("国际机票".equals(order.getProductName())){ //国际机票，线下联系退款，拨打翠微电话
+            ToastUtil.show(getContext(), "请自行联系翠微客服进行退款");
+//            refund(order, -1, REQUEST_REFUND);
         }
     }
 

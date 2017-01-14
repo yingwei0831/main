@@ -60,7 +60,8 @@ public class SearchShopActivity extends BaseActivity implements View.OnClickList
                             if (loadMore) { //下一页
                                 loadMore = false;
                                 lists.addAll(listNew);
-                                adapter.addData(listNew);
+                                adapter.notifyDataSetChanged();
+//                                adapter.addData(listNew);
                             }
                             if (refresh) { //刷新
                                 refresh = false;

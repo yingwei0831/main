@@ -122,7 +122,13 @@ public class RequestRefundActivity extends BaseActivity implements View.OnClickL
         TextView tvTitle = (TextView) findViewById(R.id.tv_title_inner_travel);
         if (type == 2){
             tvTitle.setText("取消订单");
+        }else if (type == -1){
+            tvTitle.setText("申请退款");
+        }else{
+            tvTitle.setText("评价");
         }
+        ImageView ivLeft = (ImageView) findViewById(R.id.title_main_tv_left_location);
+        ivLeft.setOnClickListener(this);
         btnCommit = (Button) findViewById(R.id.btn_request_refund_commit);
         tvRefundNotice = (TextView) findViewById(R.id.tv_refund_notice);
         etReason = (EditText) findViewById(R.id.et_reason);
@@ -169,6 +175,17 @@ public class RequestRefundActivity extends BaseActivity implements View.OnClickL
 
     @Override
     public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.title_main_tv_left_location:
+                finish();
+                break;
+            case R.id.btn_request_refund_commit:
+                refund();
+                break;
+        }
+    }
+
+    private void refund() {
         String remark = etReason.getText().toString();
         if (TextUtils.isEmpty(remark)){
             ToastCommon.toastShortShow(getApplicationContext(), null ,getString(R.string.empty_input));
@@ -178,7 +195,7 @@ public class RequestRefundActivity extends BaseActivity implements View.OnClickL
             OrderActionBiz biz = new OrderActionBiz(getApplicationContext(), handlerMain);
             biz.requestRefund(order.getOrderSN(), remark);
         } else if (2 == type){ //酒店取消订单
-           cancelHotelOrder(remark);
+            cancelHotelOrder(remark);
         }
         else{ //提交评论
             commitCommont(remark);
