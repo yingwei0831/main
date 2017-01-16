@@ -23,8 +23,11 @@ import android.widget.ViewFlipper;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.circleviewpager.ViewFactory;
 import com.jhhy.cuiweitourism.model.ADInfo;
+import com.jhhy.cuiweitourism.net.biz.ForeEndActionBiz;
 import com.jhhy.cuiweitourism.net.biz.HotelActionBiz;
+import com.jhhy.cuiweitourism.net.models.FetchModel.ForeEndAdvertise;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelScreenBrandRequest;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.ForeEndAdvertisingPositionInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelPositionLocationResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelProvinceResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
@@ -38,6 +41,7 @@ import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.jhhy.cuiweitourism.utils.Utils;
+import com.jhhy.cuiweitourism.view.MyScrollView;
 import com.just.sun.pricecalendar.ToastCommon;
 
 import java.util.ArrayList;
@@ -89,6 +93,7 @@ public class HotelMainActivity extends BaseActivity implements View.OnClickListe
         getData();
         setupView();
         addListener();
+        getInternetData(); //获取banner图
     }
 
     private void getProvince() {
@@ -143,15 +148,15 @@ private List<ADInfo> infos = new ArrayList<ADInfo>();
     private long releaseTime = 0; // 手指松开、页面不滚动时间，防止手机松开后短时间进行切换
 
     private void setupView() {
-//        imageUrls.add("drawable://" + R.drawable.ic_empty);
-        imageUrls.add("drawable://" + R.mipmap.travel_icon);
+        imageUrls.add("drawable://" + R.drawable.ic_empty);
+//        imageUrls.add("drawable://" + R.mipmap.travel_icon);
 
         tvTitle = (TextView) actionBar.getCustomView().findViewById(R.id.tv_title_inner_travel);
         tvTitle.setText(getString(R.string.hotel_title));
         ivTitleLeft = (ImageView) actionBar.getCustomView().findViewById(R.id.title_main_tv_left_location);
 
-        mGestureDetector = new GestureDetector(getApplicationContext(), this);
 
+        mGestureDetector = new GestureDetector(getApplicationContext(), this);
         flipper = (ViewFlipper)findViewById(R.id.viewflipper);
         layoutPoint =(LinearLayout)findViewById(R.id.layout_indicator_point);
 
@@ -162,8 +167,9 @@ private List<ADInfo> infos = new ArrayList<ADInfo>();
         flipper.setOnTouchListener(this);
 
         dianSelect(currentPosition);
-//        MyScrollView myScrollView = (MyScrollView)findViewById(R.id.viewflipper_myScrollview);
-//        myScrollView.setGestureDetector(mGestureDetector);
+        MyScrollView myScrollView = (MyScrollView)findViewById(R.id.viewflipper_myScrollview);
+        myScrollView.setGestureDetector(mGestureDetector);
+
 
         tvAddress = (TextView) findViewById(R.id.tv_location_name);
         tvLocation = (TextView) findViewById(R.id.tv_location_icon);
@@ -309,6 +315,62 @@ private List<ADInfo> infos = new ArrayList<ADInfo>();
         context.startActivity(intent);
     }
 
+    private void getInternetData() {
+        //广告位
+        ForeEndActionBiz fbiz = new ForeEndActionBiz();
+//        mark:index（首页）、line_index(国内游、出境游)、header（分类上方）、visa_index（签证）、customize_index(个性定制)
+        ForeEndAdvertise ad = new ForeEndAdvertise("visa_index");
+        fbiz.foreEndGetAdvertisingPosition(ad, new BizGenericCallback<ArrayList<ForeEndAdvertisingPositionInfo>>() {
+            @Override
+            public void onCompletion(GenericResponseModel<ArrayList<ForeEndAdvertisingPositionInfo>> model) {
+                if ("0000".equals(model.headModel.res_code)) {
+                    ArrayList<ForeEndAdvertisingPositionInfo> array = model.body;
+                    LogUtil.e(TAG,"foreEndGetAdvertisingPosition =" + array.toString());
+                    refreshViewBanner(array);
+                }else{
+                    ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);
+                }
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                if (error.localReason != null){
+                    ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
+                }else{
+                    ToastCommon.toastShortShow(getApplicationContext(), null, "获取广告位数据出错");
+                }
+                LogUtil.e(TAG, "foreEndGetAdvertisingPosition: " + error.toString());
+            }
+        });
+    }
+    private void refreshViewBanner(ArrayList<ForeEndAdvertisingPositionInfo> array) {
+        ArrayList<ADInfo> infosNew = new ArrayList<>();
+//        for (int i = 0; i < array.size(); i++){
+        ForeEndAdvertisingPositionInfo item = array.get(0);
+        ArrayList<String> picList = item.getT();
+        ArrayList<String> linkList = item.getL();
+        for (int j = 0; j < picList.size(); j++){
+            ADInfo ad = new ADInfo();
+            ad.setUrl(picList.get(j));
+            ad.setContent(linkList.get(j));
+            infosNew.add(ad);
+        }
+//        }
+        updateBanner(infosNew);
+    }
+    private void updateBanner(ArrayList<ADInfo> listsBanner) {
+        infos = listsBanner;
+        flipper.removeAllViews();
+        for (int i = 0; i < infos.size(); i++) {
+            flipper.addView(ViewFactory.getImageView(getApplicationContext(), infos.get(i).getUrl()));
+        }
+        addIndicator(infos.size());
+        setIndicator(0);
+        if (infos.size() < 2){
+            return;
+        }
+        handler.postDelayed(runnable, Consts.TIME_PERIOD);
+    }
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
         return mGestureDetector.onTouchEvent(motionEvent);

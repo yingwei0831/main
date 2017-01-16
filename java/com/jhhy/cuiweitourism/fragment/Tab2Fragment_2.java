@@ -81,8 +81,8 @@ public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.I
     private ViewPager viewPager;
     private OrdersPagerAdapter pagerAdapter;
 
-    private boolean loadErrorHot; //其中有一个下载失败，则为失败
-    private boolean loadErrorBan; //其中有一个下载失败，则为失败
+    public static boolean loadErrorHot; //其中有一个下载失败，则为失败，热门推荐（换一换）
+    public static boolean loadErrorBan; //其中有一个下载失败，则为失败，顶部banner
 
 
    private Handler handler = new Handler(){
@@ -98,6 +98,7 @@ public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.I
                             ToastUtil.show(getContext(), "没有热门推荐");
                             loadErrorHot = true;
                         }else{
+                            loadErrorHot = false;
                             listHotRecommend = listDest;
                             hotAdapter.setData(listHotRecommend);
                         }
@@ -195,6 +196,7 @@ public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.I
             @Override
             public void onCompletion(GenericResponseModel<ArrayList<ForeEndAdvertisingPositionInfo>> model) {
                 if ("0000".equals(model.headModel.res_code)) {
+                    loadErrorBan = false;
                     ArrayList<ForeEndAdvertisingPositionInfo> array = model.body;
                     LogUtil.e(TAG,"foreEndGetAdvertisingPosition =" + array.toString());
                     refreshViewBanner(array);
@@ -310,7 +312,7 @@ public class Tab2Fragment_2 extends Fragment implements TouchPanelLayoutModify.I
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            case R.id.tv_tab2_hot_recommend_next: //热门推荐，缓一缓
+            case R.id.tv_tab2_hot_recommend_next: //热门推荐，换一换
                 getRecommend();
                 break;
             case R.id.viewflipper:

@@ -93,6 +93,7 @@ public abstract class OrderXListViewAdapter extends BaseAdapter implements IOrde
         }
 
         Order order = (Order) getItem(position);
+        LogUtil.e(TAG, "status = " + order.getStatus() +", typeId = " + order.getTypeId());
 //        else if ("80".equals(order.getTypeId())){ //火车票：可以付款，可以取消订单；如果已经付款了，可以申请退款，否则没有申请退款；
 //            if (order.getSanfangorderno() == null || order.getSanfangorderno().length() == 0){ //未付款，则进行付款
 //                if (((order.getAddTime() != null && order.getAddTime().length() != 0 && !"null".equals(order.getAddTime())
@@ -158,13 +159,15 @@ public abstract class OrderXListViewAdapter extends BaseAdapter implements IOrde
                         holder.btnOrderPayment.setVisibility(View.GONE); //签约付款
                     }
                 }else if ("2".equals(order.getTypeId())){ //酒店，可以取消订单，可以继续付款
-                    if (!(System.currentTimeMillis() / 1000 - Integer.parseInt(order.getAddTime()) < 15 * 60)){ //15分钟不能再付款,但是也不能取消订单
+                    if (type == 0){
+                        holder.btnOrderCancel.setVisibility(View.GONE); //取消订单:全部订单不给酒店做任何操作
+                    }
+                    if (System.currentTimeMillis() / 1000 - Integer.parseInt(order.getAddTime()) < 15 * 60){ //15分钟之内，可以付款，但是不能取消订单
+
+                    }else{ //15分钟之后，不能再付款,但是也不能取消订单
                         holder.tvOrderStatus.setText(context.getString(R.string.fragment_mine_already_cancel));
                         holder.btnOrderPayment.setVisibility(View.GONE); //签约付款
                         holder.btnOrderCancel.setVisibility(View.GONE); //取消订单
-                    }
-                    if (type == 0){
-                        holder.btnOrderCancel.setVisibility(View.GONE); //取消订单:全部订单不给酒店做任何操作
                     }
                 }else if ("82".equals(order.getTypeId())){ //火车票
                     if (!(System.currentTimeMillis() / 1000 - Integer.parseInt(order.getAddTime()) < 15 * 60)){

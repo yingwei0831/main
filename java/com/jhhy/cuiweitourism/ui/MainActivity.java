@@ -302,6 +302,7 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
 
     @Override
     public void onClick(View view) {
+        LogUtil.e(TAG, "---------------onClick-------------");
         Fragment to = null;
         Fragment from = mContent;
         switch (view.getId()){
@@ -311,7 +312,7 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
                 break;
             case R.id.tab2:
                 index = 2;
-//                if (tab2Fragment_2 == null) {
+//                if (tab2Fragment_2 == null || ) { //tab2未加载成功
                     tab2Fragment_2 = Tab2Fragment_2.newInstance(null, null);
 //                }
                 to = tab2Fragment_2;
@@ -486,7 +487,7 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
             public void run() {
                 getUpdate();
             }
-        }, 4000);
+        }, 3000);
     }
 
     private void getUpdate() {

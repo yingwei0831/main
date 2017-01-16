@@ -46,9 +46,9 @@ public class HotelPhotoActivity extends BaseActionBarActivity implements NormalR
         adapter = new NormalRecyclerViewAdapter(getApplicationContext(), listImages);
         adapter.setOnItemClickListener(this);
         cyImages.setAdapter(adapter);
-        cyImages.setLayoutManager(new LinearLayoutManager(this));//这里用线性显示 类似于listview
-        cyImages.setLayoutManager(new GridLayoutManager(this, 2));
-        cyImages.setLayoutManager(new StaggeredGridLayoutManager(2, OrientationHelper.VERTICAL));//这里用线性宫格显示 类似于瀑布流
+        cyImages.setLayoutManager(new LinearLayoutManager(getApplicationContext())); //这里用线性显示 类似于listview
+//        cyImages.setLayoutManager(new GridLayoutManager(this, 2));
+//        cyImages.setLayoutManager(new StaggeredGridLayoutManager(2, OrientationHelper.VERTICAL));//这里用线性宫格显示 类似于瀑布流
     }
 
     @Override

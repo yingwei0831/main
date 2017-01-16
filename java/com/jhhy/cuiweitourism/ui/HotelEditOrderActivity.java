@@ -9,9 +9,7 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.PopupWindow;
@@ -22,25 +20,18 @@ import com.jhhy.cuiweitourism.OnItemTextViewClick;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.OrderEditContactsAdapter;
 import com.jhhy.cuiweitourism.dialog.NumberPickerActivity;
-import com.jhhy.cuiweitourism.model.PhoneBean;
 import com.jhhy.cuiweitourism.model.User;
 import com.jhhy.cuiweitourism.model.UserContacts;
 import com.jhhy.cuiweitourism.net.biz.HotelActionBiz;
-import com.jhhy.cuiweitourism.net.models.FetchModel.HotelOrderFetch;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelOrderRequest;
-import com.jhhy.cuiweitourism.net.models.FetchModel.TrainTicketOrderFetch;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
-import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelDetailInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelDetailResponse;
-import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelListResponse;
-import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelOrderInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelOrderResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelProvinceResponse;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
-import com.jhhy.cuiweitourism.popupwindows.PopupWindowNumberPicker;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.utils.SharedPreferencesUtils;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
@@ -59,7 +50,7 @@ import java.util.Locale;
 public class HotelEditOrderActivity extends BaseActionBarActivity implements PopupWindow.OnDismissListener, OnItemTextViewClick {
 
     private String TAG = HotelEditOrderActivity.class.getSimpleName();
-    private View parent;
+//    private View parent;
 
     private TextView tvHotelName;
     private TextView tvHotelPrepayRules; //酒店预付规则
@@ -67,9 +58,9 @@ public class HotelEditOrderActivity extends BaseActionBarActivity implements Pop
     private TextView tvCheckInDate;
     private TextView tvCheckOutInfo;
     private TextView tvRoomPrice;
-    private TextView tvRoomNumber;
-    private RelativeLayout layoutSelectRoom;
-    private int roomNumber = 1;
+//    private TextView tvRoomNumber;
+//    private RelativeLayout layoutSelectRoom;
+//    private int roomNumber = 1;
 
     private EditText etHotelNotice;
     private EditText etLinkName;
@@ -89,6 +80,7 @@ public class HotelEditOrderActivity extends BaseActionBarActivity implements Pop
     private String totalPrice; //订单总价
     private int number; //一共几个房间
     private String totalPricePre; //总价:这间房在预定期间应该交付的价格，并未计算人数
+    private String imageUrl; //酒店封面图，用于订单
 
     private TextView tvSelectorContacts; //添加乘客
     private MyListView listViewContacts; //联系人装载布局
@@ -116,6 +108,7 @@ public class HotelEditOrderActivity extends BaseActionBarActivity implements Pop
                 hotelProduct = HotelDetailActivity.hotelProduct;
                 number = bundle.getInt("number");
                 totalPricePre = bundle.getString("totalPrice");
+                imageUrl = bundle.getString("imageUrl");
                 LogUtil.e(TAG, "checkInDate = " + checkInDate +", checkOutDate = " + checkOutDate +", stayDays = " + stayDays +", selectCity = " + selectCity +", number = " + number);
             }
         }
@@ -124,7 +117,7 @@ public class HotelEditOrderActivity extends BaseActionBarActivity implements Pop
     @Override
     protected void setupView() {
         super.setupView();
-        parent = findViewById(R.id.layout_parent);
+//        parent = findViewById(R.id.layout_parent);
         tvTitle.setText(getString(R.string.hotel_order_title));
         if (hotelDetail.getHotel().getPhone() != null && hotelDetail.getHotel().getPhone().length() != 0) {
             ivTitleRight.setImageResource(R.mipmap.icon_telephone_hollow);
@@ -141,8 +134,8 @@ public class HotelEditOrderActivity extends BaseActionBarActivity implements Pop
         tvCheckInDate = (TextView) findViewById(R.id.tv_check_in_date);
         tvCheckOutInfo = (TextView) findViewById(R.id.tv_left_info);
         tvRoomPrice = (TextView) findViewById(R.id.tv_room_price);
-        tvRoomNumber = (TextView) findViewById(R.id.tv_room_number);
-        layoutSelectRoom = (RelativeLayout) findViewById(R.id.layout_select_room_number);
+//        tvRoomNumber = (TextView) findViewById(R.id.tv_room_number);
+//        layoutSelectRoom = (RelativeLayout) findViewById(R.id.layout_select_room_number);
         etHotelNotice = (EditText) findViewById(R.id.et_hotel_order_notice);
         etLinkName = (EditText) findViewById(R.id.et_hotel_order_link_name);
         etLinkMobile = (EditText) findViewById(R.id.et_hotel_link_mobile);
@@ -173,7 +166,7 @@ public class HotelEditOrderActivity extends BaseActionBarActivity implements Pop
     @Override
     protected void addListener() {
         super.addListener();
-        layoutSelectRoom.setOnClickListener(this);
+//        layoutSelectRoom.setOnClickListener(this);
         btnPay.setOnClickListener(this);
         tvSelectorContacts.setOnClickListener(this);
         ivTitleRight.setOnClickListener(this);
@@ -191,12 +184,12 @@ public class HotelEditOrderActivity extends BaseActionBarActivity implements Pop
             case R.id.btn_edit_order_pay:
                 gotoPay();
                 break;
-            case R.id.layout_select_room_number:
-                Bundle bundle = new Bundle();
-                bundle.putInt("value", roomNumber);
-                NumberPickerActivity.actionStart(getApplicationContext(), bundle);
-//                selectRoomNumber();
-                break;
+//            case R.id.layout_select_room_number:
+//                Bundle bundle = new Bundle();
+//                bundle.putInt("value", roomNumber);
+//                NumberPickerActivity.actionStart(getApplicationContext(), bundle);
+////                selectRoomNumber();
+//                break;
             case R.id.tv_plane_add_passenger: //添加入住人
                 selectContact();
                 break;
@@ -270,20 +263,20 @@ public class HotelEditOrderActivity extends BaseActionBarActivity implements Pop
                 hotelProduct.getRoomTypeID(), hotelProduct.getRoomName(), hotelProduct.getProductID(), hotelProduct.getName(),
                 checkInDate, checkOutDate, "Chinese", "Prepay", String.valueOf(number), String.valueOf(listContact.size()), earlierCheckInDate, String.format(Locale.getDefault(), "%s %s", checkInDate, "23:59:00"), //Chinese，Prepay
                 "RMB", totalPrice, getMyIP(), "FALSE", "NotAllowedConfirm", etHotelNotice.getText().toString(), etHotelNotice.getText().toString(), //totalPrice 单价/总价
-                "false", //发票
-                new HotelOrderRequest.ContactBean(name, mobile), hotelProduct.getPrice(), hotelProduct.getPrice(), hotelProduct.getMeals(), hotelProduct.getPrice(), //basePrice
-                hotelProduct.getPlanType(), "2", "0", hotelProduct.getRoomImgUrl());
+                "false", new HotelOrderRequest.ContactBean(name, mobile), //发票
+                hotelProduct.getPrice(), hotelProduct.getPrice(), hotelProduct.getMeals(), hotelProduct.getPrice(), //basePrice
+                hotelProduct.getPlanType(), "2", "0", imageUrl); //hotelProduct.getRoomImgUrl()
 
         request.setRooms(rooms);
         hotelBiz.setHotelOrderToCuiwei(request, new BizGenericCallback<HotelOrderResponse>() {
             @Override
             public void onCompletion(GenericResponseModel<HotelOrderResponse> model) {
-                if ("0000".equals(model.headModel.res_code)){
+//                if ("0000".equals(model.headModel.res_code)){
                     HotelOrderResponse orderResponse = model.body;
                     ToastCommon.toastShortShow(getApplicationContext(), null, "提交订单成功");
                     LogUtil.e(TAG,"setHotelOrder =" + orderResponse.toString());
                     hotelOrderPay(orderResponse);
-                }
+//                }
                 LoadingIndicator.cancel();
             }
 
@@ -500,14 +493,14 @@ public class HotelEditOrderActivity extends BaseActionBarActivity implements Pop
     protected void onDestroy() {
         super.onDestroy();
         TAG = null;
-        parent = null;
+//        parent = null;
         tvHotelName = null;
         tvRoomType = null;
         tvCheckInDate = null;
         tvCheckOutInfo = null;
         tvRoomPrice = null;
-        tvRoomNumber = null;
-        layoutSelectRoom = null;
+//        tvRoomNumber = null;
+//        layoutSelectRoom = null;
 
         etHotelNotice = null;
         etLinkName = null;

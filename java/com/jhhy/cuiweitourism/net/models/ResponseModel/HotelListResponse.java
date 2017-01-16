@@ -32,6 +32,14 @@ public class HotelListResponse {
         this.Total = Total;
     }
 
+    @Override
+    public String toString() {
+        return "HotelListResponse{" +
+                "Hotels=" + Hotels +
+                ", Total='" + Total + '\'' +
+                '}';
+    }
+
     public static class HotelsBean {
         private List<HotelBean> Hotel;
 
@@ -41,6 +49,13 @@ public class HotelListResponse {
 
         public void setHotel(List<HotelBean> Hotel) {
             this.Hotel = Hotel;
+        }
+
+        @Override
+        public String toString() {
+            return "HotelsBean{" +
+                    "Hotel=" + Hotel +
+                    '}';
         }
     }
 

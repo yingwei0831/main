@@ -294,7 +294,6 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
     @Override
     public void onClick(View view) {
         super.onClick(view);
-        LogUtil.e(TAG, "----------onClick---------" + view.getId());
         switch (view.getId()){
             case R.id.title_main_iv_right_telephone:
                 if (hotelDetail.getHotel().getPhone() != null || hotelDetail.getHotel().getPhone().length() != 0) {
@@ -402,7 +401,7 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
             String earlierCheckInDate = ""; //最早到店时间，最晚到店时间
             if (Utils.getCurrentTimeYMD().equals(checkInDate)){
                 Calendar c = Calendar.getInstance();
-                if (c.get(Calendar.HOUR_OF_DAY) <23 ) {
+                if (c.get(Calendar.HOUR_OF_DAY) < 23) {
                     earlierCheckInDate = String.format(Locale.getDefault(), "%s %d%s", checkInDate, c.get(Calendar.HOUR_OF_DAY) + 1, ":00:00");
                 }else{
                     earlierCheckInDate = String.format(Locale.getDefault(), "%s %s", Utils.getTimeStrYMD(System.currentTimeMillis() + 24 * 60 * 60 * 1000), "00:30:00"); //第二天凌晨入住
@@ -411,25 +410,21 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
                 earlierCheckInDate = String.format(Locale.getDefault(), "%s %s", checkInDate, "08:00:00");
             }
             HotelProductPriceRequest fetch = new HotelProductPriceRequest(hotelDetail.getHotel().getHotelID(),
-                    checkInDate, checkOutDate, roomItem.getRoomId(), roomItem.getProductID());
+                    checkInDate, checkOutDate, roomItem.getRoomTypeID(), roomItem.getProductID()); //roomID/roomTypeID?
 
             hotelBiz.getHotelProductPrice(fetch, new BizGenericCallback<HotelProductPriceResponse>() {
                 @Override
                 public void onCompletion(GenericResponseModel<HotelProductPriceResponse> model) {
-                    LogUtil.e(TAG, "getHotelPriceCheck: " + model.body);
+                    LogUtil.e(TAG, "getHotelProductPrice: " + model.body);
                     LoadingIndicator.cancel();
-                    if ("0001".equals(model.headModel.res_code)){
-                        ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);
-                    }else if ("0000".equals(model.headModel.res_code)){
-                        HotelProductPriceResponse priceCheck = model.body;
-                        if ("null".equals(priceCheck.getTotalPrice()) ||  priceCheck.getTotalPrice()== null){
-                            ToastCommon.toastShortShow(getApplicationContext(), null, "验价失败，请重试");
-//                            popupWindow.dismiss(); //选择房间消失
-                            return;
-                        }
+                    HotelProductPriceResponse priceCheck = model.body;
+                    if ("null".equals(priceCheck.getTotalPrice()) ||  priceCheck.getTotalPrice()== null){
+                        ToastCommon.toastShortShow(getApplicationContext(), null, "验价失败，请重新选择");
                         popupWindow.dismiss(); //选择房间消失
-                        setHotelOrder(mPosition, priceCheck.getTotalPrice());
+                        return;
                     }
+                    popupWindow.dismiss(); //选择房间消失
+                    setHotelOrder(mPosition, priceCheck.getTotalPrice());
                 }
 
                 @Override
@@ -487,6 +482,7 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
         hotelProduct = listProducts.get(position);
         bundle.putParcelable("selectCity", selectCity);
         bundle.putString("totalPrice", totalPrice);
+        bundle.putString("imageUrl", imageUrl);
         listProducts.get(position);
         intent.putExtras(bundle);
         startActivityForResult(intent, EDIT_HOTEL_ORDER);

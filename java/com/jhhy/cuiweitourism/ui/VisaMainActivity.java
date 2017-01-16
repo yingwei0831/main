@@ -295,7 +295,8 @@ public class VisaMainActivity extends BaseActivity implements XScrollView.IXScro
                 if ("0000".equals(model.headModel.res_code)) {
                     listHotCountry = model.body;
                     LogUtil.e(TAG,"visaCountryInfo: " + listHotCountry.toString());
-                    adapterHotCountry.setData(listHotCountry);
+                    List listHotCountryPart = listHotCountry.subList(0, 6);
+                    adapterHotCountry.setData(listHotCountryPart);
                 }else{
                     ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);
                 }

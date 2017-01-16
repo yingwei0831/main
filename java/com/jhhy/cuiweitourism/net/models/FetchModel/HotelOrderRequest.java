@@ -17,8 +17,8 @@ public class HotelOrderRequest extends BasicFetchModel {
      * HotelCityName : 北京
      * RoomTypeId : 0001
      * RoomTypeName : 豪华大床房(无窗)
-     * RatePlanId : 400934
-     * RatePlanName : 含双早                   ProductID
+     * RatePlanId : 400934                      ProductID
+     * RatePlanName : 含双早                   
      * ArrivalDate : 2016-12-15
      * DepartureDate : 2016-12-20
      * PassengerType : Chinese                  必填；入住类型: All=统一价； Chinese =内宾价； OtherForeign =外宾价； HongKong =港澳台客人价 Japanese=日本客人价

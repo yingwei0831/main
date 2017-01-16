@@ -402,9 +402,15 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
         ivTitleLeft = null;
         tvAliPay = null;
         tvWeChatPay = null;
+        tvAliPay = null;
+        tvWeChatPay = null;
         hotInfo = null;
         hotelInfo = null;
         trainInfo = null;
         planeOfChinaInfo = null;
+        order = null;
+        TAG = null;
+        ordersn = null;
+        orderPrice = null;
     }
 }

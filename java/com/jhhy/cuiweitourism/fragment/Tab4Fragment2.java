@@ -136,6 +136,7 @@ public class Tab4Fragment2 extends Fragment implements View.OnClickListener {
         tvAuthentication.setOnClickListener(this);
         tvContacts.setOnClickListener(this);
         tvAboutCuiwei.setOnClickListener(this);
+        civUserIcon.setOnClickListener(this);
 
         tvLoginOrRegister.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -174,6 +175,12 @@ public class Tab4Fragment2 extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         if (MainActivity.logged) {
             switch (view.getId()) {
+                case R.id.tab4_user_icon:
+                    if (MainActivity.logged){
+                        Intent intentInfo = new Intent(getContext(), Tab4UserInfoActivity.class);
+                        startActivityForResult(intentInfo, VIEW_USER_INFO);
+                    }
+                    break;
                 case R.id.tv_fragment_tab4_all_orders: //全部订单
                     Bundle bundle = new Bundle();
                     bundle.putInt("position", 0);
@@ -262,6 +269,7 @@ public class Tab4Fragment2 extends Fragment implements View.OnClickListener {
             tvUserName.setText(MainActivity.user.getUserNickName());
             if (data != null){
                 boolean tag = data.getBooleanExtra("tag", false);
+                LogUtil.e(TAG, "tag = " + tag);
                 if (tag){
                     ImageLoaderUtil.getInstance(getContext()).getImage(civUserIcon, MainActivity.user.getUserIconPath());
                     ImageLoaderUtil.getInstance(getContext()).setCallBack(new ImageLoaderUtil.ImageLoaderCallBack() {

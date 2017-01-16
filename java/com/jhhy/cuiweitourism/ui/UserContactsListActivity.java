@@ -29,7 +29,7 @@ import java.util.List;
 public class UserContactsListActivity extends BaseActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, View.OnClickListener {
 
     private ListView listView;
-    private TextView imageViewRight;;
+    private TextView imageViewRight;
     private Drawable drawableRight;
     private TextView imageViewLeft;
     private TextView tvTitle;
@@ -172,5 +172,17 @@ public class UserContactsListActivity extends BaseActivity implements AdapterVie
 
     private int ADD_CONTACTS = 1601; //添加联系人
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        listView = null;
+        imageViewRight = null;
+        drawableRight = null;
+        imageViewLeft = null;
+        tvTitle = null;
+        lists.clear();
+        lists = null;
+        adapter = null;
+    }
 
 }

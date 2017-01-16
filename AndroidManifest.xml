@@ -464,26 +464,32 @@
             android:theme="@style/ActionBarTheme" />
         <activity
             android:name=".ui.UserContactsListActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".ui.VisaListActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/ActionBarTheme" />
         <activity
             android:name=".ui.SelectAllCountryAreaActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/ActionBarTheme" />
         <activity
             android:name=".ui.VisaItemDetailActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/ActionBarTheme" />
         <activity
             android:name=".ui.VisaItemDetailActivity2"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/ActionBarTheme" />
         <activity
             android:name=".ui.VisaNeedMaterialActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/ActionBarTheme"
             android:windowSoftInputMode="adjustResize|stateHidden" />
@@ -494,15 +500,18 @@
             android:theme="@style/Theme.AppCompat.Dialog" />
         <activity
             android:name=".ui.VisaPriceCalendarReserveActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".ui.VisaOrderActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/ActionBarTheme"
             android:windowSoftInputMode="adjustNothing|stateHidden" />
         <activity
             android:name=".ui.VisaCitySelectionActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
@@ -685,6 +694,11 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/ActionBarTheme" />
+        <activity
+            android:name=".ui.HotelPhotoActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/ActionBarTheme" />
         <!-- ShareSDK 2、注意： tencent后面的appid要保持和您配置的QQ的appid一致 -->
         <activity
             android:name="com.mob.tools.MobUIShell"
@@ -765,7 +779,7 @@
         <!-- 定位需要的服务 使用2.0的定位需要加上这个 -->
         <service android:name="com.amap.api.location.APSService" />
 
-        <activity android:name=".ui.HotelPhotoActivity"></activity>
+        <activity android:name=".ui.InsuranceEditOrderActivity"></activity>
     </application>
 
 </manifest>

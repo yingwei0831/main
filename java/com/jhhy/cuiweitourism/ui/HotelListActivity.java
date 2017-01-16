@@ -27,6 +27,7 @@ import com.jhhy.cuiweitourism.net.models.FetchModel.HotelListRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelScreenBrandRequest;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelListInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelListResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelPositionLocationResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelProvinceResponse;
@@ -162,20 +163,26 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
             @Override
             public void onCompletion(GenericResponseModel<HotelListResponse> model) {
                 resetListView();
+                LogUtil.e(TAG,"hotelGetInfoList =" + model.body);
                 if ("0001".equals(model.headModel.res_code)){
                     ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);
                 }else if ("0000".equals(model.headModel.res_code)){
-                    List<HotelListResponse.HotelBean> array = model.body.getHotels().getHotel();
-                    LogUtil.e(TAG,"hotelGetInfoList =" + array.toString());
-                    LogUtil.e(TAG, "refresh = " + ", loadMore = " + loadMore);
-                    if (refresh){
-                        if (listHotel != null){
+                    List<HotelListResponse.HotelBean> array = null;
+                    if ( model.body == null){
+                        array = new ArrayList<HotelListResponse.HotelBean>();
+                    } else {
+                        array = model.body.getHotels().getHotel();
+                        LogUtil.e(TAG, "hotelGetInfoList =" + array.toString());
+                    }
+                    LogUtil.e(TAG, "refresh = " + refresh + ", loadMore = " + loadMore);
+                    if (refresh) {
+                        if (listHotel != null) {
                             listHotel.clear();
                         }
                         listHotel = array;
                         adapter.setData(listHotel);
                     }
-                    if (loadMore){
+                    if (loadMore) {
                         page = pageTemp;
                         listHotel.addAll(array);
                         adapter.notifyDataSetChanged();
@@ -189,6 +196,7 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
             @Override
             public void onError(FetchError error) {
                 resetListView();
+                LogUtil.e(TAG,"hotelGetInfoList =" + error);
                 if (error.localReason != null && !"null".equals(error.localReason)){
                     ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
                 } else {
@@ -315,6 +323,8 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
      * 筛选 酒店品牌，服务设施
      */
     private void getScreenData() {
+        LogUtil.e(TAG, "brandTag = " + brandTag +", facilityTag = " + facilityTag);
+        LogUtil.e(TAG, "listBrand.size = " + listBrand.size() +", listFacilities.size = " + listFacilities.size());
         if (brandTag && facilityTag){
             showScreenData();
         }else{
@@ -539,17 +549,17 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
                 businessDistrictPosition = bundle.getInt("businessDistrictPosition");
                 districtPosition = bundle.getInt("districtPosition");
                 viewSpot = bundle.getInt("viewSpot");
-                if (0 != businessDistrictPosition){
-                    downTown = listBrand.get(businessDistrictPosition).getID();
+                if (0 != businessDistrictPosition){ //商业区
+                    downTown = listBusinessDistrict.get(businessDistrictPosition).getID();
                 }else{
                     downTown = "";
                 }
-                if (0 != districtPosition){
+                if (0 != districtPosition){ //行政区
                     district = listDistrict.get(districtPosition).getID();
                 }else {
                     district = "";
                 }
-                if (0 != viewSpot){
+                if (0 != viewSpot){ //景点
                     landMark = listViewSpot.get(viewSpot).getID();
                 }else {
                     landMark = "";

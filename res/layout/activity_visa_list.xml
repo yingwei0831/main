@@ -91,7 +91,8 @@
             android:paddingBottom="6dp"
             android:paddingTop="8dp"
             android:text="选择领区"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            android:visibility="gone"/>
 
 
     </LinearLayout>
