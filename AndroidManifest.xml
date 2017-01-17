@@ -699,6 +699,15 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/ActionBarTheme" />
+        <activity android:name=".ui.InsuranceEditOrderActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/ActionBarTheme" />
+        <activity android:name=".ui.ShowTextActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/ActionBarTheme" />
+
         <!-- ShareSDK 2、注意： tencent后面的appid要保持和您配置的QQ的appid一致 -->
         <activity
             android:name="com.mob.tools.MobUIShell"
@@ -779,7 +788,6 @@
         <!-- 定位需要的服务 使用2.0的定位需要加上这个 -->
         <service android:name="com.amap.api.location.APSService" />
 
-        <activity android:name=".ui.InsuranceEditOrderActivity"></activity>
     </application>
 
 </manifest>

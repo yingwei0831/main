@@ -14,9 +14,8 @@ public class HotelOrderDetailRequest extends BasicFetchModel {
     private String OrderNo;
     private String PlatOrderNo;
 
-    public HotelOrderDetailRequest(String orderNo, String platOrderNo) {
+    public HotelOrderDetailRequest(String orderNo) {
         OrderNo = orderNo;
-        PlatOrderNo = platOrderNo;
     }
 
     public String getOrderNo() {

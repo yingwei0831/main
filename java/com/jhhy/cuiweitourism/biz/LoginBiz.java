@@ -215,6 +215,7 @@ public class LoginBiz {
     };
 
     public void logout(String username) {
-        DemoHelper.getInstance().logout(true, null);
+        EMChatManager.getInstance().logout();//此方法为同步方法
+//        DemoHelper.getInstance().logout(true, null); //此方法为异步方法
     }
 }

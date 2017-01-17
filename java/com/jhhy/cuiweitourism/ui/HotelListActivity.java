@@ -51,7 +51,7 @@ import java.util.Locale;
 
 public class HotelListActivity extends BaseActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
 
-    private String TAG = HotelListActivity.class.getSimpleName();
+    private String TAG = "HotelListActivity";
 
 //    private TextView tvTitle;
     private ImageView ivTitleLeft;
@@ -317,6 +317,9 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
             if (listViewSpot.size() == 0) {
                 getViewSpot();
             }
+            if (listBusinessDistrict.size() != 0 && listDistrict.size() != 0 && listViewSpot.size() != 0){
+                showLocationData();
+            }
         }
     }
     /**
@@ -333,6 +336,9 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
             }
             if (listFacilities.size() == 0) {
                 getFacilities();
+            }
+            if (listBrand.size() != 0 && listFacilities.size() != 0){
+                showScreenData();
             }
         }
     }
@@ -626,14 +632,16 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
      * 获取酒店设施
      */
     private void getFacilities() {
+        LoadingIndicator.show(this, getString(R.string.http_notice));
         hotelBiz.hotelScreenFacilities(new BizGenericCallback<HotelScreenFacilities>() {
             @Override
             public void onCompletion(GenericResponseModel<HotelScreenFacilities> model) {
                 listFacilities.add(new HotelScreenFacilities.FacilityItemBean("不限"));
                 listFacilities.addAll(model.body.getItem());
-                LogUtil.e(TAG, "getFacilities " + model.body);
+                LogUtil.e(TAG, "getFacilities：" + model.body);
                 facilityTag = true;
                 if (brandTag){
+                    LoadingIndicator.cancel();
                     showScreenData();
                 }
             }
@@ -648,6 +656,7 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
                 LogUtil.e(TAG, "getFacilities " + error);
                 facilityTag = true;
                 if (brandTag){
+                    LoadingIndicator.cancel();
                     showScreenData();
                 }
             }
@@ -658,6 +667,7 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
      * 获取品牌
      */
     private void getBrand(){
+        LoadingIndicator.show(this, getString(R.string.http_notice));
         HotelScreenBrandRequest request = new HotelScreenBrandRequest(selectCity.getCode());
         hotelBiz.hotelScreenBrand(request, new BizGenericCallback<HotelScreenBrandResponse>() {
             @Override
@@ -667,6 +677,7 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
                 LogUtil.e(TAG, "hotelScreenBrand " + model.body);
                 brandTag = true;
                 if (facilityTag){
+                    LoadingIndicator.cancel();
                     showScreenData();
                 }
             }
@@ -681,6 +692,7 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
                 LogUtil.e(TAG, "hotelScreenBrand " + error);
                 brandTag = true;
                 if (facilityTag){
+                    LoadingIndicator.cancel();
                     showScreenData();
                 }
             }
@@ -691,6 +703,7 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
      * 获取商业区
      */
     private void getBusinessDistrict(){ //商业区
+        LoadingIndicator.show(this, getString(R.string.http_notice));
         HotelScreenBrandRequest request = new HotelScreenBrandRequest(selectCity.getCode());
         hotelBiz.getHotelLocationBusinessDistrict(request, new BizGenericCallback<HotelPositionLocationResponse>() {
             @Override
@@ -700,6 +713,7 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
                 LogUtil.e(TAG, "getHotelLocationBusinessDistrict " + model.body);
                 BusinessDistrictTag = true;
                 if (districtTag && viewSpotTag){
+                    LoadingIndicator.cancel();
                     showLocationData();
                 }
             }
@@ -714,6 +728,7 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
                 LogUtil.e(TAG, "getHotelLocationBusinessDistrict " + error);
                 BusinessDistrictTag = true;
                 if (districtTag && viewSpotTag){
+                    LoadingIndicator.cancel();
                     showLocationData();
                 }
             }
@@ -724,6 +739,7 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
      * 获取行政区
      */
     private void getDistrict(){ //行政区
+        LoadingIndicator.show(this, getString(R.string.http_notice));
         HotelScreenBrandRequest request = new HotelScreenBrandRequest(selectCity.getCode());
         hotelBiz.getHotelLocationDistrict(request, new BizGenericCallback<HotelPositionLocationResponse>() {
             @Override
@@ -733,6 +749,7 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
                 LogUtil.e(TAG, "getHotelLocationDistrict " + model.body);
                 districtTag = true;
                 if (BusinessDistrictTag && viewSpotTag){
+                    LoadingIndicator.cancel();
                     showLocationData();
                 }
             }
@@ -747,6 +764,7 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
                 LogUtil.e(TAG, "getHotelLocationDistrict " + error);
                 districtTag = true;
                 if (BusinessDistrictTag && viewSpotTag){
+                    LoadingIndicator.cancel();
                     showLocationData();
                 }
             }
@@ -757,15 +775,17 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
      * 获取景点
      */
     private void getViewSpot(){ //景点
+        LoadingIndicator.show(this, getString(R.string.http_notice));
         HotelScreenBrandRequest request = new HotelScreenBrandRequest(selectCity.getCode());
         hotelBiz.getHotelLocationViewSpot(request, new BizGenericCallback<HotelPositionLocationResponse>() {
             @Override
             public void onCompletion(GenericResponseModel<HotelPositionLocationResponse> model) {
                 listViewSpot.add(new HotelPositionLocationResponse.HotelDistrictItemBean("不限"));
                 listViewSpot.addAll(model.body.getItem());
-                LogUtil.e(TAG, "getHotelLocationViewSpot " + model.body);
+                LogUtil.e(TAG, "getHotelLocationViewSpot: " + model.body);
                 viewSpotTag = true;
                 if (BusinessDistrictTag && districtTag){
+                    LoadingIndicator.cancel();
                     showLocationData();
                 }
             }
@@ -777,8 +797,9 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
                 }else{
                     ToastUtil.show(getApplicationContext(), "请求景点信息失败，请重试");
                 }
-                LogUtil.e(TAG, "getHotelLocationViewSpot " + error);
+                LogUtil.e(TAG, "getHotelLocationViewSpot: " + error);
                 if (BusinessDistrictTag && districtTag){
+                    LoadingIndicator.cancel();
                     showLocationData();
                 }
             }

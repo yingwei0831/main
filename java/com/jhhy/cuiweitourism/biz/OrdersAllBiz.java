@@ -233,6 +233,9 @@ public class OrdersAllBiz {
                         Order order = new Order();
                         order.setId(orderObj.getString(Consts.KEY_ID));
                         order.setProductName(orderObj.getString(Consts.ORDER_PRODUCT_NAME));
+//                        if ("国内机票".equals(orderObj.getString(Consts.ORDER_PRODUCT_NAME))){
+                            order.setOnclick(orderObj.getString("onclick"));
+//                        }
                         order.setPrice(orderObj.getString(Consts.KEY_PRICE));
                         order.setAddTime(orderObj.getString(Consts.ORDER_ADD_TIME));
                         order.setStatus(orderObj.getString(Consts.ORDER_STATUS));

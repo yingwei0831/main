@@ -188,7 +188,13 @@ public class InnerTravelEditOrderActivity extends BaseActivity implements View.O
             LinkSpanWrapper myURLSpan = new LinkSpanWrapper(url.getURL(), getApplicationContext(), "旅游须知、旅游合同、特别预订提示", null, null, "#28CE9D"){
                 @Override
                 public void onItemTextViewClick(int position, View textView, int id) {
-                    startActivity(new Intent(getApplicationContext(), ReserveNoticeActivity.class));
+                    Intent intent = new Intent(getApplicationContext(), ReserveNoticeActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("notice", detail.getRemark()); //预订须知
+                    bundle.putString("contract", detail.getRemark()); //TODO 加载页面
+                    bundle.putString("remark", detail.getStandard()); //费用说明
+                    intent.putExtras(bundle);
+                    startActivity(intent);
                 }
             };
             stylesBuilder.setSpan(myURLSpan, spannable.getSpanStart(url), spannable.getSpanEnd(url), spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

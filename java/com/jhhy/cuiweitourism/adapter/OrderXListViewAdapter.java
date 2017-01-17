@@ -163,7 +163,7 @@ public abstract class OrderXListViewAdapter extends BaseAdapter implements IOrde
                         holder.btnOrderCancel.setVisibility(View.GONE); //取消订单:全部订单不给酒店做任何操作
                     }
                     if (System.currentTimeMillis() / 1000 - Integer.parseInt(order.getAddTime()) < 15 * 60){ //15分钟之内，可以付款，但是不能取消订单
-
+                        holder.btnOrderCancel.setVisibility(View.GONE); //取消订单
                     }else{ //15分钟之后，不能再付款,但是也不能取消订单
                         holder.tvOrderStatus.setText(context.getString(R.string.fragment_mine_already_cancel));
                         holder.btnOrderPayment.setVisibility(View.GONE); //签约付款

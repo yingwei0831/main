@@ -169,6 +169,8 @@ public class PlaneTicketOrderDetailOfChinaResponse {
          * planeType :
          * seatClass : F
          * seatDiscount : 3
+         * arrCodes: 大连周水子国际机场
+         * depCodes: 北京首都国际机场
          */
 
         private String arrCode;
@@ -180,6 +182,8 @@ public class PlaneTicketOrderDetailOfChinaResponse {
         private String planeType;
         private String seatClass;
         private double seatDiscount;    //舱位折扣
+        private String arrCodes;
+        private String depCodes;
 
         public String getArrCode() {
             return arrCode;
@@ -253,6 +257,22 @@ public class PlaneTicketOrderDetailOfChinaResponse {
             this.seatDiscount = seatDiscount;
         }
 
+        public String getArrCodes() {
+            return arrCodes;
+        }
+
+        public void setArrCodes(String arrCodes) {
+            this.arrCodes = arrCodes;
+        }
+
+        public String getDepCodes() {
+            return depCodes;
+        }
+
+        public void setDepCodes(String depCodes) {
+            this.depCodes = depCodes;
+        }
+
         @Override
         public String toString() {
             return "FlightInfoListBean{" +
@@ -294,6 +314,7 @@ public class PlaneTicketOrderDetailOfChinaResponse {
         private double settlePrice;     //单人结算价
 
         private String ticketNo;        //781-8764777473
+        private String tui;             //已退票
 
         public String getTicketNo() {
             return ticketNo;
@@ -375,6 +396,14 @@ public class PlaneTicketOrderDetailOfChinaResponse {
             this.settlePrice = settlePrice;
         }
 
+        public String getTui() {
+            return tui;
+        }
+
+        public void setTui(String tui) {
+            this.tui = tui;
+        }
+
         @Override
         public String toString() {
             return "PassengerListBean{" +
@@ -387,6 +416,8 @@ public class PlaneTicketOrderDetailOfChinaResponse {
                     ", passengerType='" + passengerType + '\'' +
                     ", refundStatus=" + refundStatus +
                     ", settlePrice=" + settlePrice +
+                    ", ticketNo='" + ticketNo + '\'' +
+                    ", tui='" + tui + '\'' +
                     '}';
         }
     }

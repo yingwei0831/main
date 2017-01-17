@@ -37,9 +37,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="46dp"
                     android:gravity="center"
-                    android:paddingBottom="12dp"
-                    android:paddingTop="16dp"
                     android:text="跟团游"
+                    android:textSize="16sp"
                     android:textColor="@color/colorTab1RecommendForYouArgument" />
 
                 <View
@@ -60,9 +59,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="46dp"
                     android:gravity="center"
-                    android:paddingBottom="12dp"
-                    android:paddingTop="16dp"
                     android:text="自由行"
+                    android:textSize="16sp"
                     android:textColor="@android:color/black" />
 
                 <View

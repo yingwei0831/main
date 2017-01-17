@@ -8,8 +8,10 @@ public class LoadingIndicator {
     private static ProgressDialog dialog;
 
     public static void show(Activity context, String message) {
-        cancel();
-
+//        cancel();
+        if (dialog != null && dialog.isShowing()){
+            return;
+        }
      /*   View v = LayoutInflater.from(activity).inflate(R.layout.progress, null);
         ImageView image = (ImageView) v.findViewById(R.id.progress_image);
         Animation anim = AnimationUtils.loadAnimation(activity, R.anim.progress_anim);
@@ -23,7 +25,7 @@ public class LoadingIndicator {
         dialog = builder.show();
         dialog.getWindow().setContentView(v);*/
         dialog = new ProgressDialog(context);
-//        dialog.setTitle("玩命加载中，请稍后...");
+//        dialog.setTitle("加载中，请稍后...");
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         dialog.setMessage(message);
         dialog.setIndeterminate(false);

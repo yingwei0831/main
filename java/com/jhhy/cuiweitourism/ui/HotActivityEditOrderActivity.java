@@ -112,7 +112,7 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
     private TextView tvPriceTotal; //订单金额
     private Button btnPay; //立即支付
 
-    private List<UserContacts> listCommitCon = new ArrayList<>(); //提交的联系人列表数据
+//    private List<UserContacts> listCommitCon = new ArrayList<>(); //提交的联系人列表数据
     private ArrayList<ActivityOrder.Contact> listHotContact = new ArrayList<>(); //热门活动提交的联系人列表数据
     private Invoice  invoiceCommit = null; //提交的发票信息
     private float priceTotal; //订单总金额
@@ -441,9 +441,7 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
 
     private void checkAndAddContact(UserContacts cont) {
         if (listHotContact.size() == 0){
-            ActivityOrder.Contact contactTrain =
-                    new ActivityOrder.Contact(cont.getContactsName(), cont.getContactsIdCard(), cont.getContactsMobile());
-            listHotContact.add(contactTrain);
+            addContact(cont);
         } else {
             checkDouble(cont);
         }
@@ -452,11 +450,18 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
     private void checkDouble(UserContacts cont) {
         for (ActivityOrder.Contact contact : listHotContact) { //检验当前游客中是否包含所选择的游客
             if (!cont.getContactsName().equals(contact.getTourername())) {
-                ActivityOrder.Contact contactTrain =
-                        new ActivityOrder.Contact(cont.getContactsName(), cont.getContactsIdCard(), cont.getContactsMobile());
-                listHotContact.add(contactTrain);
+                addContact(cont);
             }
         }
+    }
+
+    /**
+     * 添加游客
+     */
+    private void addContact(UserContacts cont) {
+        ActivityOrder.Contact contactTrain =
+                new ActivityOrder.Contact(cont.getContactsName(), cont.getContactsIdCard(), cont.getContactsMobile());
+        listHotContact.add(contactTrain);
     }
 
     private void calcate() {

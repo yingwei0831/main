@@ -430,7 +430,9 @@
                         android:paddingRight="16dp"
                         android:paddingTop="16dp"
                         android:text="1旅游币可抵1元"
-                        android:textColor="@android:color/black" />
+                        android:textColor="@android:color/black"
+                        />
+
                 </LinearLayout>
 
                 <RelativeLayout

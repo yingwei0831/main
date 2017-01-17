@@ -312,7 +312,7 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
                 break;
             case R.id.tab2:
                 index = 2;
-//                if (tab2Fragment_2 == null || ) { //tab2未加载成功
+//                if (tab2Fragment_2 == null || ) { //tab2未加载成功怎么处理
                     tab2Fragment_2 = Tab2Fragment_2.newInstance(null, null);
 //                }
                 to = tab2Fragment_2;
@@ -395,6 +395,15 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+//        tab1Fragment
+//        tab2Fragment_2
+//        tab3Fragment
+//        tab4Fragment2
+    }
+
+    @Override
     protected void onRestart() {
         super.onRestart();
 //        Utils.setKeyboardInvisible();
@@ -429,6 +438,8 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
                 exitTime = System.currentTimeMillis();
             } else {
 //                System.exit(0);
+                LoginBiz biz = new LoginBiz(null, null);
+                biz.logout(null);
                  finish();
             }
             return true;
@@ -678,8 +689,7 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        LoginBiz biz = new LoginBiz(null, null);
-        biz.logout(null);
+
         logged = false;
         unregisterReceiver(receiver);
 

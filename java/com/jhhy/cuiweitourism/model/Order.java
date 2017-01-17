@@ -38,10 +38,19 @@ public class Order implements Serializable{
     //针对火车票，1是易购云id，2是12306id，可以查询详情
     private String sanfangorderno1; //第三方订单号；国内机票支付过了就有，国际机票只有买到机票才有，签证没有，酒店下订单后就有
     private String sanfangorderno2; //12306订单号
+    private String onclick; //是否有效订单 NO/YES
 
     //isneedpiao,dingnum,childnum,oldnum,ispay,needjifen,status,jifentprice,youke,lvyoubi,
 
     public Order() {
+    }
+
+    public String getOnclick() {
+        return onclick;
+    }
+
+    public void setOnclick(String onclick) {
+        this.onclick = onclick;
     }
 
     public String getSanfangorderno1() {

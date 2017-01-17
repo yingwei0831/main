@@ -224,6 +224,10 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
 //            ToastCommon.toastShortShow(getContext(), null, "请选择酒店订单，再进入详细信息页");
 //        } else {
             if ("80".equals(order.getTypeId())){ //火车票详情
+                if ("0".equals(type)){ //全部订单，不给任何操作
+                    ToastCommon.toastShortShow(getContext(), null, "请进入火车票订单查看");
+                    return;
+                }
                 if (order.getSanfangorderno1() == null || order.getSanfangorderno1().length() == 0 ||
                         order.getSanfangorderno2() == null || order.getSanfangorderno2().length() == 0){
                     ToastCommon.toastShortShow(getContext(), null, "订单号不存在，无详情");
@@ -234,11 +238,19 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
                 return;
             }else if ("2".equals(order.getTypeId())){ //酒店详情
                 LogUtil.e(TAG, order);
-                if ("1".equals(order.getStatus())){ //未付款
-                    if (!(System.currentTimeMillis() / 1000 - Integer.parseInt(order.getAddTime()) < 15 * 60)){
+                if ("YES".equals(order.getOnclick())){ //有详情
+                    getOrderDetail(order);
+                    return;
+                }else { //无详情
+                    if ("1".equals(order.getStatus())){ //未付款
+                        if (!(System.currentTimeMillis() / 1000 - Integer.parseInt(order.getAddTime()) < 15 * 60)){
+                            ToastCommon.toastShortShow(getContext(), null, "未付款订单，已关闭");
+                        }else {
+                            payOrder(order);
+                        }
+                        return;
+                    }else{ //酒店其它状态
                         ToastCommon.toastShortShow(getContext(), null, "未付款订单，已关闭");
-                    }else {
-                        payOrder(order);
                     }
                     return;
                 }
@@ -271,6 +283,10 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
         bundle.putInt("type", Integer.parseInt(order.getStatus())); //订单状态
         if ("国内机票".equals(order.getProductName())){ //82
             bundle.putString("typeId", order.getTypeId()); //订单类型
+            if ("NO".equals(order.getOnclick()) || order.getOnclick() == null || order.getOnclick().length() == 0){
+                ToastCommon.toastShortShow(getContext(), null, "未付款订单，无详情");
+                return;
+            }
         }else if ("国际机票".equals(order.getProductName())){ //83
             bundle.putString("typeId", "83"); //订单类型
         }

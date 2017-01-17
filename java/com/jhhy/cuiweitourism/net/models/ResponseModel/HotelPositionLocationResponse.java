@@ -65,5 +65,22 @@ public class HotelPositionLocationResponse {
         public void setQuanPin(String QuanPin) {
             this.QuanPin = QuanPin;
         }
+
+        @Override
+        public String toString() {
+            return "HotelDistrictItemBean{" +
+                    "ID='" + ID + '\'' +
+                    ", JianPin='" + JianPin + '\'' +
+                    ", Name='" + Name + '\'' +
+                    ", QuanPin='" + QuanPin + '\'' +
+                    '}';
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "HotelPositionLocationResponse{" +
+                "Item=" + Item +
+                '}';
     }
 }
