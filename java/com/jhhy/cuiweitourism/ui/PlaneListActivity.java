@@ -172,7 +172,7 @@ public class PlaneListActivity extends BaseActionBarActivity implements  Adapter
         listView.setAdapter(adapter);
 
         rbScreen = (RadioButton) findViewById(R.id.rb_plane_screen);
-
+        rbScreen.setVisibility(View.GONE);
 //        bottomRg = (RadioGroup) findViewById(R.id.rg_train_list);
         rbSortTime = (RadioButton) findViewById(R.id.rb_plane_start_time);
         rbSortPrice = (RadioButton) findViewById(R.id.rb_plane_price);

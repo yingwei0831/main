@@ -22,7 +22,9 @@
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:text="早餐（单选）"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textColor="@color/colorGrayDark"
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -39,7 +41,9 @@
                 android:background="@drawable/bg_et_city_unselected_corner_border"
                 android:gravity="center"
                 android:text="@string/hotel_room_screen_meal_all"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textColor="@color/colorGrayDark"
+                />
 
             <TextView
                 android:id="@+id/tv_breakfast"
@@ -51,7 +55,9 @@
                 android:background="@drawable/bg_et_city_unselected_corner_border"
                 android:gravity="center"
                 android:text="@string/hotel_room_screen_meal_breakfast"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textColor="@color/colorGrayDark"
+                />
 
             <TextView
                 android:id="@+id/tv_breakfast_single"
@@ -62,7 +68,9 @@
                 android:background="@drawable/bg_et_city_unselected_corner_border"
                 android:gravity="center"
                 android:text="@string/hotel_room_screen_meal_breakfast_single"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textColor="@color/colorGrayDark"
+                />
         </LinearLayout>
 
         <LinearLayout
@@ -83,7 +91,9 @@
                 android:background="@drawable/bg_et_city_unselected_corner_border"
                 android:gravity="center"
                 android:text="@string/hotel_room_screen_meal_breakfast_double"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textColor="@color/colorGrayDark"
+                />
 
             <TextView
                 android:id="@+id/tv_type5"
@@ -115,7 +125,9 @@
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:text="床型（单选）"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textColor="@color/colorGrayDark"
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -134,7 +146,9 @@
                 android:background="@drawable/bg_et_city_unselected_corner_border"
                 android:gravity="center"
                 android:text="@string/hotel_room_screen_bed_all"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textColor="@color/colorGrayDark"
+                />
 
             <TextView
                 android:id="@+id/tv_bed_large"
@@ -146,7 +160,9 @@
                 android:background="@drawable/bg_et_city_unselected_corner_border"
                 android:gravity="center"
                 android:text="@string/hotel_room_screen_bed_large"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textColor="@color/colorGrayDark"
+                />
 
             <TextView
                 android:id="@+id/tv_bed_double"
@@ -157,7 +173,9 @@
                 android:background="@drawable/bg_et_city_unselected_corner_border"
                 android:gravity="center"
                 android:text="@string/hotel_room_screen_bed_double"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textColor="@color/colorGrayDark"
+                />
         </LinearLayout>
 
         <Button

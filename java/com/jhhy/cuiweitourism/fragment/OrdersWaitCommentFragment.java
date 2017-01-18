@@ -177,17 +177,94 @@ public class OrdersWaitCommentFragment extends Fragment  implements ArgumentOnCl
              */
             @Override
             public void onOrderItemClick(int position) {
-                Order order = lists.get(position);
-                Intent intent = new Intent(getContext(), Tab4OrderDetailsActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("orderSN", order.getOrderSN());
-                bundle.putInt("type", Integer.parseInt(order.getStatus()));
-                bundle.putString("typeId", order.getTypeId());
-                intent.putExtras(bundle);
-                startActivityForResult(intent, REQUEST_CODE_DETAIL);
+                orderDetail(position);
+//                Order order = lists.get(position);
+//                Intent intent = new Intent(getContext(), Tab4OrderDetailsActivity.class);
+//                Bundle bundle = new Bundle();
+//                bundle.putSerializable("orderSN", order.getOrderSN());
+//                bundle.putInt("type", Integer.parseInt(order.getStatus()));
+//                bundle.putString("typeId", order.getTypeId());
+//                intent.putExtras(bundle);
+//                startActivityForResult(intent, REQUEST_CODE_DETAIL);
             }
         };
         listView.setAdapter(adapter);
+    }
+
+    /**
+     * 订单详情
+     */
+    private void orderDetail(int position) {
+        Order order = lists.get(position);
+        if ("80".equals(order.getTypeId())){ //火车票详情
+            if ("0".equals(type)){ //全部订单，不给任何操作
+                ToastCommon.toastShortShow(getContext(), null, "请进入火车票订单查看");
+                return;
+            }
+            if (order.getSanfangorderno1() == null || order.getSanfangorderno1().length() == 0 ||
+                    order.getSanfangorderno2() == null || order.getSanfangorderno2().length() == 0){
+                ToastCommon.toastShortShow(getContext(), null, "订单号不存在，无详情");
+                return;
+            }
+        }else if ("82".equals(order.getTypeId())){ //机票详情
+            getPlaneTicketDetail(order);
+            return;
+        }else if ("2".equals(order.getTypeId())){ //酒店详情
+            LogUtil.e(TAG, order);
+            if ("YES".equals(order.getOnclick())){ //有详情
+                getOrderDetail(order);
+                return;
+            }else { //无详情
+                if ("1".equals(order.getStatus())){ //未付款
+                    if (!(System.currentTimeMillis() / 1000 - Integer.parseInt(order.getAddTime()) < 15 * 60)){
+                        ToastCommon.toastShortShow(getContext(), null, "未付款订单，已关闭");
+                    }
+                    return;
+                }else{ //酒店其它状态
+                    ToastCommon.toastShortShow(getContext(), null, "未付款订单，已关闭");
+                }
+                return;
+            }
+        }
+        getOrderDetail(order);
+    }
+
+
+    /**
+     * 国内机票详情，国际机票详情
+     */
+    private void getPlaneTicketDetail(Order order) {
+        Intent intent = new Intent(getContext(), Tab4OrderDetailsActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("orderSN", order.getOrderSN());
+        bundle.putInt("type", Integer.parseInt(order.getStatus())); //订单状态
+        if ("国内机票".equals(order.getProductName())){ //82
+            bundle.putString("typeId", order.getTypeId()); //订单类型
+            if ("NO".equals(order.getOnclick()) || order.getOnclick() == null || order.getOnclick().length() == 0){
+                ToastCommon.toastShortShow(getContext(), null, "未付款订单，无详情");
+                return;
+            }
+        }else if ("国际机票".equals(order.getProductName())){ //83
+            bundle.putString("typeId", "83"); //订单类型
+        }
+        intent.putExtras(bundle);
+        startActivityForResult(intent, REQUEST_CODE_DETAIL);
+    }
+
+
+    /**
+     * 普通订单详情
+     */
+    private void getOrderDetail(Order order) {
+        Intent intent = new Intent(getContext(), Tab4OrderDetailsActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("orderSN", order.getOrderSN());
+        bundle.putInt("type", Integer.parseInt(order.getStatus())); //订单状态
+        bundle.putString("typeId", order.getTypeId()); //订单类型
+        bundle.putString("sanfangorderno1", order.getSanfangorderno1()); //酒店，签证，国内机票，国际机票，火车票
+        bundle.putString("sanfangorderno2", order.getSanfangorderno2()); //酒店，签证，国内机票，国际机票，火车票
+        intent.putExtras(bundle);
+        startActivityForResult(intent, REQUEST_CODE_DETAIL);
     }
 
     private int REQUEST_CODE_DETAIL = 1501; //此处是待评论页，进入详情之后，可能会进行评论

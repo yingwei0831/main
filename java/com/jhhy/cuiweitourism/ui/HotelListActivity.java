@@ -94,7 +94,7 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
     private String sortType = "A";       //排序顺序:升序A 降序 D
 
     private int brandNamePosition ;
-    private int facilitiesPosition;
+    private ArrayList<Integer> facilitiesPosition = new ArrayList<>();
 
     private int businessDistrictPosition; //商业区
     private int districtPosition; //行政区
@@ -168,7 +168,7 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
                     ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);
                 }else if ("0000".equals(model.headModel.res_code)){
                     List<HotelListResponse.HotelBean> array = null;
-                    if ( model.body == null){
+                    if ( model.body == null || model.body.getHotels() == null || model.body.getHotels().getHotel() == null){
                         array = new ArrayList<HotelListResponse.HotelBean>();
                     } else {
                         array = model.body.getHotels().getHotel();
@@ -317,7 +317,7 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
             if (listViewSpot.size() == 0) {
                 getViewSpot();
             }
-            if (listBusinessDistrict.size() != 0 && listDistrict.size() != 0 && listViewSpot.size() != 0){
+            if (listBusinessDistrict.size() != 0 || listDistrict.size() != 0 || listViewSpot.size() != 0){
                 showLocationData();
             }
         }
@@ -337,7 +337,7 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
             if (listFacilities.size() == 0) {
                 getFacilities();
             }
-            if (listBrand.size() != 0 && listFacilities.size() != 0){
+            if (listBrand.size() != 0 || listFacilities.size() != 0){
                 showScreenData();
             }
         }
@@ -356,6 +356,10 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
 
     private void showScreenData(){
         Intent intentScreen = new Intent( getApplicationContext(), HotelScreenActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("brandNamePosition", brandNamePosition);
+        bundle.putIntegerArrayList("facilitiesPosition", facilitiesPosition);
+        intentScreen.putExtras(bundle);
         startActivityForResult(intentScreen, SELECT_SCREEN);
     }
 
@@ -546,6 +550,8 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
                 Bundle bundle = data.getExtras();
                 brandName = bundle.getString("brandName");
                 facilities = bundle.getString("facilityName");
+                brandNamePosition = bundle.getInt("brandNamePosition");
+                facilitiesPosition = bundle.getIntegerArrayList("facilitiesPosition");
                 refresh = true;
                 getHotelListData();
             }

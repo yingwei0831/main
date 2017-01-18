@@ -152,7 +152,7 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            LogUtil.i(TAG, "-------------------handleMessage--------------------- what = " + msg.what);
+//            LogUtil.i(TAG, "-------------------handleMessage--------------------- what = " + msg.what);
             switch (msg.what) {
                 case Consts.MESSAGE_TAB1_RECOMMEND:
                     if (msg.arg1 == 0) {

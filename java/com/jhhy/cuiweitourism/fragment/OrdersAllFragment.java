@@ -315,8 +315,7 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
 //                }
                 else if ("82".equals(order.getTypeId())){ //飞机票（国内/国际）
                     cancelPlaneOrder(order);
-                }
-                else {
+                } else {
                     cancelOrder(order);
                 }
                 break;

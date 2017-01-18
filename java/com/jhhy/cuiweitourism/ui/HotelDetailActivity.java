@@ -159,7 +159,11 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
                     ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);
                 }else if ("0000".equals(model.headModel.res_code)){
                     hotelDetail = model.body;
-                    listRooms = hotelDetail.getHotel().getRooms().getRoom();
+                    if (hotelDetail != null && hotelDetail.getHotel() != null && hotelDetail.getHotel().getRooms() != null && hotelDetail.getHotel().getRooms().getRoom() != null) {
+                        listRooms = hotelDetail.getHotel().getRooms().getRoom();
+                    }else{
+                        listRooms = new ArrayList<HotelDetailResponse.HotelRoomBean>();
+                    }
                     refreshView();
                     LogUtil.e(TAG,"hotelGetDetailInfo =" + hotelDetail.toString());
                 }
@@ -182,10 +186,12 @@ public class HotelDetailActivity extends BaseActionBarActivity implements Adapte
 
     private void refreshView() {
         hotelImages = new ArrayList<>();
-        for (int i =0; i < hotelDetail.getHotel().getImages().getImage().size(); i++){
-            HotelDetailResponse.HotelImageBean item = hotelDetail.getHotel().getImages().getImage().get(i);
-            if ("1".equals(item.getWaterMark())) {
-                hotelImages.add(item.getUrl());
+        if (hotelDetail != null && hotelDetail.getHotel() != null && hotelDetail.getHotel().getImages() != null && hotelDetail.getHotel().getImages().getImage() != null) {
+            for (int i =0; i < hotelDetail.getHotel().getImages().getImage().size(); i++) {
+                HotelDetailResponse.HotelImageBean item = hotelDetail.getHotel().getImages().getImage().get(i);
+                if ("1".equals(item.getWaterMark())) {
+                    hotelImages.add(item.getUrl());
+                }
             }
         }
 

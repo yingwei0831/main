@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.jhhy.cuiweitourism.OnItemTextViewClick;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.OrderEditContactsAdapter;
+import com.jhhy.cuiweitourism.dialog.TourismCoinActivity;
 import com.jhhy.cuiweitourism.model.User;
 import com.jhhy.cuiweitourism.model.UserContacts;
 import com.jhhy.cuiweitourism.net.biz.TrainTicketActionBiz;
@@ -87,6 +88,9 @@ public class TrainEditOrderActivity extends AppCompatActivity implements View.On
 
     private TrainTicketActionBiz trainBiz; //火车票业务
     private TrainTicketOrderInfo info; //提交订单，返回信息
+
+    private TextView tvSelectIcon; //选择旅游币
+    private String icon = ""; //积分支付
 
     private Handler handler = new Handler(){
         @Override
@@ -158,6 +162,7 @@ public class TrainEditOrderActivity extends AppCompatActivity implements View.On
         etLinkName = (EditText) findViewById(R.id.et_train_order_link_name); //联系人
         etLinkMobile = (EditText) findViewById(R.id.et_train_link_mobile); //联系电话
 
+        tvSelectIcon = (TextView) findViewById(R.id.tv_travel_edit_order_icon); //选择旅游币
         tvPriceTotal = (TextView) findViewById(R.id.tv_edit_order_price); //订单总金额
 
         btnPay = (Button) findViewById(R.id.btn_edit_order_pay); //去往立即支付
@@ -199,6 +204,7 @@ public class TrainEditOrderActivity extends AppCompatActivity implements View.On
         tvSeatSelector.setOnClickListener(this);
         tvSelectorContacts.setOnClickListener(this);
         btnPay.setOnClickListener(this);
+        tvSelectIcon.setOnClickListener(this);
     }
 
     @Override
@@ -209,6 +215,9 @@ public class TrainEditOrderActivity extends AppCompatActivity implements View.On
                 break;
             case R.id.tv_title_simple_title_left:
                 finish();
+                break;
+            case R.id.tv_travel_edit_order_icon: //TODO 选择旅游币
+                selectIcon();
                 break;
             case R.id.tv_train_seat_info: //TODO 切换坐席，显示有车票的
 //                detail.seatInfoArray;
@@ -240,6 +249,17 @@ public class TrainEditOrderActivity extends AppCompatActivity implements View.On
                 goToPay();
                 break;
         }
+    }
+
+    /**
+     * 选择旅游币
+     */
+    private void selectIcon() {
+        Intent intent = new Intent(getApplicationContext(), TourismCoinActivity.class);
+        Bundle bundle = new Bundle();
+//        bundle.putString("needScore", price); //本次订单可以用的最多旅游币
+        intent.putExtras(bundle);
+        startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_SELECT_COIN);
     }
 
     private PopTrainSeatType changeSeatType;
@@ -370,7 +390,8 @@ public class TrainEditOrderActivity extends AppCompatActivity implements View.On
         //提交订单，进入支付页面
         final TrainTicketOrderFetch ticketOrderFetch = new TrainTicketOrderFetch(
                 MainActivity.user.getUserId(), name, mobile, detail.departureStation, detail.arrivalStation, detail.trainNum,
-                detail.departureDate, detail.departureTime, detail.arrivalDate, detail.arrivalTime, listContact, seatInfo.seatCode, String.valueOf(Float.parseFloat(seatInfo.floorPrice) * listContact.size()));
+                detail.departureDate, detail.departureTime, detail.arrivalDate, detail.arrivalTime, listContact, seatInfo.seatCode,
+                String.valueOf(Float.parseFloat(seatInfo.floorPrice) * listContact.size()), icon);
         new Thread(){
             @Override
             public void run() {

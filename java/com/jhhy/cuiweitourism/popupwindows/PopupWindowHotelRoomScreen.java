@@ -40,7 +40,7 @@ public class PopupWindowHotelRoomScreen extends PopupWindow implements View.OnCl
     private String meal = "";
     private String bedType = "";
 
-    private String TAG = PopupWindowHotelRoomScreen.class.getSimpleName();
+    private String TAG = "PopupWindowHotelRoomScreen";
 
     public PopupWindowHotelRoomScreen(final Context context) {
         this.context = context;

@@ -194,10 +194,11 @@ public class OrdersWaitRefundFragment extends Fragment  implements ArgumentOnCli
      */
     private void orderDetail(int position) {
         Order order = lists.get(position);
-//        if ("2".equals(order.getTypeId()) && "0".equals(type)){ //酒店，在这里没有详情，没有操作，只显示
-//            ToastCommon.toastShortShow(getContext(), null, "请选择酒店订单，再进入详细信息页");
-//        } else {
         if ("80".equals(order.getTypeId())){ //火车票详情
+            if ("0".equals(type)){ //全部订单，不给任何操作
+                ToastCommon.toastShortShow(getContext(), null, "请进入火车票订单查看");
+                return;
+            }
             if (order.getSanfangorderno1() == null || order.getSanfangorderno1().length() == 0 ||
                     order.getSanfangorderno2() == null || order.getSanfangorderno2().length() == 0){
                 ToastCommon.toastShortShow(getContext(), null, "订单号不存在，无详情");
@@ -206,6 +207,22 @@ public class OrdersWaitRefundFragment extends Fragment  implements ArgumentOnCli
         }else if ("82".equals(order.getTypeId())){ //机票详情
             getPlaneTicketDetail(order);
             return;
+        }else if ("2".equals(order.getTypeId())){ //酒店详情
+            LogUtil.e(TAG, order);
+            if ("YES".equals(order.getOnclick())){ //有详情
+                getOrderDetail(order);
+                return;
+            }else { //无详情
+                if ("1".equals(order.getStatus())){ //未付款
+                    if (!(System.currentTimeMillis() / 1000 - Integer.parseInt(order.getAddTime()) < 15 * 60)){
+                        ToastCommon.toastShortShow(getContext(), null, "未付款订单，已关闭");
+                    }
+                    return;
+                }else{ //酒店其它状态
+                    ToastCommon.toastShortShow(getContext(), null, "未付款订单，已关闭");
+                }
+                return;
+            }
         }
         getOrderDetail(order);
     }

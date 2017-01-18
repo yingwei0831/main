@@ -33,6 +33,7 @@ public class ReserveNoticeActivity extends BaseActivity implements View.OnClickL
 
         tvNotice = (TextView) findViewById(R.id.tv_reserve_notice);
         tvContract = (TextView) findViewById(R.id.tv_reserve_contract);
+        tvContract.setVisibility(View.GONE);
         tvNotification = (TextView) findViewById(R.id.tv_reserve_notification);
 
         ivTitleLeft.setOnClickListener(this);

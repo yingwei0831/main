@@ -127,8 +127,10 @@ public class TrainTicketOrderFetch extends BasicFetchModel {
     public ArrayList<TicketInfo> goupiaoren;
     public String SeatType;
     public String SumPrice;
+    public String needjifen;
 
-    public TrainTicketOrderFetch(String memberid, String linkman, String linktel, String fromStation, String toStation, String trainCode, String trainDate, String fromTime, String toDate, String toTime, ArrayList<TicketInfo> goupiaoren, String seatType, String sumPrice) {
+    public TrainTicketOrderFetch(String memberid, String linkman, String linktel, String fromStation, String toStation, String trainCode, String trainDate,
+                                 String fromTime, String toDate, String toTime, ArrayList<TicketInfo> goupiaoren, String seatType, String sumPrice, String needjifen) {
         this.memberid = memberid;
         this.linkman = linkman;
         this.linktel = linktel;
@@ -142,9 +144,18 @@ public class TrainTicketOrderFetch extends BasicFetchModel {
         this.goupiaoren = goupiaoren;
         SeatType = seatType;
         SumPrice = sumPrice;
+        this.needjifen = needjifen;
     }
 
     public TrainTicketOrderFetch() {
+    }
+
+    public String getNeedjifen() {
+        return needjifen;
+    }
+
+    public void setNeedjifen(String needjifen) {
+        this.needjifen = needjifen;
     }
 
     public String getMemberid() {
