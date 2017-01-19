@@ -25,8 +25,9 @@ public class VisaOrderRequest extends BasicFetchModel {
     private String linkman;
     private String linktel;
     private String linkemail;
+    private String needjifen;
 
-    public VisaOrderRequest(String memberid, String productname, String price, String usedate, String dingnum, String linkman, String linktel, String linkemail) {
+    public VisaOrderRequest(String memberid, String productname, String price, String usedate, String dingnum, String linkman, String linktel, String linkemail, String needJiFen) {
         this.memberid = memberid;
         this.productname = productname;
         this.price = price;
@@ -35,6 +36,7 @@ public class VisaOrderRequest extends BasicFetchModel {
         this.linkman = linkman;
         this.linktel = linktel;
         this.linkemail = linkemail;
+        needjifen = needJiFen;
     }
 
     public String getMemberid() {

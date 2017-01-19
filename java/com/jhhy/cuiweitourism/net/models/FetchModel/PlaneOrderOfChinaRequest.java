@@ -42,8 +42,10 @@ public class PlaneOrderOfChinaRequest extends BasicFetchModel {
     public String commisionPoint;
     public String commisionMoney;
     public String settlePrice;
+    public String needjifen;
 
-    public PlaneOrderOfChinaRequest(String policyId, String linkMan, String linkPhone, PnrInfoBean pnrInfo, String memberid, String commisionPoint, String commisionMoney, String settlePrice) {
+    public PlaneOrderOfChinaRequest(String policyId, String linkMan, String linkPhone, PnrInfoBean pnrInfo, String memberid,
+                                    String commisionPoint, String commisionMoney, String settlePrice, String needJiFen) {
         this.policyId = policyId;
         this.linkMan = linkMan;
         this.linkPhone = linkPhone;
@@ -52,6 +54,7 @@ public class PlaneOrderOfChinaRequest extends BasicFetchModel {
         this.commisionPoint = commisionPoint;
         this.commisionMoney = commisionMoney;
         this.settlePrice = settlePrice;
+        needjifen = needJiFen;
     }
 
     public String getSettlePrice() {

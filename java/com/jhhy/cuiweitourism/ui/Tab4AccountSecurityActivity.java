@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
+import com.jhhy.cuiweitourism.biz.LoginBiz;
 import com.jhhy.cuiweitourism.utils.SharedPreferencesUtils;
 
 
@@ -122,6 +123,9 @@ public class Tab4AccountSecurityActivity extends BaseActivity implements View.On
     }
 
     private void logOut() {
+        LoginBiz biz = new LoginBiz(null, null); //环信登出
+        biz.logout(null);
+
         SharedPreferencesUtils sp = SharedPreferencesUtils.getInstance(getApplicationContext());
         sp.savePassword(null);
         Bundle bundle = new Bundle();

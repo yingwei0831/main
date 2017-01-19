@@ -20,10 +20,12 @@ import com.jhhy.cuiweitourism.OnItemTextViewClick;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.OrderEditContactsAdapter;
 import com.jhhy.cuiweitourism.dialog.NumberPickerActivity;
+import com.jhhy.cuiweitourism.dialog.TourismCoinActivity;
 import com.jhhy.cuiweitourism.model.User;
 import com.jhhy.cuiweitourism.model.UserContacts;
 import com.jhhy.cuiweitourism.net.biz.HotelActionBiz;
 import com.jhhy.cuiweitourism.net.models.FetchModel.HotelOrderRequest;
+import com.jhhy.cuiweitourism.net.models.FetchModel.TrainTicketOrderFetch;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelDetailResponse;
@@ -77,7 +79,7 @@ public class HotelEditOrderActivity extends BaseActionBarActivity implements Pop
     private HotelDetailResponse hotelDetail;
 //    private int position;
     private HotelDetailResponse.HotelProductBean hotelProduct;
-    private String totalPrice; //订单总价
+    private float totalPrice; //订单总价
     private int number; //一共几个房间
     private String totalPricePre; //总价:这间房在预定期间应该交付的价格，并未计算人数
     private String imageUrl; //酒店封面图，用于订单
@@ -86,6 +88,11 @@ public class HotelEditOrderActivity extends BaseActionBarActivity implements Pop
     private MyListView listViewContacts; //联系人装载布局
     private OrderEditContactsAdapter adapter;
     private ArrayList<HotelOrderRequest.RoomBean.PassengerBean> listContact = new ArrayList<>(); //乘车人列表
+
+    private TextView tvSelectIcon; //选择旅游币
+    private TextView tvPayIcon; //旅游币个数
+    private TextView tvTotalPrice; //商品总金额
+    private int icon; //积分支付
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,7 +147,10 @@ public class HotelEditOrderActivity extends BaseActionBarActivity implements Pop
         etLinkName = (EditText) findViewById(R.id.et_hotel_order_link_name);
         etLinkMobile = (EditText) findViewById(R.id.et_hotel_link_mobile);
 
-        tvOrderPrice = (TextView) findViewById(R.id.tv_edit_order_price);
+        tvSelectIcon = (TextView) findViewById(R.id.tv_travel_edit_order_icon); //选择旅游币
+        tvPayIcon = (TextView) findViewById(R.id.tv_inner_travel_total_price_icon); //旅游币个数
+        tvTotalPrice = (TextView) findViewById(R.id.tv_inner_travel_currency_price); //商品总金额
+        tvOrderPrice = (TextView) findViewById(R.id.tv_edit_order_price); //订单总金额
         btnPay = (Button) findViewById(R.id.btn_edit_order_pay);
         btnPay.setText(getString(R.string.plane_flight_inquiry_commit));
 
@@ -170,7 +180,7 @@ public class HotelEditOrderActivity extends BaseActionBarActivity implements Pop
         btnPay.setOnClickListener(this);
         tvSelectorContacts.setOnClickListener(this);
         ivTitleRight.setOnClickListener(this);
-
+        tvSelectIcon.setOnClickListener(this);
 //        listViewContacts.setOnItemClickListener(this);
     }
 
@@ -178,9 +188,12 @@ public class HotelEditOrderActivity extends BaseActionBarActivity implements Pop
     public void onClick(View view) {
         super.onClick(view);
         switch (view.getId()){
-//            case R.id.tv_hotel_reserve_rules: //退订规则
-//
-//                break;
+            case R.id.tv_hotel_reserve_rules: //退订规则
+
+                break;
+            case R.id.tv_travel_edit_order_icon: //TODO 选择旅游币
+                selectIcon();
+                break;
             case R.id.btn_edit_order_pay:
                 gotoPay();
                 break;
@@ -213,6 +226,24 @@ public class HotelEditOrderActivity extends BaseActionBarActivity implements Pop
 //            }
 //        }
 //    }
+    /**
+     * 选择旅游币
+     */
+    private void selectIcon() {
+        if (MainActivity.logged) {
+            Intent intent = new Intent(getApplicationContext(), TourismCoinActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("needScore", String.format(Locale.getDefault(), "%d", (int) totalPrice - 1)); //本次订单可以用的最多旅游币
+            intent.putExtras(bundle);
+            startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_SELECT_COIN);
+        }else{
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putInt("type", 2);
+            intent.putExtras(bundle);
+            startActivityForResult(intent, REQUEST_LOGIN);
+        }
+    }
 
     private void gotoPay() {
         String name = etLinkName.getText().toString();
@@ -262,10 +293,11 @@ public class HotelEditOrderActivity extends BaseActionBarActivity implements Pop
                 HotelDetailActivity.hotelDetail.getHotel().getTraffic(), HotelDetailActivity.hotelDetail.getHotel().getCityCode(), HotelDetailActivity.hotelDetail.getHotel().getCityName(),
                 hotelProduct.getRoomTypeID(), hotelProduct.getRoomName(), hotelProduct.getProductID(), hotelProduct.getName(),
                 checkInDate, checkOutDate, "Chinese", "Prepay", String.valueOf(number), String.valueOf(listContact.size()), earlierCheckInDate, String.format(Locale.getDefault(), "%s %s", checkInDate, "23:59:00"), //Chinese，Prepay
-                "RMB", totalPrice, getMyIP(), "FALSE", "NotAllowedConfirm", etHotelNotice.getText().toString(), etHotelNotice.getText().toString(), //totalPrice 单价/总价
+                "RMB", String.format(Locale.getDefault(), "%.2f", totalPrice),
+                getMyIP(), "FALSE", "NotAllowedConfirm", etHotelNotice.getText().toString(), etHotelNotice.getText().toString(), //totalPrice 单价/总价
                 "false", new HotelOrderRequest.ContactBean(name, mobile), //发票
                 hotelProduct.getPrice(), hotelProduct.getPrice(), hotelProduct.getMeals(), hotelProduct.getPrice(), //basePrice
-                hotelProduct.getPlanType(), "2", "0", imageUrl); //hotelProduct.getRoomImgUrl()
+                hotelProduct.getPlanType(), "2", "0", imageUrl, String.valueOf(icon)); //hotelProduct.getRoomImgUrl()
 
         request.setRooms(rooms);
         hotelBiz.setHotelOrderToCuiwei(request, new BizGenericCallback<HotelOrderResponse>() {
@@ -330,17 +362,40 @@ public class HotelEditOrderActivity extends BaseActionBarActivity implements Pop
             }
         }else if (requestCode == Consts.REQUEST_CODE_RESERVE_SELECT_CONTACT){ //选择联系人
             if (resultCode == RESULT_OK){
+                boolean doubleContact = false;
                 Bundle bundle = data.getExtras();
                 ArrayList<UserContacts> listSelection = bundle.getParcelableArrayList("selection");
-                if (listSelection != null) {
+                if (listSelection != null && listSelection.size() != 0) {
                     for (UserContacts contact : listSelection) {
-                        HotelOrderRequest.RoomBean.PassengerBean contactTrain = new HotelOrderRequest.RoomBean.PassengerBean(contact.getContactsName(), contact.getContactsMobile());
-                        listContact.add(contactTrain);
+                        //判断联系人是否在选，再加入联系人列表
+                        if (listContact.size() != 0){
+                            for (int j = 0; j < listContact.size(); j++){
+                                HotelOrderRequest.RoomBean.PassengerBean contactSelect = listContact.get(j);
+                                if (contactSelect.getName().equals(contact.getContactsName())){ //如果存在姓名，则跳出循环，如果循环执行完毕，则执行添加
+                                    doubleContact = true;
+                                    break;
+                                }
+                            }
+                            if (!doubleContact){
+                                HotelOrderRequest.RoomBean.PassengerBean contactTrain = new HotelOrderRequest.RoomBean.PassengerBean(contact.getContactsName(), contact.getContactsMobile());
+                                listContact.add(contactTrain);
+                            }
+                        }else{
+                            HotelOrderRequest.RoomBean.PassengerBean contactTrain = new HotelOrderRequest.RoomBean.PassengerBean(contact.getContactsName(), contact.getContactsMobile());
+                            listContact.add(contactTrain);
+                        }
                     }
                     adapter.setData(listContact);
                     adapter.notifyDataSetChanged();
                 }
             }
+        }else if (requestCode == Consts.REQUEST_CODE_RESERVE_SELECT_COIN){ //选择旅游币
+            Bundle bundle = data.getExtras();
+            icon = bundle.getInt("score");
+            tvSelectIcon.setText(String.format(Locale.getDefault(), "%s个", icon));
+            tvPayIcon.setText(String.valueOf(icon));
+            tvOrderPrice.setText(String.format(Locale.getDefault(), "%.2f", totalPrice - icon));
+//            tvTotalPrice.setText(String.valueOf(totalPrice - icon));
         }
     }
 
@@ -378,7 +433,7 @@ public class HotelEditOrderActivity extends BaseActionBarActivity implements Pop
                 if (position < listContact.size()) {
                     listContact.remove(position);
                     adapter.notifyDataSetChanged();
-                    calculatePrice();
+//                    calculatePrice();
                 }
                 break;
         }
@@ -388,8 +443,9 @@ public class HotelEditOrderActivity extends BaseActionBarActivity implements Pop
      * 计算价格
      */
     private void calculatePrice() {
-        totalPrice = String.format(Locale.getDefault(), "%.2f", Float.parseFloat(totalPricePre) * number);
-        tvOrderPrice.setText(totalPrice); //订单总价
+        totalPrice = Float.parseFloat(totalPricePre) * number;
+        tvOrderPrice.setText(String.format(Locale.getDefault(), "%.2f", totalPrice - icon)); //订单总价
+        tvTotalPrice.setText(String.format(Locale.getDefault(), "%.2f",totalPrice)); //商品总金额
     }
 
     /**

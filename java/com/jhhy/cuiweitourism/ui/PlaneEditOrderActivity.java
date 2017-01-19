@@ -26,6 +26,7 @@ import android.widget.TextView;
 import com.jhhy.cuiweitourism.OnItemTextViewClick;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.OrderEditContactsAdapter;
+import com.jhhy.cuiweitourism.dialog.TourismCoinActivity;
 import com.jhhy.cuiweitourism.model.User;
 import com.jhhy.cuiweitourism.model.UserContacts;
 import com.jhhy.cuiweitourism.net.biz.PlaneTicketActionBiz;
@@ -89,6 +90,12 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
 
     private int priceDelayCost; //航班延误险价格
     private int priceAccidentCost; //航空意外险价格
+
+    private TextView tvSelectIcon; //选择旅游币
+    private TextView tvPayIcon; //旅游币个数
+    private TextView tvTotalPrice; //商品总金额
+    private int icon; //积分支付
+//    private float totalPrice; //订单总金额
 
     private PlaneOrderOfChinaResponse info;
 
@@ -164,8 +171,16 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
         cbDelayCost     = (CheckBox) findViewById(R.id.rb_plane_order_delay_insurance);
         cbAccidentCost  = (CheckBox) findViewById(R.id.rb_plane_order_accident_insurance);
 
+        tvSelectIcon = (TextView) findViewById(R.id.tv_travel_edit_order_icon); //选择旅游币
+        tvPayIcon = (TextView) findViewById(R.id.tv_inner_travel_total_price_icon); //旅游币个数
+        tvTotalPrice = (TextView) findViewById(R.id.tv_inner_travel_currency_price); //商品总金额
         tvPriceTotal = (TextView) findViewById(R.id.tv_edit_order_price); //订单总金额
-        tvPriceTotal.setText(String.format(Locale.getDefault(), "%.2f", listContact.size() * (Float.parseFloat(seatInfo.settlePrice) + Float.parseFloat(flight.airportTax) + Float.parseFloat(flight.fuelTax))));
+        tvTotalPrice.setText(String.format(Locale.getDefault(), "%.2f",
+                listContact.size() * (
+                        Float.parseFloat(seatInfo.settlePrice) + Float.parseFloat(flight.airportTax) + Float.parseFloat(flight.fuelTax))));
+        tvPriceTotal.setText(String.format(Locale.getDefault(), "%.2f",
+                listContact.size() * (
+                        Float.parseFloat(seatInfo.settlePrice) + Float.parseFloat(flight.airportTax) + Float.parseFloat(flight.fuelTax)) - icon));
         ivArrowTop = (ImageView) findViewById(R.id.iv_edit_order_arrow_top); //点击查看订单金额详情
         btnPay = (Button) findViewById(R.id.btn_edit_order_pay); //去往立即支付
 
@@ -219,6 +234,7 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
         btnPay.setOnClickListener(this);
         cbAccidentCost.setOnCheckedChangeListener(this);
         cbDelayCost.setOnCheckedChangeListener(this);
+        tvSelectIcon.setOnClickListener(this);
     }
 
     @Override
@@ -229,6 +245,9 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
                 break;
             case R.id.tv_plane_refund_notice: //退改签说明
                 changeBack();
+                break;
+            case R.id.tv_travel_edit_order_icon: //TODO 选择旅游币
+                selectIcon();
                 break;
             case R.id.tv_plane_add_passenger: //添加乘客
                 if (MainActivity.logged) {
@@ -258,6 +277,32 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
                 break;
         }
     }
+
+    /**
+     * 选择旅游币
+     */
+    private void selectIcon() {
+        if (MainActivity.logged) {
+            if (listContact.size() > 0) {
+                float a = listContact.size() * (
+                        Float.parseFloat(seatInfo.settlePrice) + Float.parseFloat(flight.airportTax) + Float.parseFloat(flight.fuelTax));
+                Intent intent = new Intent(getApplicationContext(), TourismCoinActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("needScore", String.format(Locale.getDefault(), "%d", (int) a - 1)); //本次订单可以用的最多旅游币
+                intent.putExtras(bundle);
+                startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_SELECT_COIN);
+            }else{
+                ToastCommon.toastShortShow(getApplicationContext(), null, "请先添加乘机人");
+            }
+        }else{
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putInt("type", 2);
+            intent.putExtras(bundle);
+            startActivityForResult(intent, REQUEST_LOGIN);
+        }
+    }
+
 
     private PopupWindow popupWindow;
     private int popUpHeight;
@@ -326,12 +371,30 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
 
         if (resultCode == RESULT_OK){
             if (requestCode == Consts.REQUEST_CODE_RESERVE_SELECT_CONTACT){ //选择常用联系人
+                boolean doubleContact = false;
                 Bundle bundle = data.getExtras();
                 ArrayList<UserContacts> listSelection = bundle.getParcelableArrayList("selection");
-                if (listSelection != null) {
+                if (listSelection != null && listSelection.size() != 0) {
                     for (UserContacts contact : listSelection) {
-                        TrainTicketOrderFetch.TicketInfo contactTrain = new TrainTicketOrderFetch.TicketInfo(contact.getContactsName(), "2", contact.getContactsIdCard(), "1", seatInfo.seatCode, seatInfo.settlePrice);
-                        listContact.add(contactTrain);
+                        //判断联系人是否在选，再加入联系人列表
+                        if (listContact.size() != 0){
+                            for (int j = 0; j < listContact.size(); j++){
+                                TrainTicketOrderFetch.TicketInfo contactSelect = listContact.get(j);
+                                if (contactSelect.getPsgName().equals(contact.getContactsName())){ //如果存在姓名，则跳出循环，如果循环执行完毕，则执行添加
+                                    doubleContact = true;
+                                    break;
+                                }
+                            }
+                            if (!doubleContact){
+                                TrainTicketOrderFetch.TicketInfo contactTrain = new TrainTicketOrderFetch.TicketInfo(
+                                        contact.getContactsName(), "2", contact.getContactsIdCard(), "1", seatInfo.seatCode, seatInfo.settlePrice);
+                                listContact.add(contactTrain);
+                            }
+                        }else{
+                            TrainTicketOrderFetch.TicketInfo contactTrain = new TrainTicketOrderFetch.TicketInfo(
+                                    contact.getContactsName(), "2", contact.getContactsIdCard(), "1", seatInfo.seatCode, seatInfo.settlePrice);
+                            listContact.add(contactTrain);
+                        }
                     }
                     adapter.setData(listContact);
                     adapter.notifyDataSetChanged();
@@ -343,7 +406,12 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
                 if (cbDelayCost.isChecked()){
                     dcPrice = priceDelayCost * listContact.size();
                 }
-                tvPriceTotal.setText(String.format(Locale.getDefault(), "%.2f", listContact.size() * (Float.parseFloat(seatInfo.settlePrice) + acPrice + dcPrice + Float.parseFloat(flight.airportTax) + Float.parseFloat(flight.fuelTax))));
+                tvPriceTotal.setText(String.format(Locale.getDefault(), "%.2f",
+                        listContact.size() * (
+                                Float.parseFloat(seatInfo.settlePrice) + acPrice + dcPrice + Float.parseFloat(flight.airportTax) + Float.parseFloat(flight.fuelTax)) - icon)); //订单总金额
+                tvTotalPrice.setText(String.format(Locale.getDefault(), "%.2f",
+                        listContact.size() * (
+                                Float.parseFloat(seatInfo.settlePrice) + acPrice + dcPrice + Float.parseFloat(flight.airportTax) + Float.parseFloat(flight.fuelTax)))); //商品金额
             }else if (requestCode == Consts.REQUEST_CODE_RESERVE_PAY){ //去支付，支付成功
                 LogUtil.e(TAG, "订单支付成功");
             }else if (requestCode == REQUEST_LOGIN) { //登录成功
@@ -354,6 +422,24 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
                     SharedPreferencesUtils sp = SharedPreferencesUtils.getInstance(getApplicationContext());
                     sp.saveUserId(user.getUserId());
                 }
+            }else if (requestCode == Consts.REQUEST_CODE_RESERVE_SELECT_COIN){ //选择旅游币
+                Bundle bundle = data.getExtras();
+                icon = bundle.getInt("score");
+                tvSelectIcon.setText(String.format(Locale.getDefault(), "%s个", icon));
+                tvPayIcon.setText(String.valueOf(icon));
+                int acPrice = 0, dcPrice = 0;
+                if (cbAccidentCost.isChecked()){
+                    acPrice = priceAccidentCost * listContact.size();
+                }
+                if (cbDelayCost.isChecked()){
+                    dcPrice = priceDelayCost * listContact.size();
+                }
+                tvPriceTotal.setText(String.format(Locale.getDefault(), "%.2f",
+                        listContact.size() * (
+                                Float.parseFloat(seatInfo.settlePrice) + acPrice + dcPrice + Float.parseFloat(flight.airportTax) + Float.parseFloat(flight.fuelTax)) - icon)); //订单总金额
+                tvTotalPrice.setText(String.format(Locale.getDefault(), "%.2f",
+                        listContact.size() * (
+                                Float.parseFloat(seatInfo.settlePrice) + acPrice + dcPrice + Float.parseFloat(flight.airportTax) + Float.parseFloat(flight.fuelTax)))); //商品金额
             }
         }else{
             if (requestCode == REQUEST_LOGIN) { //登录
@@ -371,6 +457,7 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
                 listContact.remove(position);
                 adapter.setData(listContact);
                 adapter.notifyDataSetChanged();
+
                 break;
             case R.id.iv_contact_view_detail: //详情/更换联系人
 //                ToastUtil.show(getApplicationContext(), "详情");
@@ -385,7 +472,12 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
         if (cbDelayCost.isChecked()){
             dcPrice = priceDelayCost * listContact.size();
         }
-        tvPriceTotal.setText(String.format(Locale.getDefault(), "%.2f", listContact.size() * (Float.parseFloat(seatInfo.settlePrice) + Float.parseFloat(flight.airportTax) + Float.parseFloat(flight.fuelTax) + acPrice + dcPrice)));
+        tvPriceTotal.setText(String.format(Locale.getDefault(), "%.2f",
+                listContact.size() * (
+                        Float.parseFloat(seatInfo.settlePrice) + Float.parseFloat(flight.airportTax) + Float.parseFloat(flight.fuelTax) + acPrice + dcPrice) - icon)); //订单金额
+        tvTotalPrice.setText(String.format(Locale.getDefault(), "%.2f",
+                listContact.size() * (
+                        Float.parseFloat(seatInfo.settlePrice) + Float.parseFloat(flight.airportTax) + Float.parseFloat(flight.fuelTax) + acPrice + dcPrice))); //商品金额
     }
 
     /**
@@ -447,7 +539,7 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
                 PlaneOrderOfChinaRequest.PnrInfoBean pnrInfoBean = new PlaneOrderOfChinaRequest.PnrInfoBean(flight.airportTax, flight.fuelTax, seatInfo.parPrice, passengers, segments);
                 PlaneOrderOfChinaRequest request = new PlaneOrderOfChinaRequest(
                         seatInfo.policyData.policyId, name, mobile, pnrInfoBean, MainActivity.user.getUserId(),
-                        seatInfo.policyData.commisionPoint, seatInfo.policyData.commisionMoney, seatInfo.settlePrice);
+                        seatInfo.policyData.commisionPoint, seatInfo.policyData.commisionMoney, seatInfo.settlePrice, String.valueOf(icon));
                 planeBiz.planeTicketOrderOfChina(request, new BizGenericCallback<PlaneOrderOfChinaResponse>() {
                     @Override
                     public void onCompletion(GenericResponseModel<PlaneOrderOfChinaResponse> model) {
@@ -482,7 +574,8 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
 
     private void changeBack() {
         LoadingIndicator.show(PlaneEditOrderActivity.this, getString(R.string.http_notice));
-        PlaneTicketOfChinaChangeBack changeBack = new PlaneTicketOfChinaChangeBack(flight.flightNo, seatInfo.seatCode, dateFrom.substring(0, dateFrom.indexOf(" ")), flight.param1, flight.dstCity);
+        PlaneTicketOfChinaChangeBack changeBack = new PlaneTicketOfChinaChangeBack(
+                flight.flightNo, seatInfo.seatCode, dateFrom.substring(0, dateFrom.indexOf(" ")), flight.param1, flight.dstCity);
         PlaneTicketActionBiz biz = new PlaneTicketActionBiz();
         biz.planeTicketOfChinaChangeBack(changeBack, new BizGenericCallback<PlaneTicketOfChinaChangeBackRespond>() {
             @Override

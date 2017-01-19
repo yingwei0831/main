@@ -19,7 +19,7 @@ public class ReserveNoticeActivity extends BaseActivity implements View.OnClickL
     private TextView tvNotification; //特别提示
 
     private String notice;
-    private String contract;
+//    private String contract;
     private String remark;
 
     @Override
@@ -38,7 +38,7 @@ public class ReserveNoticeActivity extends BaseActivity implements View.OnClickL
 
         ivTitleLeft.setOnClickListener(this);
         tvNotice.setOnClickListener(this);
-        tvContract.setOnClickListener(this);
+//        tvContract.setOnClickListener(this);
         tvNotification.setOnClickListener(this);
     }
 
@@ -48,7 +48,7 @@ public class ReserveNoticeActivity extends BaseActivity implements View.OnClickL
             Bundle bundle = intent.getExtras();
             if (bundle != null){
                 notice = bundle.getString("notice"); //预订须知
-                contract = bundle.getString("contract"); //加载页面
+//                contract = bundle.getString("contract"); //加载页面
                 remark = bundle.getString("remark"); //费用说明
             }
         }
@@ -63,9 +63,9 @@ public class ReserveNoticeActivity extends BaseActivity implements View.OnClickL
             case R.id.tv_reserve_notice:
                 showText(notice, "预订须知");
                 break;
-            case R.id.tv_reserve_contract:
-                showText(contract, "旅游合同");
-                break;
+//            case R.id.tv_reserve_contract:
+//                showText(contract, "旅游合同");
+//                break;
             case R.id.tv_reserve_notification:
                 showText(remark, "特别提示");
                 break;

@@ -38,7 +38,7 @@ import com.just.sun.pricecalendar.ToastCommon;
 
 public class Tab4Fragment2 extends Fragment implements View.OnClickListener {
 
-    private String TAG = Tab4Fragment2.class.getSimpleName();
+    private String TAG = "Tab4Fragment2";
     private static final String TITLE = "title";
 
     private Context mContext;

@@ -23,10 +23,13 @@ import com.jhhy.cuiweitourism.adapter.OrderEditContactsAdapter;
 import com.jhhy.cuiweitourism.dialog.TourismCoinActivity;
 import com.jhhy.cuiweitourism.model.User;
 import com.jhhy.cuiweitourism.model.UserContacts;
+import com.jhhy.cuiweitourism.net.biz.MemberCenterActionBiz;
 import com.jhhy.cuiweitourism.net.biz.TrainTicketActionBiz;
+import com.jhhy.cuiweitourism.net.models.FetchModel.MemberIcon;
 import com.jhhy.cuiweitourism.net.models.FetchModel.TrainTicketOrderFetch;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.MemberIconNum;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainTicketDetailInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainTicketOrderInfo;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
@@ -90,7 +93,10 @@ public class TrainEditOrderActivity extends AppCompatActivity implements View.On
     private TrainTicketOrderInfo info; //提交订单，返回信息
 
     private TextView tvSelectIcon; //选择旅游币
-    private String icon = ""; //积分支付
+    private TextView tvPayIcon; //旅游币个数
+    private TextView tvTotalPrice; //商品总金额
+    private int icon; //积分支付
+    private float totalPrice; //订单总金额
 
     private Handler handler = new Handler(){
         @Override
@@ -139,6 +145,7 @@ public class TrainEditOrderActivity extends AppCompatActivity implements View.On
         tvTitle.setText(getString(R.string.train_order_edit));
         tvTitleRight = (TextView) actionBar.getCustomView().findViewById(R.id.tv_title_simple_title_right);
         tvTitleRight.setText(getString(R.string.visa_reserve_notice));
+//        tvTitleRight.setVisibility(View.GONE);
         tvTitleRight.setTextColor(getResources().getColor(R.color.colorActionBar));
         tvTitleLeft = (TextView) actionBar.getCustomView().findViewById(R.id.tv_title_simple_title_left);
 
@@ -163,6 +170,8 @@ public class TrainEditOrderActivity extends AppCompatActivity implements View.On
         etLinkMobile = (EditText) findViewById(R.id.et_train_link_mobile); //联系电话
 
         tvSelectIcon = (TextView) findViewById(R.id.tv_travel_edit_order_icon); //选择旅游币
+        tvPayIcon = (TextView) findViewById(R.id.tv_inner_travel_total_price_icon); //旅游币个数
+        tvTotalPrice = (TextView) findViewById(R.id.tv_inner_travel_currency_price); //商品总金额
         tvPriceTotal = (TextView) findViewById(R.id.tv_edit_order_price); //订单总金额
 
         btnPay = (Button) findViewById(R.id.btn_edit_order_pay); //去往立即支付
@@ -178,14 +187,19 @@ public class TrainEditOrderActivity extends AppCompatActivity implements View.On
         adapter = new OrderEditContactsAdapter(getApplicationContext(), listContact, this);
         listViewContacts.setAdapter(adapter);
 
+//        totalPrice = Float.parseFloat(seatInfo.floorPrice);
+//        if (listContact.size() > 1){
+            totalPrice = Float.parseFloat(seatInfo.floorPrice) * listContact.size();
+//        }
         trainBiz = new TrainTicketActionBiz();
         refreshview();
     }
 
     private void refreshview(){
-        tvPriceTotal.setText(seatInfo.floorPrice);
-        tvSeatType.setText(seatInfo.seatName);
-        tvTicketPrice.setText(seatInfo.floorPrice);
+        tvPriceTotal.setText(String.format(Locale.getDefault(), "%.2f", totalPrice)); //订单金额
+        tvSeatType.setText(seatInfo.seatName); //座位类型
+        tvTicketPrice.setText(seatInfo.floorPrice); //票价
+        tvTotalPrice.setText(String.format(Locale.getDefault(), "%.2f", totalPrice)); //商品总金额
     }
 
     private void getData() {
@@ -255,11 +269,24 @@ public class TrainEditOrderActivity extends AppCompatActivity implements View.On
      * 选择旅游币
      */
     private void selectIcon() {
-        Intent intent = new Intent(getApplicationContext(), TourismCoinActivity.class);
-        Bundle bundle = new Bundle();
-//        bundle.putString("needScore", price); //本次订单可以用的最多旅游币
-        intent.putExtras(bundle);
-        startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_SELECT_COIN);
+        if (MainActivity.logged) {
+            if (listContact.size() > 0) {
+                totalPrice = Float.parseFloat(seatInfo.floorPrice) * listContact.size();
+                Intent intent = new Intent(getApplicationContext(), TourismCoinActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("needScore", String.format(Locale.getDefault(), "%d", (int) totalPrice - 1)); //本次订单可以用的最多旅游币
+                intent.putExtras(bundle);
+                startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_SELECT_COIN);
+            }else{
+                ToastCommon.toastShortShow(getApplicationContext(), null, "请先添加乘客");
+            }
+        }else{
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putInt("type", 2);
+            intent.putExtras(bundle);
+            startActivityForResult(intent, REQUEST_LOGIN);
+        }
     }
 
     private PopTrainSeatType changeSeatType;
@@ -308,18 +335,24 @@ public class TrainEditOrderActivity extends AppCompatActivity implements View.On
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK){
             if (requestCode == Consts.REQUEST_CODE_RESERVE_SELECT_CONTACT){ //选择常用联系人
+                boolean doubleContact = false;
                 Bundle bundle = data.getExtras();
                 ArrayList<UserContacts> listSelection = bundle.getParcelableArrayList("selection");
-                if (listSelection != null) {
+                if (listSelection != null && listSelection.size() != 0) {
                     for (UserContacts contact : listSelection) {
                         //判断联系人是否在选，再加入联系人列表
                         if (listContact.size() != 0){
-                            for (TrainTicketOrderFetch.TicketInfo contactSelect : listContact){
-                                if (!contactSelect.getPsgName().equals(contact.getContactsName())){
-                                    TrainTicketOrderFetch.TicketInfo contactTrain = new TrainTicketOrderFetch.TicketInfo(
-                                            contact.getContactsName(), "2", contact.getContactsIdCard(), "0", seatInfo.seatCode, seatInfo.floorPrice);
-                                    listContact.add(contactTrain);
+                            for (int j = 0; j < listContact.size(); j++){
+                                TrainTicketOrderFetch.TicketInfo contactSelect = listContact.get(j);
+                                if (contactSelect.getPsgName().equals(contact.getContactsName())){ //如果存在姓名，则跳出循环，如果循环执行完毕，则执行添加
+                                    doubleContact = true;
+                                    break;
                                 }
+                            }
+                            if (!doubleContact){
+                                TrainTicketOrderFetch.TicketInfo contactTrain = new TrainTicketOrderFetch.TicketInfo(
+                                        contact.getContactsName(), "2", contact.getContactsIdCard(), "0", seatInfo.seatCode, seatInfo.floorPrice);
+                                listContact.add(contactTrain);
                             }
                         }else{
                             TrainTicketOrderFetch.TicketInfo contactTrain = new TrainTicketOrderFetch.TicketInfo(
@@ -331,7 +364,8 @@ public class TrainEditOrderActivity extends AppCompatActivity implements View.On
                     adapter.notifyDataSetChanged();
                 }
                 tvAdultCount.setText(String.format(Locale.getDefault(), "成人%d人", listContact.size()));
-                tvPriceTotal.setText(String.format(Locale.getDefault(), "%.2f", Float.parseFloat(seatInfo.floorPrice) * listContact.size()));
+                tvPriceTotal.setText(String.format(Locale.getDefault(), "%.2f", Float.parseFloat(seatInfo.floorPrice) * listContact.size() - icon)); //订单金额
+                tvTotalPrice.setText(String.format(Locale.getDefault(), "%.2f", Float.parseFloat(seatInfo.floorPrice) * listContact.size())); //商品金额
             }else if (requestCode == Consts.REQUEST_CODE_RESERVE_PAY){ //去支付，支付成功
                 setResult(RESULT_OK);
                 finish();
@@ -343,6 +377,12 @@ public class TrainEditOrderActivity extends AppCompatActivity implements View.On
                     SharedPreferencesUtils sp = SharedPreferencesUtils.getInstance(getApplicationContext());
                     sp.saveUserId(user.getUserId());
                 }
+            }else if (requestCode == Consts.REQUEST_CODE_RESERVE_SELECT_COIN){ //选择旅游币
+                Bundle bundle = data.getExtras();
+                icon = bundle.getInt("score");
+                tvSelectIcon.setText(String.format(Locale.getDefault(), "%s个", icon));
+                tvPayIcon.setText(String.valueOf(icon));
+                tvPriceTotal.setText(String.valueOf(totalPrice - icon)); //订单总价
             }
         }else{
             if (requestCode == REQUEST_LOGIN) { //登录
@@ -391,7 +431,7 @@ public class TrainEditOrderActivity extends AppCompatActivity implements View.On
         final TrainTicketOrderFetch ticketOrderFetch = new TrainTicketOrderFetch(
                 MainActivity.user.getUserId(), name, mobile, detail.departureStation, detail.arrivalStation, detail.trainNum,
                 detail.departureDate, detail.departureTime, detail.arrivalDate, detail.arrivalTime, listContact, seatInfo.seatCode,
-                String.valueOf(Float.parseFloat(seatInfo.floorPrice) * listContact.size()), icon);
+                String.valueOf(Float.parseFloat(seatInfo.floorPrice) * listContact.size()), String.valueOf(icon));
         new Thread(){
             @Override
             public void run() {
@@ -432,7 +472,46 @@ public class TrainEditOrderActivity extends AppCompatActivity implements View.On
 
     //预定须知
     private void reserveNotice() {
-        ToastCommon.toastShortShow(getApplicationContext(), null, "预定须知");
+        Intent intent = new Intent(getApplicationContext(), WebViewActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("data", "http://www.cwly1118.com/uploads/ydxz/ydxz.html");
+        bundle.putInt("type", 3);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        tvTrainInfo = null;
+        tvTicketDate = null;
+        tvArrivalTime = null;
+        tvArrivalStation = null;
+        tvConsumingtime = null;
+        tvStartTime = null;
+        tvStartStation = null;
+        tvAdultCount = null;
+        tvSelectorContacts = null;
+        listViewContacts = null;
+        adapter = null;
+        tvPriceTotal = null;
+        btnPay = null;
+        tvSelectIcon = null;
+        tvPayIcon = null;
+        tvTotalPrice = null;
+        trainBiz = null;
+        info = null;
+        seatInfo = null;
+        detail = null;
+        etLinkName = null;
+        etLinkMobile = null;
+        tvSeatType = null;
+        tvTicketPrice = null;
+        tvSeatSelector = null;
+        tvTitleRight = null;
+        tvTitleLeft = null;
+        tvTitle = null;
+        actionBar = null;
+        parent = null;
+    }
 }

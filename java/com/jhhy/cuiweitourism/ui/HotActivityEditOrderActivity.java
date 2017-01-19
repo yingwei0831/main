@@ -212,7 +212,7 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
             LinkSpanWrapper myURLSpan = new LinkSpanWrapper(url.getURL(), getApplicationContext(), "旅游须知、旅游合同、特别预订提示", null, null, "#28CE9D"){
                 @Override
                 public void onItemTextViewClick(int position, View textView, int id) {
-                    startActivity(new Intent(getApplicationContext(), ReserveNoticeActivity.class));
+                    viewReserveNotice();
                 }
             };
             stylesBuilder.setSpan(myURLSpan, spannable.getSpanStart(url), spannable.getSpanEnd(url), spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -247,7 +247,18 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
         adapter.setCount(count);
         listViewContact.setAdapter(adapter);
     }
-
+    /**
+     * 预定须知
+     */
+    private void viewReserveNotice() {
+        Intent intent = new Intent(getApplicationContext(), ReserveNoticeActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("notice", hotActivityDetail.getYdxz()); //预订须知
+//        bundle.putString("contract", detail.getRemark()); //TODO 加载页面
+        bundle.putString("remark", hotActivityDetail.getFeeinclude()); //费用说明
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
 //    private void calculateContacts() {
 //        addContacts(count);
 //    }
@@ -315,7 +326,6 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
                 finish();
                 break;
             case R.id.tv_travel_edit_order_select_from_city: //选择出发城市
-
                 break;
             case R.id.tv_travel_edit_order_select_traveler: //选择常用联系人,可选择多个联系人
                 if (MainActivity.logged) {
@@ -326,11 +336,7 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
                     intent.putExtras(bundle);
                     startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_SELECT_CONTACT);
                 }else{
-                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("type", 2);
-                    intent.putExtras(bundle);
-                    startActivityForResult(intent, REQUEST_LOGIN);
+                    userLogin();
                 }
                 break;
             case R.id.btn_edit_order_pay: //去付款
@@ -356,10 +362,18 @@ public class HotActivityEditOrderActivity extends BaseActivity implements View.O
                 break;
             case R.id.tv_travel_edit_order_notice: //去往预订须知
 //            case R.id.tv_travel_edit_order_deal:
-                startActivity(new Intent(getApplicationContext(), ReserveNoticeActivity.class));
+                viewReserveNotice();
                 break;
 
         }
+    }
+
+    private void userLogin() {
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("type", 2);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, REQUEST_LOGIN);
     }
 
     private int REQUEST_LOGIN = 2913; //请求登录

@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.jhhy.cuiweitourism.ui.PlaneItemInfoActivity">
+    tools:context="com.jhhy.cuiweitourism.ui.PlaneItemInfoActivity"
+    >
 
     <!--顶部当前航班信息-->
     <LinearLayout
@@ -160,7 +161,9 @@
             android:id="@+id/list_plane_detail"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/transparent"
+            android:background="@android:color/white"
+            android:divider="@color/colorLineGray2"
+            android:dividerHeight="1.2px"
             android:scrollbars="none" />
     </LinearLayout>
 

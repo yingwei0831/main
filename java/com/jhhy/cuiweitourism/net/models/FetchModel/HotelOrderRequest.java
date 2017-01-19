@@ -84,8 +84,14 @@ public class HotelOrderRequest extends BasicFetchModel {
     private String IsGuarantee;
     private String imgurl;
     private List<RoomBean> rooms;
+    private String needjifen;
 
-    public HotelOrderRequest(String uid, String hotelId, String hotelName, String hotelAddress, String hotelCityCode, String hotelCityName, String roomTypeId, String roomTypeName, String ratePlanId, String ratePlanName, String arrivalDate, String departureDate, String passengerType, String paymentType, String numberOfRooms, String numberOfPassengers, String earliestArrivalTime, String latestArrivalTime, String currencyCode, String totalPrice, String passengerIPAddress, String isGuaranteeOrCharged, String confirmationType, String noteToHotel, String noteToSuppler, String isNeedInvoice, ContactBean contact, String daysPrice, String daysBasePrice, String daysBreakfast, String basePrice, String planType, String travelType, String isGuarantee, String imgurl) {
+    public HotelOrderRequest(String uid, String hotelId, String hotelName, String hotelAddress, String hotelCityCode, String hotelCityName,
+                             String roomTypeId, String roomTypeName, String ratePlanId, String ratePlanName, String arrivalDate, String departureDate,
+                             String passengerType, String paymentType, String numberOfRooms, String numberOfPassengers, String earliestArrivalTime,
+                             String latestArrivalTime, String currencyCode, String totalPrice, String passengerIPAddress, String isGuaranteeOrCharged,
+                             String confirmationType, String noteToHotel, String noteToSuppler, String isNeedInvoice, ContactBean contact, String daysPrice,
+                             String daysBasePrice, String daysBreakfast, String basePrice, String planType, String travelType, String isGuarantee, String imgurl, String needJiFen) {
         this.uid = uid;
         HotelId = hotelId;
         HotelName = hotelName;
@@ -121,6 +127,7 @@ public class HotelOrderRequest extends BasicFetchModel {
         TravelType = travelType;
         IsGuarantee = isGuarantee;
         this.imgurl = imgurl;
+        needjifen = needJiFen;
     }
 
     public String getUid() {

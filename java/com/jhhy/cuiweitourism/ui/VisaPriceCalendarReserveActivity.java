@@ -234,7 +234,7 @@ public class VisaPriceCalendarReserveActivity extends BaseActivity implements Vi
 
             case R.id.btn_price_calendar_reserve:
                 if (selectDay) {
-                    Intent intent = new Intent(getApplicationContext(), VisaOrderActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), VisaEditOrderActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putInt("countAdult", countAdult);
                     bundle.putSerializable("detail", detail);

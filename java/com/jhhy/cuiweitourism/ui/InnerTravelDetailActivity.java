@@ -51,6 +51,7 @@ import com.markmao.pulltorefresh.widght.XScrollView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.ShareSDK;
@@ -388,7 +389,7 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
                 if (i == tripDescribe.size() - 1) {
                     viewStep.isLastStep(true);
                 }
-                viewStep.setTvDayText(tripDay.getDay());
+                viewStep.setTvDayText(String.format(Locale.getDefault(), "第%s天", tripDay.getDay()));
                 viewStep.setTvTitleText(tripDay.getTitle());
                 viewStep.setTvContent(tripDay.getDetail());
                 layoutTravelDescribe.addView(viewStep);
@@ -845,6 +846,7 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
     }
 
     private void showShare(Context context) {
+        if (detail == null) return;
         ShareSDK.initSDK(context);
         OnekeyShare oks = new OnekeyShare();
         //关闭sso授权
@@ -857,9 +859,9 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
         // titleUrl是标题的网络链接，仅在人人网和QQ和QQ空间使用
         oks.setTitleUrl(Consts.BASE_SHARE_URL + detail.getId());
         // text是分享文本，所有平台都需要这个字段
-        oks.setText(context.getString(R.string.share_text));
+        oks.setText(detail.getTitle());
         //分享网络图片，新浪微博分享网络图片需要通过审核后申请高级写入接口，否则请注释掉测试新浪微博
-//        oks.setImageUrl("http://f1.sharesdk.cn/imgs/2014/02/26/owWpLZo_638x960.jpg");
+        oks.setImageUrl(detail.getPictureList().get(0));
         // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
         oks.setImagePath(WelcomeActivity.TEST_IMAGE);//确保SDcard下面存在此张图片
         // url仅在微信（包括好友和朋友圈）中使用
@@ -874,7 +876,7 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
             @Override
             public void onShare(Platform platform, cn.sharesdk.framework.Platform.ShareParams paramsToShare) {
                 if ("SinaWeibo".equals(platform.getName())) {
-                    paramsToShare.setText(getApplicationContext().getString(R.string.share_text) + "\n" + Consts.BASE_SHARE_URL + detail.getId());
+                    paramsToShare.setText(detail.getTitle() + "\n" + Consts.BASE_SHARE_URL + detail.getId());
                 }
             }
         });

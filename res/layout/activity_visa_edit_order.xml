@@ -270,7 +270,7 @@
                 android:background="@android:color/white"
                 android:orientation="vertical"
                 android:visibility="visible">
-
+                <!--旅游币-->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -294,8 +294,9 @@
                         android:paddingTop="16dp"
                         android:text="1旅游币可抵1元" />
                 </LinearLayout>
-
+                <!--发票-->
                 <RelativeLayout
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -331,15 +332,17 @@
                         android:paddingTop="16dp"
                         android:text="不需要发票" />
                 </RelativeLayout>
-
+                <!--预定须知-->
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1.2px"
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
-                    android:background="@color/colorLineGray2" />
-
+                    android:background="@color/colorLineGray2"
+                    android:visibility="gone"/>
+                <!--预定须知-->
                 <LinearLayout
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -471,12 +474,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="1.2px"
                     android:background="@color/colorLineGray2" />
-
+                <!--预订须知-->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:visibility="gone">
 
                     <CheckBox
                         android:id="@+id/cb_travel_edit_order_deal"

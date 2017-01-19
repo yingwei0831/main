@@ -4,9 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -16,13 +14,11 @@ import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.OnItemTextViewClick;
 import com.jhhy.cuiweitourism.R;
-import com.jhhy.cuiweitourism.biz.VisaBiz;
 import com.jhhy.cuiweitourism.dialog.TourismCoinActivity;
 import com.jhhy.cuiweitourism.model.Invoice;
 import com.jhhy.cuiweitourism.model.Order;
 import com.jhhy.cuiweitourism.model.User;
 import com.jhhy.cuiweitourism.model.UserContacts;
-import com.jhhy.cuiweitourism.model.VisaDetail;
 import com.jhhy.cuiweitourism.net.biz.VisaActionBiz;
 import com.jhhy.cuiweitourism.net.models.FetchModel.VisaOrderRequest;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
@@ -40,10 +36,11 @@ import com.just.sun.pricecalendar.ToastCommon;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
-public class VisaOrderActivity extends BaseActionBarActivity implements OnItemTextViewClick {
+public class VisaEditOrderActivity extends BaseActionBarActivity implements OnItemTextViewClick {
 
-    private String TAG = VisaOrderActivity.class.getSimpleName();
+    private String TAG = "VisaEditOrderActivity";
 
     private int countAdult; //成人
     private VisaDetailInfo detail; //旅游详情
@@ -85,6 +82,12 @@ public class VisaOrderActivity extends BaseActionBarActivity implements OnItemTe
     private Invoice  invoiceCommit = null; //提交的发票信息
     private int priceTotal; //订单总金额
 
+    private TextView tvSelectIcon; //选择旅游币
+    private TextView tvPayIcon; //旅游币个数
+    private TextView tvTotalPrice; //商品总金额
+//    private int icon; //积分支付
+
+
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -111,19 +114,9 @@ public class VisaOrderActivity extends BaseActionBarActivity implements OnItemTe
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-//        //获取ActionBar对象
-//        ActionBar bar =  getSupportActionBar();
-//        //自定义一个布局，并居中
-//        bar.setDisplayShowCustomEnabled(true);
-//        View v = LayoutInflater.from(getApplicationContext()).inflate(R.layout.title_tab1_inner_travel, null);
-//        bar.setCustomView(v, new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT));
-
         setContentView(R.layout.activity_visa_edit_order);
         getData();
         super.onCreate(savedInstanceState);
-
-//        setupView();
-//        addListener();
     }
 
     private void getData() {
@@ -156,17 +149,21 @@ public class VisaOrderActivity extends BaseActionBarActivity implements OnItemTe
 
         tvTravelIcon = (TextView) findViewById(R.id.tv_travel_edit_order_icon);
         tvInvoice = (TextView) findViewById(R.id.tv_travel_edit_order_invoice);
-        tvReserveNotice = (TextView) findViewById(R.id.tv_travel_edit_order_notice);
+        tvReserveNotice = (TextView) findViewById(R.id.tv_travel_edit_order_notice); //预定规则
+        tvReserveNotice.setVisibility(View.GONE);
 
         cbDeal = (CheckBox) findViewById(R.id.cb_travel_edit_order_deal); //条款
         tvDeal = (TextView) findViewById(R.id.tv_travel_edit_order_deal); //进入条款内容
 
+        tvSelectIcon = (TextView) findViewById(R.id.tv_travel_edit_order_icon); //选择旅游币
+        tvPayIcon = (TextView) findViewById(R.id.tv_inner_travel_total_price_icon); //旅游币个数
+        tvTotalPrice = (TextView) findViewById(R.id.tv_inner_travel_currency_price); //商品总金额
         tvPriceTotal = (TextView) findViewById(R.id.tv_edit_order_price); //订单总金额
+        tvTotalPrice.setText(String.valueOf(priceTotal));
         tvPriceTotal.setText(String.valueOf(priceTotal));
         btnPay = (Button) findViewById(R.id.btn_edit_order_pay); //去往立即支付
 
-        int totalCustom = countAdult;
-
+//        int totalCustom = countAdult;
 //        for (int i = 0; i < totalCustom; i++) {
 //            View viewCustom = LayoutInflater.from(getApplicationContext()).inflate(R.layout.layout_traveler, null);
 //            final TextView tvName = (TextView) viewCustom.findViewById(R.id.tv_travel_edit_order_name);
@@ -219,6 +216,7 @@ public class VisaOrderActivity extends BaseActionBarActivity implements OnItemTe
         tvTravelIcon.setOnClickListener(this);
         tvInvoice.setOnClickListener(this);
         tvReserveNotice.setOnClickListener(this);
+        tvSelectIcon.setOnClickListener(this);
     }
 
     @Override
@@ -242,15 +240,11 @@ public class VisaOrderActivity extends BaseActionBarActivity implements OnItemTe
                 if (MainActivity.logged) {
                     Intent intent1 = new Intent(getApplicationContext(), TourismCoinActivity.class);
                     Bundle bundle1 = new Bundle();
-//                bundle1.putString("needScore", detail.getJifentprice()); //本次订单可以用的最多旅游币
+                    bundle1.putString("needScore", String.valueOf(priceTotal - 1)); //本次订单可以用的最多旅游币
                     intent1.putExtras(bundle1);
                     startActivityForResult(intent1, Consts.REQUEST_CODE_RESERVE_SELECT_COIN);
                 }else{
-                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("type", 2);
-                    intent.putExtras(bundle);
-                    startActivityForResult(intent, REQUEST_LOGIN);
+                    userLogin();
                 }
                 break;
             case R.id.tv_travel_edit_order_invoice: //是否需要发票
@@ -264,11 +258,32 @@ public class VisaOrderActivity extends BaseActionBarActivity implements OnItemTe
                 invoice.putExtras(bundleI);
                 startActivityForResult(invoice, Consts.REQUEST_CODE_RESERVE_SELECT_INVOICE);
                 break;
-            case R.id.tv_travel_edit_order_notice: //去往预订须知
-                startActivity(new Intent(getApplicationContext(), ReserveNoticeActivity.class));
-                break;
+//            case R.id.tv_travel_edit_order_notice: //去往预订须知
+//                viewReserveNotice();
+//                break;
         }
     }
+
+    private void userLogin() {
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("type", 2);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, REQUEST_LOGIN);
+    }
+
+    /**
+     * 预定须知
+     */
+//    private void viewReserveNotice() {
+//        Intent intent = new Intent(getApplicationContext(), ReserveNoticeActivity.class);
+//        Bundle bundle = new Bundle();
+//        bundle.putString("notice", detail.getRemark()); //预订须知
+//        bundle.putString("contract", detail.getRemark()); //TODO 加载页面
+//        bundle.putString("remark", detail.getStandard()); //费用说明
+//        intent.putExtras(bundle);
+//        startActivity(intent);
+//    }
 
     private int REQUEST_LOGIN = 2913; //请求登录
 
@@ -313,8 +328,8 @@ public class VisaOrderActivity extends BaseActionBarActivity implements OnItemTe
                 Bundle bundle = data.getExtras();
                 priceIcon = bundle.getInt("score");
                 tvTravelIcon.setText(String.valueOf(priceIcon));
-                tvPriceIcon.setText(String.valueOf(priceIcon));
-                tvPriceTotal.setText(String.valueOf(priceTotal - priceIcon));
+                tvPriceIcon.setText(String.format(Locale.getDefault(), "%d个", priceIcon));
+                tvPriceTotal.setText(String.format(Locale.getDefault(), "%d", priceTotal - priceIcon));
             } else if (requestCode == Consts.REQUEST_CODE_RESERVE_SELECT_INVOICE){ //选择是否开发票
                 Bundle bundle = data.getExtras();
 
@@ -334,7 +349,6 @@ public class VisaOrderActivity extends BaseActionBarActivity implements OnItemTe
                     }else{
                         tvInvoice.setText("个人");
                     }
-
                 }
             } else if (requestCode == Consts.REQUEST_CODE_RESERVE_PAY) { //订单生成成功，去支付成功
                 setResult(RESULT_OK);
@@ -355,65 +369,69 @@ public class VisaOrderActivity extends BaseActionBarActivity implements OnItemTe
      * 去支付页面
      */
     private void goToPay() {
-        LoadingIndicator.show(VisaOrderActivity.this, getString(R.string.http_notice));
-        String name = etContactName.getText().toString();
-        String mobile = etContactTel.getText().toString();
-        String mail = etContactMail.getText().toString();
-        String remark = etContactRemark.getText().toString();
-        if (TextUtils.isEmpty(name)) {
-            ToastCommon.toastShortShow(getApplicationContext(), null, "联系人不能为空");
-            etContactName.requestFocus();
-            LoadingIndicator.cancel();
-            return;
-        }
-        if(TextUtils.isEmpty(mobile) ){
-            ToastCommon.toastShortShow(getApplicationContext(), null, "联系人手机号码不能为空");
-            etContactTel.requestFocus();
-            LoadingIndicator.cancel();
-            return;
-        }
-        if (TextUtils.isEmpty(mail)){
-            ToastCommon.toastShortShow(getApplicationContext(), null, "联系人邮件不能为空");
-            etContactMail.requestFocus();
-            LoadingIndicator.cancel();
-            return;
-        }
-        String needInvoice = invoiceTag == 1 ? "0" : "1";
-        String useIcon;
-        if (priceIcon == 0){
-            useIcon = "0";
-        }else{
-            useIcon = "1";
-        }
-
-        //提交订单，并进入支付页面
-        VisaActionBiz biz = new VisaActionBiz();
-        VisaOrderRequest request = new VisaOrderRequest(MainActivity.user.getUserId(),
-                detail.getVisaName(), detail.getVisaPrice(),
-                selectGroupDeadline.getDate(), String.valueOf(countAdult),
-                name, mobile, mail);
-        biz.setVisaOrder(request, new BizGenericCallback<VisaOrderResponse>() {
-            @Override
-            public void onCompletion(GenericResponseModel<VisaOrderResponse> model) {
-                Intent intent = new Intent(getApplicationContext(), SelectPaymentActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("order", model.body);
-                bundle.putInt("type", 22);
-                intent.putExtras(bundle);
-                startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_PAY); //订单生成成功，去支付
+        if (MainActivity.logged) {
+            LoadingIndicator.show(VisaEditOrderActivity.this, getString(R.string.http_notice));
+            String name = etContactName.getText().toString();
+            String mobile = etContactTel.getText().toString();
+            String mail = etContactMail.getText().toString();
+            String remark = etContactRemark.getText().toString();
+            if (TextUtils.isEmpty(name)) {
+                ToastCommon.toastShortShow(getApplicationContext(), null, "联系人不能为空");
+                etContactName.requestFocus();
                 LoadingIndicator.cancel();
+                return;
+            }
+            if (TextUtils.isEmpty(mobile)) {
+                ToastCommon.toastShortShow(getApplicationContext(), null, "联系人手机号码不能为空");
+                etContactTel.requestFocus();
+                LoadingIndicator.cancel();
+                return;
+            }
+            if (TextUtils.isEmpty(mail)) {
+                ToastCommon.toastShortShow(getApplicationContext(), null, "联系人邮件不能为空");
+                etContactMail.requestFocus();
+                LoadingIndicator.cancel();
+                return;
+            }
+            String needInvoice = invoiceTag == 1 ? "0" : "1";
+            String useIcon;
+            if (priceIcon == 0) {
+                useIcon = "0";
+            } else {
+                useIcon = "1";
             }
 
-            @Override
-            public void onError(FetchError error) {
-                if (error.localReason != null){
-                    ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
-                }else{
-                    ToastCommon.toastShortShow(getApplicationContext(), null, "预定出错，请重试");
+            //提交订单，并进入支付页面
+            VisaActionBiz biz = new VisaActionBiz();
+            VisaOrderRequest request = new VisaOrderRequest(MainActivity.user.getUserId(),
+                    detail.getVisaName(), detail.getVisaPrice(),
+                    selectGroupDeadline.getDate(), String.valueOf(countAdult),
+                    name, mobile, mail, String.valueOf(priceIcon));
+            biz.setVisaOrder(request, new BizGenericCallback<VisaOrderResponse>() {
+                @Override
+                public void onCompletion(GenericResponseModel<VisaOrderResponse> model) {
+                    Intent intent = new Intent(getApplicationContext(), SelectPaymentActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("order", model.body);
+                    bundle.putInt("type", 22);
+                    intent.putExtras(bundle);
+                    startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_PAY); //订单生成成功，去支付
+                    LoadingIndicator.cancel();
                 }
-                LoadingIndicator.cancel();
-            }
-        });
+
+                @Override
+                public void onError(FetchError error) {
+                    if (error.localReason != null) {
+                        ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
+                    } else {
+                        ToastCommon.toastShortShow(getApplicationContext(), null, "预定出错，请重试");
+                    }
+                    LoadingIndicator.cancel();
+                }
+            });
+        }else{
+            userLogin();
+        }
 //        VisaBiz biz = new VisaBiz(getApplicationContext(), handler);
 //        biz.doReserveVisa(MainActivity.user.getUserId(), detail.getId(), detail.getVisatype(), detail.getPrice(),
 //                selectGroupDeadline.getDate(), String.valueOf(countAdult), name, mobile, mail, needInvoice, invoiceCommit,

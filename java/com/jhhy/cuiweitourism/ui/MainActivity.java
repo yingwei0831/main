@@ -547,6 +547,9 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
         builder.setCancelable(true);
 
         Dialog noticeDialog = builder.create();
+        if (this.isFinishing()){
+            return;
+        }
         noticeDialog.show();
     }
     /* 更新进度条 */
@@ -689,7 +692,8 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
+        LoginBiz biz = new LoginBiz(null, null);
+        biz.logout(null);
         logged = false;
         unregisterReceiver(receiver);
 

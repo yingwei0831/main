@@ -504,7 +504,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
-            android:name=".ui.VisaOrderActivity"
+            android:name=".ui.VisaEditOrderActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/ActionBarTheme"

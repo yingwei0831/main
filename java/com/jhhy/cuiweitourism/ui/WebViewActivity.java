@@ -56,6 +56,11 @@ public class WebViewActivity extends BaseActionBarActivity {
         if (intent != null){
             Bundle bundle = intent.getExtras();
             if (bundle != null){
+                type = bundle.getInt("type");
+                if (type == 3){
+                    url = bundle.getString("data");
+                    return;
+                }
                 CuiweiInfoResponse item = (CuiweiInfoResponse) bundle.getSerializable("data");
                 if (item != null){
                     url = item.getUrl();
@@ -118,10 +123,14 @@ public class WebViewActivity extends BaseActionBarActivity {
     @Override
     protected void setupView() {
         super.setupView();
-        if (item == null) {
-            tvTitle.setText("法律声明");
-        }else{
-            tvTitle.setText(item.getTitle());
+        if (type == 3){
+            tvTitle.setText("预订须知");
+        }else {
+            if (item == null) {
+                tvTitle.setText("法律声明");
+            } else {
+                tvTitle.setText(item.getTitle());
+            }
         }
         progressBar = (ProgressBar) findViewById(R.id.progressBar1);
         webView = (WebView) findViewById(R.id.about_web_view);

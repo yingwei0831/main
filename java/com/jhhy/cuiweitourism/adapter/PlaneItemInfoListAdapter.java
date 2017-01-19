@@ -42,6 +42,7 @@ public abstract class PlaneItemInfoListAdapter extends MyBaseAdapter implements 
             holder.tvRefundNotice = (TextView) view.findViewById(R.id.tv_plane_ticket_refund);
             holder.btnReserveTicket = (Button) view.findViewById(R.id.btn_plane_ticket_reserve);
             holder.tvTaxPrice = (TextView) view.findViewById(R.id.tv_tax_price);
+            holder.viewGreen = view.findViewById(R.id.view_green);
             view.setTag(holder);
         }else {
             holder = (ViewHolder) view.getTag();
@@ -80,6 +81,7 @@ public abstract class PlaneItemInfoListAdapter extends MyBaseAdapter implements 
             holder.tvTicketPrice.setText(String.format("￥%s", cabin.totalFare.taxTotal)); //票面价 cabin.baseFare.faceValueTotal ; 含税总价：hf.cabin.totalFare.taxTotal
             holder.tvTaxPrice.setText(String.format("税费：￥%s", cabin.passengerType.taxTypeCodeMap.get("XT").price)); //税费xxx; 含税总价；
         }else{
+            holder.viewGreen.setVisibility(View.GONE);
             PlaneTicketInfoOfChina.SeatItemInfo seatItem = (PlaneTicketInfoOfChina.SeatItemInfo) getItem(i);
             holder.tvTypeSeat.setText(String.format("%s%s折", seatItem.seatMsg, seatItem.discount));
             holder.tvTicketPrice.setText(String.format("￥%s", seatItem.parPrice));
@@ -93,5 +95,6 @@ public abstract class PlaneItemInfoListAdapter extends MyBaseAdapter implements 
         private TextView tvRefundNotice;
         private Button btnReserveTicket;
         private TextView tvTaxPrice;
+        private View viewGreen;
     }
 }

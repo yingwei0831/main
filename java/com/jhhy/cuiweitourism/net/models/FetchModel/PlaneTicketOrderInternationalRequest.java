@@ -36,9 +36,10 @@ public class PlaneTicketOrderInternationalRequest extends BasicFetchModel{
     private String TravelType;
     private List<List<PlaneTicketInternationalPolicyCheckRequest.IFlight>> InterFlights; //单程1条，往返2条
     private List<PassengersBean> Passengers;
+    private String needjifen;
 
     public PlaneTicketOrderInternationalRequest(String uid, String linkman, String linktel, String policyId, String platCode, String accountLevel, String balanceMoney, String platformType, String travelType,
-                                                String from, String to, List<List<PlaneTicketInternationalPolicyCheckRequest.IFlight>> interFlights, List<PassengersBean> passengers) {
+                                                String from, String to, List<List<PlaneTicketInternationalPolicyCheckRequest.IFlight>> interFlights, List<PassengersBean> passengers, String needJiFen) {
         this.uid = uid;
         this.linkman = linkman;
         this.linktel = linktel;
@@ -52,6 +53,7 @@ public class PlaneTicketOrderInternationalRequest extends BasicFetchModel{
         this.to = to;
         InterFlights = interFlights;
         Passengers = passengers;
+        needjifen= needJiFen;
     }
 
     public String getFrom() {

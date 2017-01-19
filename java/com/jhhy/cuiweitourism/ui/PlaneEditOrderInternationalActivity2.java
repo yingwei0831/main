@@ -24,6 +24,7 @@ import com.jhhy.cuiweitourism.OnItemTextViewClick;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.OrderEditContactsAdapter;
 import com.jhhy.cuiweitourism.adapter.PlaneInfoInternationalAdapter;
+import com.jhhy.cuiweitourism.dialog.TourismCoinActivity;
 import com.jhhy.cuiweitourism.model.User;
 import com.jhhy.cuiweitourism.model.UserContacts;
 import com.jhhy.cuiweitourism.net.biz.PlaneTicketActionBiz;
@@ -31,6 +32,7 @@ import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneOrderOfChinaRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketInternationalChangeBack;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketInternationalPolicyCheckRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.PlaneTicketOrderInternationalRequest;
+import com.jhhy.cuiweitourism.net.models.FetchModel.TrainTicketOrderFetch;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneOrderOfChinaResponse;
@@ -103,7 +105,14 @@ public class PlaneEditOrderInternationalActivity2 extends AppCompatActivity impl
     private PlaneTicketInternationalPolicyResponse checkResponse; //验价返回数据
     private PlaneOrderOfChinaResponse info; //提交订单，返回，格式与国内相同
 
-    private ArrayList listContact = new ArrayList(); //联系人
+    private ArrayList<PlaneTicketOrderInternationalRequest.PassengersBean> listContact = new ArrayList<>(); //联系人
+
+    private TextView tvSelectIcon; //选择旅游币
+    private TextView tvPayIcon; //旅游币个数
+    private TextView tvTotalPrice; //商品总金额
+    private int icon; //积分支付
+    private float unitPrice; //订单总金额
+
 
     private Handler handler = new Handler(){
         @Override
@@ -219,7 +228,7 @@ public class PlaneEditOrderInternationalActivity2 extends AppCompatActivity impl
         TextView tvPrice = (TextView) findViewById(R.id.tv_plane_total_price); //总价
         tvTicketPrice.setText(String.format(Locale.getDefault(), "￥%.2f", Float.parseFloat(cabin.baseFare.faceValueTotal))); //票价(票面价)
         tvTax.setText(String.format(Locale.getDefault(), "￥%.2f", Float.parseFloat(cabin.passengerType.taxTypeCodeMap.get("XT").price))); //税费
-        tvPrice.setText(String.format(Locale.getDefault(), "￥%.2f", Float.parseFloat(cabin.totalFare.taxTotal))); //总价（单张票总价）
+        tvPrice.setText(String.format(Locale.getDefault(), "￥%.2f", unitPrice)); //总价（单张票总价）
 
         tvRefundNotice = (TextView) findViewById(R.id.tv_plane_refund_notice); //退改签说明
 
@@ -232,8 +241,14 @@ public class PlaneEditOrderInternationalActivity2 extends AppCompatActivity impl
         cbDelayCost     = (CheckBox) findViewById(R.id.rb_plane_order_delay_insurance);
         cbAccidentCost  = (CheckBox) findViewById(R.id.rb_plane_order_accident_insurance);
 
+        tvSelectIcon = (TextView) findViewById(R.id.tv_travel_edit_order_icon); //选择旅游币
+        tvPayIcon = (TextView) findViewById(R.id.tv_inner_travel_total_price_icon); //旅游币个数
+        tvTotalPrice = (TextView) findViewById(R.id.tv_inner_travel_currency_price); //商品总金额
         tvPriceTotal = (TextView) findViewById(R.id.tv_edit_order_price); //订单总金额
-        tvPriceTotal.setText(String.format(Locale.getDefault(), "%.2f", listContact.size() * (Float.parseFloat(cabin.totalFare.taxTotal))));
+        tvTotalPrice.setText(String.format(Locale.getDefault(), "%.2f",
+                listContact.size() * (unitPrice))); //商品总金额
+        tvPriceTotal.setText(String.format(Locale.getDefault(), "%.2f",
+                listContact.size() * (unitPrice) - icon)); //订单总金额
         ivArrowTop = (ImageView) findViewById(R.id.iv_edit_order_arrow_top); //点击查看订单金额详情
         btnPay = (Button) findViewById(R.id.btn_edit_order_pay); //去往立即支付
 
@@ -327,6 +342,8 @@ public class PlaneEditOrderInternationalActivity2 extends AppCompatActivity impl
             }
             interFlights.add(iFlightsMultiply);
         }
+
+        unitPrice = Float.parseFloat(cabin.totalFare.taxTotal); //单价（不含税）
     }
 
     private void addListener() {
@@ -337,6 +354,7 @@ public class PlaneEditOrderInternationalActivity2 extends AppCompatActivity impl
         btnPay.setOnClickListener(this);
         cbAccidentCost.setOnCheckedChangeListener(this);
         cbDelayCost.setOnCheckedChangeListener(this);
+        tvSelectIcon.setOnClickListener(this);
     }
 
     @Override
@@ -347,6 +365,9 @@ public class PlaneEditOrderInternationalActivity2 extends AppCompatActivity impl
                 break;
             case R.id.tv_plane_refund_notice: //退改签说明
                 changeBack();
+                break;
+            case R.id.tv_travel_edit_order_icon: //TODO 选择旅游币
+                selectIcon();
                 break;
             case R.id.tv_plane_add_passenger: //添加乘客
                 if (MainActivity.logged) {
@@ -374,6 +395,30 @@ public class PlaneEditOrderInternationalActivity2 extends AppCompatActivity impl
             case R.id.btn_edit_order_pay: //立即支付
                 goToPay();
                 break;
+        }
+    }
+
+    /**
+     * 选择旅游币
+     */
+    private void selectIcon() {
+        if (MainActivity.logged) {
+            if (listContact.size() > 0) {
+                float totalPrice = listContact.size() * unitPrice;
+                Intent intent = new Intent(getApplicationContext(), TourismCoinActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("needScore", String.format(Locale.getDefault(), "%d", (int) totalPrice - 1)); //本次订单可以用的最多旅游币
+                intent.putExtras(bundle);
+                startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_SELECT_COIN);
+            }else{
+                ToastCommon.toastShortShow(getApplicationContext(), null, "请先添加乘客");
+            }
+        }else{
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putInt("type", 2);
+            intent.putExtras(bundle);
+            startActivityForResult(intent, REQUEST_LOGIN);
         }
     }
 
@@ -454,14 +499,32 @@ public class PlaneEditOrderInternationalActivity2 extends AppCompatActivity impl
 
         if (resultCode == RESULT_OK){
             if (requestCode == Consts.REQUEST_CODE_RESERVE_SELECT_CONTACT){ //选择常用联系人
+                boolean doubleContact = false;
                 Bundle bundle = data.getExtras();
                 ArrayList<UserContacts> listSelection = bundle.getParcelableArrayList("selection");
                 if (listSelection != null) {
                     for (UserContacts contact : listSelection) {
-                        PlaneTicketOrderInternationalRequest.PassengersBean contactTrain =
-                                new PlaneTicketOrderInternationalRequest.PassengersBean(
-                                        contact.getContactsName(), "1", "2", contact.getContactsIdCard(), contact.getContactsMobile(), cabin.passengerType.faceValue, cabin.baseFare.faceValueTotal, "", "", "", cabin.passengerType.taxTypeCodeMap.get("XT").price);
-                        listContact.add(contactTrain);
+                        //判断联系人是否在选，再加入联系人列表
+                        if (listContact.size() != 0){
+                            for (int j = 0; j < listContact.size(); j++){
+                                PlaneTicketOrderInternationalRequest.PassengersBean contactSelect = listContact.get(j);
+                                if (contactSelect.getName().equals(contact.getContactsName())){ //如果存在姓名，则跳出循环，如果循环执行完毕，则执行添加
+                                    doubleContact = true;
+                                    break;
+                                }
+                            }
+                            if (!doubleContact){
+                                PlaneTicketOrderInternationalRequest.PassengersBean contactTrain =
+                                        new PlaneTicketOrderInternationalRequest.PassengersBean(
+                                                contact.getContactsName(), "1", "2", contact.getContactsIdCard(), contact.getContactsMobile(), cabin.passengerType.faceValue, cabin.baseFare.faceValueTotal, "", "", "", cabin.passengerType.taxTypeCodeMap.get("XT").price);
+                                listContact.add(contactTrain);
+                            }
+                        }else{
+                            PlaneTicketOrderInternationalRequest.PassengersBean contactTrain =
+                                    new PlaneTicketOrderInternationalRequest.PassengersBean(
+                                            contact.getContactsName(), "1", "2", contact.getContactsIdCard(), contact.getContactsMobile(), cabin.passengerType.faceValue, cabin.baseFare.faceValueTotal, "", "", "", cabin.passengerType.taxTypeCodeMap.get("XT").price);
+                            listContact.add(contactTrain);
+                        }
                     }
                     adapter.setData(listContact);
                     adapter.notifyDataSetChanged();
@@ -479,6 +542,12 @@ public class PlaneEditOrderInternationalActivity2 extends AppCompatActivity impl
                     SharedPreferencesUtils sp = SharedPreferencesUtils.getInstance(getApplicationContext());
                     sp.saveUserId(user.getUserId());
                 }
+            }else if (requestCode == Consts.REQUEST_CODE_RESERVE_SELECT_COIN){ //选择旅游币
+                Bundle bundle = data.getExtras();
+                icon = bundle.getInt("score");
+                tvSelectIcon.setText(String.format(Locale.getDefault(), "%s个", icon));
+                tvPayIcon.setText(String.valueOf(icon));
+                calculateTotalPrice();
             }
         }else{
             if (requestCode == REQUEST_LOGIN) { //登录
@@ -495,7 +564,10 @@ public class PlaneEditOrderInternationalActivity2 extends AppCompatActivity impl
         if (cbDelayCost.isChecked()){
             dcPrice = priceDelayCost * listContact.size();
         }
-        tvPriceTotal.setText(String.format(Locale.getDefault(), "%.2f", listContact.size() * (Float.parseFloat(cabin.totalFare.taxTotal) + acPrice + dcPrice)));
+        tvPriceTotal.setText(String.format(Locale.getDefault(), "%.2f",
+                listContact.size() * (unitPrice + acPrice + dcPrice) - icon)); //订单总价
+        tvTotalPrice.setText(String.format(Locale.getDefault(), "%.2f",
+                listContact.size() * (unitPrice))); //商品总金额
     }
 
     @Override
@@ -558,8 +630,10 @@ public class PlaneEditOrderInternationalActivity2 extends AppCompatActivity impl
                 super.run();
 
                 PlaneTicketOrderInternationalRequest request = new PlaneTicketOrderInternationalRequest(MainActivity.user.getUserId(), name, mobile, checkResponse.getPolicys().getPolicy().getPolicyId(),
-                        checkResponse.getPolicys().getPolicy().getPlatCode(), checkResponse.getPolicys().getPolicy().getAccountLevel(), checkResponse.getPolicys().getPolicy().getSettlePrice(),
-                        checkResponse.getPolicys().getPolicy().getPlatformType(), travelType, fromCity.getCode(), toCity.getCode(), interFlights, listContact);
+                        checkResponse.getPolicys().getPolicy().getPlatCode(), checkResponse.getPolicys().getPolicy().getAccountLevel(),
+//                        checkResponse.getPolicys().getPolicy().getSettlePrice(),
+                        checkResponse.getPolicys().getPolicy().getPrice(),
+                        checkResponse.getPolicys().getPolicy().getPlatformType(), travelType, fromCity.getCode(), toCity.getCode(), interFlights, listContact, String.valueOf(icon));
                 planeBiz.planeTicketOrderInternational(request, new BizGenericCallback<PlaneOrderOfChinaResponse>() {
                     @Override
                     public void onCompletion(GenericResponseModel<PlaneOrderOfChinaResponse> model) {
