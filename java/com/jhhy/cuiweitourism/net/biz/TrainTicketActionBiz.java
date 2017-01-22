@@ -120,20 +120,20 @@ public class TrainTicketActionBiz extends BasicActionBiz {
             @Override
             public void onCompletion(FetchResponseModel response) {
                 ArrayList<ArrayList<String>> array = parseJsonTotwoLevelArray(response);
-                ArrayList<TrainStationInfo> statios = new ArrayList<TrainStationInfo>();
+                ArrayList<TrainStationInfo> stations = new ArrayList<TrainStationInfo>();
                 for (ArrayList<String> station : array){
                     TrainStationInfo itemStation = new TrainStationInfo();
                     itemStation.id = station.get(0);
                     itemStation.name = station.get(1);
                     itemStation.fullPY = station.get(2);
                     itemStation.shortPY = station.get(3);
-                    itemStation.isHot = Integer.parseInt(station.get(4)) > 0 ? true : false;
-                    itemStation.headChar = itemStation.fullPY.substring(0,1).toUpperCase();
+                    itemStation.isHot = Integer.parseInt(station.get(4)) > 0;
+                    itemStation.headChar = itemStation.fullPY.substring(0, 1).toUpperCase();
                     itemStation.type = 0;
-                    statios.add(itemStation);
+                    stations.add(itemStation);
                 }
 
-                GenericResponseModel<ArrayList<TrainStationInfo>> model = new GenericResponseModel<>(response.head, statios);
+                GenericResponseModel<ArrayList<TrainStationInfo>> model = new GenericResponseModel<>(response.head, stations);
                 this.bizCallback.onCompletion(model);
             }
 

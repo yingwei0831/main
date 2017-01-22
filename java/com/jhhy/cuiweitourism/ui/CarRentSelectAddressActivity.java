@@ -190,14 +190,14 @@ public class CarRentSelectAddressActivity extends BaseActivity implements Adapte
 
     @Override
     public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-        if(TextUtils.isEmpty(charSequence)){
-            adapter.setData(list);
-        }
+
     }
 
     @Override
     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+        if(TextUtils.isEmpty(charSequence)){
+            adapter.setData(list);
+        }
     }
 
     @Override

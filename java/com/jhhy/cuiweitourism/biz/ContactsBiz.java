@@ -76,6 +76,17 @@ public class ContactsBiz {
 //{"head":{"res_code":"0000","res_msg":"success","res_arg":"获取成功"},"body":[
 // {"id":"19","memberid":"1","linkman":"姓名","mobile":"15933424245","idcard":"身份证号","cardtype":"证件类型","sex":"0","passport":护照号},
 // {"id":"20","memberid":"1","linkman":"李小妹","mobile":"15252525425","idcard":"图的","cardtype":"身份证","sex":"0","passport":null}]}
+//                    {
+//                        "id": "150",
+//                        "enname": "",
+//                        "memberid": "73",
+//                        "linkman": "李玉生",
+//                        "mobile": "15210656911",
+//                        "idcard": "211382198908302912",
+//                        "cardtype": "身份证",
+//                        "sex": "女",
+//                        "passport": "还会更丰富"
+//                    }
                     JSONArray bodyAry = resultObj.getJSONArray(Consts.KEY_BODY);
                     List<UserContacts> listContacts = null;
                     if (bodyAry != null && bodyAry.length() != 0) {
@@ -84,10 +95,13 @@ public class ContactsBiz {
                             JSONObject contactsObj = bodyAry.getJSONObject(i);
                             UserContacts contacts = new UserContacts();
                             contacts.setContactsId(contactsObj.getString(Consts.KEY_ID));
+                            contacts.setEnglishName(contactsObj.getString("enname"));
                             contacts.setContactsMemberId(contactsObj.getString("memberid"));
                             contacts.setContactsName(contactsObj.getString("linkman"));
                             contacts.setContactsMobile(contactsObj.getString(Consts.KEY_USER_MOBILE));
                             contacts.setContactsIdCard(contactsObj.getString("idcard"));
+                            contacts.setContactsCardType(contactsObj.getString("cardtype"));
+                            contacts.setContactsGender(contactsObj.getString("sex"));
                             contacts.setContactsPassport(contactsObj.getString("passport"));
                             listContacts.add(contacts);
                         }
@@ -111,7 +125,8 @@ public class ContactsBiz {
 
     private String CODE_SAVE_CONTACTS = "User_contactsadd";
 
-    //    {"head":{"code":"User_contactsadd"},"field":{"mid":"1","linkman":"张三","mobile":"13865826547","idcard":"211382198908205489","passport":"BJ123456"}}
+//    {"mid":"1","linkman":"张三","mobile":"13865826547","idcard":"211382198908205489","passport":"BJ123456"}
+//    {"mid":"1","linkman":"张三","mobile":"13865826547","idcard":"211382198908205489","passport":"BJ123456","enname":"zhangsan","sex":"0"} //0:女，1:男
     public void saveContacts(final UserContacts contacts) {
         if (NetworkUtil.checkNetwork(context)) {
             new Thread() {
@@ -124,6 +139,8 @@ public class ContactsBiz {
                     fieldMap.put("linkman", contacts.getContactsName());
                     fieldMap.put(Consts.KEY_USER_MOBILE, contacts.getContactsMobile());
                     fieldMap.put("idcard", contacts.getContactsIdCard());
+                    fieldMap.put("enname", contacts.getEnglishName());
+                    fieldMap.put("sex", contacts.getContactsGender());
                     String pass = contacts.getContactsPassport();
                     if (pass != null) {
                         fieldMap.put("passport", pass);
@@ -189,6 +206,8 @@ public class ContactsBiz {
                     fieldMap.put("linkman", contacts.getContactsName());
                     fieldMap.put(Consts.KEY_USER_MOBILE, contacts.getContactsMobile());
                     fieldMap.put("idcard", contacts.getContactsIdCard());
+                    fieldMap.put("enname", contacts.getEnglishName());
+                    fieldMap.put("sex", contacts.getContactsGender());
                     String pass = contacts.getContactsPassport();
                     if (pass != null) {
                         fieldMap.put("passport", pass);

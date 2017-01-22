@@ -1,6 +1,8 @@
 package com.jhhy.cuiweitourism.ui;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,7 +10,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.text.Html;
+import android.text.TextUtils;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -58,9 +62,9 @@ import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.onekeyshare.OnekeyShare;
 import cn.sharesdk.onekeyshare.ShareContentCustomizeCallback;
 
-public class InnerTravelDetailActivity extends BaseActivity implements GestureDetector.OnGestureListener, XScrollView.IXScrollViewListener, View.OnClickListener, AdapterView.OnItemClickListener, View.OnTouchListener {
+public class InnerTravelDetailActivity extends BaseActionBarActivity implements GestureDetector.OnGestureListener, XScrollView.IXScrollViewListener, View.OnClickListener, AdapterView.OnItemClickListener, View.OnTouchListener {
 
-    private String TAG = getClass().getSimpleName();
+    private String TAG = "InnerTravelDetailActivity";
 
     private XScrollView mScrollView;
     private View content;
@@ -101,7 +105,7 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
     private LinearLayout layoutReserveNotice; //预订须知
     private TextView tvReserveNotice; //预订须知
 
-    private TextView tvTitle;
+    private TextView tvTravelTitle;
     private TextView tvPrice; //价格
     private TextView tvCommentCount;
     private CircleImageView civIcon;
@@ -145,7 +149,7 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
                         TravelDetail detailNew = (TravelDetail) msg.obj;
                         if (detailNew != null) {
                             detail = detailNew;
-                            LogUtil.e(TAG, detail);
+                            LogUtil.e(TAG, "线路详情："+detail);
                             refreshView();
                         }
                         break;
@@ -176,12 +180,12 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_inner_travel_detail);
         getData();
-        setupView();
-        addListener();
+        super.onCreate(savedInstanceState); //TODO
+//        requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        setupView();
+//        addListener();
     }
 
     private void getData() {
@@ -199,7 +203,14 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
         imageUrls.add("drawable://" + R.drawable.ic_empty);
     }
 
-    private void setupView() {
+//    private void setupView() { //TODO
+
+    @Override
+    protected void setupView() {
+        super.setupView();
+        tvTitle.setText(getString(R.string.title_inner_travel_detail));
+        ivTitleRight.setImageResource(R.mipmap.icon_telephone_hollow);
+
         mScrollView = (XScrollView) findViewById(R.id.scroll_view_detail);
         mScrollView.setPullRefreshEnable(false);
         mScrollView.setPullLoadEnable(false);
@@ -239,7 +250,7 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
             viewDescribe = content.findViewById(R.id.view_describe_bottom);
             viewNotice = content.findViewById(R.id.view_notice_bottom);
 
-            tvTitle = (TextView) content.findViewById(R.id.tv_travel_detail_title);
+            tvTravelTitle = (TextView) content.findViewById(R.id.tv_travel_detail_title);
             tvPrice = (TextView) content.findViewById(R.id.tv_travel_price);
             layoutComment = (LinearLayout) content.findViewById(R.id.layout_comment);
             tvCommentCount = (TextView) content.findViewById(R.id.tv_travel_comment_count);
@@ -285,13 +296,14 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
         mScrollView.setOnXScrollChangedI(new XScrollView.onXScrollChangedI() {
             @Override
             public void onXScrollChangedImpl(int l, int t, int oldl, int oldt) {
+                int barH = actionBar.getHeight();
                 //页面中的导航栏
                 int[] s = new int[2];
                 layoutIndicatorBottom.getLocationOnScreen(s);
                 int statusHeight = Utils.getStatusBarHeight(getApplicationContext());
 //                int titleHeight = layoutTitle.getHeight();
                 indicatorHeightTop = layoutIndicatorTop.getHeight();
-                if (s[1] <= statusHeight) { // + titleHeight
+                if (s[1] <= statusHeight + barH) { // + titleHeight
                     layoutIndicatorTop.setVisibility(View.VISIBLE);
                 } else {
                     layoutIndicatorTop.setVisibility(View.GONE);
@@ -300,28 +312,28 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
                     //商品详情——>线路特写
                     int[] detailAry = new int[2];
                     mWebViewProduct.getLocationOnScreen(detailAry);
-                    if (detailAry[1] <= statusHeight) {
+                    if (detailAry[1] <= statusHeight + barH) {
                         changeIndicator(1);
                     }
 
                     //行程描述——>标准
                     int[] describe = new int[2];
                     layoutTravelDescribe.getLocationOnScreen(describe);
-                    if (describe[1] <= statusHeight + indicatorHeightTop) {
+                    if (describe[1] <= statusHeight + indicatorHeightTop + barH) {
                         changeIndicator(3);
                     }
 
                     //费用说明——>行程安排
                     int[] priceAry = new int[2];
                     layoutPrice.getLocationOnScreen(priceAry);
-                    if (priceAry[1] <= statusHeight + indicatorHeightTop) {
+                    if (priceAry[1] <= statusHeight + indicatorHeightTop + barH) {
                         changeIndicator(2);
                     }
 
                     //预订须知
                     int[] reserve = new int[2];
                     layoutReserveNotice.getLocationOnScreen(reserve);
-                    if (reserve[1] <= statusHeight + indicatorHeightTop) {
+                    if (reserve[1] <= statusHeight + indicatorHeightTop + barH) {
                         changeIndicator(4);
                     }
                 }
@@ -349,7 +361,7 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
         updateBinner(newADInfos);
         //Title
         String title = detail.getTitle();
-        tvTitle.setText(title);
+        tvTravelTitle.setText(title);
         //Price
         String price = detail.getPrice();
         tvPrice.setText(price);
@@ -402,7 +414,17 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
 
     @Override
     public void onClick(View view) {
+        super.onClick(view); //TODO
+
         switch (view.getId()) {
+            case R.id.title_main_iv_right_telephone: //电话
+                if (detail == null || TextUtils.isEmpty(detail.getTel())){
+                    ToastUtil.show(getApplicationContext(), "该商户未上传电话信息");
+                }else{
+                    //弹窗显示400电话
+                    showTelephoneNumber();
+                }
+                break;
             case R.id.tv_inner_travel_detail_content_product_bottom:
             case R.id.btn_inner_travel_detail_indicator_top_product:
                 click = true;
@@ -479,12 +501,7 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
                     intent.putExtra("im", im);
                     startActivity(intent);
                 } else {
-//                    ToastUtil.show(getApplicationContext(), "请登录后再试");
-                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("type", 2);
-                    intent.putExtras(bundle);
-                    startActivityForResult(intent, REQUEST_LOGIN);
+                    userLogin();
                 }
                 break;
             case R.id.btn_inner_travel_reserve: //立即预定
@@ -497,15 +514,31 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
                     startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_SELECT_DATE); //选择日期
 //                PriceCalendarReserveActivity.actionStart(getApplicationContext(), bundle);
                 } else {
-//                    ToastUtil.show(getApplicationContext(), "请登录后再试");
-                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("type", 2);
-                    intent.putExtras(bundle);
-                    startActivityForResult(intent, REQUEST_LOGIN);
+                    userLogin();
                 }
                 break;
         }
+    }
+
+    private void showTelephoneNumber() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(detail.getTel());
+        builder.setTitle(getString(R.string.title_telephone));
+        builder.setPositiveButton(R.string.tab1_inner_travel_pop_commit, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        builder.create().show();
+    }
+
+    private void userLogin() {
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("type", 2);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, REQUEST_LOGIN);
     }
 
     private int REQUEST_LOGIN = 2913; //请求登录
@@ -539,7 +572,12 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
 
     }
 
-    private void addListener() {
+//    private void addListener() { //TODO
+
+    @Override
+    protected void addListener() {
+        super.addListener();
+
         rbCollection.setOnClickListener(this);
         tvShare.setOnClickListener(this);
         btnArgument.setOnClickListener(this);
@@ -836,11 +874,7 @@ public class InnerTravelDetailActivity extends BaseActivity implements GestureDe
             biz.doCollection(MainActivity.user.getUserId(), "1", detail.getId());
         } else {
 //            ToastUtil.show(getApplicationContext(), "请登录后再试");
-            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putInt("type", 2);
-            intent.putExtras(bundle);
-            startActivityForResult(intent, REQUEST_LOGIN);
+            userLogin();
             rbCollection.setChecked(false);
         }
     }

@@ -17,16 +17,16 @@ public class DemoModel {
 	 * 
 	 * @param username
 	 */
-//	public void setCurrentUserName(String username) {
-//		EPreferenceManager.getInstance().setCurrentUserName(username);
-//	}
+	public void setCurrentUserName(String username) {
+		EPreferenceManager.getInstance().setCurrentUserName(username);
+	}
 
 	/**
 	 * 设置当前用户的环信密码
 	 */
-//	public void setCurrentUserPwd(String password){
-//		EPreferenceManager.getInstance().setCurrentUserPwd(password);
-//	}
+	public void setCurrentUserPwd(String password){
+		EPreferenceManager.getInstance().setCurrentUserPwd(password);
+	}
 	
 	
 	/**

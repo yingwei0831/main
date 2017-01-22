@@ -66,7 +66,6 @@ public class EasemobLoginActivity extends EaseBaseActivity {
 			}).start();
 		}else{
 			progressShow = true;
-			progressShow = true;
 			progressDialog = getProgressDialog();
 			progressDialog.setMessage(getResources().getString(R.string.is_contact_customer));
 			if (!progressDialog.isShowing()) {
@@ -82,6 +81,8 @@ public class EasemobLoginActivity extends EaseBaseActivity {
 					if (!progressShow) {
 						return;
 					}
+					DemoHelper.getInstance().setCurrentUserName(MainActivity.user.getHxname());
+					DemoHelper.getInstance().setCurrentPassword("admin123");
 					try {
 						EMChatManager.getInstance().loadAllConversations();
 					} catch (Exception e) {

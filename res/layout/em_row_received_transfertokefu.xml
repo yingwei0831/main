@@ -28,7 +28,7 @@
             android:background="@drawable/ease_default_avatar"
             android:scaleType="fitXY" />
 
-            android:background="@drawable/ease_chatfrom_bg"
+            <!--android:background="@drawable/ease_chatfrom_bg"-->
         <TextView
             android:background="@drawable/bg_left_chat"
             android:id="@+id/tv_chatcontent"

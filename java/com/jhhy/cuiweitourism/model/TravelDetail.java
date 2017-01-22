@@ -30,8 +30,17 @@ public class TravelDetail implements Serializable{
     private String im; //商户环信账号
     private String iscollect; //1：已收藏；0：未收藏
 
+    private String tel; //翠微电话
 
     public TravelDetail() {
+    }
+
+    public String getTel() {
+        return tel;
+    }
+
+    public void setTel(String tel) {
+        this.tel = tel;
     }
 
     public String getIscollect() {

@@ -394,12 +394,23 @@ public class TrainEditOrderActivity extends AppCompatActivity implements View.On
     private ArrayList<TrainTicketOrderFetch.TicketInfo> listContact = new ArrayList<>(); //乘车人列表
 
     @Override
-    public void onItemTextViewClick(int position, View imageView, int id) {
-        listContact.remove(position);
-        adapter.setData(listContact);
-        adapter.notifyDataSetChanged();
-        tvAdultCount.setText(String.format(Locale.getDefault(), "成人%d人", listContact.size()));
-        tvPriceTotal.setText(String.format(Locale.getDefault(), "%.2f", Float.parseFloat(seatInfo.floorPrice) * listContact.size()));
+    public void onItemTextViewClick(int position, View view, int id) {
+        switch (view.getId()){
+            case R.id.iv_train_trash:
+                listContact.remove(position);
+                adapter.setData(listContact);
+                adapter.notifyDataSetChanged();
+                totalPrice = Float.parseFloat(seatInfo.floorPrice) * listContact.size();
+                if (totalPrice == 0 || totalPrice - icon <= 0) {
+                    tvSelectIcon.setText("1旅游币可抵1元");
+                    tvPayIcon.setText("0");
+                    icon = 0;
+                }
+                tvAdultCount.setText(String.format(Locale.getDefault(), "成人%d人", listContact.size()));
+                tvPriceTotal.setText(String.format(Locale.getDefault(), "%.2f", (totalPrice == 0 || totalPrice - icon <= 0) ? 0 : totalPrice - icon)); //订单总金额
+                tvTotalPrice.setText(String.format(Locale.getDefault(), "%.2f", totalPrice)); //商品总金额
+                break;
+        }
     }
 
     /**

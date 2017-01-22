@@ -12,6 +12,7 @@
     <string name="activity_main_order">订单</string>
     <string name="activity_main_mine">我的</string>
 
+    <string name="title_telephone">电话</string>
     <string name="tab1_title_phone">400-900-5665</string>
 
     <string name="tab1_tablelayout_item1">国内游</string>
@@ -35,6 +36,7 @@
     <string name="tab1_hot_activity">热门活动</string>
     <string name="tab1_hot_activity_notice">齐齐来参加~</string>
 
+    <string name="title_inner_travel_detail">线路详情</string>
     <string name="tab1_recommend_for_you">为您推荐</string>
     <string name="tab1_recommend_for_you_notice">带您随意选产品</string>
 
@@ -132,6 +134,7 @@
     <string name="inner_travel_detail_price">行程介绍</string>
     <string name="inner_travel_detail_describe">费用说明</string>
     <string name="inner_travel_detail_day_one">第一天</string>
+    <string name="travel_balance">单房差</string>
 
     <string name="select_custom_title">选择常用游客</string>
     <string name="share_text">一款提供旅游路线在线下单，全民旅游，人人发布旅游活动的app，内含飞机票，火车票，租车，签证，酒店，私人定制服务等一体化的旅游综合服务平台。</string>
@@ -258,6 +261,9 @@
     <string name="tab4_account_certification_phone">手机号码</string>
     <string name="tab4_account_certification_phone_notice">请输入手机号码</string>
     <string name="tab4_account_certification_gender">性别</string>
+    <string name="user_gender">性别：</string>
+    <string name="user_english_name">英文姓名：</string>
+    <string name="user_input">必填</string>
     <string name="tab4_account_certification_gender_notice">请选择</string>
     <string name="tab4_account_certification_id">身份证号码</string>
     <string name="tab4_account_certification_id_notice">请输入身份证号码</string>

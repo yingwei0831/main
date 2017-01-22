@@ -214,7 +214,10 @@
         <activity
             android:name=".ui.InnerTravelDetailActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
+            android:launchMode="singleTop"
+            android:theme="@style/ActionBarTheme"
+            />
+            <!--android:theme="@style/Theme.AppCompat.NoActionBar" -->
         <activity
             android:name=".ui.StartActivityListActivity"
             android:screenOrientation="portrait"
@@ -375,7 +378,10 @@
         <activity
             android:name=".ui.HotActivityDetailActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
+            android:launchMode="singleTop"
+            android:theme="@style/ActionBarTheme"
+            />
+            <!--android:theme="@style/Theme.AppCompat.NoActionBar" -->
         <activity
             android:name=".ui.SearchRouteActivity"
             android:screenOrientation="portrait"

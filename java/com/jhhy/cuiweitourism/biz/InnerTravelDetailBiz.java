@@ -188,6 +188,7 @@ public class InnerTravelDetailBiz {
                         detail.setCommentCount(bodyObj.getString("plcount").trim());
                         detail.setIm(bodyObj.getString("im"));
                         detail.setIscollect(bodyObj.getString("iscollect"));
+                        detail.setTel(bodyObj.getString("tel"));
                     }
                     msg.obj = detail;
                 }

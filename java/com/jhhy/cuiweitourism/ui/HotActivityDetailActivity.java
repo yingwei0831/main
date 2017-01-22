@@ -1,6 +1,8 @@
 package com.jhhy.cuiweitourism.ui;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -51,9 +54,9 @@ import com.markmao.pulltorefresh.widght.XScrollView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HotActivityDetailActivity extends BaseActivity implements GestureDetector.OnGestureListener, XScrollView.IXScrollViewListener, View.OnClickListener, AdapterView.OnItemClickListener, View.OnTouchListener {
+public class HotActivityDetailActivity extends BaseActionBarActivity implements GestureDetector.OnGestureListener, XScrollView.IXScrollViewListener, View.OnClickListener, AdapterView.OnItemClickListener, View.OnTouchListener {
 
-    private String TAG = getClass().getSimpleName();
+    private String TAG = "HotActivityDetailActivity";
 
     private XScrollView mScrollView;
     private View content;
@@ -89,8 +92,8 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
     private View layoutNotice;
     private TextView tvReserveNotice; //预订须知
 
-    private View layoutTitle;
-    private TextView tvTitle;
+//    private View layoutTitle;
+//    private TextView tvTitle;
     private TextView tvPrice; //价格
 
     private View layoutComment; //评论大布局
@@ -149,18 +152,19 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
         }
     };
 
-    private TextView tvTitleTop;
-    private ImageView ivTitleLeft;
+//    private TextView tvTitleTop;
+//    private ImageView ivTitleLeft;
+//    private ImageView ivTitleRight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_hot_activity_detail);
+//        requestWindowFeature(Window.FEATURE_NO_TITLE);
         getData();
+        setContentView(R.layout.activity_hot_activity_detail);
+        super.onCreate(savedInstanceState);
         getInternetData();
-        setupView();
-        addListener();
+//        setupView();
+//        addListener();
     }
 
     /**
@@ -199,7 +203,6 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
                 LoadingIndicator.cancel();
             }
         });
-        imageUrls.add("drawable://" + R.drawable.ic_empty);
 //        HotActivityBiz biz = new HotActivityBiz(getApplicationContext(), handler);
 //        biz.getHotActivityDetail(id);
     }
@@ -210,11 +213,17 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
         type = bundle.getInt("type");
     }
 
-    private void setupView() {
-        layoutTitle = findViewById(R.id.layout_title_inner_travel);
-        tvTitleTop = (TextView) findViewById(R.id.tv_title_inner_travel);
-        tvTitleTop.setText("热门活动详情");
-        ivTitleLeft = (ImageView) findViewById(R.id.title_main_tv_left_location);
+    @Override
+    protected void setupView() {
+        super.setupView();
+        imageUrls.add("drawable://" + R.drawable.ic_empty);
+//        layoutTitle = findViewById(R.id.layout_title_inner_travel);
+//        tvTitleTop = (TextView) findViewById(R.id.tv_title_inner_travel);
+        tvTitle.setText("热门活动详情");
+//        ivTitleLeft = (ImageView) findViewById(R.id.title_main_tv_left_location);
+//        ivTitleRight = (ImageView) findViewById(R.id.title_main_iv_right_telephone);
+        ivTitleRight.setImageResource(R.mipmap.icon_telephone_hollow);
+        ivTitleRight.setVisibility(View.VISIBLE);
 
         mScrollView = (XScrollView) findViewById(R.id.scroll_view_detail);
         mScrollView.setPullRefreshEnable(false);
@@ -308,7 +317,7 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
                 int[] s = new int[2];
                 layoutIndicatorBottom.getLocationOnScreen(s);
                 int statusHeight = Utils.getStatusBarHeight(getApplicationContext());
-                int titleHeight = layoutTitle.getHeight();
+                int titleHeight = getSupportActionBar().getHeight();
                 int indicatorHeightTop = layoutIndicatorTop.getHeight();
 //                LogUtil.e(TAG, "statusHeight = " + statusHeight + ", titleHeight = " + titleHeight + ", s[1] = " + s[1]);
                 if (statusHeight + titleHeight >= s[1]) { // + titleHeight
@@ -471,6 +480,9 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
             case R.id.title_main_tv_left_location:
                 finish();
                 break;
+            case R.id.title_main_iv_right_telephone:
+                showTelephoneNumber();
+                break;
             case R.id.tv_inner_travel_detail_content_product_bottom:
             case R.id.btn_inner_travel_detail_indicator_top_product:
                 changeIndicator(1);
@@ -523,6 +535,20 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
                 break;
         }
     }
+
+    private void showTelephoneNumber() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("400-900-5665");
+        builder.setTitle(getString(R.string.title_telephone));
+        builder.setPositiveButton(R.string.tab1_inner_travel_pop_commit, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int which) {
+                dialogInterface.dismiss();
+            }
+        });
+        builder.create().show();
+    }
+
     private PopupWindow popupWindow;
 
     private TextView tvNumber;
@@ -614,8 +640,14 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
         //TODO 进入查看大图页面
     }
 
-    private void addListener() {
+//    private void addListener() {
+
+    @Override
+    protected void addListener() {
+        super.addListener();
+
         ivTitleLeft.setOnClickListener(this);
+        ivTitleRight.setOnClickListener(this);
 
         btnReserve.setOnClickListener(this);
 
@@ -828,7 +860,6 @@ public class HotActivityDetailActivity extends BaseActivity implements GestureDe
         tvTravelDescribe = null;
         layoutNotice = null;
         tvReserveNotice = null;
-        layoutTitle = null;
         tvTitle = null;
         tvPrice = null;
         layoutComment = null;

@@ -564,6 +564,11 @@ public class PlaneEditOrderInternationalActivity2 extends AppCompatActivity impl
         if (cbDelayCost.isChecked()){
             dcPrice = priceDelayCost * listContact.size();
         }
+        if (listContact.size() * (unitPrice + acPrice + dcPrice) - icon <= 0){
+            icon = 0;
+            tvSelectIcon.setText("1旅游币可抵1元");
+            tvPayIcon.setText("0");
+        }
         tvPriceTotal.setText(String.format(Locale.getDefault(), "%.2f",
                 listContact.size() * (unitPrice + acPrice + dcPrice) - icon)); //订单总价
         tvTotalPrice.setText(String.format(Locale.getDefault(), "%.2f",
@@ -607,15 +612,18 @@ public class PlaneEditOrderInternationalActivity2 extends AppCompatActivity impl
 //            LoadingIndicator.cancel();
             return;
         }
+        if (!Utils.isMobileNO(mobile)){
+            ToastCommon.toastShortShow(getApplicationContext(), null, "联系人手机号码不正确");
+            etLinkMobile.requestFocus();
+            return;
+        }
         if (mobile.length() != 11){
             ToastUtil.show(getApplicationContext(), "请检查联系人手机号码");
             etLinkMobile.requestFocus();
-//            LoadingIndicator.cancel();
             return;
         }
         if (listContact.size() == 0){
             ToastUtil.show(getApplicationContext(), "请选择乘车人");
-//            LoadingIndicator.cancel();
             return;
         }
         if (paying){

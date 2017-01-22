@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Message;
 
 import com.easemob.EMCallBack;
+import com.easemob.chat.EMChat;
 import com.easemob.chat.EMChatManager;
 import com.jhhy.cuiweitourism.http.NetworkUtil;
 import com.jhhy.cuiweitourism.net.netcallback.HttpUtils;
@@ -26,7 +27,7 @@ import java.util.Map;
  */
 public class LoginBiz {
 
-    private static final String TAG = LoginBiz.class.getSimpleName();
+    private String TAG = "LoginBiz";
 
     private Context context;
     private Handler handler;
@@ -155,7 +156,7 @@ public class LoginBiz {
 // "truename":"","cardid":"","jifen":"0","hxname":"","status":0}}
                     String body = resultObj.getString(Consts.KEY_BODY);
                     JSONObject bodyObj = new JSONObject(body);
-                    User user = new User();
+                    final User user = new User();
                     user.setUserId(bodyObj.getString(Consts.KEY_USER_USER_MID));
                     user.setUserNickName(bodyObj.getString(Consts.KEY_USER_NICK_NAME));
                     user.setUserGender(bodyObj.getString(Consts.KEY_USER_GENDER));
@@ -168,28 +169,45 @@ public class LoginBiz {
                     user.setStatus("0".equals(bodyObj.getString("status")) ? "未认证" : "已认证");
                     msg.obj = user;
 
-                    //登录环信聊天服务器
-                    EMChatManager.getInstance().login(user.getHxname(), "admin123", new EMCallBack() {
-                        @Override
-                        public void onSuccess() {
-                            handler.sendMessage(msg);
-                        }
+                    handler.sendMessage(msg);
 
-                        @Override
-                        public void onProgress(int progress, String status) {
-                        }
-
-                        @Override
-                        public void onError(final int code, final String message) {
-                            String failed = "环信客服登录失败，失败原因 message = " + message;
-                            LogUtil.e(TAG, "code = " + code + ", 环信失败原因 message = " + message);
-                            Message msg = new Message();
-                            msg.what = Consts.MESSAGE_LOGIN;
-                            msg.arg1 = 0;
-                            msg.obj = failed;
-                            handler.sendMessage(msg);
-                        }
-                    });
+//                    final String hxName = user.getHxname();
+//                    //判断环信聊天服务器是否登录
+//                    DemoHelper helper = DemoHelper.getInstance();
+//                    LogUtil.e(TAG, "hxName: "+ helper.getCurrentUsernName());
+//                    LogUtil.e(TAG, "logged: " + EMChat.getInstance().isLoggedIn());
+//                    if (user.getHxname().equals(helper.getCurrentUsernName()) && EMChat.getInstance().isLoggedIn()){
+//                        LogUtil.e(TAG, "环信已登录");
+//                        handler.sendMessage(msg);
+//                    } else {
+//                        LogUtil.e(TAG, "环信未登录");
+//                        //登录环信聊天服务器
+//                        EMChatManager.getInstance().login(hxName, "admin123", new EMCallBack() {
+//                            @Override
+//                            public void onSuccess() {
+//                                LogUtil.e(TAG, "环信登录成功");
+//                                DemoHelper.getInstance().setCurrentUserName(hxName);
+//                                DemoHelper.getInstance().setCurrentPassword("admin123");
+//                                handler.sendMessage(msg);
+//                            }
+//
+//                            @Override
+//                            public void onProgress(int progress, String status) {
+//                                LogUtil.e(TAG, "环信正在登录");
+//                            }
+//
+//                            @Override
+//                            public void onError(final int code, final String message) {
+//                                String failed = "环信客服登录失败，失败原因: " + message;
+//                                LogUtil.e(TAG, "code = " + code + ", 环信失败原因 message = " + message);
+//                                Message msg = new Message();
+//                                msg.what = Consts.MESSAGE_LOGIN;
+//                                msg.arg1 = 0;
+//                                msg.obj = failed;
+//                                handler.sendMessage(msg);
+//                            }
+//                        });
+//                    }
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -215,7 +233,9 @@ public class LoginBiz {
     };
 
     public void logout(String username) {
-        EMChatManager.getInstance().logout();//此方法为同步方法
+        if (EMChat.getInstance().isLoggedIn()){
+            EMChatManager.getInstance().logout();//此方法为同步方法
+        }
 //        DemoHelper.getInstance().logout(true, null); //此方法为异步方法
     }
 }

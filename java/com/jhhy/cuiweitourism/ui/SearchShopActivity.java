@@ -7,9 +7,13 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -20,6 +24,11 @@ import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.adapter.SearchShopGridAdapter;
 import com.jhhy.cuiweitourism.biz.FindShopBiz;
 import com.jhhy.cuiweitourism.model.ShopRecommend;
+import com.jhhy.cuiweitourism.net.biz.ShopActionBiz;
+import com.jhhy.cuiweitourism.net.models.FetchModel.ShopSearchRequest;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
+import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
@@ -30,9 +39,9 @@ import com.just.sun.pricecalendar.ToastCommon;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchShopActivity extends BaseActivity implements View.OnClickListener {
+public class SearchShopActivity extends BaseActivity implements View.OnClickListener, TextWatcher {
 
-    private String TAG = SearchShopActivity.class.getSimpleName();
+    private String TAG = "SearchShopActivity";
     private ImageView ivTitleLeft;
     private TextView tvTitle;
     private ActionBar actionBar;
@@ -43,10 +52,15 @@ public class SearchShopActivity extends BaseActivity implements View.OnClickList
     private List<ShopRecommend> lists = new ArrayList<>();
     private SearchShopGridAdapter adapter;
 
+    private List<ShopRecommend> listSearch = new ArrayList<>();
+
     private int page = 1;
 
     private boolean refresh = true;
     private boolean loadMore;
+
+    private EditText etSearch; //输入框
+    private ImageView ivSearchShop; //搜索
 
     private Handler handler = new Handler(){
         @Override
@@ -127,6 +141,7 @@ public class SearchShopActivity extends BaseActivity implements View.OnClickList
     }
 
     private void addListener() {
+        ivSearchShop.setOnClickListener(this);
         ivTitleLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -140,8 +155,8 @@ public class SearchShopActivity extends BaseActivity implements View.OnClickList
                 LogUtil.e(TAG, "i = " + i +", l = " + l);
                 Intent intent = new Intent(getApplicationContext() , LineListActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("shopId", lists.get((int) l).getId());
-                bundle.putString("shopName", lists.get((int) l).getName());
+                bundle.putString("shopId", lists.get((int) l).getSid());
+                bundle.putString("shopName", lists.get((int) l).getSuppliername());
                 intent.putExtras(bundle);
                 startActivityForResult(intent, REQUEST_LINE_LIST);
             }
@@ -158,6 +173,8 @@ public class SearchShopActivity extends BaseActivity implements View.OnClickList
                 loadMore();
             }
         });
+
+        etSearch.addTextChangedListener(this);
     }
 
     private void loadMore() {
@@ -191,8 +208,8 @@ public class SearchShopActivity extends BaseActivity implements View.OnClickList
         tvTitle.setText(getString(R.string.tab1_shop_title));
         ivTitleLeft = (ImageView) actionBar.getCustomView().findViewById(R.id.title_main_tv_left_location);
 
-        TextView textView = (TextView) findViewById(R.id.edit_search);
-        textView.setOnClickListener(this);
+        etSearch = (EditText) findViewById(R.id.edit_search);
+        ivSearchShop = (ImageView) findViewById(R.id.iv_search_shop);
 
         pullToRefreshGridView = (PullToRefreshGridView) findViewById(R.id.pull_gridview);
         pullToRefreshGridView.getLoadingLayoutProxy().setLastUpdatedLabel(Utils.getCurrentTime());
@@ -221,11 +238,68 @@ public class SearchShopActivity extends BaseActivity implements View.OnClickList
             case R.id.title_main_tv_left_location:
                 finish();
                 break;
-            case R.id.edit_search:
-                Bundle bundleSearch = new Bundle();
-//                bundleSearch.putSerializable("selectCity", selectCity);
-                SearchActivity.actionStart(getApplicationContext(), bundleSearch);
+            case R.id.iv_search_shop: //搜索按钮
+                searchShop();
                 break;
         }
+    }
+
+    private void searchShop() {
+        String search = etSearch.getText().toString();
+        if (TextUtils.isEmpty(search)){
+            ToastCommon.toastShortShow(getApplicationContext(), null, "搜索输入为空");
+            return;
+        }
+//        Utils.setKeyboardInvisible(this);
+        ShopActionBiz biz = new ShopActionBiz();
+        ShopSearchRequest fetch = new ShopSearchRequest(search);
+        biz.getShopSearch(fetch, new BizGenericCallback<ArrayList<ShopRecommend>>() {
+            @Override
+            public void onCompletion(GenericResponseModel<ArrayList<ShopRecommend>> model) {
+                listSearch = model.body;
+                adapter.setData(listSearch);
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                if (error.localReason != null){
+                    ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
+                }else{
+                    ToastCommon.toastShortShow(getApplicationContext(), null, "搜索数据发生错误，请重试");
+                }
+            }
+        });
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//        LogUtil.e(TAG, "--------beforeTextChanged-------");
+//        LogUtil.e(TAG, "charSequence: " + charSequence);
+    }
+
+    @Override
+    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//        LogUtil.e(TAG, "--------onTextChanged-------");
+//        LogUtil.e(TAG, "charSequence: " + charSequence);
+    }
+
+    @Override
+    public void afterTextChanged(Editable editable) {
+//        LogUtil.e(TAG, "--------afterTextChanged-------");
+//        LogUtil.e(TAG, "editable: " + editable);
+        if (TextUtils.isEmpty(editable)){
+//            Utils.setKeyboardInvisible(this);
+            adapter.setData(lists);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        lists.clear();
+        lists = null;
+        listSearch.clear();
+        listSearch = null;
+        adapter = null;
     }
 }

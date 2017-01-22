@@ -6,40 +6,46 @@ package com.jhhy.cuiweitourism.model;
  */
 public class ShopRecommend {
 
-    private String id;
-    private String name;
-    private String litpic;
+//    {
+//        "sid": "14",
+//        "suppliername": "易途假期",
+//        "logo": "http://www.cwly1118.com/uploads/member/584138eb8c7c2.png"
+//    }
+
+    private String sid;
+    private String suppliername;
+    private String logo;
 
     public ShopRecommend() {
     }
 
-    public ShopRecommend(String id, String name, String litpic) {
-        this.id = id;
-        this.name = name;
-        this.litpic = litpic;
+    public ShopRecommend(String sid, String suppliername, String logo) {
+        this.sid = sid;
+        this.suppliername = suppliername;
+        this.logo = logo;
     }
 
-    public String getId() {
-        return id;
+    public String getSid() {
+        return sid;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setSid(String sid) {
+        this.sid = sid;
     }
 
-    public String getName() {
-        return name;
+    public String getSuppliername() {
+        return suppliername;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setSuppliername(String suppliername) {
+        this.suppliername = suppliername;
     }
 
-    public String getLitpic() {
-        return litpic;
+    public String getLogo() {
+        return logo;
     }
 
-    public void setLitpic(String litpic) {
-        this.litpic = litpic;
+    public void setLogo(String logo) {
+        this.logo = logo;
     }
 }

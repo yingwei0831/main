@@ -28,6 +28,9 @@ public class ContactPreviewActivity extends BaseActivity implements View.OnClick
     private EditText etMobile;
     private EditText etPassport;
 
+    private TextView tvUserGender; //性别
+    private EditText etEnglishName; //汉语拼音名字
+
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -92,6 +95,9 @@ public class ContactPreviewActivity extends BaseActivity implements View.OnClick
         etMobile = (EditText) findViewById(R.id.et_contacts_mobile);
         etPassport = (EditText) findViewById(R.id.et_contacts_passport);
 
+        tvUserGender = (TextView) findViewById(R.id.tv_contacts_gender);
+        etEnglishName = (EditText) findViewById(R.id.et_contacts_english_name);
+
         etName.setEnabled(false);
         etID.setEnabled(false);
         etMobile.setEnabled(false);
@@ -103,7 +109,17 @@ public class ContactPreviewActivity extends BaseActivity implements View.OnClick
         if (contacts.getContactsPassport() != null && !"null".equals(contacts.getContactsPassport())) {
             etPassport.setText(contacts.getContactsPassport());
         }else{
-            etPassport.setText(" ");
+            etPassport.setHint(" ");
+        }
+        if (contacts.getContactsGender() != null && !"null".equals(contacts.getContactsGender())){
+            tvUserGender.setText("0".equals(contacts.getContactsGender()) ? "女" : "男");
+        }else{
+            tvUserGender.setHint("");
+        }
+        if (contacts.getEnglishName() != null && !"null".equals(contacts.getEnglishName())){
+            etEnglishName.setText(contacts.getEnglishName());
+        }else {
+            etEnglishName.setHint("");
         }
     }
 
@@ -129,13 +145,14 @@ public class ContactPreviewActivity extends BaseActivity implements View.OnClick
                     etID.setEnabled(true);
                     etMobile.setEnabled(true);
                     etPassport.setEnabled(true);
-
+                    etEnglishName.setEnabled(true);
                 } else { //编辑状态
                     String name = etName.getText().toString();
                     String ID = etID.getText().toString();
                     String mobile = etMobile.getText().toString();
                     String passport = etPassport.getText().toString();
-                    if (TextUtils.isEmpty(name) || TextUtils.isEmpty(ID) || TextUtils.isEmpty(mobile)){
+                    String englishName = etEnglishName.getText().toString();
+                    if (TextUtils.isEmpty(name) || TextUtils.isEmpty(ID) || TextUtils.isEmpty(mobile) || TextUtils.isEmpty(englishName)){
                         ToastCommon.toastShortShow(getApplicationContext(), null, "必输项不能为空");
                         return;
                     }
@@ -143,6 +160,7 @@ public class ContactPreviewActivity extends BaseActivity implements View.OnClick
                     contacts.setContactsIdCard(ID.trim());
                     contacts.setContactsMobile(mobile.trim());
                     contacts.setContactsPassport(passport.trim());
+                    contacts.setEnglishName(englishName.trim());
                     ContactsBiz biz = new ContactsBiz(getApplicationContext(), handler);
                     biz.modifyContacts(contacts);
                 }

@@ -38,7 +38,7 @@ import org.json.JSONObject;
 
 public class ChatFragment extends EaseChatFragment implements EaseChatFragment.EaseChatFragmentListener {
 
-	private static final String TAG = ChatFragment.class.getSimpleName();
+	private static final String TAG = "ChatFragment";
 	// 避免和基类定义的常量可能发生的冲突，常量从11开始定义
 	private static final int ITEM_FILE = 11;
 //	private static final int ITEM_SHORT_CUT_MESSAGE = 12;
@@ -506,6 +506,7 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragment.E
 			case EventNewMessage:
 				// 获取到message
 				EMMessage message = (EMMessage) event.getData();
+				LogUtil.e(TAG, "收到的message: " + message);
 				try {
 					JSONObject msg = message.getJSONObjectAttribute("weichat");
 					JSONObject agent = msg.getJSONObject("agent");

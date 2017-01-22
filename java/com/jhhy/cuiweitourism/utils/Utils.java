@@ -26,6 +26,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -66,7 +67,7 @@ import cn.sharesdk.onekeyshare.OnekeyShare;
 @SuppressLint("SimpleDateFormat")
 public class Utils {
 
-    private static final String TAG = Utils.class.getSimpleName();
+    private static final String TAG = "Utils";
 
     /**
      * 正则表达式:验证身份证
@@ -81,6 +82,7 @@ public class Utils {
 
     /**
      * 获得屏幕高度
+     *
      * @param context
      * @return
      */
@@ -94,6 +96,7 @@ public class Utils {
 
     /**
      * 获得屏幕宽度
+     *
      * @param context
      * @return
      */
@@ -113,13 +116,23 @@ public class Utils {
 //    public static boolean isIdCard(String idCard){
 //        return Pattern.matches(REGEX_ID_CARD, idCard);
 //    }
+
     /**
      * 校验邮箱
+     *
      * @param email
      * @return 校验通过返回true，否则返回false
      */
     public static boolean isEmail(String email) {
         return Pattern.matches(REGEX_EMAIL, email);
+    }
+
+    /**
+     * true:手机号
+     */
+    public static boolean isMobileNO(String mobiles) {
+        String telRegex = "[1][34578]\\d{9}"; //"[1]"代表第1位为数字1，"[358]"代表第二位可以为3、5、8中的一个，"\\d{9}"代表后面是可以是0～9的数字，有9位。
+        return !TextUtils.isEmpty(mobiles) && mobiles.matches(telRegex);
     }
 
     /**
@@ -135,10 +148,11 @@ public class Utils {
 
     /**
      * 获得状态栏/通知栏的高度
+     *
      * @param context
      * @return
      */
-    public static int getStatusBarHeight(Context context){
+    public static int getStatusBarHeight(Context context) {
         Class<?> c = null;
         Object obj = null;
         Field field = null;
@@ -161,68 +175,70 @@ public class Utils {
 
     /**
      * 获得导航栏高度
+     *
      * @param activity
      * @return
      */
     public int getNavigationBarHeight(Activity activity) {
         Resources resources = activity.getResources();
-        int resourceId = resources.getIdentifier("navigation_bar_height","dimen", "android");
+        int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
         //获取NavigationBar的高度
         int height = resources.getDimensionPixelSize(resourceId);
         return height;
     }
 
 
-    public static String getDayOfStrE(int day){
+    public static String getDayOfStrE(int day) {
         String week = null;
-        switch (day){
+        switch (day) {
             case 1:
                 week = "周日";
                 break;
             case 2:
-                week ="周一";
+                week = "周一";
                 break;
             case 3:
-                week ="周二";
+                week = "周二";
                 break;
             case 4:
-                week ="周三";
+                week = "周三";
                 break;
             case 5:
-                week ="周四";
+                week = "周四";
                 break;
             case 6:
-                week ="周五";
+                week = "周五";
                 break;
             case 7:
-                week ="周六";
+                week = "周六";
                 break;
         }
         return week;
     }
-    public static String getDayOfStr(int day){
+
+    public static String getDayOfStr(int day) {
         String week = null;
-        switch (day){
+        switch (day) {
             case 1:
                 week = "星期日";
                 break;
             case 2:
-                week ="星期一";
+                week = "星期一";
                 break;
             case 3:
-                week ="星期二";
+                week = "星期二";
                 break;
             case 4:
-                week ="星期三";
+                week = "星期三";
                 break;
             case 5:
-                week ="星期四";
+                week = "星期四";
                 break;
             case 6:
-                week ="星期五";
+                week = "星期五";
                 break;
             case 7:
-                week ="星期六";
+                week = "星期六";
                 break;
         }
         return week;
@@ -230,10 +246,11 @@ public class Utils {
 
     /**
      * 检查密码串的合法性
+     *
      * @param password
      * @return
      */
-    public static boolean checkPassword(String password){
+    public static boolean checkPassword(String password) {
         String arg = "^[0-9A-Za-z]{6,18}$";//密码:字母数字混合表达式
         Pattern pattern = Pattern.compile(arg);
         Matcher matcher = pattern.matcher(password);
@@ -242,6 +259,7 @@ public class Utils {
 
     /**
      * 验证Email
+     *
      * @param email email地址，格式：zhangsan@sina.com，zhangsan@xxx.com.cn，xxx代表邮件服务商
      * @return 验证成功返回true，验证失败返回false
      */
@@ -253,20 +271,21 @@ public class Utils {
     /**
      * 获取double值的字符串格式
      * 米、千米
+     *
      * @param doubleData
      * @return
      */
-    public static String getStr(double doubleData){
+    public static String getStr(double doubleData) {
         StringBuffer str = new StringBuffer();
 //        LogUtil.i(TAG, "值："+(doubleData/1000)+"");
         String dateStr = Double.toString(doubleData);
         int index = dateStr.indexOf(".");
-        if(doubleData / 1000 < 1){
-            if(doubleData / 1000 == 0){
+        if (doubleData / 1000 < 1) {
+            if (doubleData / 1000 == 0) {
                 return str.append(0).append("m").toString();
             }
             str.append(dateStr.substring(0, index + 3)).append("m");
-        }else{
+        } else {
             double result = doubleData / 1000;
             String resultStr = Double.toString(result);
             index = resultStr.indexOf(".");
@@ -279,12 +298,13 @@ public class Utils {
      * 获取当前时间
      * 格式：yyyy-MM-dd HH:mm:ss
      */
-    public static String getCurrentTime(){
+    public static String getCurrentTime() {
         Date date = new Date();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return format.format(date);
     }
-    public static String getCurrentTimeYMD(){
+
+    public static String getCurrentTimeYMD() {
         Date date = new Date();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
         return format.format(date);
@@ -292,27 +312,30 @@ public class Utils {
 
     /**
      * 给定分钟数，返回XX时XX分
+     *
      * @param minutes
      * @return
      */
-    public static String getPeriod(String minutes){
+    public static String getPeriod(String minutes) {
         int minute = Integer.parseInt(minutes);
         int hour = minute / 60;
         minute = minute % 60;
         return String.format(Locale.getDefault(), "%d时%02d分", hour, minute);
     }
+
     /**
      * 格式：yyyy-MM-dd 周六
+     *
      * @return 2016-12-30 周五
      */
-     public static String getCurrentTimeYMDE(){
+    public static String getCurrentTimeYMDE() {
         Date date = new Date();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd E");
         return format.format(date);
     }
 
     //将分钟数转化为XX时XX分
-    public static String getDuration(long minute){
+    public static String getDuration(long minute) {
         long mi = minute;
         long ho = mi / 60;
         mi = mi % 60;
@@ -321,10 +344,11 @@ public class Utils {
 
     /**
      * 时间的格式化：yyyy-MM-dd HH:mm:ss
+     *
      * @param time 时间毫秒值
      * @return 格式化后的时间字符串
      */
-    public static String getTimeStr(long time){
+    public static String getTimeStr(long time) {
         Date date = new Date(time);
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
         return format.format(date);
@@ -334,7 +358,7 @@ public class Utils {
      * @param time 毫秒
      * @return 2016-12-30
      */
-    public static String getTimeStrYMD(long time){
+    public static String getTimeStrYMD(long time) {
         Date date = new Date(time);
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
         return format.format(date);
@@ -348,23 +372,14 @@ public class Utils {
 
     /**
      * 转为毫秒
+     *
      * @param date 2016-10-19
      * @return
      */
-    public static long getTime(String date){
+    public static long getTime(String date) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         try {
-            Date time =  format.parse(date);
-            return time.getTime();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-       return 0;
-    }
-    public static long getTimeHM(String hourMinute){
-        SimpleDateFormat format = new SimpleDateFormat("HH:mm");
-        try {
-            Date time =  format.parse(hourMinute);
+            Date time = format.parse(date);
             return time.getTime();
         } catch (ParseException e) {
             e.printStackTrace();
@@ -372,10 +387,21 @@ public class Utils {
         return 0;
     }
 
-    public static long getTimeYMDH(String date){
+    public static long getTimeHM(String hourMinute) {
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+        try {
+            Date time = format.parse(hourMinute);
+            return time.getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public static long getTimeYMDH(String date) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH");
         try {
-            Date time =  format.parse(date);
+            Date time = format.parse(date);
             return time.getTime();
         } catch (ParseException e) {
             e.printStackTrace();
@@ -385,6 +411,7 @@ public class Utils {
 
     /**
      * 获取日期 的星期 2016-10-26 周三
+     *
      * @param day 2016-10-26
      * @return
      */
@@ -403,19 +430,20 @@ public class Utils {
 
     /**
      * 获取两个日期相隔的天数
+     *
      * @param beginDateStr yyyy-MM-dd
-     * @param endDateStr yyyy-MM-dd
+     * @param endDateStr   yyyy-MM-dd
      * @return 相差几天
      */
-    public static long getDiff(String beginDateStr, String endDateStr){
+    public static long getDiff(String beginDateStr, String endDateStr) {
         SimpleDateFormat format = new java.text.SimpleDateFormat("yyyy-MM-dd");
-        Date beginDate= null;
-        Date endDate= null;
+        Date beginDate = null;
+        Date endDate = null;
         long day = 0;
         try {
             beginDate = format.parse(beginDateStr);
             endDate = format.parse(endDateStr);
-            day = (endDate.getTime() - beginDate.getTime()) / (24*60*60*1000);
+            day = (endDate.getTime() - beginDate.getTime()) / (24 * 60 * 60 * 1000);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -424,15 +452,15 @@ public class Utils {
     }
 
     //起飞时间，到达时间
-    public static String getDiffMinute(String beginDateStr, String endDateStr){
+    public static String getDiffMinute(String beginDateStr, String endDateStr) {
         SimpleDateFormat format = new java.text.SimpleDateFormat("HHmm");
-        Date beginDate= null;
-        Date endDate= null;
+        Date beginDate = null;
+        Date endDate = null;
         long minute = 0; //分钟数
         try {
             beginDate = format.parse(beginDateStr);
             endDate = format.parse(endDateStr);
-            minute = (endDate.getTime() - beginDate.getTime()) / (60*1000);
+            minute = (endDate.getTime() - beginDate.getTime()) / (60 * 1000);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -440,56 +468,60 @@ public class Utils {
 //        String date2 = getTimeStr(endDate.getTime());
 //        LogUtil.e(TAG, "date1 = " + date1 +", date2 = " + date2);
 //        LogUtil.e(TAG, "minute = " + day);
-        if (minute < 0){
+        if (minute < 0) {
             minute = 24 * 60 + minute;
         }
         return getDuration(minute);
     }
+
     //起飞时间，到达时间
-    public static boolean getEqualMinute(String beginDateStr, String endDateStr){
+    public static boolean getEqualMinute(String beginDateStr, String endDateStr) {
         SimpleDateFormat format = new java.text.SimpleDateFormat("HH:mm");
-        Date beginDate= null;
-        Date endDate= null;
+        Date beginDate = null;
+        Date endDate = null;
         long minute = 0; //分钟数
         try {
             beginDate = format.parse(beginDateStr);
             endDate = format.parse(endDateStr);
-            minute = (endDate.getTime() - beginDate.getTime()) / (60*1000);
+            minute = (endDate.getTime() - beginDate.getTime()) / (60 * 1000);
         } catch (ParseException e) {
             e.printStackTrace();
         }
         return minute > 0;
     }
+
     //起飞时间，到达时间
-    public static boolean getEqualMinutePoint(String beginDateStr, String endDateStr){
+    public static boolean getEqualMinutePoint(String beginDateStr, String endDateStr) {
         SimpleDateFormat format = new java.text.SimpleDateFormat("HHmm");
-        Date beginDate= null;
-        Date endDate= null;
+        Date beginDate = null;
+        Date endDate = null;
         long minute = 0; //分钟数
         try {
             beginDate = format.parse(beginDateStr);
             endDate = format.parse(endDateStr);
-            minute = (endDate.getTime() - beginDate.getTime()) / (60*1000);
+            minute = (endDate.getTime() - beginDate.getTime()) / (60 * 1000);
         } catch (ParseException e) {
             e.printStackTrace();
         }
         return minute > 0;
     }
+
     /**
      * 获取连个时间的分钟差
+     *
      * @param beginDateStr yyyy-MM-dd HH:mm
-     * @param endDateStr yyyy-MM-dd HH:mm
+     * @param endDateStr   yyyy-MM-dd HH:mm
      * @return xx时xx分
      */
-    public static String getDiffMinuteStr(String beginDateStr, String endDateStr){
+    public static String getDiffMinuteStr(String beginDateStr, String endDateStr) {
         SimpleDateFormat format = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm");
-        Date beginDate= null;
-        Date endDate= null;
+        Date beginDate = null;
+        Date endDate = null;
         long day = 0; //分钟数
         try {
             beginDate = format.parse(beginDateStr);
             endDate = format.parse(endDateStr);
-            day = (endDate.getTime() - beginDate.getTime()) / (60*1000);
+            day = (endDate.getTime() - beginDate.getTime()) / (60 * 1000);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -498,13 +530,14 @@ public class Utils {
 
     /**
      * 获取时间的毫秒
+     *
      * @param date
      * @return
      */
-    public static long getTimeH(String date){
+    public static long getTimeH(String date) {
         SimpleDateFormat format = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm");
         try {
-            Date time =  format.parse(date);
+            Date time = format.parse(date);
             return time.getTime();
         } catch (ParseException e) {
             e.printStackTrace();
@@ -521,7 +554,7 @@ public class Utils {
                     if (!addr.isLoopbackAddress()) {
                         String sAddr = addr.getHostAddress();
                         //boolean isIPv4 = InetAddressUtils.isIPv4Address(sAddr);
-                        boolean isIPv4 = sAddr.indexOf(':')<0;
+                        boolean isIPv4 = sAddr.indexOf(':') < 0;
 
                         if (useIPv4) {
                             if (isIPv4)
@@ -529,7 +562,7 @@ public class Utils {
                         } else {
                             if (!isIPv4) {
                                 int delim = sAddr.indexOf('%'); // drop ip6 zone suffix
-                                return delim<0 ? sAddr.toUpperCase() : sAddr.substring(0, delim).toUpperCase();
+                                return delim < 0 ? sAddr.toUpperCase() : sAddr.substring(0, delim).toUpperCase();
                             }
                         }
                     }
@@ -543,6 +576,7 @@ public class Utils {
 
     /**
      * 通过wifi获取手机的IP地址
+     *
      * @return string
      */
     public String getIpByWIFI(Context context) {
@@ -556,22 +590,24 @@ public class Utils {
         int ipAddress = wifiInfo.getIpAddress();
         return intToIp(ipAddress);
     }
+
     private static String intToIp(int i) {
-        return (i & 0xFF ) + "." +
-                ((i >> 8 ) & 0xFF) + "." +
-                ((i >> 16 ) & 0xFF) + "." +
-                ( i >> 24 & 0xFF) ;
+        return (i & 0xFF) + "." +
+                ((i >> 8) & 0xFF) + "." +
+                ((i >> 16) & 0xFF) + "." +
+                (i >> 24 & 0xFF);
     }
 
     /**
      * 打电话
+     *
      * @param mobile
      */
     public static void contact(Context context, String mobile) {
-        if(mobile != null && mobile.length() != 0){
+        if (mobile != null && mobile.length() != 0) {
             Intent intent = new Intent();
             intent.setAction("android.intent.action.DIAL");
-            intent.setData(Uri.parse("tel:"+mobile));
+            intent.setData(Uri.parse("tel:" + mobile));
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
         }
@@ -579,6 +615,7 @@ public class Utils {
 
     /**
      * 将时间戳转为代表"距现在多久之前"的字符串
+     *
      * @param t  时间戳
      * @return
      */
@@ -651,54 +688,57 @@ public class Utils {
 
     /**
      * 18位身份证校验,粗略的校验
-     * @author lyl
+     *
      * @param idCard
      * @return
+     * @author lyl
      */
-    public static boolean is18ByteIdCard(String idCard){
+    public static boolean is18ByteIdCard(String idCard) {
         Pattern pattern1 = Pattern.compile("^(\\d{6})(19|20)(\\d{2})(1[0-2]|0[1-9])(0[1-9]|[1-2][0-9]|3[0-1])(\\d{3})(\\d|X|x)?$"); //粗略的校验
         Matcher matcher = pattern1.matcher(idCard);
-        if(matcher.matches()){
+        if (matcher.matches()) {
             return true;
         }
         return false;
     }
+
     /**
      * 18位身份证校验,比较严格校验
-     * @author lyl
+     *
      * @param idCard
      * @return
+     * @author lyl
      */
-    public static boolean is18ByteIdCardComplex(String idCard){
+    public static boolean is18ByteIdCardComplex(String idCard) {
         Pattern pattern1 = Pattern.compile("^(\\d{6})(19|20)(\\d{2})(1[0-2]|0[1-9])(0[1-9]|[1-2][0-9]|3[0-1])(\\d{3})(\\d|X|x)?$");
         Matcher matcher = pattern1.matcher(idCard);
-        int[] prefix = new int[]{7,9,10,5,8,4,2,1,6,3,7,9,10,5,8,4,2};
-        int[] suffix = new int[]{ 1, 0, 10, 9, 8, 7, 6, 5, 4, 3, 2 };
-        if(matcher.matches()){
+        int[] prefix = new int[]{7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2};
+        int[] suffix = new int[]{1, 0, 10, 9, 8, 7, 6, 5, 4, 3, 2};
+        if (matcher.matches()) {
             Map<String, String> cityMap = initCityMap();
-            if(cityMap.get(idCard.substring(0,2)) == null ){
+            if (cityMap.get(idCard.substring(0, 2)) == null) {
                 return false;
             }
-            int idCardWiSum=0; //用来保存前17位各自乖以加权因子后的总和
-            for(int i=0;i<17;i++){
-                idCardWiSum+=Integer.valueOf(idCard.substring(i,i+1))*prefix[i];
+            int idCardWiSum = 0; //用来保存前17位各自乖以加权因子后的总和
+            for (int i = 0; i < 17; i++) {
+                idCardWiSum += Integer.valueOf(idCard.substring(i, i + 1)) * prefix[i];
             }
 
-            int idCardMod=idCardWiSum%11;//计算出校验码所在数组的位置
-            String idCardLast=idCard.substring(17);//得到最后一位身份证号码
+            int idCardMod = idCardWiSum % 11;//计算出校验码所在数组的位置
+            String idCardLast = idCard.substring(17);//得到最后一位身份证号码
 
             //如果等于2，则说明校验码是10，身份证号码最后一位应该是X
-            if(idCardMod==2){
-                if(idCardLast.equalsIgnoreCase("x")){
+            if (idCardMod == 2) {
+                if (idCardLast.equalsIgnoreCase("x")) {
                     return true;
-                }else{
+                } else {
                     return false;
                 }
-            }else{
+            } else {
                 //用计算出的验证码与最后一位身份证号码匹配，如果一致，说明通过，否则是无效的身份证号码
-                if(idCardLast.equals(suffix[idCardMod]+"")){
+                if (idCardLast.equals(suffix[idCardMod] + "")) {
                     return true;
-                }else{
+                } else {
                     return false;
                 }
             }
@@ -706,7 +746,7 @@ public class Utils {
         return false;
     }
 
-    private static Map<String, String> initCityMap(){
+    private static Map<String, String> initCityMap() {
         Map<String, String> cityMap = new HashMap<String, String>();
         cityMap.put("11", "北京");
         cityMap.put("12", "天津");

@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.easemob.chat.EMChat;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.biz.LoginBiz;
 import com.jhhy.cuiweitourism.utils.SharedPreferencesUtils;

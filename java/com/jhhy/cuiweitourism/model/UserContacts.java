@@ -18,10 +18,19 @@ public class UserContacts implements Parcelable, Serializable
     private String contactsMobile; //手机号码
     private String contactsIdCard; //身份证号码
     private String contactsCardType; //证件类型
-    private String contactsGender; //性别
+    private String contactsGender; //性别 0:女，1:男
     private String contactsPassport; //护照号码
+    private String EnglishName;
 
     public UserContacts() {
+    }
+
+    public String getEnglishName() {
+        return EnglishName;
+    }
+
+    public void setEnglishName(String englishName) {
+        EnglishName = englishName;
     }
 
     public String getContactsId() {
@@ -116,6 +125,7 @@ public class UserContacts implements Parcelable, Serializable
         out.writeString(contactsCardType);
         out.writeString(contactsGender);
         out.writeString(contactsPassport);
+        out.writeString(EnglishName);
     }
 
     private UserContacts(Parcel in){
@@ -126,6 +136,7 @@ public class UserContacts implements Parcelable, Serializable
         contactsCardType = in.readString();
         contactsGender = in.readString();
         contactsPassport = in.readString();
+        EnglishName = in.readString();
     }
 
     @Override

@@ -80,10 +80,11 @@ public class CalendarLineBiz {
                     if (bodyAry != null && bodyAry.length() != 0){
                         for (int i = 0; i < bodyAry.length(); i ++){
 //                            {
-//                                "day": "1479916800",
-//                                "childprice": "0",
+//                                "day": "1491408000",
+//                                "childprice": "1000",
 //                                "oldprice": "0",
-//                                "adultprice": "1480"
+//                                "adultprice": "2380",
+//                                "roombalance": "420"
 //                            }
                             JSONObject cpObj = bodyAry.getJSONObject(i);
                             GroupDeadline groupDeadline = new GroupDeadline();
@@ -94,6 +95,7 @@ public class CalendarLineBiz {
                                 groupDeadline.setSell_price_children(cpObj.getString("childprice"));
                                 groupDeadline.setSell_price_elder(cpObj.getString("oldprice"));
                                 groupDeadline.setSell_price_adult(cpObj.getString("adultprice"));
+                                groupDeadline.setTrade_price_adult(cpObj.getString("roombalance")); //单房差价格
                                 listCalendar.add(groupDeadline);
                                 LogUtil.e(TAG, groupDeadline.toString());
                             }

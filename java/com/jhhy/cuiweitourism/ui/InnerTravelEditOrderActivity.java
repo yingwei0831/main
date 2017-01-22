@@ -32,15 +32,17 @@ import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.utils.LinkSpanWrapper;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
+import com.jhhy.cuiweitourism.utils.Utils;
 import com.just.sun.pricecalendar.GroupDeadline;
 import com.just.sun.pricecalendar.ToastCommon;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class InnerTravelEditOrderActivity extends BaseActivity implements View.OnClickListener, OnItemTextViewClick {
 
-    private String TAG = InnerTravelEditOrderActivity.class.getSimpleName();
+    private String TAG = "InnerTravelEditOrderActivity";
     private TextView tvTitleTop;
     private ImageView ivTitleLeft;
 
@@ -141,7 +143,25 @@ public class InnerTravelEditOrderActivity extends BaseActivity implements View.O
         priceTotal = countAdult * priceAdult + countChild * priceChild;
     }
 
+    private ImageView ivReduce; //减少
+    private ImageView ivAdd; //增加
+    private TextView tvBalanceNumber; //数量
+    private TextView tvBalanceMoney; //钱
+    private String roombalance; //单房差价格 selectGroupDeadline.get_trade_adult()
+    private int balancenum = 1; //单房差数量
+
+    private int balanceMin; //最少增加单房差数量
+    private int balanceMax; //最多增加单房差数量
+
     private void setupView() {
+        ivReduce = (ImageView) findViewById(R.id.tv_price_calendar_number_reduce);
+        ivAdd = (ImageView) findViewById(R.id.tv_price_calendar_number_add);
+        tvBalanceNumber = (TextView) findViewById(R.id.tv_price_calendar_number);
+        tvBalanceMoney = (TextView) findViewById(R.id.tv_balance_money);
+        roombalance = selectGroupDeadline.getTrade_price_adult();
+        checkBalanceNum();
+        showBalanceText();
+
         tvTitleTop = (TextView) findViewById(R.id.tv_title_inner_travel);
         tvTitleTop.setText("填写订单");
         ivTitleLeft = (ImageView) findViewById(R.id.title_main_tv_left_location);
@@ -258,6 +278,8 @@ public class InnerTravelEditOrderActivity extends BaseActivity implements View.O
 
     private void addListener() {
         ivTitleLeft.setOnClickListener(this);
+        ivReduce.setOnClickListener(this);
+        ivAdd.setOnClickListener(this);
 
 //        tvSelectFromCity.setOnClickListener(this);
         tvSelectTraveler.setOnClickListener(this);
@@ -289,7 +311,7 @@ public class InnerTravelEditOrderActivity extends BaseActivity implements View.O
             case R.id.tv_travel_edit_order_icon: //选择旅游币(热门活动没有旅游币)
                 Intent intent1 = new Intent(getApplicationContext(), TourismCoinActivity.class);
                 Bundle bundle1 = new Bundle();
-                bundle1.putString("needScore", detail.getPrice()); //本次订单可以用的最多旅游币
+                bundle1.putString("needScore", String.format(Locale.getDefault(), "%.0f", Float.parseFloat(detail.getPrice()) - 1)); //本次订单可以用的最多旅游币
                 intent1.putExtras(bundle1);
                 startActivityForResult(intent1, Consts.REQUEST_CODE_RESERVE_SELECT_COIN);
                 break;
@@ -306,7 +328,50 @@ public class InnerTravelEditOrderActivity extends BaseActivity implements View.O
             case R.id.tv_travel_edit_order_notice: //去往预订须知
                 viewReserveNotice();
                 break;
+            case R.id.tv_price_calendar_number_reduce: //TODO 减少
+                if (balancenum > balanceMin ) {
+                    balancenum--;
+                    showBalanceText();
+                }else{
+                    ToastCommon.toastShortShow(getApplicationContext(), null, "最少添加" + balancenum + "间单房差");
+                }
+                break;
+            case R.id.tv_price_calendar_number_add: //TODO 增加
+                if (balancenum < balanceMax) {
+                    balancenum++;
+                    showBalanceText();
+                }else{
+                    ToastCommon.toastShortShow(getApplicationContext(), null, "最多添加" + balancenum + "间单房差");
+                }
+                break;
+
         }
+    }
+
+    private void checkBalanceNum() {
+        //如果1个人，最多增加1个，最少增加1个
+//        如果2个人，最多增加2个，最少增加0个
+//        如果3个人，最多增加3个，最少增加1个
+//        如果4个人，最多增加4个，最少增加1个
+//        如果5个人，最多增加5个，最少增加1个
+        if (countAdult == 1){
+            balanceMin = 1;
+        }else{
+            if (countAdult % 2 == 0){
+                balanceMin = 0;
+            }else if (countAdult % 2 == 1) {
+                balanceMin = 1;
+            }
+        }
+        balanceMax = countAdult;
+        balancenum = balanceMin;
+    }
+
+    private void showBalanceText() {
+        tvBalanceNumber.setText(String.valueOf(balancenum));
+        tvBalanceMoney.setText(String.format(Locale.getDefault(), "+￥%d", Integer.parseInt(roombalance) * balancenum));
+//        tvPriceTotal
+//        tvPriceTravel
     }
 
     /**
@@ -410,8 +475,20 @@ public class InnerTravelEditOrderActivity extends BaseActivity implements View.O
             LoadingIndicator.cancel();
             return;
         }
+        if (!Utils.isMobileNO(mobile)){
+            ToastCommon.toastShortShow(getApplicationContext(), null, "联系人手机号码不正确");
+            LoadingIndicator.cancel();
+            etContactTel.requestFocus();
+            return;
+        }
         if (TextUtils.isEmpty(mail)) {
             ToastCommon.toastShortShow(getApplicationContext(), null, "联系人邮件不能为空");
+            etContactMail.requestFocus();
+            LoadingIndicator.cancel();
+            return;
+        }
+        if (!Utils.isEmail(mail)){
+            ToastCommon.toastShortShow(getApplicationContext(), null, "联系人邮件格式不正确");
             etContactMail.requestFocus();
             LoadingIndicator.cancel();
             return;
@@ -437,7 +514,7 @@ public class InnerTravelEditOrderActivity extends BaseActivity implements View.O
         OrdersAllBiz biz = new OrdersAllBiz(getApplicationContext(), handler);
         biz.commitOrder(detail, selectGroupDeadline, countAdult, countChild,
                 name, mobile, mail, needInvoice, invoiceCommit,
-                useIcon, String.valueOf(priceIcon), listCommitCon, remark);
+                useIcon, String.valueOf(priceIcon), listCommitCon, remark, roombalance, String.valueOf(balancenum)); //单房差价格，单房差数量
     }
 
     @Override
@@ -447,9 +524,9 @@ public class InnerTravelEditOrderActivity extends BaseActivity implements View.O
         tvTitleTop = null;
         ivTitleLeft = null;
         priceAdult = 0;
-                priceChild = 0;
+        priceChild = 0;
         countAdult = 0;
-                countChild = 0;
+        countChild = 0;
         count = 0;
         detail = null;
         selectGroupDeadline = null;

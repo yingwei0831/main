@@ -113,7 +113,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="@android:color/white"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
                 <!--联系人-->
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -294,7 +295,7 @@
                 android:orientation="vertical"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp">
-
+                <!--游客信息-->
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -316,8 +317,7 @@
                         android:layout_toRightOf="@+id/tv_inner_travel_edit_order_traveller_detail"
                         android:gravity="center_vertical"
                         android:text="2成人，2儿童"
-                        android:textColor="@android:color/black"
-                        />
+                        android:textColor="@android:color/black" />
 
                     <TextView
                         android:id="@+id/tv_travel_edit_order_select_traveler"
@@ -328,26 +328,21 @@
                         android:drawablePadding="10dp"
                         android:drawableRight="@mipmap/arrow_right_dark"
                         android:gravity="center_vertical"
-                        android:text="常用游客"
                         android:maxLines="1"
                         android:paddingBottom="16dp"
                         android:paddingLeft="16dp"
                         android:paddingTop="16dp"
+                        android:text="常用游客"
                         android:textColor="@android:color/black"
                         android:textSize="14sp" />
                 </RelativeLayout>
-
 
                 <!--出行人信息，需要动态添加，默认有一个-->
                 <LinearLayout
                     android:id="@+id/layout_traveler"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-
-                </LinearLayout>
-
+                    android:orientation="vertical"></LinearLayout>
 
             </LinearLayout>
 
@@ -357,7 +352,7 @@
                 android:layout_marginTop="10dp"
                 android:background="@android:color/white"
                 android:orientation="vertical"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <LinearLayout
                     android:id="@+id/layout_tourism_icon"
@@ -468,9 +463,10 @@
                 android:layout_marginTop="10dp"
                 android:background="@android:color/white"
                 android:orientation="vertical"
+                android:paddingBottom="10dp"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp">
-
+                <!--商品金额-->
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -499,7 +495,7 @@
                         android:textSize="16sp" />
 
                 </RelativeLayout>
-
+                <!--旅游币-->
                 <RelativeLayout
                     android:id="@+id/layout_tourism_icon_num"
                     android:layout_width="match_parent"
@@ -520,7 +516,8 @@
                         android:layout_centerVertical="true"
                         android:layout_toLeftOf="@+id/tv_inner_travel_total_price_icon"
                         android:text="-￥"
-                        android:textColor="@android:color/holo_red_light" />
+                        android:textColor="@android:color/holo_red_light"
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/tv_inner_travel_total_price_icon"
@@ -531,7 +528,7 @@
                         android:textColor="@android:color/holo_red_light"
                         android:textSize="16sp" />
                 </RelativeLayout>
-
+                <!--发票快递费-->
                 <RelativeLayout
                     android:id="@+id/layout_price_express"
                     android:layout_width="match_parent"
@@ -552,7 +549,8 @@
                         android:layout_centerVertical="true"
                         android:layout_toLeftOf="@+id/tv_inner_travel_express_price"
                         android:text="+￥"
-                        android:textColor="@android:color/holo_red_light" />
+                        android:textColor="@android:color/holo_red_light"
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/tv_inner_travel_express_price"
@@ -564,11 +562,71 @@
                         android:textSize="16sp" />
                 </RelativeLayout>
 
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/tv_single_balance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="@string/travel_balance"
+                        android:textColor="@android:color/black" />
+
+                    <ImageView
+                        android:id="@+id/tv_price_calendar_number_reduce"
+                        android:layout_width="36dp"
+                        android:layout_height="34dp"
+                        android:layout_alignBottom="@+id/tv_price_calendar_number"
+                        android:layout_alignTop="@+id/tv_price_calendar_number"
+                        android:layout_marginLeft="20dp"
+                        android:layout_toRightOf="@+id/tv_single_balance"
+                        android:background="@drawable/bg_iv_price_calendar_left_border"
+                        android:scaleType="centerInside"
+                        android:src="@mipmap/icon_reduce" />
+
+                    <TextView
+                        android:id="@+id/tv_price_calendar_number"
+                        android:layout_width="36dp"
+                        android:layout_height="34dp"
+                        android:layout_marginLeft="-1dp"
+                        android:layout_marginRight="-1dp"
+                        android:layout_toRightOf="@+id/tv_price_calendar_number_reduce"
+                        android:background="@drawable/bg_tv_price_calendar_number_border"
+                        android:gravity="center"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp" />
+
+                    <ImageView
+                        android:id="@+id/tv_price_calendar_number_add"
+                        android:layout_width="36dp"
+                        android:layout_height="34dp"
+                        android:layout_alignBottom="@+id/tv_price_calendar_number"
+                        android:layout_alignTop="@+id/tv_price_calendar_number"
+                        android:layout_toRightOf="@+id/tv_price_calendar_number"
+                        android:background="@drawable/bg_iv_price_calendar_right_border"
+                        android:padding="12dp"
+                        android:scaleType="centerInside"
+                        android:src="@mipmap/icon_plus" />
+
+                    <TextView
+                        android:id="@+id/tv_balance_money"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:text="+￥100"
+                        android:textColor="@android:color/holo_red_light"
+                        android:textSize="16sp" />
+                </RelativeLayout>
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1.2px"
+                    android:layout_marginTop="6dp"
                     android:background="@color/colorLineGray2" />
-
+                <!--旅游须知等条款-->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -579,15 +637,15 @@
                         android:id="@+id/cb_travel_edit_order_deal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:checked="true"
-                        android:textColor="@android:color/black"
                         android:button="@drawable/bg_check_box"
-                        />
+                        android:checked="true"
+                        android:textColor="@android:color/black" />
 
                     <TextView
                         android:id="@+id/tv_travel_edit_order_deal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="4dp"
                         android:text="我已阅读并接受预订须知，旅游合同，特别预订提示等款项"
                         android:textColor="@android:color/black"
                         android:textSize="12sp" />

@@ -17,28 +17,38 @@
         android:id="@+id/layout_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/title_city_selection"
         android:paddingBottom="8dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:paddingTop="8dp">
 
-        <TextView
+        <EditText
             android:id="@+id/edit_search"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="40dp"
             android:background="@android:color/white"
-            android:drawableLeft="@mipmap/edit_search"
             android:drawablePadding="10dp"
             android:focusableInTouchMode="true"
-            android:hint="请输入名字或者拼音"
+            android:hint="请输入名字"
             android:gravity="center"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:singleLine="true"
             android:textColor="@android:color/black"
             android:textColorHint="#ff333333"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            />
+            <!--android:drawableLeft="@mipmap/edit_search"-->
+        <ImageView
+            android:id="@+id/iv_search_shop"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_btn_login"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:src="@mipmap/tab2_icon_search" />
+
     </LinearLayout>
 
     <TextView

@@ -165,7 +165,87 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1.2px"
-            android:background="@color/colorLineGray2" />
+            android:background="@color/colorLineGray2"
+            android:visibility="gone"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:layout_height="wrap_content"
+            >
+
+            <TextView
+                android:textSize="16sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/user_gender"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="*"
+                android:textColor="@android:color/holo_red_light" />
+
+            <TextView
+                android:id="@+id/tv_contacts_gender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:hint="@string/tab4_account_certification_gender_notice"
+                android:textSize="14sp"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                android:drawableRight="@mipmap/arrow_right_dark"
+                android:paddingLeft="4dp"
+                />
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1.2px"
+            android:background="@color/colorLineGray2"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <TextView
+                android:textSize="16sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/user_english_name"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="*"
+                android:textColor="@android:color/holo_red_light" />
+
+            <EditText
+                android:id="@+id/et_contacts_english_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:hint="@string/user_input"
+                android:textSize="14sp"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                android:paddingLeft="4dp"
+                />
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1.2px"
+            android:background="@color/colorLineGray2"
+            />
     </LinearLayout>
 
 

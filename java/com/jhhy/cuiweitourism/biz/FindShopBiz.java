@@ -156,9 +156,9 @@ public class FindShopBiz {
                     for (int i = 0; i < bodyAry.length(); i++) {
                         JSONObject shopObj = bodyAry.getJSONObject(i);
                         ShopRecommend shop = new ShopRecommend();
-                        shop.setId(shopObj.getString("sid"));
-                        shop.setName(shopObj.getString("suppliername"));
-                        shop.setLitpic(shopObj.getString("logo"));
+                        shop.setSid(shopObj.getString("sid"));
+                        shop.setSuppliername(shopObj.getString("suppliername"));
+                        shop.setLogo(shopObj.getString("logo"));
                         listShop.add(shop);
                     }
                     msg.obj = listShop;

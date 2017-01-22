@@ -814,10 +814,6 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
                 return;
             }
             Intent intent = new Intent(getContext(), EasemobLoginActivity.class);
-            if (im == null || im.length() == 0) {
-                ToastUtil.show(getContext(), "当前商户暂未提供客服功能");
-                return;
-            }
             intent.putExtra("im", im);
             startActivity(intent);
         } else {

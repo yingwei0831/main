@@ -36,8 +36,8 @@ public class SearchShopGridAdapter extends MyBaseAdapter {
         }
 
         ShopRecommend shop = (ShopRecommend) getItem(i);
-        holder.tvShopName.setText(shop.getName());
-        ImageLoaderUtil.getInstance(context).displayImage(shop.getLitpic(), holder.ivShopLogo);
+        holder.tvShopName.setText(shop.getSuppliername());
+        ImageLoaderUtil.getInstance(context).displayImage(shop.getLogo(), holder.ivShopLogo);
         return view;
     }
 

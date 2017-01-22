@@ -365,8 +365,16 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        LogUtil.e(TAG, "------------onNewIntent------------");
+
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        LogUtil.e(TAG, "------------onActivityResult------------");
         if(requestCode == REQUEST_LOGIN){
             if (RESULT_OK == resultCode){
 //                getData(data.getExtras());
@@ -429,23 +437,6 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
     }
 
     private long exitTime=0;
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
-            if((System.currentTimeMillis()-exitTime) > 2000){
-                ToastUtil.showShortToast(getApplicationContext(), "再按一次退出程序");
-                exitTime = System.currentTimeMillis();
-            } else {
-//                System.exit(0);
-                LoginBiz biz = new LoginBiz(null, null);
-                biz.logout(null);
-                 finish();
-            }
-            return true;
-        }
-        return true;
-    }
 
     private NetWorkReceiver receiver;
 
@@ -688,12 +679,28 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
         startActivity(i);
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
+            if((System.currentTimeMillis()-exitTime) > 2000){
+                ToastUtil.showShortToast(getApplicationContext(), "再按一次退出程序");
+                exitTime = System.currentTimeMillis();
+            } else {
+//                System.exit(0);
+//                LoginBiz biz = new LoginBiz(null, null);
+//                biz.logout(null);
+                finish();
+            }
+            return true;
+        }
+        return true;
+    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        LoginBiz biz = new LoginBiz(null, null);
-        biz.logout(null);
+//        LoginBiz biz = new LoginBiz(null, null);
+//        biz.logout(null);
         logged = false;
         unregisterReceiver(receiver);
 

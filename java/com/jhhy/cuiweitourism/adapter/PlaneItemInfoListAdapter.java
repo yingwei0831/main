@@ -66,7 +66,7 @@ public abstract class PlaneItemInfoListAdapter extends MyBaseAdapter implements 
             }
         });
 
-        if (type == 1) {
+        if (type == 1) { //国际机票
             holder.tvTaxPrice.setVisibility(View.VISIBLE);
             PlaneTicketInternationalInfo.PlaneTicketInternationalHFCabin cabin = (PlaneTicketInternationalInfo.PlaneTicketInternationalHFCabin) getItem(i);
 
@@ -80,7 +80,7 @@ public abstract class PlaneItemInfoListAdapter extends MyBaseAdapter implements 
             holder.tvTypeSeat.setText(cabinType);
             holder.tvTicketPrice.setText(String.format("￥%s", cabin.totalFare.taxTotal)); //票面价 cabin.baseFare.faceValueTotal ; 含税总价：hf.cabin.totalFare.taxTotal
             holder.tvTaxPrice.setText(String.format("税费：￥%s", cabin.passengerType.taxTypeCodeMap.get("XT").price)); //税费xxx; 含税总价；
-        }else{
+        }else{ //国内机票
             holder.viewGreen.setVisibility(View.GONE);
             PlaneTicketInfoOfChina.SeatItemInfo seatItem = (PlaneTicketInfoOfChina.SeatItemInfo) getItem(i);
             holder.tvTypeSeat.setText(String.format("%s%s折", seatItem.seatMsg, seatItem.discount));

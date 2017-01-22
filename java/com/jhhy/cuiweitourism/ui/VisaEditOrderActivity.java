@@ -327,8 +327,8 @@ public class VisaEditOrderActivity extends BaseActionBarActivity implements OnIt
             if (requestCode == Consts.REQUEST_CODE_RESERVE_SELECT_COIN){ //选择旅游币
                 Bundle bundle = data.getExtras();
                 priceIcon = bundle.getInt("score");
-                tvTravelIcon.setText(String.valueOf(priceIcon));
-                tvPriceIcon.setText(String.format(Locale.getDefault(), "%d个", priceIcon));
+                tvTravelIcon.setText(String.format(Locale.getDefault(), "%d个", priceIcon));
+                tvPriceIcon.setText(String.format(Locale.getDefault(), "%d", priceIcon));
                 tvPriceTotal.setText(String.format(Locale.getDefault(), "%d", priceTotal - priceIcon));
             } else if (requestCode == Consts.REQUEST_CODE_RESERVE_SELECT_INVOICE){ //选择是否开发票
                 Bundle bundle = data.getExtras();

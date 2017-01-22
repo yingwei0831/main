@@ -71,7 +71,8 @@ public class OrdersAllBiz {
 // "linkman":"张三","linktel":"15210656884","linkemail":"826782665@qq.com",
 // "isneedpiao":"1","fapiao":{"title":"北京发票","receiver":"王二麻子","mobile":"13895784597","address":"北京市昌平区"},
 // "jifentprice":"10","usejifen":"1","needjifen":"10",
-// "lxr":[{"linkman":"王二麻子","idcard":"233695898745896597","mobile":"13895878954","passport":"hz12346789"}],"remark":"备注可不填"}}
+// "lxr":[{"linkman":"王二麻子","idcard":"233695898745896597","mobile":"13895878954","passport":"hz12346789"}],
+// "remark":"备注可不填","roombalance":"","balancenum":""}}
     private String CODE_COMMIT_ORDER = "Order_index";
     /**
      * 提交订单
@@ -80,7 +81,7 @@ public class OrdersAllBiz {
                             final String linkName, final String linkMobile, final String linkMail,
                             final String needInvoice, final Invoice invoice,
                             final String useScore, final String priceScore,
-                            final List<UserContacts> contactses, final String remark){
+                            final List<UserContacts> contactses, final String remark, final String roombalance, final String balancenum){
         if (NetworkUtil.checkNetwork(context)) {
             new Thread(){
                 @Override
@@ -132,7 +133,8 @@ public class OrdersAllBiz {
 
                         fieldObj.put("lxr", contactArray);
                         fieldObj.put("remark", remark);
-
+                        fieldObj.put("", roombalance); //单房差价格
+                        fieldObj.put("", balancenum); //单房差数量
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
