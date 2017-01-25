@@ -120,10 +120,12 @@ public class SearchShopActivity extends BaseActivity implements View.OnClickList
             //自定义ActionBar
             actionBar = getSupportActionBar();
 //            actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-            actionBar.setDisplayShowCustomEnabled(true);
-            View v = LayoutInflater.from(getApplicationContext()).inflate(R.layout.title_tab1_inner_travel, null);
-            actionBar.setCustomView(v, new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT)); //自定义ActionBar布局);
-            actionBar.setElevation(0); //删除自带阴影
+            if (actionBar != null) {
+                actionBar.setDisplayShowCustomEnabled(true);
+                View v = LayoutInflater.from(getApplicationContext()).inflate(R.layout.title_tab1_inner_travel, null);
+                actionBar.setCustomView(v, new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT)); //自定义ActionBar布局);
+                actionBar.setElevation(0); //删除自带阴影
+            }
 
             setContentView(R.layout.activity_search_shop);
             getInternetData();

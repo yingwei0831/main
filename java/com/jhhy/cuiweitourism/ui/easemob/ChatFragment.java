@@ -70,18 +70,29 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragment.E
 
 	protected String currentUserNick;
 
+	private boolean kefuIcon;
+
 	private Handler handler = new Handler(){
 		@Override
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
+			LogUtil.e(TAG, "kefuIcon = " + kefuIcon);
+			if ("null".equals(urlYou) || urlYou == null || urlYou.length() == 0 || "http:".equals(urlYou)){
+				return;
+			}
+			if (kefuIcon){
+				return;
+			}
 			ImageLoaderUtil imageLoader = ImageLoaderUtil.getInstance(getContext());
 			imageLoader.getImage(titleBar.getRightImageView(), (String) msg.obj);
 			imageLoader.setCallBack(new ImageLoaderUtil.ImageLoaderCallBack() {
 				@Override
 				public void refreshAdapter(Bitmap loadBitmap) {
 					titleBar.getRightImageView().setImageBitmap(loadBitmap);
+					kefuIcon = true;
 				}
 			});
+			LogUtil.e(TAG, "kefuIcon = " + kefuIcon);
 		}
 	};
 
@@ -503,24 +514,32 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragment.E
 	public void onEvent(EMNotifierEvent event) {
 		super.onEvent(event);
 		switch (event.getEvent()) {
-			case EventNewMessage:
-				// 获取到message
+			case EventNewMessage: // 获取到message
 				EMMessage message = (EMMessage) event.getData();
-				LogUtil.e(TAG, "收到的message: " + message);
+				LogUtil.e(TAG, "收到的message: " + message.toString());
 				try {
 					JSONObject msg = message.getJSONObjectAttribute("weichat");
-					JSONObject agent = msg.getJSONObject("agent");
+					LogUtil.e(TAG, "receive weichat = " + msg);
+					JSONObject agent = msg.getJSONObject("agent"); //{"avatar":null,"userNickname":null}
 					urlYou = agent.getString("avatar");
-					nickNameYou = agent.getString("callback_user"); //userNickname  callback_user
-
-					Message messageUrl = new Message();
-					messageUrl.obj = "http://kefu.easemob.com/ossimages" + urlYou;
-					handler.sendMessage(messageUrl);
-
-					LogUtil.e(TAG, "receive = " + msg);
+					if ("null".equals(agent.getString("userNickname")) || "".equals(agent.getString("userNickname")) || agent.getString("userNickname") == null){
+						nickNameYou = message.getUserName();
+					}else{
+						nickNameYou = agent.getString("userNickname");
+					}
+//					nickNameYou = message.getUserName(); //agent.getString("userNickname"); //userNickname  callback_user
+//					if ("null".equals(urlYou) || urlYou == null || urlYou.length() == 0 || kefuIcon){
+//					}
+					if (nickNameYou != null && nickNameYou.length() != 0 && !kefuIcon){
+						titleBar.setTitle(nickNameYou);
+					}
+					if (!kefuIcon){
+						Message messageUrl = new Message();
+//						messageUrl.obj = "http://kefu.easemob.com/ossimages" + urlYou;
+						messageUrl.obj = "http:" + urlYou;
+						handler.sendMessage(messageUrl);
+					}
 					LogUtil.e(TAG, "nickNameYou = " + nickNameYou + ", urlYou = " + urlYou);
-					titleBar.setTitle(nickNameYou);
-
 				} catch (EaseMobException e) {
 					e.printStackTrace();
 				} catch (JSONException e){

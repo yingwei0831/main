@@ -150,6 +150,7 @@ public class UserContacts implements Parcelable, Serializable
                 ", contactsCardType='" + contactsCardType + '\'' +
                 ", contactsGender='" + contactsGender + '\'' +
                 ", contactsPassport='" + contactsPassport + '\'' +
+                ", EnglishName='"+ EnglishName + '\'' +
                 '}';
     }
 }

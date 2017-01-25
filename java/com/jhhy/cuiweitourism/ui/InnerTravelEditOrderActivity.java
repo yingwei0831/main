@@ -29,6 +29,7 @@ import com.jhhy.cuiweitourism.model.Order;
 import com.jhhy.cuiweitourism.model.TravelDetail;
 import com.jhhy.cuiweitourism.model.UserContacts;
 import com.jhhy.cuiweitourism.net.utils.Consts;
+import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.utils.LinkSpanWrapper;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.utils.ToastUtil;
@@ -57,7 +58,7 @@ public class InnerTravelEditOrderActivity extends BaseActivity implements View.O
 
     private GroupDeadline selectGroupDeadline; //选择某天的价格日历
     private int priceIcon = 0; //将要抵扣的旅游币
-    private int priceInvoice = 15;
+    private int priceInvoice = 0; //发票快递费
 
     private TextView tvTitle;
     private TextView tvFromCity;
@@ -74,8 +75,8 @@ public class InnerTravelEditOrderActivity extends BaseActivity implements View.O
     private TextView tvSelectTraveler; //常用联系人
     private LinearLayout layoutTravelers; //动态添加游客
 
-    private LinearLayout layoutTourismIcon; //旅游币布局
-    private View viewLineTourism; //旅游币线
+//    private LinearLayout layoutTourismIcon; //旅游币布局
+//    private View viewLineTourism; //旅游币线
     private TextView tvTravelIcon; //旅游币
     private TextView tvInvoice; //发票
     private TextView tvReserveNotice; //预订须知
@@ -83,7 +84,7 @@ public class InnerTravelEditOrderActivity extends BaseActivity implements View.O
     private TextView tvPriceTravel; //商品金额
     private TextView tvPriceIcon; //可抵扣的旅游币
     private RelativeLayout layoutIconPrice; //抵扣旅游币数量布局
-    private RelativeLayout layoutPriceExpress;
+//    private RelativeLayout layoutPriceExpress;
     private TextView tvPriceInvoice; //快递费
 
     private CheckBox cbDeal;
@@ -94,6 +95,7 @@ public class InnerTravelEditOrderActivity extends BaseActivity implements View.O
     private List<UserContacts> listCommitCon = new ArrayList<>(); //提交的联系人列表数据
 //    private ArrayList<ActivityOrder.Contact> listHotContact = new ArrayList<>(); //热门活动提交的联系人列表数据
     private Invoice invoiceCommit = null; //提交的发票信息
+    private int priceTravel; //商品总金额
     private int priceTotal; //订单总金额
 
     private Handler handler = new Handler() {
@@ -140,14 +142,17 @@ public class InnerTravelEditOrderActivity extends BaseActivity implements View.O
 
         detail = (TravelDetail) bundle.getSerializable("detail");
 
-        priceTotal = countAdult * priceAdult + countChild * priceChild;
+        roombalance = Integer.parseInt(selectGroupDeadline.getTrade_price_adult());
+        checkBalanceNum();
+        priceTravel = countAdult * priceAdult + countChild * priceChild;
+        LogUtil.e(TAG, "priceTotal = " + priceTotal);
     }
 
     private ImageView ivReduce; //减少
     private ImageView ivAdd; //增加
     private TextView tvBalanceNumber; //数量
     private TextView tvBalanceMoney; //钱
-    private String roombalance; //单房差价格 selectGroupDeadline.get_trade_adult()
+    private int roombalance; //单房差价格 selectGroupDeadline.get_trade_adult()
     private int balancenum = 1; //单房差数量
 
     private int balanceMin; //最少增加单房差数量
@@ -158,9 +163,6 @@ public class InnerTravelEditOrderActivity extends BaseActivity implements View.O
         ivAdd = (ImageView) findViewById(R.id.tv_price_calendar_number_add);
         tvBalanceNumber = (TextView) findViewById(R.id.tv_price_calendar_number);
         tvBalanceMoney = (TextView) findViewById(R.id.tv_balance_money);
-        roombalance = selectGroupDeadline.getTrade_price_adult();
-        checkBalanceNum();
-        showBalanceText();
 
         tvTitleTop = (TextView) findViewById(R.id.tv_title_inner_travel);
         tvTitleTop.setText("填写订单");
@@ -182,9 +184,9 @@ public class InnerTravelEditOrderActivity extends BaseActivity implements View.O
         tvSelectTraveler = (TextView) findViewById(R.id.tv_travel_edit_order_select_traveler);
         layoutTravelers = (LinearLayout) findViewById(R.id.layout_traveler);
 
-        layoutTourismIcon = (LinearLayout) findViewById(R.id.layout_tourism_icon);
+//        layoutTourismIcon = (LinearLayout) findViewById(R.id.layout_tourism_icon);
         tvTravelIcon = (TextView) findViewById(R.id.tv_travel_edit_order_icon);
-        viewLineTourism = findViewById(R.id.line_tourism_icon);
+//        viewLineTourism = findViewById(R.id.line_tourism_icon);
 
         tvInvoice = (TextView) findViewById(R.id.tv_travel_edit_order_invoice);
         tvReserveNotice = (TextView) findViewById(R.id.tv_travel_edit_order_notice);
@@ -216,7 +218,6 @@ public class InnerTravelEditOrderActivity extends BaseActivity implements View.O
         tvDeal.setText(stylesBuilder);
 
         tvPriceTotal = (TextView) findViewById(R.id.tv_edit_order_price); //订单总金额
-        tvPriceTotal.setText(String.valueOf(priceTotal));
         btnPay = (Button) findViewById(R.id.btn_edit_order_pay); //去往立即支付
 
         int totalCustom = countAdult + countChild;
@@ -224,6 +225,8 @@ public class InnerTravelEditOrderActivity extends BaseActivity implements View.O
         for (int i = 0; i < totalCustom; i++) {
             View viewCustom = LayoutInflater.from(getApplicationContext()).inflate(R.layout.layout_traveler, null);
             final TextView tvName = (TextView) viewCustom.findViewById(R.id.tv_travel_edit_order_name);
+            TextView tvContactTitle = (TextView) viewCustom.findViewById(R.id.tv_inner_travel_edit_order_traveller_detail_1);
+            tvContactTitle.setText(String.format(Locale.getDefault(), "游客%d：", i + 1));
             final int j = i;
             viewCustom.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -250,16 +253,18 @@ public class InnerTravelEditOrderActivity extends BaseActivity implements View.O
         }
         tvTravelers.setText(countAdult + "成人" + str);
         tvPriceTravel = (TextView) findViewById(R.id.tv_inner_travel_currency_price); //商品总金额
-        tvPriceTravel.setText(String.valueOf(priceTotal));
+        tvPriceTravel.setText(String.valueOf(priceTravel));
+
         tvPriceIcon = (TextView) findViewById(R.id.tv_inner_travel_total_price_icon); //旅游币
         layoutIconPrice = (RelativeLayout) findViewById(R.id.layout_tourism_icon_num); //抵扣旅游币数量布局
 
         tvPriceIcon.setText(String.valueOf(priceIcon));
 
-        layoutPriceExpress = (RelativeLayout) findViewById(R.id.layout_price_express);
-        layoutPriceExpress.setVisibility(View.GONE);
+//        layoutPriceExpress = (RelativeLayout) findViewById(R.id.layout_price_express);
+//        layoutPriceExpress.setVisibility(View.GONE);
         tvPriceInvoice = (TextView) findViewById(R.id.tv_inner_travel_express_price); //发票
-
+        tvPriceInvoice.setText(String.valueOf(priceInvoice));
+        showBalanceText();
     }
 
     int position = -1; //点击的联系人布局中的位置
@@ -272,6 +277,7 @@ public class InnerTravelEditOrderActivity extends BaseActivity implements View.O
         Intent intent = new Intent(getApplicationContext(), SelectCustomActivity.class);
         Bundle bundle = new Bundle();
         bundle.putInt("number", 1);
+        bundle.putString("travelType", detail.getType());
         intent.putExtras(bundle);
         startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_SELECT_CONTACT);
     }
@@ -302,6 +308,7 @@ public class InnerTravelEditOrderActivity extends BaseActivity implements View.O
                 Intent intent = new Intent(getApplicationContext(), SelectCustomActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putInt("number", count);
+                bundle.putString("travelType", detail.getType());
                 intent.putExtras(bundle);
                 startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_SELECT_CONTACT);
                 break;
@@ -311,7 +318,8 @@ public class InnerTravelEditOrderActivity extends BaseActivity implements View.O
             case R.id.tv_travel_edit_order_icon: //选择旅游币(热门活动没有旅游币)
                 Intent intent1 = new Intent(getApplicationContext(), TourismCoinActivity.class);
                 Bundle bundle1 = new Bundle();
-                bundle1.putString("needScore", String.format(Locale.getDefault(), "%.0f", Float.parseFloat(detail.getPrice()) - 1)); //本次订单可以用的最多旅游币
+//                bundle1.putString("needScore", String.format(Locale.getDefault(), "%.0f", Float.parseFloat(detail.getPrice()) - 1)); //本次订单可以用的最多旅游币
+                bundle1.putString("needScore", String.format(Locale.getDefault(), "%d", priceTotal - 1)); //本次订单可以用的最多旅游币
                 intent1.putExtras(bundle1);
                 startActivityForResult(intent1, Consts.REQUEST_CODE_RESERVE_SELECT_COIN);
                 break;
@@ -368,10 +376,10 @@ public class InnerTravelEditOrderActivity extends BaseActivity implements View.O
     }
 
     private void showBalanceText() {
+        priceTotal = priceTravel + roombalance * balancenum + priceInvoice - priceIcon;
         tvBalanceNumber.setText(String.valueOf(balancenum));
-        tvBalanceMoney.setText(String.format(Locale.getDefault(), "+￥%d", Integer.parseInt(roombalance) * balancenum));
-//        tvPriceTotal
-//        tvPriceTravel
+        tvBalanceMoney.setText(String.format(Locale.getDefault(), "+￥%d", roombalance * balancenum));
+        tvPriceTotal.setText(String.valueOf(priceTotal));
     }
 
     /**
@@ -426,7 +434,8 @@ public class InnerTravelEditOrderActivity extends BaseActivity implements View.O
                 priceIcon = bundle.getInt("score");
                 tvTravelIcon.setText(String.valueOf(priceIcon));
                 tvPriceIcon.setText(String.valueOf(priceIcon));
-                tvPriceTotal.setText(String.valueOf(priceTotal - priceIcon));
+                priceTotal = priceTravel + roombalance * balancenum - priceIcon + priceInvoice;
+                tvPriceTotal.setText(String.valueOf(priceTotal));
             } else if (requestCode == Consts.REQUEST_CODE_RESERVE_SELECT_INVOICE) { //选择是否开发票
                 Bundle bundle = data.getExtras();
 
@@ -434,17 +443,23 @@ public class InnerTravelEditOrderActivity extends BaseActivity implements View.O
                 if (invoiceTag == 1) {
                     invoiceCommit = null;
                     tvInvoice.setText("不需要发票");
-                    layoutPriceExpress.setVisibility(View.GONE);
-                    tvPriceTotal.setText(String.valueOf(priceTotal - priceIcon));
+                    priceInvoice = 0;
+                    tvPriceInvoice.setText(String.valueOf(priceInvoice));
+                    priceTotal = priceTravel + roombalance * balancenum - priceIcon + priceInvoice;
+                    tvPriceTotal.setText(String.valueOf(priceTotal));
                 } else {
                     invoiceCommit = (Invoice) data.getSerializableExtra("invoice");
-                    layoutPriceExpress.setVisibility(View.VISIBLE);
+                    LogUtil.e(TAG, invoiceCommit);
+                    priceInvoice = 15;
                     tvPriceInvoice.setText(String.valueOf(priceInvoice));
-                    tvPriceTotal.setText(String.valueOf(priceTotal - priceIcon + priceInvoice));
+                    priceTotal = priceTravel + roombalance * balancenum - priceIcon + priceInvoice;
+                    tvPriceTotal.setText(String.valueOf(priceTotal));
                     if (invoiceTag == 3) {
-                        tvInvoice.setText("单位" + invoiceCommit.getTitle());
+                        tvInvoice.setText(String.format(Locale.getDefault(), "单位: %s", invoiceCommit.getTitle()));
+                        invoiceCommit.setTitle(invoiceCommit.getTitle());
                     } else {
                         tvInvoice.setText("个人");
+                        invoiceCommit.setTitle("个人");
                     }
                 }
             } else if (requestCode == Consts.REQUEST_CODE_RESERVE_PAY) { //订单生成成功，去支付
@@ -514,7 +529,7 @@ public class InnerTravelEditOrderActivity extends BaseActivity implements View.O
         OrdersAllBiz biz = new OrdersAllBiz(getApplicationContext(), handler);
         biz.commitOrder(detail, selectGroupDeadline, countAdult, countChild,
                 name, mobile, mail, needInvoice, invoiceCommit,
-                useIcon, String.valueOf(priceIcon), listCommitCon, remark, roombalance, String.valueOf(balancenum)); //单房差价格，单房差数量
+                useIcon, String.valueOf(priceIcon), listCommitCon, remark, String.valueOf(roombalance), String.valueOf(balancenum)); //单房差价格，单房差数量
     }
 
     @Override
@@ -543,15 +558,15 @@ public class InnerTravelEditOrderActivity extends BaseActivity implements View.O
         tvTravelers = null;
         tvSelectTraveler = null;
         layoutTravelers = null;
-        layoutTourismIcon = null;
-        viewLineTourism = null;
+//        layoutTourismIcon = null;
+//        viewLineTourism = null;
         tvTravelIcon  = null;
         tvInvoice = null;
         tvReserveNotice = null;
         tvPriceTravel = null;
         tvPriceIcon = null;
         layoutIconPrice = null;
-        layoutPriceExpress = null;
+//        layoutPriceExpress = null;
         tvPriceInvoice = null;
         cbDeal = null;
         tvPriceTotal = null;

@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.model.Invoice;
+import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.just.sun.pricecalendar.ToastCommon;
 
 public class SettingInvoiceActivity extends BaseActionBarActivity implements RadioGroup.OnCheckedChangeListener, View.OnClickListener {
@@ -140,6 +141,7 @@ public class SettingInvoiceActivity extends BaseActionBarActivity implements Rad
                     invoiceCommit.setAddress(address.trim());
                     if (selection == 3) {
                         String title = etTitle.getText().toString();
+                        LogUtil.e(TAG, "title = " + title);
                         if (TextUtils.isEmpty(title)){
                             ToastCommon.toastShortShow(getApplicationContext(), null, "公司名称不能为空");
                             return;

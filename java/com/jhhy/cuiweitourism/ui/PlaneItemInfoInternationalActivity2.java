@@ -48,7 +48,7 @@ public class PlaneItemInfoInternationalActivity2 extends BaseActionBarActivity {
     private String traveltype; //航程类型 OW（单程） RT（往返）
     private PlaneTicketInternationalInfo.PlaneTicketInternationalHFCabin cabin;
 
-    public static PlaneTicketInternationalPolicyResponse checkResponseData;
+//    public static PlaneTicketInternationalPolicyResponse checkResponseData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,6 +157,7 @@ public class PlaneItemInfoInternationalActivity2 extends BaseActionBarActivity {
         bundle.putSerializable("toCity", toCity);
         bundle.putSerializable("cabin", cabin);
         bundle.putString("travelType", traveltype);
+        bundle.putString("flightPrice", cabin.baseFare.faceValueTotal);
 //        bundle.putParcelable("checkResponse", checkResponse);
         if ("RT".equals(traveltype)){
             bundle.putString("dateReturn", dateReturn);
@@ -168,95 +169,99 @@ public class PlaneItemInfoInternationalActivity2 extends BaseActionBarActivity {
      * 国际机票验价
      */
     private void checkData() {
-        LoadingIndicator.show(PlaneItemInfoInternationalActivity2.this, getString(R.string.http_notice));
-        PlaneTicketActionBiz planeBiz = new PlaneTicketActionBiz();
+        reserveTicker();
 
-        List<List<PlaneTicketInternationalPolicyCheckRequest.IFlight>>  interFlights = new ArrayList<>();
-        List<PlaneTicketInternationalPolicyCheckRequest.IFlight> iFlightsSingle = new ArrayList<>(); //单程
-        ArrayList<PlaneTicketInternationalInfo.FlightInfo> iFlightS1 = flight.S1.flightInfos;
-
-        String cabinCodes = cabin.passengerType.airportCabinCode;
-        LogUtil.e(TAG, "舱位代码 cabinCodes: " + cabinCodes); //J,J,Y/Y,Y,Y
-        String[] cabinCode = cabinCodes.split("/");
-        String[] cabinCodeS1 = cabinCode[0].split(",");
-        String[] cabinCodeS2 = new String[0];
-        if ("RT".equals(traveltype)){
-            cabinCodeS2 = cabinCode[1].split(",");
-        }
-
-        String cabinTypes = cabin.passengerType.airportCabinType;
-        LogUtil.e(TAG, "舱位类型 cabinTypes: " + cabinTypes); //B,B,E/E
-        String[] cabinType = cabinTypes.split("/");
-        String[] cabinTypeS1 = cabinType[0].split(",");
-        String[] cabinTypeS2 = new String[0];
-        if ("RT".equals(traveltype)){
-            cabinTypeS2 = cabinType[1].split(",");
-        }
-
-        for (int i = 0; i < iFlightS1.size(); i++){
-            PlaneTicketInternationalInfo.FlightInfo flightInfo = iFlightS1.get(i);
-            PlaneTicketInternationalPolicyCheckRequest.IFlight iFlight = new PlaneTicketInternationalPolicyCheckRequest.IFlight(String.valueOf(i), "S1",
-                    cabin.passengerType.mainCarrierCheck, flightInfo.toDateCheck, flightInfo.toTimeCheck, flightInfo.fromAirportCodeCheck, flightInfo.fromTerminal, flightInfo.airlineCompanyCheck,
-                    cabinCodeS1[i], flightInfo.fromDateCheck, flightInfo.fromTimeCheck,
-                    flightInfo.flightNumberCheck, flightInfo.toAirportCodeCheck, flightInfo.toTermianl);
-            if (cabinTypeS1.length > 1){
-                iFlight.setClassRank(cabinTypeS1[i]);
-            }else{
-                iFlight.setClassRank(cabinTypeS1[0]);
-            }
-            iFlightsSingle.add(iFlight);
-        }
-        interFlights.add(iFlightsSingle);
-
-        if ("RT".equals(traveltype)) {
-            List<PlaneTicketInternationalPolicyCheckRequest.IFlight> iFlightsMultiply = new ArrayList<>(); //往返
-            ArrayList<PlaneTicketInternationalInfo.FlightInfo> iFlightS2 = flight.S2.flightInfos;
-            for (int i = 0; i < iFlightS2.size(); i++) {
-                PlaneTicketInternationalInfo.FlightInfo flightInfo = iFlightS2.get(i);
-//                LogUtil.e(TAG, flightInfo);
-                PlaneTicketInternationalPolicyCheckRequest.IFlight iFlight = new PlaneTicketInternationalPolicyCheckRequest.IFlight(String.valueOf(i), "S2",
-                        cabin.passengerType.mainCarrierCheck, flightInfo.toDateCheck, flightInfo.toTimeCheck, flightInfo.fromAirportCodeCheck, flightInfo.fromTerminal, flightInfo.airlineCompanyCheck,
-                        cabinCodeS2[i], flightInfo.fromDateCheck, flightInfo.fromTimeCheck,
-                        flightInfo.flightNumberCheck, flightInfo.toAirportCodeCheck, flightInfo.toTermianl);
-                if (cabinTypeS2.length > 1){
-                    iFlight.setClassRank(cabinTypeS2[i]);
-                }else{
-                    iFlight.setClassRank(cabinTypeS2[0]);
-                }
-                iFlightsMultiply.add(iFlight);
-            }
-            interFlights.add(iFlightsMultiply);
-        }
-
-        PlaneTicketInternationalPolicyCheckRequest request = new PlaneTicketInternationalPolicyCheckRequest(traveltype, "1E", "ALL", interFlights);
-        planeBiz.planeTicketInternationalPolicyCheck(request, new BizGenericCallback<PlaneTicketInternationalPolicyResponse>() {
-            @Override
-            public void onCompletion(GenericResponseModel<PlaneTicketInternationalPolicyResponse> model) {
-                if ("0001".equals(model.headModel.res_code)){
-                    ToastUtil.show(getApplicationContext(), model.headModel.res_arg);
-                }else if ("0000".equals(model.headModel.res_code)){
-                    PlaneTicketInternationalPolicyResponse checkResponse = model.body;
-                    if ("N".equals(checkResponse.getPolicys().getPolicy().getFlag())){
-                        ToastUtil.show(getApplicationContext(), checkResponse.getPolicys().getPolicy().getErrMsg());
-                    }else if ("Y".equals(checkResponse.getPolicys().getPolicy().getFlag())){
-                        checkResponseData = checkResponse;
-                        reserveTicker();
-                    }
-                }
-                LoadingIndicator.cancel();
-            }
-
-            @Override
-            public void onError(FetchError error) {
-                LogUtil.e(TAG, "ERROR = "+error);
-                if (error.localReason != null){
-                    ToastUtil.show(getApplicationContext(), error.localReason);
-                }else{
-                    ToastUtil.show(getApplicationContext(), "验价失败，请返回重试");
-                }
-                LoadingIndicator.cancel();
-            }
-        });
+//        LoadingIndicator.show(PlaneItemInfoInternationalActivity2.this, getString(R.string.http_notice));
+//        PlaneTicketActionBiz planeBiz = new PlaneTicketActionBiz();
+//
+//        List<List<PlaneTicketInternationalPolicyCheckRequest.IFlight>>  interFlights = new ArrayList<>();
+//        List<PlaneTicketInternationalPolicyCheckRequest.IFlight> iFlightsSingle = new ArrayList<>(); //单程
+//        ArrayList<PlaneTicketInternationalInfo.FlightInfo> iFlightS1 = flight.S1.flightInfos;
+//
+//        String cabinCodes = cabin.passengerType.airportCabinCode;
+//        LogUtil.e(TAG, "舱位代码 cabinCodes: " + cabinCodes); //J,J,Y/Y,Y,Y
+//        String[] cabinCode = cabinCodes.split("/");
+//        String[] cabinCodeS1 = cabinCode[0].split(",");
+//        String[] cabinCodeS2 = new String[0];
+//        if ("RT".equals(traveltype)){
+//            cabinCodeS2 = cabinCode[1].split(",");
+//        }
+//
+//        String cabinTypes = cabin.passengerType.airportCabinType;
+//        LogUtil.e(TAG, "舱位类型 cabinTypes: " + cabinTypes); //B,B,E/E
+//        String[] cabinType = cabinTypes.split("/");
+//        String[] cabinTypeS1 = cabinType[0].split(",");
+//        String[] cabinTypeS2 = new String[0];
+//        if ("RT".equals(traveltype)){
+//            cabinTypeS2 = cabinType[1].split(",");
+//        }
+//
+//        for (int i = 0; i < iFlightS1.size(); i++){
+//            PlaneTicketInternationalInfo.FlightInfo flightInfo = iFlightS1.get(i);
+//            PlaneTicketInternationalPolicyCheckRequest.IFlight iFlight = new PlaneTicketInternationalPolicyCheckRequest.IFlight(String.valueOf(i), "S1",
+//                    cabin.passengerType.mainCarrierCheck, flightInfo.toDateCheck, flightInfo.toTimeCheck, flightInfo.fromAirportCodeCheck, flightInfo.fromTerminal, flightInfo.airlineCompanyCheck,
+//                    cabinCodeS1[i], flightInfo.fromDateCheck, flightInfo.fromTimeCheck,
+//                    flightInfo.flightNumberCheck, flightInfo.toAirportCodeCheck, flightInfo.toTermianl);
+//            if (cabinTypeS1.length > 1){
+//                iFlight.setClassRank(cabinTypeS1[i]);
+//            }else{
+//                iFlight.setClassRank(cabinTypeS1[0]);
+//            }
+//            iFlightsSingle.add(iFlight);
+//        }
+//        interFlights.add(iFlightsSingle);
+//
+//        if ("RT".equals(traveltype)) {
+//            List<PlaneTicketInternationalPolicyCheckRequest.IFlight> iFlightsMultiply = new ArrayList<>(); //往返
+//            ArrayList<PlaneTicketInternationalInfo.FlightInfo> iFlightS2 = flight.S2.flightInfos;
+//            for (int i = 0; i < iFlightS2.size(); i++) {
+//                PlaneTicketInternationalInfo.FlightInfo flightInfo = iFlightS2.get(i);
+////                LogUtil.e(TAG, flightInfo);
+//                PlaneTicketInternationalPolicyCheckRequest.IFlight iFlight = new PlaneTicketInternationalPolicyCheckRequest.IFlight(String.valueOf(i), "S2",
+//                        cabin.passengerType.mainCarrierCheck, flightInfo.toDateCheck, flightInfo.toTimeCheck, flightInfo.fromAirportCodeCheck, flightInfo.fromTerminal, flightInfo.airlineCompanyCheck,
+//                        cabinCodeS2[i], flightInfo.fromDateCheck, flightInfo.fromTimeCheck,
+//                        flightInfo.flightNumberCheck, flightInfo.toAirportCodeCheck, flightInfo.toTermianl);
+//                if (cabinTypeS2.length > 1){
+//                    iFlight.setClassRank(cabinTypeS2[i]);
+//                }else{
+//                    iFlight.setClassRank(cabinTypeS2[0]);
+//                }
+//                iFlightsMultiply.add(iFlight);
+//            }
+//            interFlights.add(iFlightsMultiply);
+//        }
+//
+//        PlaneTicketInternationalPolicyCheckRequest request = new PlaneTicketInternationalPolicyCheckRequest(traveltype, "1E", "ALL", interFlights);
+//        planeBiz.planeTicketInternationalPolicyCheck(request, new BizGenericCallback<PlaneTicketInternationalPolicyResponse>() {
+//            @Override
+//            public void onCompletion(GenericResponseModel<PlaneTicketInternationalPolicyResponse> model) {
+//                if ("0001".equals(model.headModel.res_code)){
+//                    ToastUtil.show(getApplicationContext(), model.headModel.res_arg);
+//                }else if ("0000".equals(model.headModel.res_code)){
+//                    PlaneTicketInternationalPolicyResponse checkResponse = model.body;
+//                    if ("N".equals(checkResponse.getPolicys().getPolicy().getFlag())){
+//                        ToastUtil.show(getApplicationContext(), checkResponse.getPolicys().getPolicy().getErrMsg());
+//                    }else if ("Y".equals(checkResponse.getPolicys().getPolicy().getFlag())){
+//                        checkResponseData = checkResponse;
+//                        reserveTicker();
+//                    }else{
+//                        ToastUtil.show(getApplicationContext(), "验价失败，请重新选择航线");
+//                    }
+//                }
+//                LoadingIndicator.cancel();
+//            }
+//
+//            @Override
+//            public void onError(FetchError error) {
+//                LogUtil.e(TAG, "ERROR = "+error);
+//                if (error.localReason != null){
+//                    ToastUtil.show(getApplicationContext(), error.localReason);
+//                }else{
+//                    ToastUtil.show(getApplicationContext(), "验价失败，请返回重试");
+//                }
+//                LoadingIndicator.cancel();
+//            }
+//        });
     }
 
     private int EDIT_PLANE_ORDER = 9632; //编辑机票订单
@@ -339,6 +344,6 @@ public class PlaneItemInfoInternationalActivity2 extends BaseActionBarActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        checkResponseData = null;
+//        checkResponseData = null;
     }
 }

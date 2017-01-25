@@ -31,8 +31,17 @@ public class TravelDetail implements Serializable{
     private String iscollect; //1：已收藏；0：未收藏
 
     private String tel; //翠微电话
+    private String type; //区分国内或国外旅游线路类型    1：国内   2：国外
 
     public TravelDetail() {
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getTel() {

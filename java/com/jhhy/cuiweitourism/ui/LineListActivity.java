@@ -32,7 +32,7 @@ public class LineListActivity extends BaseActionBarActivity {
 
     private String shopId;
     private String shopName;
-    private int page = 0;
+    private int page = 1;
 //    private boolean add = false;
 
     private boolean refresh = true;
@@ -46,7 +46,7 @@ public class LineListActivity extends BaseActionBarActivity {
                 case Consts.MESSAGE_FIND_SHOP_LINE_LIST: //该商铺的所有线路
                     if (msg.arg1 == 1) {
                         List<Line> listNew = (List<Line>) msg.obj;
-                        if (listNew != null && listNew.size()!= 0) {
+                        if (listNew != null) {
                             if (loadMore) { //加载更多
                                 loadMore = false;
                                 list.addAll(listNew);
@@ -71,7 +71,7 @@ public class LineListActivity extends BaseActionBarActivity {
                         }
                     }
                     LoadingIndicator.cancel();
-                    pullToRefreshListView.onRefreshComplete();
+                    cancelRefresh();
                     break;
                 case Consts.NET_ERROR:
                     ToastUtil.show(getApplicationContext(), "请检查网络后重试");
@@ -82,6 +82,7 @@ public class LineListActivity extends BaseActionBarActivity {
             }
         }
     };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -176,5 +177,14 @@ public class LineListActivity extends BaseActionBarActivity {
                 finish();
             }
         }
+    }
+
+    private void cancelRefresh() {
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                pullToRefreshListView.onRefreshComplete();
+            }
+        }, 1000);
     }
 }

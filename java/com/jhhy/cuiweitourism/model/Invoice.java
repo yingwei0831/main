@@ -46,4 +46,14 @@ public class Invoice implements Serializable{
     public void setAddress(String address) {
         this.address = address;
     }
+
+    @Override
+    public String toString() {
+        return "Invoice{" +
+                "title='" + title + '\'' +
+                ", receiver='" + receiver + '\'' +
+                ", mobile='" + mobile + '\'' +
+                ", address='" + address + '\'' +
+                '}';
+    }
 }

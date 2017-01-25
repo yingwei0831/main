@@ -30,7 +30,7 @@
             android:background="@android:color/white"
             android:drawablePadding="10dp"
             android:focusableInTouchMode="true"
-            android:hint="请输入名字"
+            android:hint="@string/search_shop_notice"
             android:gravity="center"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"

@@ -102,7 +102,7 @@ public class PlaneEditOrderInternationalActivity2 extends AppCompatActivity impl
     private PlaneTicketActionBiz planeBiz;
 
     private List<List<PlaneTicketInternationalPolicyCheckRequest.IFlight>> interFlights;
-    private PlaneTicketInternationalPolicyResponse checkResponse; //验价返回数据
+//    private PlaneTicketInternationalPolicyResponse checkResponse; //验价返回数据
     private PlaneOrderOfChinaResponse info; //提交订单，返回，格式与国内相同
 
     private ArrayList<PlaneTicketOrderInternationalRequest.PassengersBean> listContact = new ArrayList<>(); //联系人
@@ -112,6 +112,7 @@ public class PlaneEditOrderInternationalActivity2 extends AppCompatActivity impl
     private TextView tvTotalPrice; //商品总金额
     private int icon; //积分支付
     private float unitPrice; //订单总金额
+    private String facePrice;
 
 
     private Handler handler = new Handler(){
@@ -266,7 +267,8 @@ public class PlaneEditOrderInternationalActivity2 extends AppCompatActivity impl
             dateFrom = bundle.getString("dateFrom");
             cabin = (PlaneTicketInternationalInfo.PlaneTicketInternationalHFCabin) bundle.getSerializable("cabin");
             travelType = bundle.getString("travelType");
-            checkResponse =  PlaneItemInfoInternationalActivity2.checkResponseData;
+            facePrice = bundle.getString("flightPrice");
+//            checkResponse =  PlaneItemInfoInternationalActivity2.checkResponseData;
 //            LogUtil.e(TAG, checkResponse);
             if ("RT".equals(travelType)){
                 dateReturn = bundle.getString("dateReturn");
@@ -374,6 +376,7 @@ public class PlaneEditOrderInternationalActivity2 extends AppCompatActivity impl
                     Intent intent = new Intent(getApplicationContext(), SelectCustomActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putInt("type", 13);
+                    bundle.putString("travelType", "2");
                     if (listContact.size() == 0) {
                         bundle.putInt("number", 10);
                     } else {
@@ -516,13 +519,13 @@ public class PlaneEditOrderInternationalActivity2 extends AppCompatActivity impl
                             if (!doubleContact){
                                 PlaneTicketOrderInternationalRequest.PassengersBean contactTrain =
                                         new PlaneTicketOrderInternationalRequest.PassengersBean(
-                                                contact.getContactsName(), "1", "2", contact.getContactsIdCard(), contact.getContactsMobile(), cabin.passengerType.faceValue, cabin.baseFare.faceValueTotal, "", "", "", cabin.passengerType.taxTypeCodeMap.get("XT").price);
+                                                contact.getContactsName(), "1", "2", contact.getContactsPassport(), contact.getContactsMobile(), cabin.passengerType.faceValue, cabin.baseFare.faceValueTotal, "", "", "", cabin.passengerType.taxTypeCodeMap.get("XT").price);
                                 listContact.add(contactTrain);
                             }
                         }else{
                             PlaneTicketOrderInternationalRequest.PassengersBean contactTrain =
                                     new PlaneTicketOrderInternationalRequest.PassengersBean(
-                                            contact.getContactsName(), "1", "2", contact.getContactsIdCard(), contact.getContactsMobile(), cabin.passengerType.faceValue, cabin.baseFare.faceValueTotal, "", "", "", cabin.passengerType.taxTypeCodeMap.get("XT").price);
+                                            contact.getContactsName(), "1", "2", contact.getContactsPassport(), contact.getContactsMobile(), cabin.passengerType.faceValue, cabin.baseFare.faceValueTotal, "", "", "", cabin.passengerType.taxTypeCodeMap.get("XT").price);
                             listContact.add(contactTrain);
                         }
                     }
@@ -637,11 +640,13 @@ public class PlaneEditOrderInternationalActivity2 extends AppCompatActivity impl
             public void run() {
                 super.run();
 
-                PlaneTicketOrderInternationalRequest request = new PlaneTicketOrderInternationalRequest(MainActivity.user.getUserId(), name, mobile, checkResponse.getPolicys().getPolicy().getPolicyId(),
-                        checkResponse.getPolicys().getPolicy().getPlatCode(), checkResponse.getPolicys().getPolicy().getAccountLevel(),
-//                        checkResponse.getPolicys().getPolicy().getSettlePrice(),
-                        checkResponse.getPolicys().getPolicy().getPrice(),
-                        checkResponse.getPolicys().getPolicy().getPlatformType(), travelType, fromCity.getCode(), toCity.getCode(), interFlights, listContact, String.valueOf(icon));
+                PlaneTicketOrderInternationalRequest request = new PlaneTicketOrderInternationalRequest(MainActivity.user.getUserId(), name, mobile,
+                        "", //checkResponse.getPolicys().getPolicy().getPolicyId(),
+                        "", //checkResponse.getPolicys().getPolicy().getPlatCode(),
+                        "", //checkResponse.getPolicys().getPolicy().getAccountLevel(),
+                        facePrice, //checkResponse.getPolicys().getPolicy().getPrice(),     // checkResponse.getPolicys().getPolicy().getSettlePrice(),
+                        "", //checkResponse.getPolicys().getPolicy().getPlatformType(),
+                        travelType, fromCity.getCode(), toCity.getCode(), interFlights, listContact, String.valueOf(icon));
                 planeBiz.planeTicketOrderInternational(request, new BizGenericCallback<PlaneOrderOfChinaResponse>() {
                     @Override
                     public void onCompletion(GenericResponseModel<PlaneOrderOfChinaResponse> model) {
@@ -758,6 +763,6 @@ public class PlaneEditOrderInternationalActivity2 extends AppCompatActivity impl
 //        tvPopPriceEnsurance = null;
 //        tvPopNumberEnsurance = null;
         tvPopNumberPassenger = null;
-        checkResponse = null;
+//        checkResponse = null;
     }
 }

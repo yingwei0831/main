@@ -189,6 +189,7 @@ public class InnerTravelDetailBiz {
                         detail.setIm(bodyObj.getString("im"));
                         detail.setIscollect(bodyObj.getString("iscollect"));
                         detail.setTel(bodyObj.getString("tel"));
+                        detail.setType(bodyObj.getString("type"));
                     }
                     msg.obj = detail;
                 }

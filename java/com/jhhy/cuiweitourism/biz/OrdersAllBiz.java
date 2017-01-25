@@ -110,6 +110,7 @@ public class OrdersAllBiz {
                             conMap.put("idcard", con.getContactsIdCard());
                             conMap.put("mobile", con.getContactsMobile());
                             conMap.put("passport", con.getContactsPassport());
+                            conMap.put("enname", con.getEnglishName());
                             contactArray.put(new JSONObject(conMap));
                         }
                         fieldObj.put("memberid", MainActivity.user.getUserId());
@@ -133,8 +134,8 @@ public class OrdersAllBiz {
 
                         fieldObj.put("lxr", contactArray);
                         fieldObj.put("remark", remark);
-                        fieldObj.put("", roombalance); //单房差价格
-                        fieldObj.put("", balancenum); //单房差数量
+                        fieldObj.put("roombalance", roombalance); //单房差价格
+                        fieldObj.put("balancenum", balancenum); //单房差数量
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

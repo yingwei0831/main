@@ -39,6 +39,7 @@ public class SelectCustomActivity extends BaseActivity implements View.OnClickLi
     private List<Integer> listSelectionCont; //已选择的联系人位置
 
     private int type; // 13:火车票选择联系人
+    private String travelType; //旅游类型   1：国内    2：国外
 
     private ListView listViewContact;
     private ContactsListAdapter adapter;
@@ -91,6 +92,7 @@ public class SelectCustomActivity extends BaseActivity implements View.OnClickLi
         Bundle bundle = getIntent().getExtras();
         type = bundle.getInt("type");
         totalNumber = bundle.getInt("number");
+        travelType = bundle.getString("travelType");
         if (type == 13) {
             if (totalNumber > 10) {
                 totalNumber = 10;
@@ -143,6 +145,17 @@ public class SelectCustomActivity extends BaseActivity implements View.OnClickLi
                     adapter.removeSelection(position); //如果包含，则移除它所在位置的对象
                 } else {
                     if (listSelectionCont.size() < totalNumber) { //已选择的总数 < 可选择的总数
+                        UserContacts contact = listContacts.get(position);
+                        if ("2".equals(travelType)){
+                            if (contact.getContactsPassport() == null || contact.getContactsPassport().length() == 0 ) {
+                                ToastUtil.show(getApplicationContext(), "该联系人护照信息不完善，请编辑护照信息后再重新选择");
+                                return;
+                            }
+                            if (contact.getEnglishName() == null || contact.getEnglishName().length() == 0){
+                                ToastUtil.show(getApplicationContext(), "该联系人英文名字不完善，请编辑信息后再重新选择");
+                                return;
+                            }
+                        }
                         adapter.addSelection(position);
                     } else { //已选择的总数 >= 可选择的总数
                         return;
@@ -205,9 +218,21 @@ public class SelectCustomActivity extends BaseActivity implements View.OnClickLi
         if (listSelectionCont.size() == 0) {
             setResult(RESULT_CANCELED);
         } else {
+
             ArrayList<UserContacts> listContacts = new ArrayList<>();
             for (int i = 0; i < listSelectionCont.size(); i++) {
-                listContacts.add(this.listContacts.get(listSelectionCont.get(i))); //在某些位置上的联系人
+                UserContacts contact = this.listContacts.get(listSelectionCont.get(i));
+                if ("2".equals(travelType)){
+                    if (contact.getContactsPassport() == null || contact.getContactsPassport().length() == 0) {
+                        ToastUtil.show(getApplicationContext(), "请完善联系人护照信息");
+                        return;
+                    }
+                    if (contact.getEnglishName() == null || contact.getEnglishName().length() == 0){
+                        ToastUtil.show(getApplicationContext(), "该联系人英文名字不完善，请编辑信息后再重新选择");
+                        return;
+                    }
+                }
+                listContacts.add(contact); //在某些位置上的联系人
             }
             Intent intent = new Intent();
             Bundle bundle = new Bundle();

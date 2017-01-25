@@ -44,6 +44,7 @@ import com.jhhy.cuiweitourism.ui.HotActivityListActivity;
 import com.jhhy.cuiweitourism.ui.HotelMainActivity;
 import com.jhhy.cuiweitourism.ui.InnerTravelDetailActivity;
 import com.jhhy.cuiweitourism.ui.InnerTravelMainActivity;
+import com.jhhy.cuiweitourism.ui.LineListActivity;
 import com.jhhy.cuiweitourism.ui.LoginActivity;
 import com.jhhy.cuiweitourism.ui.MainActivity;
 import com.jhhy.cuiweitourism.ui.PersonalizedCustomActivity;
@@ -113,6 +114,8 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
     private boolean isScrollingBottom = false; // 滚动框是否滚动着
     private final int WHEEL_BOTTOM = 1010; // 转动
     private final int WHEEL_WAIT_BOTTOM = 1011; // 等待
+
+    private boolean isClick = true; //品质专线是否点击
 
     private int typeFlipper = 0; //区分滑动的是哪个Flipper：1，顶部flipper；2，底部flipper
 
@@ -518,6 +521,8 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
             dianSelect(2, currentPositionBottom);
             MyScrollView myScrollView2 = (MyScrollView) content.findViewById(R.id.viewflipper_myScrollview2);
             myScrollView2.setGestureDetector(mGestureDetector);
+            View framelayout = content.findViewById(R.id.layout_frame);
+            framelayout.setOnClickListener(this);
         }
         mScrollView.setView(content);
         mScrollView.setOnXScrollChangedI(new XScrollView.onXScrollChangedI() {
@@ -576,9 +581,22 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
     public void onClick(View view) {
         if (NetworkUtil.checkNetwork(getContext())) {
             switch (view.getId()) {
+                case R.id.layout_frame: //进入翠微品质专线列表
+                    if (isClick){
+                        int position = flipperBottom.getDisplayedChild();
+                        LogUtil.e(TAG, "position = " + position);
+                        Intent intent = new Intent(getContext() , LineListActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("shopId", infosBottom.get(position).getContent());
+                        bundle.putString("shopName", "翠微品质专线");
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }else{
+                        isClick = true;
+                    }
+                    break;
                 case R.id.tv_search_text: //搜索
                 case R.id.title_main_iv_right_search: //搜索
-                    //TODO
                     Bundle bundleSearch = new Bundle();
                     bundleSearch.putSerializable("selectCity", selectCity);
                     SearchActivity.actionStart(getContext(), bundleSearch);
@@ -599,7 +617,6 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
                     InnerTravelMainActivity.actionStart(getContext(), bundleOut);
                     break;
                 case R.id.tv_tab1_plane_ticket: //TODO 飞机票
-//                    ToastCommon.toastShortShow(getContext(), null, getString(R.string.developing_notice));
                     Bundle bundlePlane = new Bundle();
                     bundlePlane.putInt("type", 2);
                     PlaneMainActivity.actionStart(getContext(), bundlePlane);
@@ -747,11 +764,20 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        LogUtil.e(TAG, "i = " + i + ", l = " + l);
-        Travel travel = lists.get((int) l);
-        Bundle bundle = new Bundle();
-        bundle.putString("id", travel.getId());
-        InnerTravelDetailActivity.actionStart(getContext(), bundle);
+        LogUtil.e(TAG, "i = " + i + ", l = " + l + ", indicator = " + indicator) ;
+        Travel travel = null;
+        if (indicator == 1){
+            travel = lists.get((int) l);
+        }else if (indicator == 2){
+            travel = listsInner.get((int) l);
+        }else if (indicator == 3){
+            travel = listsOutside.get((int)l);
+        }
+        if (travel != null){
+            Bundle bundle = new Bundle();
+            bundle.putString("id", travel.getId());
+            InnerTravelDetailActivity.actionStart(getContext(), bundle);
+        }
     }
 
     private void changeIndicator(int type) {
@@ -892,7 +918,28 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
 
     //GestureDetector.OnGestureListener 回调
     @Override
-    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) { //e1:ACTION_DOWN  e2:ACTION_UP
+        isClick = false;
+        LogUtil.e(TAG, "velocityX = " + velocityX  + ", velocityY = " + velocityY);
+        LogUtil.e(TAG, "e1");
+        switch (e1.getAction()){
+            case MotionEvent.ACTION_DOWN:
+                LogUtil.e(TAG, "ACTION_DOWN");
+                break;
+            case MotionEvent.ACTION_UP:
+                LogUtil.e(TAG, "ACTION_UP");
+                break;
+        }
+        LogUtil.e(TAG, "e2");
+        switch (e2.getAction()){
+            case MotionEvent.ACTION_DOWN:
+                LogUtil.e(TAG, "ACTION_DOWN");
+                break;
+            case MotionEvent.ACTION_UP:
+                LogUtil.e(TAG, "ACTION_UP");
+                break;
+        }
+
         if (e1.getX() - e2.getX() > FLING_MIN_DISTANCE &&
                 Math.abs(velocityX) > FLING_MIN_VELOCITY) {
 //            LogUtil.i(TAG, "==============开始向左滑动了================");

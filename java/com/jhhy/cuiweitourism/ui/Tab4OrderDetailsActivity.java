@@ -717,17 +717,17 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
      * 国际机票订单详情
      */
     private void refreshPlaneTicketInternationalView() {
-        int size = planeTicketOrderDetailInternational.getInfos().getInterFlights().size(); //单程：一个元素；往返：两个元素
+//        int size = planeTicketOrderDetailInternational.getInfos().getInterFlights().size(); //单程：一个元素；往返：两个元素
         tvOrderTitle.setText(planeTicketOrderDetailInternational.getTitle());
         List<PlaneTicketDetailInternationalResponse.InterFlightsBean> mList = new ArrayList<>();
         mList.addAll(planeTicketOrderDetailInternational.getInfos().getInterFlights().get(0));
         if ("RT".equals(planeTicketOrderDetailInternational.getInfos().getTravelType())){
             mList.addAll(planeTicketOrderDetailInternational.getInfos().getInterFlights().get(1));
         }
-        mListViewPlane.setVisibility(View.VISIBLE);
-        PlaneInfoInternationalAdapter mAdapter = new PlaneInfoInternationalAdapter(getApplicationContext(), mList);
-        mAdapter.setOrderType(true);
-        mListViewPlane.setAdapter(mAdapter);
+//        mListViewPlane.setVisibility(View.VISIBLE); //行程列表
+//        PlaneInfoInternationalAdapter mAdapter = new PlaneInfoInternationalAdapter(getApplicationContext(), mList);
+//        mAdapter.setOrderType(true);
+//        mListViewPlane.setAdapter(mAdapter);
 
         tvOrderSN.setText(planeTicketOrderDetailInternational.getOrdersn());
         tvOrderTime.setText(Utils.getTimeStr(Long.parseLong(planeTicketOrderDetailInternational.getAddtime()) * 1000));

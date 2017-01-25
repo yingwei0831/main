@@ -182,7 +182,7 @@ public class ContactAddActivity extends BaseActionBarActivity {
             ToastCommon.toastShortShow(getApplicationContext(), null, "输入的手机号码有误，请检查");
             return;
         }
-        if (Utils.is18ByteIdCardComplex(cardId)){
+        if (!Utils.is18ByteIdCardComplex(cardId)){
             ToastCommon.toastShortShow(getApplicationContext(), null, "输入的身份证号码有误，请检查");
             return;
         }

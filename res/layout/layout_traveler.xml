@@ -16,7 +16,8 @@
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:text="游客1："
-        android:textColor="@android:color/black" />
+        android:textColor="@android:color/black"
+        />
 
     <TextView
         android:id="@+id/tv_flag"
