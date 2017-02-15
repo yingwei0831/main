@@ -45,7 +45,7 @@ import java.util.Set;
 
 public class PlaneCitySelectionActivity extends BaseActivity implements View.OnClickListener, RadioGroup.OnCheckedChangeListener {
 
-    private static final String TAG = PlaneCitySelectionActivity.class.getSimpleName();
+    private static final String TAG = "PlaneCitySelectionActivity";
 //    private TextView tvTitle;
 //    private ImageView ivTitleLeft;
     private View layoutTitle;
@@ -202,6 +202,12 @@ public class PlaneCitySelectionActivity extends BaseActivity implements View.OnC
             list_all = PlaneMainActivity.airportOuter;
             cityType = 2;
             radioButtonOuter.setChecked(true);
+        }else if (type == 10){ //保险，国内
+            radioGroup.setVisibility(View.GONE);
+            list_all = InsuranceMainActivity.airportInner;
+        }else if (type == 11){ //保险，国际
+            radioGroup.setVisibility(View.GONE);
+            list_all = InsuranceMainActivity.airportOuter;
         }
     }
 
@@ -296,9 +302,6 @@ public class PlaneCitySelectionActivity extends BaseActivity implements View.OnC
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 LogUtil.e(TAG, "--------------listView---onItemClick--------------");
                 if (list_show.get(i).type == PlaneCitySelectionActivity.ITEM) { // 标题点击不给操作
-                    if (cityType == 2){
-                    }else if (cityType == 1){
-                    }
                     PlaneTicketCityInfo city = list_show.get(i);
                     ToastCommon.toastShortShow(getApplicationContext(), null, city.getName());
                     Intent intent = new Intent();
@@ -318,9 +321,6 @@ public class PlaneCitySelectionActivity extends BaseActivity implements View.OnC
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 LogUtil.e(TAG, "--------------listSearch---onItemClick--------------");
                 if (list_show.get(i).type == PlaneCitySelectionActivity.ITEM) { // 标题点击不给操作
-                    if (cityType == 2){
-                    }else if (cityType == 1){
-                    }
                     PlaneTicketCityInfo city = list_show.get(i);
                     ToastCommon.toastShortShow(getApplicationContext(), null, city.getName());
                     Intent intent = new Intent();

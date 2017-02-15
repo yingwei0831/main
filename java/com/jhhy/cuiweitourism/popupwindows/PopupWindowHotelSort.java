@@ -61,11 +61,9 @@ public class PopupWindowHotelSort extends PopupWindow implements AdapterView.OnI
         adapter.notifyDataSetChanged();
     }
 
-
-
     private void initView(View view) {
         listView = (ListView) view.findViewById(R.id.list_view_popup_sort);
-        listSort.add("默认排序");
+        listSort.add("默认排序(好评)");
         listSort.add("距离 近—>远");
         listSort.add("价格 低—>高");
         listSort.add("价格 高—>低");

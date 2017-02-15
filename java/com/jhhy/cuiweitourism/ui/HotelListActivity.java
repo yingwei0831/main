@@ -61,6 +61,7 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
     private HotelListAdapter adapter;
 //    private ArrayList<HotelListInfo> listHotel = new ArrayList<>();
     private List<HotelListResponse.HotelBean> listHotel = new ArrayList<>();
+    private List<HotelListResponse.HotelBean> listBackup = new ArrayList<>();
 
     private View layout;
     private TextView tvScreen; //筛选
@@ -90,7 +91,7 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
     private String isApartment = "0";   //是否公寓；1是0否
     private String brandName = "";  	//酒店品牌编号
     private String facilities = "";     //设施ID 多个设施用逗号,隔开
-    private String sortBy = "P";         //排序项: 价格P/星级S/好评G
+    private String sortBy = "G";         //排序项: 价格P/星级S/好评G(默认)/距离D
     private String sortType = "A";       //排序顺序:升序A 降序 D
 
     private int brandNamePosition ;
@@ -179,12 +180,17 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
                         if (listHotel != null) {
                             listHotel.clear();
                         }
-                        listHotel = array;
+                        if (listBackup != null){
+                            listBackup.clear();
+                        }
+                        listHotel.addAll(array);
+                        listBackup.addAll(array);
                         adapter.setData(listHotel);
                     }
                     if (loadMore) {
                         page = pageTemp;
                         listHotel.addAll(array);
+                        listBackup.addAll(array);
                         adapter.notifyDataSetChanged();
 //                        adapter.addData(array);
                     }
@@ -394,9 +400,10 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
                 int orderPositionNew = popUpSort.getSortPosition();
                 if (orderPosition != orderPositionNew){
                     orderPosition = orderPositionNew;
-                    //TODO 排序
                     if (orderPosition == 0){ //
                         sortByDefault();
+//                        getData();
+//                        return;
                     }else if (orderPosition == 1){ //"距离 近—>远"
                         sortByDistance();
                     }else if (orderPosition == 2 || orderPosition == 3){ //"价格 低—>高" //"价格 高—>低"
@@ -410,8 +417,16 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
         });
     }
 
+    //TODO 默认排序 好评、A升序
     private void sortByDefault() {
+        LogUtil.e(TAG, "listhotel.size = " + listHotel.size() +", listBackup.size = " + listBackup.size());
         tvSortDefault.setText("默认排序");
+        sortBy = "G";
+        sortType = "A";
+        listHotel.clear();
+//        listHotel = listBackup;
+        listHotel.addAll(listBackup);
+        LogUtil.e(TAG, "listhotel.size = " + listHotel.size() +", listBackup.size = " + listBackup.size());
     }
 
     private void sortByStarLevel() {
@@ -426,11 +441,14 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
                 return 0;
             }
         });
+        sortBy = "S";
         if (orderPosition == 5){ //"星级 低—>高"
             Collections.reverse(listHotel);
             tvSortDefault.setText("星级由低到高");
+            sortType = "A";
         }else{
             tvSortDefault.setText("星级由高到低");
+            sortType = "D";
         }
     }
 
@@ -446,11 +464,14 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
                 return 0;
             }
         });
+        sortBy = "P";
         if (orderPosition == 3){ //"价格 高—>低"
             Collections.reverse(listHotel);
             tvSortDefault.setText("价格由高到低");
+            sortType = "D";
         }else{
             tvSortDefault.setText("价格由低到高");
+            sortType = "A";
         }
     }
 
@@ -486,6 +507,8 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
                 return 0;
             }
         });
+        sortBy = "D";
+        sortType = "A";
         tvSortDefault.setText("由近到远");
     }
 
@@ -820,5 +843,14 @@ public class HotelListActivity extends BaseActivity implements View.OnClickListe
         }
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        listHotel.clear();
+        listHotel = null;
+        listBackup.clear();
+        listBackup = null;
     }
 }

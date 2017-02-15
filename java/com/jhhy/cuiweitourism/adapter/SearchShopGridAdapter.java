@@ -14,7 +14,7 @@ import com.jhhy.cuiweitourism.utils.ImageLoaderUtil;
 import java.util.List;
 
 /**
- * Created by birney1 on 16/9/29.
+ * Created by lanlan on 16/9/29.
  */
 public class SearchShopGridAdapter extends MyBaseAdapter {
 

@@ -31,6 +31,8 @@
     <string name="tab1_shop_recommend">推荐店铺</string>
     <string name="tab1_insurance">旅游保险</string>
 
+    <string name="insurance_type_title">保险方案</string>
+
     <string name="tab1_personalized_custom">个性定制</string>
     <string name="tab1_personalized_custom_notice">一起来定制吧~</string>
     <string name="tab1_hot_activity">热门活动</string>

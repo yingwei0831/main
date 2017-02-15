@@ -44,6 +44,7 @@ import com.jhhy.cuiweitourism.ui.HotActivityListActivity;
 import com.jhhy.cuiweitourism.ui.HotelMainActivity;
 import com.jhhy.cuiweitourism.ui.InnerTravelDetailActivity;
 import com.jhhy.cuiweitourism.ui.InnerTravelMainActivity;
+import com.jhhy.cuiweitourism.ui.InsuranceMainActivity;
 import com.jhhy.cuiweitourism.ui.LineListActivity;
 import com.jhhy.cuiweitourism.ui.LoginActivity;
 import com.jhhy.cuiweitourism.ui.MainActivity;
@@ -660,7 +661,8 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
                     SearchShopActivity.actionStart(getContext(), null);
                     break;
                 case R.id.tv_travel_insurance: //旅游保险
-                    ToastCommon.toastShortShow(getContext(), null, getString(R.string.developing_notice));
+//                    ToastCommon.toastShortShow(getContext(), null, getString(R.string.developing_notice));
+                    startActivity(new Intent(getContext(), InsuranceMainActivity.class));
                     break;
                 case R.id.tv_tab1_recommend_all_bottom: //Indicator 全部
                 case R.id.tv_tab1_indicator_all_top:

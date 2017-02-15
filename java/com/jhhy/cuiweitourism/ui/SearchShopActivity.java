@@ -62,6 +62,8 @@ public class SearchShopActivity extends BaseActivity implements View.OnClickList
     private EditText etSearch; //输入框
     private ImageView ivSearchShop; //搜索
 
+    private boolean searched = false;
+
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -154,11 +156,16 @@ public class SearchShopActivity extends BaseActivity implements View.OnClickList
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                LogUtil.e(TAG, "i = " + i +", l = " + l);
+                LogUtil.e(TAG, "i = " + i +", l = " + l +", searched = " + searched);
                 Intent intent = new Intent(getApplicationContext() , LineListActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("shopId", lists.get((int) l).getSid());
-                bundle.putString("shopName", lists.get((int) l).getSuppliername());
+                if (searched){
+                    bundle.putString("shopId", listSearch.get((int) l).getSid());
+                    bundle.putString("shopName", listSearch.get((int) l).getSuppliername());
+                }else {
+                    bundle.putString("shopId", lists.get((int) l).getSid());
+                    bundle.putString("shopName", lists.get((int) l).getSuppliername());
+                }
                 intent.putExtras(bundle);
                 startActivityForResult(intent, REQUEST_LINE_LIST);
             }
@@ -247,7 +254,7 @@ public class SearchShopActivity extends BaseActivity implements View.OnClickList
     }
 
     private void searchShop() {
-        String search = etSearch.getText().toString();
+        final String search = etSearch.getText().toString();
         if (TextUtils.isEmpty(search)){
             ToastCommon.toastShortShow(getApplicationContext(), null, "搜索输入为空");
             return;
@@ -258,8 +265,10 @@ public class SearchShopActivity extends BaseActivity implements View.OnClickList
         biz.getShopSearch(fetch, new BizGenericCallback<ArrayList<ShopRecommend>>() {
             @Override
             public void onCompletion(GenericResponseModel<ArrayList<ShopRecommend>> model) {
+                listSearch.clear();
                 listSearch = model.body;
                 adapter.setData(listSearch);
+                searched = true;
             }
 
             @Override
@@ -291,6 +300,7 @@ public class SearchShopActivity extends BaseActivity implements View.OnClickList
 //        LogUtil.e(TAG, "editable: " + editable);
         if (TextUtils.isEmpty(editable)){
 //            Utils.setKeyboardInvisible(this);
+            searched = false;
             adapter.setData(lists);
         }
     }

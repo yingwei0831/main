@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -93,7 +94,7 @@ public class DemoHelper {
             //在小米手机上当app被kill时使用小米推送进行消息提示，SDK已支持，可选
 //            EMChatManager.getInstance().setMipushConfig("2882303761517370134", "5131737040134");
 		    //设为调试模式，打成正式包时，最好设为false，以免消耗额外的资源
-		    EMChat.getInstance().setDebugMode(true); //TODO
+		    EMChat.getInstance().setDebugMode(false); //TODO
 		    //get easeui instance
 		    easeUI = EaseUI.getInstance();
 		    //调用easeui的api设置providers

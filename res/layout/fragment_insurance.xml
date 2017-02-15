@@ -1,0 +1,210 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.jhhy.cuiweitourism.fragment.InsuranceFragment"
+    android:background="@android:color/white">
+
+    <!--搜索 航班-->
+    <LinearLayout
+        android:id="@+id/layout_insurance_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="visible">
+        <!--选择出发城市和到达城市-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:paddingTop="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/iv_train_exchange"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@mipmap/icon_air_flight"
+                    android:drawablePadding="8dp"
+                    android:text="出发城市"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_insurance_from_city"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:paddingTop="12dp"
+                    android:textColor="@android:color/black"
+                    android:textSize="22sp"
+                    android:hint="@string/tab4_account_certification_gender_notice"
+                    />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/iv_train_exchange"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:padding="12dp"
+                android:src="@mipmap/arrow_circle_right" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/iv_train_exchange"
+                android:gravity="right"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@mipmap/icon_air_flight"
+                    android:drawablePadding="8dp"
+                    android:text="到达城市"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_insurance_to_city"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="right"
+                    android:paddingTop="12dp"
+                    android:hint="@string/tab4_account_certification_gender_notice"
+                    android:textColor="@android:color/black"
+                    android:textSize="22sp" />
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1.2px"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:background="@color/colorLineGray2" />
+        <!--时间-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <!--出发时间-->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingBottom="10dp"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:paddingTop="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@mipmap/icon_train_calendar"
+                    android:drawablePadding="8dp"
+                    android:text="出发时间"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_insurance_from_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:drawablePadding="8dp"
+                    android:paddingTop="12dp"
+                    android:hint="@string/tab4_account_certification_gender_notice"
+                    android:textColor="@android:color/black"
+                    android:textSize="22sp" />
+            </LinearLayout>
+            <!--返程时间-->
+            <LinearLayout
+                android:id="@+id/layout_return_time"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:orientation="vertical"
+                android:paddingBottom="10dp"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:paddingTop="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@mipmap/icon_train_calendar"
+                    android:drawablePadding="8dp"
+                    android:text="返程时间"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_insurance_return_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="8dp"
+                    android:gravity="right"
+                    android:paddingTop="12dp"
+                    android:hint="@string/tab4_account_certification_gender_notice"
+                    android:textColor="@android:color/black"
+                    android:textSize="22sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1.2px"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:background="@color/colorLineGray2" />
+        <TextView
+            android:id="@+id/tv_insurance_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="保险方案（1~20天）"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:paddingTop="10dp"
+            />
+        <TextView
+            android:id="@+id/tv_insurance_price"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="10元"
+            android:paddingTop="14dp"
+            android:paddingBottom="10dp"
+            android:drawableRight="@mipmap/arrow_right_dark"
+            />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1.2px"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:background="@color/colorLineGray2" />
+
+        <!--搜索-->
+        <Button
+            android:id="@+id/btn_insurance_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="12dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/bg_btn_price_calendar_selector_corner"
+            android:text="购买"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+</FrameLayout>

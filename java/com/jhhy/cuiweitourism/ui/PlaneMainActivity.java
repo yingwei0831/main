@@ -243,16 +243,16 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
                 exchange();
                 break;
             case R.id.tv_plane_from_city: //出发城市
-                selectFromCity();
+                selectCity(SELECT_FROM_CITY);
                 break;
             case R.id.tv_plane_to_city: //到达城市
-                selectToCity();
+                selectCity(SELECT_TO_CITY);
                 break;
             case R.id.tv_plane_from_time: //出发时间
-                selectFromTime();
+                selectTime(SELECT_START_TIME);
                 break;
-            case R.id.tv_plane_return_time: //出发时间
-                selectReturnTime();
+            case R.id.tv_plane_return_time: //返程时间
+                selectTime(SELECT_RETURN_TIME);
                 break;
             case R.id.btn_plane_search:
                 search();
@@ -342,7 +342,7 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
     }
 
     //出发城市
-    private void selectFromCity() {
+    private void selectCity(int requestCode) {
         if (airportInner == null || airportInner.size() == 0){
             ToastUtil.show(getApplicationContext(), "出发地获取失败，请返回重试");
             return;
@@ -353,41 +353,41 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
 
         bundle.putInt("type", type);
         intent.putExtras(bundle);
-        startActivityForResult(intent, SELECT_FROM_CITY);
+        startActivityForResult(intent, requestCode);
     }
 
     //目的城市
-    private void selectToCity() {
-        if (airportInner == null || airportInner.size() == 0){
-            ToastUtil.show(getApplicationContext(), "目的地获取失败，请返回重试");
-            return;
-        }
-        Intent intent = new Intent(getApplicationContext(), PlaneCitySelectionActivity.class);
-        Bundle bundle = new Bundle();
-        //根据当前是单程/往返/询价，传入type; 1:国内 2:国际 3:询价
-
-        bundle.putInt("type", type);
-        intent.putExtras(bundle);
-        startActivityForResult(intent, SELECT_TO_CITY);
-    }
+//    private void selectToCity() {
+//        if (airportInner == null || airportInner.size() == 0){
+//            ToastUtil.show(getApplicationContext(), "目的地获取失败，请返回重试");
+//            return;
+//        }
+//        Intent intent = new Intent(getApplicationContext(), PlaneCitySelectionActivity.class);
+//        Bundle bundle = new Bundle();
+//        //根据当前是单程/往返/询价，传入type; 1:国内 2:国际 3:询价
+//
+//        bundle.putInt("type", type);
+//        intent.putExtras(bundle);
+//        startActivityForResult(intent, SELECT_TO_CITY);
+//    }
 
     //返程时间
-    private void selectReturnTime() {
+    private void selectTime(int requestCode) {
         Intent intent = new Intent(getApplicationContext(), DatePickerActivity.class);
         Bundle bundle = new Bundle();
         bundle.putInt("type", 2);
         intent.putExtras(bundle);
-        startActivityForResult(intent, SELECT_RETURN_TIME);
+        startActivityForResult(intent, requestCode);
     }
 
     //出发时间
-    private void selectFromTime() {
-        Intent intent = new Intent(getApplicationContext(), DatePickerActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putInt("type", 2);
-        intent.putExtras(bundle);
-        startActivityForResult(intent, SELECT_START_TIME);
-    }
+//    private void selectStartTime() {
+//        Intent intent = new Intent(getApplicationContext(), DatePickerActivity.class);
+//        Bundle bundle = new Bundle();
+//        bundle.putInt("type", 2);
+//        intent.putExtras(bundle);
+//        startActivityForResult(intent, SELECT_START_TIME);
+//    }
 
     private int SELECT_START_TIME = 6528; //选择出发时间 10-24
     private int SELECT_RETURN_TIME = 6529; //选择返程时间 10-25
@@ -513,18 +513,18 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
                 break;
             case R.id.tv_plane_from_city: //出发城市
                 bottomSelectionPosition = position;
-                selectFromCity();
+                selectCity(SELECT_FROM_CITY);
                 break;
             case R.id.tv_plane_to_city: //目的城市
                 bottomSelectionPosition = position;
-                selectToCity();
+                selectCity(SELECT_TO_CITY);
                 break;
             case R.id.iv_train_exchange: //交换出发城市/目的城市
                 exchangeCity(position);
                 break;
             case R.id.tv_plane_from_time: //出发时间
                 bottomSelectionPosition = position;
-                selectFromTime();
+                selectTime(SELECT_START_TIME);
                 break;
         }
     }

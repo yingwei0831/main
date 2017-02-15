@@ -46,9 +46,4 @@ public class OrdersPagerAdapter extends FragmentPagerAdapter {
             return null;
         }
     }
-
-    public void setCurrentItem(int position){
-
-    }
-
 }

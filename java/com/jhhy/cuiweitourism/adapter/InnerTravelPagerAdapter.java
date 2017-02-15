@@ -21,9 +21,9 @@ public class InnerTravelPagerAdapter extends FragmentPagerAdapter {
     private List<String> titles;                              //tab名的列表
     private Context context;
 
-    public InnerTravelPagerAdapter(FragmentManager fm) {
-        super(fm);
-    }
+//    public InnerTravelPagerAdapter(FragmentManager fm) {
+//        super(fm);
+//    }
 
     public InnerTravelPagerAdapter(Context context, FragmentManager fm, List<Fragment> fragments, List<String> titles) {
         super(fm);

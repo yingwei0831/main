@@ -16,7 +16,7 @@ import java.net.SocketTimeoutException;
  */
 public abstract class ResponseResult implements Callback.CommonCallback<String>, ResponseCallback{
 
-    private static final String TAG = ResponseResult.class.getSimpleName();
+    private static final String TAG = "ResponseResult";
     private Handler handler;
 
     public ResponseResult() {

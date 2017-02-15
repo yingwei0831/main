@@ -26,7 +26,7 @@ import com.just.sun.pricecalendar.ToastCommon;
 
 public class VisaItemDetailActivity extends BaseActivity implements View.OnClickListener {
 
-    private String TAG = VisaItemDetailActivity.class.getSimpleName();
+    private String TAG = "VisaItemDetailActivity";
     private ImageView ivTitleLeft;
     private TextView tvTitle;
     private ActionBar actionBar;
