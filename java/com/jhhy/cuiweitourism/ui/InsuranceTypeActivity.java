@@ -1,12 +1,15 @@
 package com.jhhy.cuiweitourism.ui;
 
 import android.content.Intent;
+import android.graphics.Canvas;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.jhhy.cuiweitourism.R;
@@ -25,7 +28,7 @@ import com.just.sun.pricecalendar.ToastCommon;
 
 import java.util.ArrayList;
 
-public class InsuranceTypeActivity extends BaseActionBarActivity {
+public class InsuranceTypeActivity extends BaseActionBarActivity implements AdapterView.OnItemClickListener {
 
     private static final String TAG = "InsuranceTypeActivity";
 
@@ -60,10 +63,19 @@ public class InsuranceTypeActivity extends BaseActionBarActivity {
         rvAdapter = new InsuranceRefundMoneyRecyclerAdapter(getApplicationContext(), listType);
         listInsuranceRefundMoney.setAdapter(rvAdapter);
         listInsuranceRefundMoney.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
+        listInsuranceRefundMoney.addItemDecoration(new DividerItemDecoration(getApplicationContext(), LinearLayoutManager.HORIZONTAL));
 
         getIntentData();
         biz = new InsuranceBiz();
         getData(type);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        mAdapterType.setPosition(i);
+        mAdapterType.notifyDataSetChanged();
+        rvAdapter.setPosition(i);
+        rvAdapter.notifyDataSetChanged();
     }
 
     private void getIntentData() {
@@ -87,8 +99,10 @@ public class InsuranceTypeActivity extends BaseActionBarActivity {
             public void onCompletion(GenericResponseModel<ArrayList<InsuranceTypeResponse>> model) {
                 listType = model.body;
                 mAdapterType.setData(listType);
+                mAdapterType.setPosition(listType.size()-1);
                 mAdapterType.notifyDataSetChanged();
 
+                rvAdapter.setPosition(listType.size() - 1);
                 rvAdapter.setData(listType);
                 LogUtil.e(TAG, "getInsuranceType: " + model.body);
                 LogUtil.e(TAG, "getInsuranceType: " + listType.size());
@@ -111,6 +125,8 @@ public class InsuranceTypeActivity extends BaseActionBarActivity {
     @Override
     protected void addListener() {
         super.addListener();
+        LogUtil.e(TAG, "------------addListener-----------");
+        listInsuranceType.setOnItemClickListener(this);
 
     }
 
@@ -119,7 +135,12 @@ public class InsuranceTypeActivity extends BaseActionBarActivity {
         super.onClick(view);
         switch (view.getId()){
             case R.id.tv_hotel_reserve_rules: //保存
-
+                Intent intent = new Intent();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("insurance", listType.get(mAdapterType.getPosition()));
+                intent.putExtras(bundle);
+                setResult(RESULT_OK, intent);
+                finish();
                 break;
         }
     }

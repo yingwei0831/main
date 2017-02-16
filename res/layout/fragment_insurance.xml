@@ -33,7 +33,10 @@
                     android:drawableLeft="@mipmap/icon_air_flight"
                     android:drawablePadding="8dp"
                     android:text="出发城市"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textColorHint="@color/colorGrayDark"
+                    android:textColor="@color/colorGrayDark"
+                    />
 
                 <TextView
                     android:id="@+id/tv_insurance_from_city"
@@ -42,6 +45,7 @@
                     android:layout_weight="1"
                     android:paddingTop="12dp"
                     android:textColor="@android:color/black"
+                    android:textColorHint="@color/colorGrayDark"
                     android:textSize="22sp"
                     android:hint="@string/tab4_account_certification_gender_notice"
                     />
@@ -68,7 +72,10 @@
                     android:drawableLeft="@mipmap/icon_air_flight"
                     android:drawablePadding="8dp"
                     android:text="到达城市"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textColorHint="@color/colorGrayDark"
+                    android:textColor="@color/colorGrayDark"
+                    />
 
                 <TextView
                     android:id="@+id/tv_insurance_to_city"
@@ -78,6 +85,7 @@
                     android:paddingTop="12dp"
                     android:hint="@string/tab4_account_certification_gender_notice"
                     android:textColor="@android:color/black"
+                    android:textColorHint="@color/colorGrayDark"
                     android:textSize="22sp" />
             </LinearLayout>
 
@@ -111,6 +119,8 @@
                     android:drawableLeft="@mipmap/icon_train_calendar"
                     android:drawablePadding="8dp"
                     android:text="出发时间"
+                    android:textColorHint="@color/colorGrayDark"
+                    android:textColor="@color/colorGrayDark"
                     android:textSize="16sp" />
 
                 <TextView
@@ -122,6 +132,7 @@
                     android:paddingTop="12dp"
                     android:hint="@string/tab4_account_certification_gender_notice"
                     android:textColor="@android:color/black"
+                    android:textColorHint="@color/colorGrayDark"
                     android:textSize="22sp" />
             </LinearLayout>
             <!--返程时间-->
@@ -143,6 +154,8 @@
                     android:drawableLeft="@mipmap/icon_train_calendar"
                     android:drawablePadding="8dp"
                     android:text="返程时间"
+                    android:textColorHint="@color/colorGrayDark"
+                    android:textColor="@color/colorGrayDark"
                     android:textSize="16sp" />
 
                 <TextView
@@ -153,6 +166,7 @@
                     android:gravity="right"
                     android:paddingTop="12dp"
                     android:hint="@string/tab4_account_certification_gender_notice"
+                    android:textColorHint="@color/colorGrayDark"
                     android:textColor="@android:color/black"
                     android:textSize="22sp" />
             </LinearLayout>
@@ -172,6 +186,8 @@
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
             android:paddingTop="10dp"
+            android:textColor="@color/colorGrayDark"
+            android:textColorHint="@color/colorGrayDark"
             />
         <TextView
             android:id="@+id/tv_insurance_price"
@@ -179,7 +195,9 @@
             android:paddingRight="12dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="10元"
+            android:hint="请选择"
+            android:textColor="@android:color/black"
+            android:textColorHint="@color/colorGrayDark"
             android:paddingTop="14dp"
             android:paddingBottom="10dp"
             android:drawableRight="@mipmap/arrow_right_dark"

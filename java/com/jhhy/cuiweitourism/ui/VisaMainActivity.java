@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -27,6 +29,7 @@ import com.jhhy.cuiweitourism.net.biz.VisaActionBiz;
 import com.jhhy.cuiweitourism.net.models.FetchModel.ForeEndAdvertise;
 import com.jhhy.cuiweitourism.net.models.FetchModel.VisaCountry;
 import com.jhhy.cuiweitourism.net.models.FetchModel.VisaHot;
+import com.jhhy.cuiweitourism.net.models.FetchModel.VisaSearchRequest;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.ForeEndAdvertisingPositionInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
@@ -36,6 +39,7 @@ import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.utils.LoadingIndicator;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
+import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.jhhy.cuiweitourism.view.MyGridView;
 import com.jhhy.cuiweitourism.view.MyScrollView;
 import com.just.sun.pricecalendar.ToastCommon;
@@ -205,6 +209,8 @@ public class VisaMainActivity extends BaseActivity implements XScrollView.IXScro
         });
     }
 
+    private EditText etSearchInput;
+
     private void setupView(){
         tvTitle = (TextView) findViewById(R.id.tv_title_inner_travel);
         tvTitle.setText(getString(R.string.tab1_tablelayout_item8));
@@ -219,6 +225,11 @@ public class VisaMainActivity extends BaseActivity implements XScrollView.IXScro
 
         content = LayoutInflater.from(getApplicationContext()).inflate(R.layout.activity_visa_main_content, null);
         if (content != null){
+            etSearchInput = (EditText) content.findViewById(R.id.et_search_key_words);
+            etSearchInput.setHint("输入国家名称");
+            ImageView ivSearch = (ImageView) content.findViewById(R.id.title_search_iv_right_telephone);
+            ivSearch.setOnClickListener(this);
+
             gvHotVisaCountry = (MyGridView) content.findViewById(R.id.gv_visa_hot_country);
             gvHotVisaCountry.setFocusable(false);
             gvHotVisaCountry.setFocusableInTouchMode(false);
@@ -359,7 +370,45 @@ public class VisaMainActivity extends BaseActivity implements XScrollView.IXScro
             case R.id.btn_visa_view_all: //查看全部国家和地区
                 startActivity(new Intent(getApplicationContext(), SelectAllCountryAreaActivity.class));
                 break;
+            case R.id.title_search_iv_right_telephone:
+                search();
+                break;
         }
+    }
+
+    public static ArrayList<VisaHotInfo> searchList;
+
+    /**
+     * TODO 搜索
+     */
+    private void search() {
+        final String search = etSearchInput.getText().toString();
+        if (TextUtils.isEmpty(search)){
+            ToastUtil.show(getApplicationContext(), "搜索关键字不能为空");
+            return;
+        }
+        LoadingIndicator.show(this, getString(R.string.http_notice));
+        biz.getSearchList(new VisaSearchRequest(search), new BizGenericCallback<ArrayList<VisaHotInfo>>() {
+            @Override
+            public void onCompletion(GenericResponseModel<ArrayList<VisaHotInfo>> model) {
+                LoadingIndicator.cancel();
+                searchList = model.body;
+                Intent intent = new Intent(getApplicationContext(), VisaSearchListActivity.class);
+                intent.putExtra("name", search);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                if (error.localReason != null){
+                    ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
+                }else{
+                    ToastCommon.toastShortShow(getApplicationContext(), null, "搜索签证国家数据出错，请重试");
+                }
+                LoadingIndicator.cancel();
+                LogUtil.e(TAG, "getSearchList: " + error.toString());
+            }
+        });
     }
 
     private final int VIEW_VISA_DETAIL = 1801; //热门签证详情

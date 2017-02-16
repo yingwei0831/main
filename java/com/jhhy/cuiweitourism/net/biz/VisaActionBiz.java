@@ -9,6 +9,7 @@ import com.jhhy.cuiweitourism.net.models.FetchModel.VisaDetail;
 import com.jhhy.cuiweitourism.net.models.FetchModel.VisaHot;
 import com.jhhy.cuiweitourism.net.models.FetchModel.VisaHotCountry;
 import com.jhhy.cuiweitourism.net.models.FetchModel.VisaOrderRequest;
+import com.jhhy.cuiweitourism.net.models.FetchModel.VisaSearchRequest;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.BasicResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchResponseModel;
@@ -250,6 +251,52 @@ public class VisaActionBiz extends BasicActionBiz {
             }
         };
         HttpUtils.executeXutils(request, new FetchGenericCallback<>(response));
+    }
+
+
+    public void getSearchList(VisaSearchRequest fetch, BizGenericCallback<ArrayList<VisaHotInfo>> callback){
+        fetch.code = "Visa_search";
+        FetchGenericResponse<ArrayList<VisaHotInfo>> response = new FetchGenericResponse<ArrayList<VisaHotInfo>>(callback) {
+            @Override
+            public void onCompletion(FetchResponseModel response) {
+                ArrayList<ArrayList<String>> array = parseJsonTotwoLevelArray(response);
+                ArrayList<VisaHotInfo> countries = new ArrayList<>();
+                for (int i = 0; i < array.size(); i++){
+                    ArrayList<String> country = array.get(i);
+                    VisaHotInfo countryItem = new VisaHotInfo();
+                    countryItem.visaId = country.get(0);
+                    countryItem.visaName = country.get(1);
+                    countryItem.visaFlagUrl = country.get(2);
+                    countryItem.visaAddressCode = country.get(3);
+                    countryItem.visaAddress = country.get(4);
+                    countryItem.visaTime = country.get(5);
+                    countryItem.visaHurry = country.get(6).equals("Y");
+                    countryItem.visaPeriodOfValidaty = country.get(7);
+                    countryItem.visaStayPeriod = country.get(8);
+                    countryItem.innerTimes = country.get(9);
+                    countryItem.needInterview = country.get(10).equals("1");
+                    countryItem.visaPrice = country.get(11);
+                    countryItem.visaPriceLower = country.get(12);
+                    countryItem.visaPriceAdditional = country.get(13);
+                    countryItem.visaTypeId = country.get(14);
+                    countryItem.visaType = country.get(15);
+                    countryItem.productResource = country.get(16);
+                    countryItem.visaCCode = country.get(17);
+                    countryItem.visaCName = country.get(18);
+                    countryItem.visaNationCode = country.get(19);
+                    countryItem.visaNationName = country.get(20);
+                    countries.add(countryItem);
+                }
+                GenericResponseModel<ArrayList<VisaHotInfo>> returnModel = new GenericResponseModel<>(response.head, countries);
+                this.bizCallback.onCompletion(returnModel);
+            }
+
+            @Override
+            public void onError(FetchError error) {
+                this.bizCallback.onError(error);
+            }
+        };
+        HttpUtils.executeXutils(fetch, new FetchGenericCallback<>(response));
     }
 }
 

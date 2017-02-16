@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.InsuranceTypeResponse;
+import com.jhhy.cuiweitourism.net.utils.LogUtil;
 
 import java.util.List;
 
@@ -19,8 +20,11 @@ import java.util.List;
  */
 public class InsuranceRefundMoneyRecyclerAdapter  extends RecyclerView.Adapter{
 
+    private static final String TAG = "InsuranceRefundMoneyRecyclerAdapter";
+
     private Context context;
     private List mDates;
+    private int position;
 
     public InsuranceRefundMoneyRecyclerAdapter(Context context, List mDates) {
         this.context = context;
@@ -37,20 +41,29 @@ public class InsuranceRefundMoneyRecyclerAdapter  extends RecyclerView.Adapter{
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         MyViewHolder vh = (MyViewHolder) holder;
-        if (position % 2 == 1) {
+        LogUtil.e(TAG, "select = " + this.position +", position = " + position);
+        if (position == this.position && position != 0) {
             vh.itemView.setBackgroundColor(Color.YELLOW);
-        }else{
+            vh.textView1.setTextColor(Color.RED);
+            vh.textView2.setTextColor(Color.RED);
+            vh.textView3.setTextColor(Color.RED);
+            vh.textView4.setTextColor(Color.RED);
+            vh.textView5.setTextColor(Color.RED);
+        } else {
             vh.itemView.setBackgroundColor(Color.WHITE);
+            vh.textView1.setTextColor(Color.DKGRAY);
+            vh.textView2.setTextColor(Color.DKGRAY);
+            vh.textView3.setTextColor(Color.DKGRAY);
+            vh.textView4.setTextColor(Color.DKGRAY);
+            vh.textView5.setTextColor(Color.DKGRAY);
         }
-        if (position == 0){
-
-        }else {
+        if (position != 0){
             InsuranceTypeResponse item = (InsuranceTypeResponse) mDates.get(position - 1);
-            vh.textView1.setText(item.getOurprice().get(0));
-            vh.textView2.setText(item.getOurprice().get(1));
-            vh.textView3.setText(item.getOurprice().get(2));
-            vh.textView4.setText(item.getOurprice().get(3));
-            vh.textView5.setText(item.getDefaultprice());
+            vh.textView1.setText(item.getOurprice().get(3));
+            vh.textView2.setText(item.getOurprice().get(2));
+            vh.textView3.setText(item.getOurprice().get(1));
+            vh.textView4.setText(item.getOurprice().get(0));
+            vh.textView5.setText(item.getDefaultprice()+"元");
         }
     }
 
@@ -63,6 +76,14 @@ public class InsuranceRefundMoneyRecyclerAdapter  extends RecyclerView.Adapter{
     public void setData(List mDates){
         this.mDates = mDates;
         notifyDataSetChanged();
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position + 1;
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder{

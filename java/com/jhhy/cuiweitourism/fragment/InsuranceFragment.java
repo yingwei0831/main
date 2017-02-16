@@ -14,8 +14,10 @@ import android.widget.TextView;
 
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.dialog.DatePickerActivity;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.InsuranceTypeResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketCityInfo;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
+import com.jhhy.cuiweitourism.ui.InsuranceEditOrderActivity;
 import com.jhhy.cuiweitourism.ui.InsuranceMainActivity;
 import com.jhhy.cuiweitourism.ui.InsuranceTypeActivity;
 import com.jhhy.cuiweitourism.ui.PlaneCitySelectionActivity;
@@ -33,6 +35,13 @@ public class InsuranceFragment extends Fragment implements View.OnClickListener 
     private static final String TYPE = "type";
 
     private int type; //0:国内；1：国际
+
+    private InsuranceTypeResponse insurance;
+    private String fromCity;
+    private String arrivalCity;
+
+    private String fromDate;
+    private String returnDate;
 
     public InsuranceFragment() {
         // Required empty public constructor
@@ -88,7 +97,31 @@ public class InsuranceFragment extends Fragment implements View.OnClickListener 
     }
 
     private void editInsuranceOrder() { //订单页
+        if (insurance == null){
+            ToastUtil.show(getContext(), "请选择保险方案");
+            return;
+        }
+        if (returnDate == null || fromDate == null){
+            ToastUtil.show(getContext(), "请选择日期");
+            return;
+        }
+        if (fromCity == null || arrivalCity == null){
+            ToastUtil.show(getContext(), "请选择城市");
+            return;
+        }
+//        fromDate = "2017-02-19";
+//        returnDate = "2017-02-19";
+//        fromCity = "北京";
+//        arrivalCity = "南京";
 
+        Intent intent = new Intent(getContext(), InsuranceEditOrderActivity.class);
+        intent.putExtra("insurance", insurance);
+        intent.putExtra("fromCity", fromCity);
+        intent.putExtra("arrivalCity", arrivalCity);
+        intent.putExtra("fromDate", fromDate);
+        intent.putExtra("returnDate", returnDate);
+        intent.putExtra("travelType", type);
+        startActivityForResult(intent, INSURANCE_ORDER);
     }
 
     /**
@@ -135,22 +168,29 @@ public class InsuranceFragment extends Fragment implements View.OnClickListener 
             Bundle bundle = data.getExtras();
             if (bundle != null) {
                 if (requestCode == CODE_FROM_CITY) { //出发城市
-                    PlaneTicketCityInfo city = (PlaneTicketCityInfo) bundle.getSerializable("selectCity");
-                    tvFromCity.setText(city.getName());
+                    PlaneTicketCityInfo fromCity = (PlaneTicketCityInfo) bundle.getSerializable("selectCity");
+                    this.fromCity = fromCity.getName();
+                    tvFromCity.setText(this.fromCity);
                 } else if (requestCode == CODE_ARRIVAL_CITY) { //到达城市
-                    PlaneTicketCityInfo city = (PlaneTicketCityInfo) bundle.getSerializable("selectCity");
-                    tvArrivalCity.setText(city.getName());
+                    PlaneTicketCityInfo arrivalCity = (PlaneTicketCityInfo) bundle.getSerializable("selectCity");
+                    this.arrivalCity = arrivalCity.getName();
+                    tvArrivalCity.setText(this.arrivalCity);
                 } else if (requestCode == CODE_FROM_DATE) { //出发日期
                     String dateFrom = bundle.getString("selectDate");
-                    tvFromDate.setText(dateFrom.substring(0, dateFrom.indexOf(" ")));
+                    fromDate = dateFrom.substring(0, dateFrom.indexOf(" "));
+                    tvFromDate.setText(fromDate);
                 } else if (requestCode == CODE_RETURN_DATE) { //返程日期
                     String dateReturn = bundle.getString("selectDate");
-                    tvArrivalDate.setText(dateReturn.substring(0, dateReturn.indexOf(" ")));
+                    returnDate = dateReturn.substring(0, dateReturn.indexOf(" "));
+                    tvArrivalDate.setText(returnDate);
                 } else if (requestCode == CODE_INSURANCE_TYPE) { //保险方案
-//                    bundle.getString("name");
-//                    tvInsuranceName.setText();
-//                    tvInsurancePrice.setText();
+                    insurance = (InsuranceTypeResponse) bundle.getSerializable("insurance");
+                    tvInsurancePrice.setText(insurance.getDefaultprice() + "元");
                 }
+            }
+
+            if (requestCode == INSURANCE_ORDER){
+
             }
         }
     }
@@ -160,7 +200,7 @@ public class InsuranceFragment extends Fragment implements View.OnClickListener 
         tvArrivalCity = (TextView) view.findViewById(R.id.tv_insurance_to_city);
         tvFromDate = (TextView) view.findViewById(R.id.tv_insurance_from_time);
         tvArrivalDate = (TextView) view.findViewById(R.id.tv_insurance_return_time);
-        tvInsuranceName = (TextView) view.findViewById(R.id.tv_insurance_name);
+//        tvInsuranceName = (TextView) view.findViewById(R.id.tv_insurance_name);
         tvInsurancePrice = (TextView) view.findViewById(R.id.tv_insurance_price);
         btnBuy = (Button) view.findViewById(R.id.btn_insurance_search);
     }
@@ -180,7 +220,7 @@ public class InsuranceFragment extends Fragment implements View.OnClickListener 
     private TextView tvFromDate;
     private TextView tvArrivalDate;
 
-    private TextView tvInsuranceName;
+//    private TextView tvInsuranceName;
     private TextView tvInsurancePrice;
 
     private Button btnBuy;
@@ -190,6 +230,7 @@ public class InsuranceFragment extends Fragment implements View.OnClickListener 
     private final int CODE_FROM_DATE = 989; //出发时间
     private final int CODE_RETURN_DATE = 990; //到达时间
     private final int CODE_INSURANCE_TYPE = 991; //保险方案
+    private final int INSURANCE_ORDER = 992; //保险订单
 
 
 }

@@ -5,7 +5,7 @@
     android:background="@color/colorTab2Space"
     android:orientation="vertical">
 
-    <include layout="@layout/title_tab1_inner_travel" />
+    <!--<include layout="@layout/title_tab1_inner_travel"/>-->
 
     <ScrollView
         android:layout_width="match_parent"
@@ -18,70 +18,66 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tv_inner_travel_edit_order_title"
+                android:id="@+id/tv_insurance_edit_order_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@android:color/white"
                 android:ellipsize="end"
                 android:lineSpacingMultiplier="1.2"
                 android:maxLines="2"
                 android:paddingBottom="16dp"
-                android:textColor="@android:color/black"
-                android:textSize="16sp"
-                android:text="国内游10元套餐"
-                android:background="@android:color/white"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
                 android:paddingTop="16dp"
-                />
+                android:text="国内游10元套餐"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/tv_inner_travel_edit_order_from_city"
+                android:id="@+id/tv_insurance_order_product_no"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tv_inner_travel_edit_order_title"
+                android:background="@android:color/white"
+                android:paddingBottom="12dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
                 android:text="产品编号：01067859208"
                 android:textColor="@color/colorGrayDark"
                 android:textColorHint="@android:color/black"
-                android:textSize="12sp"
-                android:background="@android:color/white"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:paddingBottom="12dp"
-                />
+                android:textSize="12sp" />
 
             <TextView
-                android:id="@+id/tv_travel_edit_order_from_city"
+                android:id="@+id/tv_insurance_order_from_city"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tv_inner_travel_edit_order_title"
                 android:layout_toLeftOf="@+id/tv_inner_travel_edit_order_city_name"
                 android:layout_toRightOf="@+id/tv_inner_travel_edit_order_from_city"
+                android:background="@android:color/white"
+                android:paddingBottom="12dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
                 android:text="旅游线路：北京—上海"
                 android:textColor="@color/colorGrayDark"
                 android:textColorHint="@android:color/black"
-                android:textSize="12sp"
-                android:background="@android:color/white"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:paddingBottom="12dp"
-                />
+                android:textSize="12sp" />
 
             <TextView
-                android:id="@+id/tv_inner_travel_edit_order_city_name"
+                android:id="@+id/tv_insurance_order_city_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tv_inner_travel_edit_order_title"
                 android:layout_toLeftOf="@+id/tv_inner_travel_edit_order_travel_number"
+                android:background="@android:color/white"
+                android:paddingBottom="12dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
                 android:text="旅游时间：2017-01-16~2017-01-22"
                 android:textColor="@color/colorGrayDark"
                 android:textColorHint="@android:color/black"
                 android:textSize="12sp"
-                android:visibility="visible"
-                android:background="@android:color/white"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:paddingBottom="12dp"
-                />
+                android:visibility="visible" />
 
             <TextView
                 android:id="@+id/tv_inner_travel_edit_order_travel_number"
@@ -89,21 +85,20 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/tv_inner_travel_edit_order_title"
-                android:text="类型：0~80岁"
+                android:background="@android:color/white"
+                android:paddingBottom="12dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:text="类型：0~90岁"
                 android:textColor="@color/colorGrayDark"
                 android:textColorHint="@android:color/black"
                 android:textSize="12sp"
-                android:visibility="visible"
-                android:background="@android:color/white"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:paddingBottom="12dp"
-                />
+                android:visibility="visible" />
             <!--数量-->
             <RelativeLayout
-                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:background="@android:color/white"
                 android:paddingBottom="8dp"
                 android:paddingLeft="16dp"
@@ -116,40 +111,41 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:text="数量"
-                    android:textSize="16sp"
-                    android:textColor="@android:color/black"/>
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
 
 
                 <ImageView
-                    android:id="@+id/tv_price_calendar_number_reduce_child"
+                    android:id="@+id/tv_insurance_number_reduce_child"
                     android:layout_width="40dp"
                     android:layout_height="38dp"
-                    android:layout_alignBottom="@+id/tv_price_calendar_number_child"
-                    android:layout_alignTop="@+id/tv_price_calendar_number_child"
-                    android:layout_toLeftOf="@+id/tv_price_calendar_number_child"
+                    android:layout_alignBottom="@+id/tv_insurance_number_child"
+                    android:layout_alignTop="@+id/tv_insurance_number_child"
+                    android:layout_toLeftOf="@+id/tv_insurance_number_child"
                     android:background="@drawable/bg_iv_price_calendar_left_border"
                     android:scaleType="centerInside"
                     android:src="@mipmap/icon_reduce" />
 
                 <TextView
-                    android:id="@+id/tv_price_calendar_number_child"
+                    android:id="@+id/tv_insurance_number_child"
                     android:layout_width="40dp"
                     android:layout_height="38dp"
                     android:layout_marginLeft="-1dp"
                     android:layout_marginRight="-1dp"
-                    android:layout_toLeftOf="@+id/tv_price_calendar_number_add_child"
+                    android:layout_toLeftOf="@+id/tv_insurance_number_add_child"
                     android:background="@drawable/bg_tv_price_calendar_number_border"
                     android:gravity="center"
-                    android:textSize="18sp"
-                    android:textColor="@android:color/black"/>
+                    android:text="1"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp" />
 
                 <ImageView
-                    android:id="@+id/tv_price_calendar_number_add_child"
+                    android:id="@+id/tv_insurance_number_add_child"
                     android:layout_width="40dp"
                     android:layout_height="38dp"
-                    android:layout_alignBottom="@+id/tv_price_calendar_number_child"
+                    android:layout_alignBottom="@+id/tv_insurance_number_child"
                     android:layout_alignParentRight="true"
-                    android:layout_alignTop="@+id/tv_price_calendar_number_child"
+                    android:layout_alignTop="@+id/tv_insurance_number_child"
                     android:background="@drawable/bg_iv_price_calendar_right_border"
                     android:padding="12dp"
                     android:scaleType="centerInside"
@@ -161,44 +157,48 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
+                android:layout_marginTop="10dp"
                 android:background="@android:color/white"
                 android:orientation="horizontal"
-                android:layout_marginTop="10dp"
-                >
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="被保人信息"
-                    android:textSize="16sp"
                     android:textColor="@android:color/black"
-                    />
+                    android:textSize="16sp" />
+
                 <TextView
-                    android:paddingTop="16dp"
-                    android:paddingBottom="16dp"
+                    android:id="@+id/tv_user_contact"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:text="常用联系人"
-                    android:drawableRight="@mipmap/arrow_right_dark"
+                    android:layout_weight="1"
                     android:drawablePadding="10dp"
+                    android:drawableRight="@mipmap/arrow_right_dark"
                     android:gravity="right"
-                    android:textColor="@android:color/black"
-                    />
+                    android:paddingBottom="16dp"
+                    android:paddingTop="16dp"
+                    android:text="常用联系人"
+                    android:textColor="@android:color/black" />
             </LinearLayout>
+
             <com.jhhy.cuiweitourism.view.MyListView
                 android:id="@+id/list_visitors"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/white"
-                />
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="@android:color/white"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="visible">
                 <!--联系人-->
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -222,7 +222,7 @@
                         android:textColor="@android:color/holo_red_light" />
 
                     <EditText
-                        android:id="@+id/et_travel_edit_order_contact_name"
+                        android:id="@+id/et_insurance_order_contact_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
@@ -267,7 +267,7 @@
                         android:textColor="@android:color/holo_red_light" />
 
                     <EditText
-                        android:id="@+id/et_travel_edit_order_contact_tel"
+                        android:id="@+id/et_insurance_order_contact_tel"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
@@ -314,7 +314,7 @@
                         android:textColor="@android:color/black" />
 
                     <EditText
-                        android:id="@+id/et_travel_edit_order_contact_remark"
+                        android:id="@+id/et_insurance_order_contact_remark"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignBottom="@+id/tv_inner_travel_edit_order_contact_leaving"
@@ -330,72 +330,6 @@
                         android:textColorHint="@android:color/darker_gray"
                         android:textSize="14sp" />
                 </LinearLayout>
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="@android:color/white"
-                android:orientation="vertical"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical">
-
-                    <TextView
-                        android:id="@+id/tv_inner_travel_edit_order_traveller_detail"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:text="游客信息："
-                        android:textColor="@android:color/black" />
-
-                    <TextView
-                        android:id="@+id/tv_travel_edit_order_travelers"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_toRightOf="@+id/tv_inner_travel_edit_order_traveller_detail"
-                        android:gravity="center_vertical"
-                        android:text="2成人，2儿童"
-                        android:textColor="@android:color/black"
-                        />
-
-                    <TextView
-                        android:id="@+id/tv_travel_edit_order_select_traveler"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_gravity="right"
-                        android:drawablePadding="10dp"
-                        android:drawableRight="@mipmap/arrow_right_dark"
-                        android:gravity="center_vertical"
-                        android:text="常用游客"
-                        android:maxLines="1"
-                        android:paddingBottom="16dp"
-                        android:paddingLeft="16dp"
-                        android:paddingTop="16dp"
-                        android:textColor="@android:color/black"
-                        android:textSize="14sp" />
-                </RelativeLayout>
-
-
-                <!--出行人信息，需要动态添加，默认有一个-->
-                <LinearLayout
-                    android:id="@+id/layout_traveler"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-
-                </LinearLayout>
-
-
             </LinearLayout>
 
             <LinearLayout
@@ -419,7 +353,7 @@
                         android:textColor="@android:color/black" />
 
                     <TextView
-                        android:id="@+id/tv_travel_edit_order_icon"
+                        android:id="@+id/tv_insurance_order_icon"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -430,8 +364,7 @@
                         android:paddingRight="16dp"
                         android:paddingTop="16dp"
                         android:text="1旅游币可抵1元"
-                        android:textColor="@android:color/black"
-                        />
+                        android:textColor="@android:color/black" />
 
                 </LinearLayout>
 
@@ -455,7 +388,7 @@
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
                         android:paddingLeft="16dp"
-                        android:text="发票"
+                        android:text="投保注意事项"
                         android:textColor="@android:color/black" />
 
                     <TextView
@@ -471,49 +404,16 @@
                         android:paddingBottom="16dp"
                         android:paddingRight="16dp"
                         android:paddingTop="16dp"
-                        android:text="不需要发票"
-                        android:textColor="@android:color/black" />
-                </RelativeLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1.2px"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:background="@color/colorLineGray2" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="16dp"
-                        android:text="预订须知"
-                        android:textColor="@android:color/black" />
-
-                    <TextView
-                        android:id="@+id/tv_travel_edit_order_notice"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:drawablePadding="10dp"
-                        android:drawableRight="@mipmap/arrow_right_dark"
-                        android:gravity="right"
-                        android:paddingBottom="16dp"
-                        android:paddingRight="16dp"
-                        android:paddingTop="16dp"
                         android:text="查看"
                         android:textColor="@android:color/black" />
-                </LinearLayout>
+                </RelativeLayout>
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="6dp"
                 android:layout_marginTop="10dp"
                 android:background="@android:color/white"
                 android:orientation="vertical"
@@ -524,7 +424,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingBottom="8dp"
-                    android:paddingTop="12dp">
+                    android:paddingTop="12dp"
+                    android:gravity="bottom">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -535,17 +436,20 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_toLeftOf="@+id/tv_inner_travel_currency_price"
+                        android:layout_toLeftOf="@+id/tv_insurance_currency_price"
                         android:text="￥"
-                        android:textColor="@android:color/holo_red_light" />
+                        android:textColor="@android:color/holo_red_light"
+                        android:layout_alignBottom="@+id/tv_insurance_currency_price"
+                        />
 
                     <TextView
-                        android:id="@+id/tv_inner_travel_currency_price"
+                        android:id="@+id/tv_insurance_currency_price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:textColor="@android:color/holo_red_light"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        android:text="0"/>
 
                 </RelativeLayout>
 
@@ -554,7 +458,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingBottom="8dp"
-                    android:paddingTop="8dp">
+                    android:paddingTop="6dp"
+                    android:gravity="bottom">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -567,50 +472,21 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_toLeftOf="@+id/tv_inner_travel_total_price_icon"
+                        android:layout_toLeftOf="@+id/tv_insurance_total_price_icon"
                         android:text="-￥"
-                        android:textColor="@android:color/holo_red_light" />
+                        android:textColor="@android:color/holo_red_light"
+                        android:paddingBottom="1dp"
+                        />
 
                     <TextView
-                        android:id="@+id/tv_inner_travel_total_price_icon"
+                        android:id="@+id/tv_insurance_total_price_icon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:text="5526"
+                        android:text="0"
                         android:textColor="@android:color/holo_red_light"
-                        android:textSize="16sp" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/layout_price_express"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="8dp"
-                    android:paddingTop="8dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:text="发票快递费"
-                        android:textColor="@android:color/black" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_toLeftOf="@+id/tv_inner_travel_express_price"
-                        android:text="+￥"
-                        android:textColor="@android:color/holo_red_light" />
-
-                    <TextView
-                        android:id="@+id/tv_inner_travel_express_price"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:text="15"
-                        android:textColor="@android:color/holo_red_light"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        />
                 </RelativeLayout>
 
                 <View
@@ -622,22 +498,23 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:paddingBottom="8dp">
 
                     <CheckBox
-                        android:id="@+id/cb_travel_edit_order_deal"
+                        android:id="@+id/cb_insurance_order_deal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:checked="true"
-                        android:textColor="@android:color/black"
                         android:button="@drawable/bg_check_box"
-                        />
+                        android:checked="true"
+                        android:textColor="@android:color/black" />
 
                     <TextView
-                        android:id="@+id/tv_travel_edit_order_deal"
+                        android:id="@+id/tv_insurance_order_deal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="我已阅读并接受预订须知，旅游合同，特别预订提示等款项"
+                        android:paddingLeft="6dp"
+                        android:text="我已阅读并接受投保注意事项条款"
                         android:textColor="@android:color/black"
                         android:textSize="12sp" />
                 </LinearLayout>

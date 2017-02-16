@@ -26,6 +26,7 @@ import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelOrderInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelOrderResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.HotelOrderToPlatformResponse;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.InsuranceOrderResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneOrderOfChinaResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketOfChinaCommitPlatformResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainOrderFromPlatformResponse;
@@ -60,7 +61,7 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
     private Button tvWeChatPay;
 
     private int type;   // 11:热门活动支付；       21/25(订单页面进入):酒店支付；         16:租车订单；        14/18(订单页面中跳过来)：火车票订单；      15/19(订单页面进入)/23(详情页面进入)：国内飞机票订单；
-                        // 17/20(订单页面进入)/24（详情页面进入）：国际飞机票；         22：签证
+                        // 17/20(订单页面进入)/24（详情页面进入）：国际飞机票；         22：签证        31:保险
     private ActivityOrderInfo hotInfo; //热门活动订单
     private HotelOrderResponse hotelInfo; //酒店订单
     private TrainTicketOrderInfo trainInfo; //火车票订单
@@ -210,6 +211,10 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
             } else if (type == 23 || type == 24){ //国内机票，详情页面进入 / 国际机票，详情页进入
                 ordersn = bundle.getString("ordersn");
                 orderPrice = bundle.getString("orderPrice");
+            } else if (type == 31){
+                InsuranceOrderResponse order = (InsuranceOrderResponse) bundle.getSerializable("order");
+                ordersn = order.getOrdersn();
+                orderPrice = String.valueOf(order.getPrice());
             }
 //            else if (type == 18 || type == 19 || type == 20 || type == 24){ //火车票，订单页面进入；国内机票，订单页面进入；国际机票，订单页面进入；酒店，订单页面进入
 //                order = (Order) bundle.getSerializable("order");

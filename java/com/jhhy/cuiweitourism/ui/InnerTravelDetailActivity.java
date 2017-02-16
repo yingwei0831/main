@@ -394,7 +394,7 @@ public class InnerTravelDetailActivity extends BaseActionBarActivity implements 
         if (tripDescribe != null && tripDescribe.size() > 0) {
             for (int i = 0; i < tripDescribe.size(); i++) {
                 TravelDetailDay tripDay = tripDescribe.get(i);
-                InnerTravelDetailDescribeView viewStep = new InnerTravelDetailDescribeView(getApplicationContext());
+                InnerTravelDetailDescribeView viewStep = new InnerTravelDetailDescribeView(getApplicationContext(), handler);
                 if (i == 0) {
                     viewStep.isFirstStep(true);
                 }

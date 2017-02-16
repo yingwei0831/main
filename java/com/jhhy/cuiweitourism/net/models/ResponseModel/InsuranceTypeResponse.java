@@ -1,11 +1,12 @@
 package com.jhhy.cuiweitourism.net.models.ResponseModel;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by jiahe008_lvlanlan on 2017/2/15.
  */
-public class InsuranceTypeResponse {
+public class InsuranceTypeResponse implements Serializable{
 
     /**
      * id : 1
