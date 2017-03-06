@@ -171,6 +171,11 @@ public class InnerTravelEditOrderActivity extends BaseActivity implements View.O
         tvTitle = (TextView) findViewById(R.id.tv_inner_travel_edit_order_title);
         tvFromCity = (TextView) findViewById(R.id.tv_travel_edit_order_from_city);
 
+        TextView tvAdultNumber = (TextView) findViewById(R.id.tv_travel_edit_order_adult_number);
+        TextView tvChildNumber = (TextView) findViewById(R.id.tv_travel_edit_order_child_number);
+        tvAdultNumber.setText(String.format(Locale.getDefault(), "%d人", countAdult));
+        tvChildNumber.setText(String.format(Locale.getDefault(), "%d人", countChild));
+
         tvSelectFromCity = (TextView) findViewById(R.id.tv_travel_edit_order_select_from_city);
 
         tvTravelId = (TextView) findViewById(R.id.tv_inner_travel_edit_order_travel_number);

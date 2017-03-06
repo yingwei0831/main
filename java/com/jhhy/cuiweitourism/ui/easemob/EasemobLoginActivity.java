@@ -38,6 +38,7 @@ public class EasemobLoginActivity extends EaseBaseActivity {
 	private int messageToIndex = Consts.MESSAGE_TO_DEFAULT;
 
 	private String im;
+	private String sjmc;
 
 	@Override
 	protected void onCreate(Bundle arg0) {
@@ -46,6 +47,7 @@ public class EasemobLoginActivity extends EaseBaseActivity {
 		selectedIndex = intent.getIntExtra(Consts.INTENT_CODE_IMG_SELECTED_KEY, Consts.INTENT_CODE_IMG_SELECTED_DEFAULT);
 		messageToIndex = intent.getIntExtra(Consts.MESSAGE_TO_INTENT_EXTRA, Consts.MESSAGE_TO_DEFAULT);
 		im = intent.getStringExtra("im");
+		sjmc = intent.getStringExtra("sjmc");
 
 		if (EMChat.getInstance().isLoggedIn()) {
 			progressDialog = getProgressDialog();
@@ -123,9 +125,12 @@ public class EasemobLoginActivity extends EaseBaseActivity {
 				if (!EasemobLoginActivity.this.isFinishing())
 					progressDialog.dismiss();
 				// 进入主页面
-				startActivity(new Intent(EasemobLoginActivity.this, ChatActivity.class).putExtra(
-						Consts.INTENT_CODE_IMG_SELECTED_KEY, selectedIndex).putExtra(
-						Consts.MESSAGE_TO_INTENT_EXTRA, messageToIndex).putExtra("im", im));
+				startActivity(new Intent(EasemobLoginActivity.this, ChatActivity.class)
+						.putExtra(Consts.INTENT_CODE_IMG_SELECTED_KEY, selectedIndex)
+						.putExtra(Consts.MESSAGE_TO_INTENT_EXTRA, messageToIndex)
+						.putExtra("im", im)
+						.putExtra("sjmc", sjmc)
+				);
 				finish();
 			}
 		});

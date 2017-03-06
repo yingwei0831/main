@@ -1,6 +1,7 @@
 package com.jhhy.cuiweitourism.ui;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,6 +15,7 @@ import android.os.Message;
 import android.provider.MediaStore;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -186,14 +188,30 @@ public class RequestRefundActivity extends BaseActivity implements View.OnClickL
     }
 
     private void refund() {
-        String remark = etReason.getText().toString();
+        final String remark = etReason.getText().toString();
         if (TextUtils.isEmpty(remark)){
             ToastCommon.toastShortShow(getApplicationContext(), null ,getString(R.string.empty_input));
             return;
         }
-        if (type == -1){ //申请退款
-            OrderActionBiz biz = new OrderActionBiz(getApplicationContext(), handlerMain);
-            biz.requestRefund(order.getOrderSN(), remark);
+        if (type == -1){ //申请退款,申请退款前提示是否退款
+            AlertDialog.Builder builder = new AlertDialog.Builder(this); //, android.R.style.Theme_Material_Light_Dialog
+            builder.setTitle(getString(R.string.refund_notice_title));
+            builder.setIcon(R.drawable.app_logo);
+            builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                    OrderActionBiz biz = new OrderActionBiz(getApplicationContext(), handlerMain);
+                    biz.requestRefund(order.getOrderSN(), remark);
+                }
+            });
+            builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            });
+            builder.create().show();
         } else if (2 == type){ //酒店取消订单
             cancelHotelOrder(remark);
         }

@@ -118,7 +118,26 @@
                         />
 
                 </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:orientation="horizontal"
+                    android:paddingLeft="16dp">
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="是否面签："
+                        android:textColor="@android:color/black" />
+
+                    <TextView
+                        android:id="@+id/tv_visa_face"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        />
+
+                </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -182,7 +201,6 @@
                         />
 
                 </LinearLayout>
-
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="10dp"

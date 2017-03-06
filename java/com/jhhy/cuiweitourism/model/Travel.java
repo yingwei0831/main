@@ -25,8 +25,17 @@ public class Travel implements Serializable
     private String group; //环信用
     private String orderSN; //订单sn
 
+    private String sjmc;
 
     public Travel(){}
+
+    public String getSjmc() {
+        return sjmc;
+    }
+
+    public void setSjmc(String sjmc) {
+        this.sjmc = sjmc;
+    }
 
     public String getGysid() {
         return gysid;

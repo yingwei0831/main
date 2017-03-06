@@ -432,7 +432,7 @@ public class TrainMainActivity extends BaseActionBarActivity implements View.OnT
         //广告位
         ForeEndActionBiz fbiz = new ForeEndActionBiz();
 //        mark:index（首页）、line_index(国内游、出境游)、header（分类上方）、visa_index（签证）、customize_index(个性定制)
-        ForeEndAdvertise ad = new ForeEndAdvertise("visa_index");
+        ForeEndAdvertise ad = new ForeEndAdvertise("help_show");
         fbiz.foreEndGetAdvertisingPosition(ad, new BizGenericCallback<ArrayList<ForeEndAdvertisingPositionInfo>>() {
             @Override
             public void onCompletion(GenericResponseModel<ArrayList<ForeEndAdvertisingPositionInfo>> model) {

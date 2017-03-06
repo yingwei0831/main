@@ -196,10 +196,10 @@ public class TrainEditOrderActivity extends AppCompatActivity implements View.On
     }
 
     private void refreshview(){
-        tvPriceTotal.setText(String.format(Locale.getDefault(), "%.2f", totalPrice)); //订单金额
+        tvPriceTotal.setText(String.format(Locale.getDefault(), "%.2f", totalPrice+5f*listContact.size())); //订单金额
         tvSeatType.setText(seatInfo.seatName); //座位类型
         tvTicketPrice.setText(seatInfo.floorPrice); //票价
-        tvTotalPrice.setText(String.format(Locale.getDefault(), "%.2f", totalPrice)); //商品总金额
+        tvTotalPrice.setText(String.format(Locale.getDefault(), "%.2f+%d元服务费", totalPrice, listContact.size() * 5)); //商品总金额
     }
 
     private void getData() {
@@ -244,25 +244,34 @@ public class TrainEditOrderActivity extends AppCompatActivity implements View.On
                     bundle.putInt("type", 13);
 //                if (listContact.size()== 0 && Integer.parseInt(seatInfo.seatCount))
                     if (listContact.size() == 0) {
-                        bundle.putInt("number", 10);
+                        bundle.putInt("number", 5);
                     } else {
-                        bundle.putInt("number", 10 - listContact.size());
+                        if (5 - listContact.size() > 0) {
+                            bundle.putInt("number", 5 - listContact.size());
+                        }else{
+                            ToastUtil.show(getApplicationContext(), "最多添加5位乘车人，请删除后再添加");
+                            return;
+                        }
                     }
                     intent.putExtras(bundle);
                     startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_SELECT_CONTACT);
                 } else {
 //                    ToastUtil.show(getApplicationContext(), getString(R.string.logged_notice));
-                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("type", 2);
-                    intent.putExtras(bundle);
-                    startActivityForResult(intent, REQUEST_LOGIN);
+                    userLogin();
                 }
                 break;
             case R.id.btn_edit_order_pay: //立即支付
                 goToPay();
                 break;
         }
+    }
+
+    private void userLogin() {
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("type", 2);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, REQUEST_LOGIN);
     }
 
     /**
@@ -281,11 +290,7 @@ public class TrainEditOrderActivity extends AppCompatActivity implements View.On
                 ToastCommon.toastShortShow(getApplicationContext(), null, "请先添加乘客");
             }
         }else{
-            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putInt("type", 2);
-            intent.putExtras(bundle);
-            startActivityForResult(intent, REQUEST_LOGIN);
+            userLogin();
         }
     }
 
@@ -364,8 +369,13 @@ public class TrainEditOrderActivity extends AppCompatActivity implements View.On
                     adapter.notifyDataSetChanged();
                 }
                 tvAdultCount.setText(String.format(Locale.getDefault(), "成人%d人", listContact.size()));
-                tvPriceTotal.setText(String.format(Locale.getDefault(), "%.2f", Float.parseFloat(seatInfo.floorPrice) * listContact.size() - icon)); //订单金额
-                tvTotalPrice.setText(String.format(Locale.getDefault(), "%.2f", Float.parseFloat(seatInfo.floorPrice) * listContact.size())); //商品金额
+                tvPriceTotal.setText(String.format(
+                        Locale.getDefault(), "%.2f",
+                        Float.parseFloat(seatInfo.floorPrice) * listContact.size() - icon + 5f * listContact.size())); //订单金额
+                tvTotalPrice.setText(
+                        String.format(
+                                Locale.getDefault(), "%.2f+%d元服务费",
+                                Float.parseFloat(seatInfo.floorPrice) * listContact.size(), listContact.size() * 5)); //商品金额
             }else if (requestCode == Consts.REQUEST_CODE_RESERVE_PAY){ //去支付，支付成功
                 setResult(RESULT_OK);
                 finish();
@@ -382,7 +392,7 @@ public class TrainEditOrderActivity extends AppCompatActivity implements View.On
                 icon = bundle.getInt("score");
                 tvSelectIcon.setText(String.format(Locale.getDefault(), "%s个", icon));
                 tvPayIcon.setText(String.valueOf(icon));
-                tvPriceTotal.setText(String.valueOf(totalPrice - icon)); //订单总价
+                tvPriceTotal.setText(String.valueOf(totalPrice - icon + 5f * listContact.size())); //订单总价
             }
         }else{
             if (requestCode == REQUEST_LOGIN) { //登录
@@ -407,8 +417,9 @@ public class TrainEditOrderActivity extends AppCompatActivity implements View.On
                     icon = 0;
                 }
                 tvAdultCount.setText(String.format(Locale.getDefault(), "成人%d人", listContact.size()));
-                tvPriceTotal.setText(String.format(Locale.getDefault(), "%.2f", (totalPrice == 0 || totalPrice - icon <= 0) ? 0 : totalPrice - icon)); //订单总金额
-                tvTotalPrice.setText(String.format(Locale.getDefault(), "%.2f", totalPrice)); //商品总金额
+                tvPriceTotal.setText(String.format(Locale.getDefault(), "%.2f",
+                        (totalPrice == 0 || totalPrice - icon <= 0) ? 0f : totalPrice - icon + 5f*listContact.size())); //订单总金额
+                tvTotalPrice.setText(String.format(Locale.getDefault(), "%.2f+%d元服务费", totalPrice, listContact.size() * 5)); //商品总金额
                 break;
         }
     }

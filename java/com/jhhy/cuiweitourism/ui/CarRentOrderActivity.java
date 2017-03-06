@@ -150,11 +150,7 @@ public class CarRentOrderActivity extends BaseActivity implements View.OnClickLi
                 break;
             case R.id.btn_car_rent_order_next:
                 if (!MainActivity.logged){ //未登录
-                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("type", 2);
-                    intent.putExtras(bundle);
-                    startActivityForResult(intent, REQUEST_LOGIN);
+                    userLogin();
                     return;
                 }
                 String linkName = etLinkName.getText().toString();
@@ -195,6 +191,14 @@ public class CarRentOrderActivity extends BaseActivity implements View.OnClickLi
 
                 break;
         }
+    }
+
+    private void userLogin() {
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("type", 2);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, REQUEST_LOGIN);
     }
 
     private int RENT_CARRIAGE_SUCCESS = 2908; //租车订单成功，去支付

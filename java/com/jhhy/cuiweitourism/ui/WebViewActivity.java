@@ -53,22 +53,22 @@ public class WebViewActivity extends BaseActionBarActivity {
 
     private void getData() {
         Intent intent = getIntent();
-        if (intent != null){
+        if (intent != null) {
             Bundle bundle = intent.getExtras();
-            if (bundle != null){
+            if (bundle != null) {
                 type = bundle.getInt("type");
-                if (type == 3){
+                if (type == 3) {
                     url = bundle.getString("data");
                     return;
                 }
-                CuiweiInfoResponse item = (CuiweiInfoResponse) bundle.getSerializable("data");
-                if (item != null){
+                item = (CuiweiInfoResponse) bundle.getSerializable("data");
+                if (item != null) {
                     url = item.getUrl();
-                }else{
+                } else {
                     type = bundle.getInt("type");
-                    if (type == 2){
+                    if (type == 2) {
                         getInternetData();
-                    }else{
+                    } else {
                         url = "http://www.cwly1118.com";
                     }
                 }
@@ -83,11 +83,11 @@ public class WebViewActivity extends BaseActionBarActivity {
         biz.fetchCuiweiInfo(new BizGenericCallback<ArrayList<CuiweiInfoResponse>>() {
             @Override
             public void onCompletion(GenericResponseModel<ArrayList<CuiweiInfoResponse>> model) {
-                LogUtil.e(TAG,"homePageCustomAdd =" + model.body.toString());
+                LogUtil.e(TAG, "homePageCustomAdd =" + model.body.toString());
                 if ("0000".equals(model.headModel.res_code)) {
                     ArrayList<CuiweiInfoResponse> listService = model.body;
                     separator(listService);
-                }else if ("0001".equals(model.headModel.res_code)){
+                } else if ("0001".equals(model.headModel.res_code)) {
                     ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);
                 }
                 LoadingIndicator.cancel();
@@ -95,9 +95,9 @@ public class WebViewActivity extends BaseActionBarActivity {
 
             @Override
             public void onError(FetchError error) {
-                if (error.localReason != null){
+                if (error.localReason != null) {
                     ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
-                }else{
+                } else {
                     ToastCommon.toastShortShow(getApplicationContext(), null, "请求失败，请返回重试");
                 }
                 LoadingIndicator.cancel();
@@ -106,14 +106,14 @@ public class WebViewActivity extends BaseActionBarActivity {
     }
 
     private void separator(ArrayList<CuiweiInfoResponse> listService) {
-            for (int i = 0; i< listService.size(); i++) {
-                item = listService.get(i);
-                if ("法律声明".equals(item.getServername())) {
-                    url = item.getUrl();
-                    break;
-                }
+        for (int i = 0; i < listService.size(); i++) {
+            item = listService.get(i);
+            if ("法律声明".equals(item.getServername())) {
+                url = item.getUrl();
+                break;
             }
-        if (url == null){
+        }
+        if (url == null) {
             url = "http://www.cwly1118.com";
             ToastUtil.show(getApplicationContext(), "找不到目的地啦，请返回重试~");
         }
@@ -123,9 +123,9 @@ public class WebViewActivity extends BaseActionBarActivity {
     @Override
     protected void setupView() {
         super.setupView();
-        if (type == 3){
+        if (type == 3) {
             tvTitle.setText("预订须知");
-        }else {
+        } else {
             if (item == null) {
                 tvTitle.setText("法律声明");
             } else {
@@ -134,7 +134,7 @@ public class WebViewActivity extends BaseActionBarActivity {
         }
         progressBar = (ProgressBar) findViewById(R.id.progressBar1);
         webView = (WebView) findViewById(R.id.about_web_view);
-        webView.setWebViewClient(new WebViewClient(){
+        webView.setWebViewClient(new WebViewClient() {
             //覆写shouldOverrideUrlLoading实现内部显示网页
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -145,11 +145,11 @@ public class WebViewActivity extends BaseActionBarActivity {
         });
         WebSettings seting = webView.getSettings();
         seting.setJavaScriptEnabled(true);//设置webview支持javascript脚本
-        webView.setWebChromeClient(new WebChromeClient(){
+        webView.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
                 // TODO 自动生成的方法存根
-                if(newProgress==100){
+                if (newProgress == 100) {
                     progressBar.setVisibility(View.GONE);//加载完网页进度条消失
                 } else {
                     progressBar.setVisibility(View.VISIBLE);//开始加载网页时显示进度条

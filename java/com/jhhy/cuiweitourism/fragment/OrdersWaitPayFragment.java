@@ -205,10 +205,10 @@ public class OrdersWaitPayFragment extends Fragment implements ArgumentOnClick {
         Order order = lists.get(position);
 
         if ("80".equals(order.getTypeId())){ //火车票详情
-            if ("0".equals(type)){ //全部订单，不给任何操作
-                ToastCommon.toastShortShow(getContext(), null, "请进入火车票订单查看");
-                return;
-            }
+//            if ("0".equals(type)){ //全部订单，不给任何操作
+//                ToastCommon.toastShortShow(getContext(), null, "请进入火车票订单查看");
+//                return;
+//            }
             if (order.getSanfangorderno1() == null || order.getSanfangorderno1().length() == 0 ||
                     order.getSanfangorderno2() == null || order.getSanfangorderno2().length() == 0){
                 ToastCommon.toastShortShow(getContext(), null, "订单号不存在，无详情");

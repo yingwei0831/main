@@ -43,18 +43,19 @@ public class ContactAddActivity extends BaseActionBarActivity {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            LoadingIndicator.cancel();
+
             commit = false;
                 switch (msg.what) {
                     case Consts.MESSAGE_ADD_CONTACTS: //添加联系人成功
                         if (msg.arg1 == 1) {
-                            setResult(RESULT_OK);
-                            finish();
+                            handler.postDelayed(runnable, 1000);
                         }else{
+                            LoadingIndicator.cancel();
                             ToastCommon.toastShortShow(getApplicationContext(), null, (String) msg.obj);
                         }
                         break;
                     case Consts.MESSAGE_MODIFY_CONTACTS: //修改联系人成功
+                        LoadingIndicator.cancel();
                         if (msg.arg1 == 1) {
                             setResult(RESULT_OK);
                             finish();
@@ -63,12 +64,23 @@ public class ContactAddActivity extends BaseActionBarActivity {
                         }
                         break;
                     case Consts.NET_ERROR:
+                        LoadingIndicator.cancel();
                         ToastUtil.show(getApplicationContext(), "请检查网络后重试");
                         break;
                     case Consts.NET_ERROR_SOCKET_TIMEOUT:
+                        LoadingIndicator.cancel();
                         ToastUtil.show(getApplicationContext(), "与服务器链接超时，请重试");
                         break;
                 }
+        }
+    };
+
+    Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            LoadingIndicator.cancel();
+            setResult(RESULT_OK);
+            finish();
         }
     };
 
@@ -182,7 +194,7 @@ public class ContactAddActivity extends BaseActionBarActivity {
             ToastCommon.toastShortShow(getApplicationContext(), null, "输入的手机号码有误，请检查");
             return;
         }
-        if (!Utils.is18ByteIdCardComplex(cardId)){
+        if (TextUtils.isEmpty(cardId) || cardId.length() != 18){ //Utils.is18ByteIdCardComplex(cardId)
             ToastCommon.toastShortShow(getApplicationContext(), null, "输入的身份证号码有误，请检查");
             return;
         }

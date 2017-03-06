@@ -17,12 +17,15 @@ public class ChatActivity extends BaseActivity {
     public static ChatActivity activityInstance;
     private ChatFragment chatFragment;
     String toChatUsername;
+    String sjmc;
 
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
         setContentView(R.layout.em_activity_chat);
         toChatUsername = getIntent().getStringExtra("im");
+        sjmc = getIntent().getStringExtra("sjmc");
+
         activityInstance = this;
         // 聊天人或群id
 //        toChatUsername = MainActivity.user.getHxname();//15210656919/MainActivity.user.getUserPhoneNumber(); //HelpDeskPreferenceUtils.getInstance(this).getSettingCustomerAccount();
@@ -30,6 +33,7 @@ public class ChatActivity extends BaseActivity {
         chatFragment = new ChatFragment();
         Intent intent = getIntent();
         intent.putExtra(Consts.EXTRA_USER_ID, toChatUsername);
+        intent.putExtra("sjmc", sjmc);
         intent.putExtra(Consts.EXTRA_SHOW_USERNICK, false); //此处是设置不显示客服昵称
         // 传入参数
         chatFragment.setArguments(intent.getExtras());

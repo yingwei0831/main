@@ -830,28 +830,38 @@ public class Tab1Fragment extends Fragment implements XScrollView.IXScrollViewLi
 //        String pwd = sp.getPassword();
         if (MainActivity.logged) { //|| (number != null && !"null".equals(number) && pwd != null && !"null".equals(pwd))
             String im = null;
+            String sjmc = null;
             if (indicator == 1) {
                 im = lists.get(position).getIm();
+                sjmc = lists.get(position).getSjmc();
             } else if (indicator == 2) {
                 im = listsInner.get(position).getIm();
+                sjmc = listsInner.get(position).getSjmc();
             } else if (indicator == 3) {
                 im = listsOutside.get(position).getIm();
+                sjmc = listsOutside.get(position).getSjmc();
             }
             if (im == null || im.length() == 0) {
                 ToastUtil.show(getContext(), "当前商户暂未提供客服功能");
                 return;
             }
+
             Intent intent = new Intent(getContext(), EasemobLoginActivity.class);
             intent.putExtra("im", im);
+            intent.putExtra("sjmc", sjmc);
             startActivity(intent);
         } else {
 //            ToastUtil.show(getContext(), "请登录后再试");
-            Intent intent = new Intent(getContext(), LoginActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putInt("type", 2);
-            intent.putExtras(bundle);
-            startActivityForResult(intent, REQUEST_LOGIN);
+            userLogin();
         }
+    }
+
+    private void userLogin() {
+        Intent intent = new Intent(getContext(), LoginActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("type", 2);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, REQUEST_LOGIN);
     }
 
     @Override

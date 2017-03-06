@@ -21,7 +21,7 @@ import com.jhhy.cuiweitourism.utils.ToastUtil;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
 
-    private static final String TAG = LoginActivity.class.getSimpleName();
+    private static final String TAG = "LoginActivity";
 
     private EditText etUserName;
     private EditText etPassword;

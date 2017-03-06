@@ -488,6 +488,8 @@ public class OrdersAllBiz {
                             order.setOrderSN(orderObj.getString("ordersn"));
                             order.setPicPath(orderObj.getString(Consts.PIC_PATH_LITPIC));
                             order.setTypeId(orderObj.getString("typeid"));
+                            order.setSanfangorderno1(orderObj.getString("sanfangorderno1"));
+                            order.setSanfangorderno2(orderObj.getString("sanfangorderno2"));
                             listWaitRefund.add(order);
                         }
                     }

@@ -3,6 +3,7 @@ package com.jhhy.cuiweitourism.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,6 +20,7 @@ import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
 import com.jhhy.cuiweitourism.net.netcallback.BizGenericCallback;
 import com.jhhy.cuiweitourism.net.utils.Consts;
 import com.jhhy.cuiweitourism.net.utils.LogUtil;
+import com.jhhy.cuiweitourism.utils.ToastUtil;
 import com.just.sun.pricecalendar.ToastCommon;
 
 import java.util.ArrayList;
@@ -197,12 +199,13 @@ public class PersonalizedCustomStartActivity extends BaseActivity implements Vie
     }
 
     private void commit() {
-        selectFromCityName = selectCity.getName();
-        if (selectFromCityName == null){
-            ToastCommon.toastShortShow(getApplicationContext(), null, "请输入目的城市");
+        selectFromCityName = etSelectFromCity.getText().toString();
+        if (TextUtils.isEmpty(selectFromCityName)){
+            ToastCommon.toastShortShow(getApplicationContext(), null, "请输入出发城市");
             return;
         }
-        if (selectToCityName == null){
+        selectToCityName = etSelectToCity.getText().toString();
+        if (TextUtils.isEmpty(selectToCityName)){
             ToastCommon.toastShortShow(getApplicationContext(), null, "请输入目的城市");
             return;
         }
@@ -251,10 +254,10 @@ public class PersonalizedCustomStartActivity extends BaseActivity implements Vie
                 if ("0000".equals(model.headModel.res_code)) {
                     ArrayList<Object> array = model.body;
                     LogUtil.e(TAG,"homePageCustomAdd =" + array.toString());
-                    ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);
+                    ToastUtil.show(getApplicationContext(), model.headModel.res_arg);
                     finish();
                 }else if ("0001".equals(model.headModel.res_code)){
-                    ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);
+                    ToastUtil.show(getApplicationContext(), model.headModel.res_arg);
                 }
             }
 
@@ -262,9 +265,9 @@ public class PersonalizedCustomStartActivity extends BaseActivity implements Vie
             public void onError(FetchError error) {
                 LogUtil.e(TAG, " homePageCustomAdd :" + error.toString());
                 if (error.localReason != null){
-                    ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
+                    ToastUtil.show(getApplicationContext(), error.localReason);
                 }else{
-                    ToastCommon.toastShortShow(getApplicationContext(), null, "请求失败，请返回重试");
+                    ToastUtil.show(getApplicationContext(), "请求失败，请重试");
                 }
             }
         });

@@ -112,7 +112,8 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
                     // 判断resultStatus 为“9000”则代表支付成功，具体状态码代表含义可参考接口文档
                     if (TextUtils.equals(resultStatus, "9000")) {
                         ToastUtil.show(SelectPaymentActivity.this, "支付成功");
-                        if (type== 14 || type == 18){
+                        LogUtil.e(TAG, "type = " + type + ", ordersn = " + ordersn);
+                        if (type== 14 || type == 18){ //火车票支付
                             setTrainOrder(ordersn);
                         } else if (type == 15 || type == 19){ //国内飞机票
                             setPlaneTicketToPlatForm();
@@ -373,10 +374,14 @@ public class SelectPaymentActivity extends BaseActivity implements View.OnClickL
         });
     }
 
+    private boolean trainOrder = false;
+
     /**
      * 火车票，下单到本平台后，再继续下单到第三方平台
      */
     private void setTrainOrder(String ordersn) {
+        if (trainOrder)return;
+        trainOrder = true;
         LoadingIndicator.show(SelectPaymentActivity.this, "正在下单，请稍后");
         TrainTicketActionBiz biz = new TrainTicketActionBiz();
         TrainOrderToOtherPlatRequest request = new TrainOrderToOtherPlatRequest(ordersn);

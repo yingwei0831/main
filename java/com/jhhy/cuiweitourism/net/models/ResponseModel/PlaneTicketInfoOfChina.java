@@ -156,7 +156,7 @@ public class PlaneTicketInfoOfChina implements Serializable{
         //"policyData": {},
         //"seatCode": "V",
         //"seatMsg": "经济舱", //舱位说明
-        //"seatStatus": "A", //舱位状态
+        //"seatStatus": "A", //舱位状态:    A：可以提供9个以上座位；1-9：可以提供1-9个座位
         //"seatType": 1, //是否特价舱位（1 普通舱位  3 特价舱位）
         //"settlePrice": 320    //成人的结算价（根据 commisionPoint 和commisionMoney算出来的净价）
 

@@ -47,7 +47,7 @@ import java.util.List;
 public class TrainListActivity extends BaseActionBarActivity implements  AdapterView.OnItemClickListener //,RadioGroup.OnCheckedChangeListener
 {
 
-    private String TAG = TrainListActivity.class.getSimpleName();
+    private String TAG = "TrainListActivity";
 
     private TrainTicketFetch ticket;
     private TrainTicketActionBiz trainBiz;

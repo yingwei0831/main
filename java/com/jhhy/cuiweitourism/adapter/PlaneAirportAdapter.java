@@ -10,14 +10,19 @@ import android.widget.TextView;
 import com.jhhy.cuiweitourism.R;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.PlaneTicketCityInfo;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.TrainStationInfo;
+import com.jhhy.cuiweitourism.net.utils.LogUtil;
 import com.jhhy.cuiweitourism.ui.CitySelectionActivity;
 import com.jhhy.cuiweitourism.view.PinnedSectionListView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 
 
 public class PlaneAirportAdapter extends BaseAdapter implements PinnedSectionListView.PinnedSectionListAdapter {
+
+    private static final String TAG = "PlaneAirportAdapter";
+
     private LayoutInflater layoutInflater;
     /**
      * 数据集
@@ -28,10 +33,16 @@ public class PlaneAirportAdapter extends BaseAdapter implements PinnedSectionLis
      */
     public HashMap<String, Integer> map_IsHead;
 
+    private int type; //10保险，显示国家
+
     public PlaneAirportAdapter(Context context, ArrayList<PlaneTicketCityInfo> list, HashMap<String, Integer> map_IsHead) {
         this.list = list;
         this.map_IsHead = map_IsHead;
         layoutInflater = LayoutInflater.from(context);
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     @Override
@@ -80,7 +91,13 @@ public class PlaneAirportAdapter extends BaseAdapter implements PinnedSectionLis
                 }
 
                 //设置名字
-                viewHolder.txt.setText(list.get(i).getName());
+//                viewHolder.txt.setText(String.format(Locale.getDefault(), "%s  %s", list.get(i).getName(), list.get(i).getCode()));
+                if (type == 10 || type == 11) {
+                    viewHolder.txt.setText(list.get(i).getName());
+                }else {
+                    viewHolder.txt.setText(list.get(i).getAirportname());
+                }
+
                 break;
             case CitySelectionActivity.TITLE:
                 if (view == null) {

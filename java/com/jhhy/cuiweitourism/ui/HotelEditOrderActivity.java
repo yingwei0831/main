@@ -237,11 +237,7 @@ public class HotelEditOrderActivity extends BaseActionBarActivity implements Pop
             intent.putExtras(bundle);
             startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_SELECT_COIN);
         }else{
-            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putInt("type", 2);
-            intent.putExtras(bundle);
-            startActivityForResult(intent, REQUEST_LOGIN);
+            userLogin();
         }
     }
 
@@ -468,12 +464,16 @@ public class HotelEditOrderActivity extends BaseActionBarActivity implements Pop
             intent.putExtras(bundlePassenger);
             startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_SELECT_CONTACT);
         }else{
-            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-            Bundle bundlePassenger = new Bundle();
-            bundlePassenger.putInt("type", 2);
-            intent.putExtras(bundlePassenger);
-            startActivityForResult(intent, REQUEST_LOGIN);
+            userLogin();
         }
+    }
+
+    private void userLogin() {
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        Bundle bundlePassenger = new Bundle();
+        bundlePassenger.putInt("type", 2);
+        intent.putExtras(bundlePassenger);
+        startActivityForResult(intent, REQUEST_LOGIN);
     }
 
     private String getMyIP(){

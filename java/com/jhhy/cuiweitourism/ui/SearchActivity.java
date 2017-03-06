@@ -264,11 +264,13 @@ public class SearchActivity extends BaseActionBarActivity implements ArgumentOnC
         if (MainActivity.logged) { //|| (number != null && !"null".equals(number) && pwd != null && !"null".equals(pwd))
             Intent intent = new Intent(getApplicationContext(), EasemobLoginActivity.class);
             String im = lists.get(position).getAttrid();
+//            String sjmc = lists.get(position).getSjmc();
             if (im == null || im.length() == 0){
                 ToastUtil.show(getApplicationContext(), "当前商户暂未提供客服功能");
                 return;
             }
             intent.putExtra("im", im);
+            intent.putExtra("sjmc", im);
             startActivity(intent);
         }else{
 //            ToastUtil.show(getApplicationContext(), "请登录后再试");

@@ -1,9 +1,11 @@
 package com.jhhy.cuiweitourism.ui;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -450,14 +452,14 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
         }
         else if ("80".equals(typeId)){ //火车票 退票
 //            selectPassengers();
-            cancelTrainOrder();
+            showRefundDialog(80);
             return;
         } else if ("82".equals(typeId)){ //国内机票
             //TODO
             LogUtil.e(TAG, "planeTicketOfChinaType = " + planeTicketOfChinaType);
             if (planeTicketOfChinaType == 1){ //退款
 //                selectPlaneOfChinaPassengers();
-                refundPlaneTicketOfChina();
+                showRefundDialog(82);
             }else if (planeTicketOfChinaType == 2){ //取消订单
                 planeTicketOfChinaCancelOrder();
             }else if (planeTicketOfChinaType == 3){ //支付
@@ -506,6 +508,30 @@ public class Tab4OrderDetailsActivity extends BaseActionBarActivity {
                 startActivityForResult(intentComment, REQUEST_COMMENT);
                 break;
         }
+    }
+
+    private void showRefundDialog(final int type) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this); //, android.R.style.Theme_Material_Light_Dialog
+        builder.setTitle(getString(R.string.refund_notice_title));
+        builder.setIcon(R.drawable.app_logo);
+        builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+                if (type == 80){
+                    cancelTrainOrder();
+                }else if ( type  == 82){
+                    refundPlaneTicketOfChina();
+                }
+            }
+        });
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        builder.create().show();
     }
 
     /**

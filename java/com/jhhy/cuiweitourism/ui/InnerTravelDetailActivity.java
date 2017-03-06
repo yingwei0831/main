@@ -492,6 +492,7 @@ public class InnerTravelDetailActivity extends BaseActionBarActivity implements 
                 if (MainActivity.logged) {
                     Intent intent = new Intent(getApplicationContext(), EasemobLoginActivity.class);
                     String im = detail.getIm();
+                    String sjmc = detail.getSjmc();
                     if (im == null || im.length() == 0){
                         ToastUtil.show(getApplicationContext(), "当前商户暂未提供客服功能");
                         return;
@@ -499,6 +500,7 @@ public class InnerTravelDetailActivity extends BaseActionBarActivity implements 
 //                    intent.putExtra("name", );
 //                    intent.putExtra("icon", );
                     intent.putExtra("im", im);
+                    intent.putExtra("sjmc", sjmc);
                     startActivity(intent);
                 } else {
                     userLogin();

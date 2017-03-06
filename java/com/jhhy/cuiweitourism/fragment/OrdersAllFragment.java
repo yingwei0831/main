@@ -224,10 +224,6 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
 //            ToastCommon.toastShortShow(getContext(), null, "请选择酒店订单，再进入详细信息页");
 //        } else {
             if ("80".equals(order.getTypeId())){ //火车票详情
-                if ("0".equals(type)){ //全部订单，不给任何操作
-                    ToastCommon.toastShortShow(getContext(), null, "请进入火车票订单查看");
-                    return;
-                }
                 if (order.getSanfangorderno1() == null || order.getSanfangorderno1().length() == 0 ||
                         order.getSanfangorderno2() == null || order.getSanfangorderno2().length() == 0){
                     ToastCommon.toastShortShow(getContext(), null, "订单号不存在，无详情");
@@ -358,7 +354,12 @@ public class OrdersAllFragment extends Fragment implements ArgumentOnClick {
         }else if ("2".equals(order.getTypeId())){ //酒店
             bundlePay.putSerializable("order", order);
             bundlePay.putInt("type", 25);
-        }else{
+        }
+//        else if ("7".equals(order.getTypeId())){ //保险
+//            bundlePay.putSerializable("order", order);
+//            bundlePay.putInt("type", 7);
+//        }
+        else{
             bundlePay.putSerializable("order", order);
         }
         intentPay.putExtras(bundlePay);

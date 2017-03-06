@@ -727,7 +727,7 @@ public class PlaneMainActivity extends BaseActionBarActivity implements RadioGro
         //广告位
         ForeEndActionBiz fbiz = new ForeEndActionBiz();
 //        mark:index（首页）、line_index(国内游、出境游)、header（分类上方）、visa_index（签证）、customize_index(个性定制)
-        ForeEndAdvertise ad = new ForeEndAdvertise("visa_index");
+        ForeEndAdvertise ad = new ForeEndAdvertise("article_index");
         fbiz.foreEndGetAdvertisingPosition(ad, new BizGenericCallback<ArrayList<ForeEndAdvertisingPositionInfo>>() {
             @Override
             public void onCompletion(GenericResponseModel<ArrayList<ForeEndAdvertisingPositionInfo>> model) {

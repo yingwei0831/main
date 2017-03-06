@@ -239,6 +239,8 @@
                 android:paddingBottom="16dp"
                 android:paddingTop="16dp"
                 android:paddingLeft="4dp"
+                android:textColor="@android:color/black"
+                android:textColorHint="@android:color/darker_gray"
                 />
         </LinearLayout>
         <View

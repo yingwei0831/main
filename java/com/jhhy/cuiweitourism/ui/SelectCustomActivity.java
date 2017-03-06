@@ -98,11 +98,11 @@ public class SelectCustomActivity extends BaseActivity implements View.OnClickLi
                 totalNumber = 10;
             }
         }
+        LoadingIndicator.show(SelectCustomActivity.this, getString(R.string.http_notice));
         getInternetData();
     }
 
     private void getInternetData() {
-        LoadingIndicator.show(SelectCustomActivity.this, getString(R.string.http_notice));
         ContactsBiz biz = new ContactsBiz(getApplicationContext(), handler);
         biz.getContacts(MainActivity.user.getUserId());
     }
@@ -178,9 +178,9 @@ public class SelectCustomActivity extends BaseActivity implements View.OnClickLi
 
         } else {
             if (requestCode == Consts.REQUEST_CODE_EDIT_CONTACT) { //编辑联系人信息
-                getData();
+                getInternetData();
             } else if (requestCode == Consts.REQUEST_CODE_ADD_CONTACT) { //添加联系人信息
-                getData();
+                getInternetData();
             }
         }
     }

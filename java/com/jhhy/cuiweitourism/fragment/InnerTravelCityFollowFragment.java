@@ -217,19 +217,25 @@ public class InnerTravelCityFollowFragment extends Fragment implements AdapterVi
         if (MainActivity.logged) { //|| (number != null && !"null".equals(number) && pwd != null && !"null".equals(pwd))
             Intent intent = new Intent(getContext(), EasemobLoginActivity.class);
             String im = list.get(position).getIm();
+            String sjmc = list.get(position).getSjmc();
             if (im == null || im.length() == 0){
                 ToastUtil.show(getContext(), "当前商户暂未提供客服功能");
                 return;
             }
             intent.putExtra("im", im);
+            intent.putExtra("sjmc", sjmc);
             startActivity(intent);
         }else{
 //            ToastUtil.show(getContext(), "请登录后再试");
-            Intent intent = new Intent(getContext(), LoginActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putInt("type", 2);
-            intent.putExtras(bundle);
-            startActivityForResult(intent, REQUEST_LOGIN);
+            userLogin();
         }
+    }
+
+    private void userLogin() {
+        Intent intent = new Intent(getContext(), LoginActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("type", 2);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, REQUEST_LOGIN);
     }
 }

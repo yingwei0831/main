@@ -130,7 +130,8 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragment.E
 		super.setUpView();
 		titleBar.setLeftImageResource(R.mipmap.arrow_left_green);
 //		titleBar.setRightImageResource(R.drawable.em_icon_comment);
-		titleBar.setTitle(nickNameYou);
+//		titleBar.setTitle(nickNameYou);
+		titleBar.setTitle(sjmc);
 
 //		titleBar.setRightLayoutClickListener(new View.OnClickListener(){
 //			@Override

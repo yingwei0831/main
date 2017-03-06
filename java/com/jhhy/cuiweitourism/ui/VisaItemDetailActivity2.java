@@ -1,5 +1,6 @@
 package com.jhhy.cuiweitourism.ui;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -7,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -41,7 +43,7 @@ import java.util.Locale;
 
 public class VisaItemDetailActivity2 extends BaseActivity implements View.OnClickListener {
 
-    private String TAG = VisaItemDetailActivity2.class.getSimpleName();
+    private String TAG = "VisaItemDetailActivity2";
     private ImageView ivTitleLeft;
     private TextView tvTitle;
     private ActionBar actionBar;
@@ -52,6 +54,7 @@ public class VisaItemDetailActivity2 extends BaseActivity implements View.OnClic
     private ImageView ivNation;
     private TextView tvVisaTitle;
     private TextView tvVisaPrice;
+    private TextView tvVisaFace; //是否面签
     private TextView tvVisaPeriod;
     private TextView tvVisaType;
     private TextView tvVisaStayTime;
@@ -162,6 +165,7 @@ public class VisaItemDetailActivity2 extends BaseActivity implements View.OnClic
 
         tvVisaTitle = (TextView) findViewById(R.id.tv_visa_title);
         tvVisaPrice = (TextView) findViewById(R.id.tv_travel_price);
+        tvVisaFace = (TextView) findViewById(R.id.tv_visa_face);
         tvVisaPeriod = (TextView) findViewById(R.id.tv_visa_period);
         tvVisaType = (TextView) findViewById(R.id.tv_visa_type);
         tvVisaStayTime = (TextView) findViewById(R.id.tv_visa_stay_time);
@@ -349,13 +353,30 @@ public class VisaItemDetailActivity2 extends BaseActivity implements View.OnClic
         }
     }
 
-    //立即预定,去日历中添加人数
+    //立即预定,显示办签须知，去日历中添加人数
     private void toReserve() {
-        Intent intent = new Intent(getApplicationContext(), VisaPriceCalendarReserveActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("visaDetail", visaDetailInfo);
-        intent.putExtras(bundle);
-        startActivityForResult(intent, VISA_RESERVE);
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog
+                .setTitle("办签须知")
+                .setMessage(visaDetailInfo.getNotice())
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Intent intent = new Intent(getApplicationContext(), VisaPriceCalendarReserveActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("visaDetail", visaDetailInfo);
+                        intent.putExtras(bundle);
+                        startActivityForResult(intent, VISA_RESERVE);
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                })
+                .create()
+                .show();
     }
 
     private final int VISA_RESERVE = 1821; //立即预定
@@ -383,31 +404,24 @@ public class VisaItemDetailActivity2 extends BaseActivity implements View.OnClic
     private void refreshListView(int type) {
         if (type == 1) {
             listMaterialData = visaDetailInfo.getMaterialCollectionl().worker;
-            adapterMaterial.setData(listMaterialData);
-            adapterMaterial.notifyDataSetChanged();
         } else if (type == 2) {
             listMaterialData = visaDetailInfo.getMaterialCollectionl().freedom;
-            adapterMaterial.setData(listMaterialData);
-            adapterMaterial.notifyDataSetChanged();
         } else if (type == 3) {
             listMaterialData = visaDetailInfo.getMaterialCollectionl().retired;
-            adapterMaterial.setData(listMaterialData);
-            adapterMaterial.notifyDataSetChanged();
         } else if (type == 4) {
             listMaterialData = visaDetailInfo.getMaterialCollectionl().student;
-            adapterMaterial.setData(listMaterialData);
-            adapterMaterial.notifyDataSetChanged();
         } else if (type == 5) {
             listMaterialData = visaDetailInfo.getMaterialCollectionl().children;
-            adapterMaterial.setData(listMaterialData);
-            adapterMaterial.notifyDataSetChanged();
         }
+        adapterMaterial.setData(listMaterialData);
+        adapterMaterial.notifyDataSetChanged();
     }
 
     private void refreshView() {
         ImageLoaderUtil.getInstance(getApplicationContext()).displayImage(visaDetailInfo.getCountryFlagUrl(), ivNation);
         tvVisaTitle.setText(visaDetailInfo.getVisaName());
         tvVisaPrice.setText(visaDetailInfo.getVisaPrice());
+        tvVisaFace.setText(visaDetailInfo.isNeedInterview() ? "是" : "否");
         tvVisaPeriod.setText(String.format(Locale.getDefault(), "%s天", visaDetailInfo.getVisaTime()));
         tvVisaType.setText(visaDetailInfo.getVisaType());
         tvVisaStayTime.setText(visaDetailInfo.getVisaStayPeriod());

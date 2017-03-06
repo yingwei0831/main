@@ -63,6 +63,7 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
     private TextView tvRefundNotice; //退改签说明
 
     private TextView tvSelectorContacts; //添加乘客
+    private TextView tvNumberNotice; //最多添加乘客数量提示
     private MyListView listViewContacts; //联系人装载布局
     private OrderEditContactsAdapter adapter;
 
@@ -98,6 +99,7 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
 //    private float totalPrice; //订单总金额
 
     private PlaneOrderOfChinaResponse info;
+    private int number;
 
     private Handler handler = new Handler(){
         @Override
@@ -163,6 +165,8 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
         tvRefundNotice = (TextView) findViewById(R.id.tv_plane_refund_notice);
 
         tvSelectorContacts = (TextView) findViewById(R.id.tv_plane_add_passenger); //添加乘客
+        tvNumberNotice = (TextView) findViewById(R.id.tv_train_passenger_count_notice);
+        tvNumberNotice.setText(String.format(Locale.getDefault(), "(余票%d张)", number));
         listViewContacts = (MyListView) findViewById(R.id.list_plane_contacts); //装载乘机人
 
         etLinkName = (EditText) findViewById(R.id.et_plane_order_link_name); //联系人
@@ -211,6 +215,7 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
             dateFrom = bundle.getString("dateFrom");
             int positionSeat = bundle.getInt("positionSeat");
             seatInfo = flight.getSeatItems().get(positionSeat);
+            seatMaxNumber(seatInfo.seatStatus);
 
             traveltype = bundle.getString("traveltype");
             if ("RT".equals(traveltype)){
@@ -218,6 +223,39 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
                 flightBack = (PlaneTicketInfoOfChina.FlightInfo) bundle.getSerializable("flightBack");
                 int positionSeatBack = bundle.getInt("positionSeatBack");
                 seatInfoBack = flightBack.getSeatItems().get(positionSeatBack);
+            }
+        }
+    }
+
+    private void seatMaxNumber(String seatItemInfo) {
+        if ("A".equals(seatItemInfo)){
+            number = 9;
+        }else{
+            switch (seatItemInfo){
+                case "1":
+                    number = 1;
+                    break;
+                case "2":
+                    number = 2;
+                    break;
+                case "3":
+                    number = 3;
+                    break;
+                case "4":
+                    number = 4;
+                    break;
+                case "5":
+                    number = 5;
+                    break;
+                case "6":
+                    number = 6;
+                    break;
+                case "7":
+                    number = 7;
+                    break;
+                case "8":
+                    number = 8;
+                    break;
             }
         }
     }
@@ -251,18 +289,19 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
                     Bundle bundle = new Bundle();
                     bundle.putInt("type", 13);
                     if (listContact.size() == 0) {
-                        bundle.putInt("number", 10);
+                        bundle.putInt("number", number);
                     } else {
-                        bundle.putInt("number", 10 - listContact.size());
+                        if (number - listContact.size() > 0) {
+                            bundle.putInt("number", number - listContact.size());
+                        }else{
+                            ToastUtil.show(getApplicationContext(), "请先删除联系人后再添加");
+                            return;
+                        }
                     }
                     intent.putExtras(bundle);
                     startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_SELECT_CONTACT);
                 }else{
-                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("type", 2);
-                    intent.putExtras(bundle);
-                    startActivityForResult(intent, REQUEST_LOGIN);
+                    userLogin();
                 }
                 break;
             case R.id.iv_edit_order_arrow_top: //订单金额详情
@@ -272,6 +311,14 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
                 goToPay();
                 break;
         }
+    }
+
+    private void userLogin() {
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("type", 2);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, REQUEST_LOGIN);
     }
 
     /**
@@ -291,11 +338,7 @@ public class PlaneEditOrderActivity extends AppCompatActivity implements View.On
                 ToastCommon.toastShortShow(getApplicationContext(), null, "请先添加乘机人");
             }
         }else{
-            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putInt("type", 2);
-            intent.putExtras(bundle);
-            startActivityForResult(intent, REQUEST_LOGIN);
+            userLogin();
         }
     }
 

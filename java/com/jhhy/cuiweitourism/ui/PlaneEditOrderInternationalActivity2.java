@@ -114,6 +114,8 @@ public class PlaneEditOrderInternationalActivity2 extends AppCompatActivity impl
     private float unitPrice; //订单总金额
     private String facePrice;
 
+    private int number; //最多选择乘车人数
+
 
     private Handler handler = new Handler(){
         @Override
@@ -234,6 +236,9 @@ public class PlaneEditOrderInternationalActivity2 extends AppCompatActivity impl
         tvRefundNotice = (TextView) findViewById(R.id.tv_plane_refund_notice); //退改签说明
 
         tvSelectorContacts = (TextView) findViewById(R.id.tv_plane_add_passenger); //添加乘客
+        TextView tvNumberNotice = (TextView) findViewById(R.id.tv_train_passenger_count_notice_international); //余票张数
+        tvNumberNotice.setText(String.format(Locale.getDefault(), "(余票%d张)", number));
+
         MyListView listViewContacts = (MyListView) findViewById(R.id.list_plane_contacts); //联系人列表
 
         etLinkName = (EditText) findViewById(R.id.et_plane_order_link_name); //联系人
@@ -266,6 +271,7 @@ public class PlaneEditOrderInternationalActivity2 extends AppCompatActivity impl
             toCity = (PlaneTicketCityInfo) bundle.getSerializable("toCity");
             dateFrom = bundle.getString("dateFrom");
             cabin = (PlaneTicketInternationalInfo.PlaneTicketInternationalHFCabin) bundle.getSerializable("cabin");
+            number = Integer.parseInt(cabin.passengerType.cabinCount);
             travelType = bundle.getString("travelType");
             facePrice = bundle.getString("flightPrice");
 //            checkResponse =  PlaneItemInfoInternationalActivity2.checkResponseData;
@@ -378,18 +384,19 @@ public class PlaneEditOrderInternationalActivity2 extends AppCompatActivity impl
                     bundle.putInt("type", 13);
                     bundle.putString("travelType", "2");
                     if (listContact.size() == 0) {
-                        bundle.putInt("number", 10);
+                        bundle.putInt("number", number);
                     } else {
-                        bundle.putInt("number", 10 - listContact.size());
+                        if (number - listContact.size() > 0) {
+                            bundle.putInt("number", number - listContact.size());
+                        }else{
+                            ToastUtil.show(getApplicationContext(), "请先删除联系人后再添加");
+                            return;
+                        }
                     }
                     intent.putExtras(bundle);
                     startActivityForResult(intent, Consts.REQUEST_CODE_RESERVE_SELECT_CONTACT);
                 }else{
-                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("type", 2);
-                    intent.putExtras(bundle);
-                    startActivityForResult(intent, REQUEST_LOGIN);
+                    userLogin();
                 }
                 break;
             case R.id.iv_edit_order_arrow_top: //订单金额详情
@@ -399,6 +406,14 @@ public class PlaneEditOrderInternationalActivity2 extends AppCompatActivity impl
                 goToPay();
                 break;
         }
+    }
+
+    private void userLogin() {
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("type", 2);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, REQUEST_LOGIN);
     }
 
     /**
@@ -417,11 +432,7 @@ public class PlaneEditOrderInternationalActivity2 extends AppCompatActivity impl
                 ToastCommon.toastShortShow(getApplicationContext(), null, "请先添加乘客");
             }
         }else{
-            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putInt("type", 2);
-            intent.putExtras(bundle);
-            startActivityForResult(intent, REQUEST_LOGIN);
+            userLogin();
         }
     }
 

@@ -413,11 +413,13 @@ public class SearchRouteActivity extends BaseActivity implements View.OnClickLis
                 if (MainActivity.logged) { //|| (number != null && !"null".equals(number) && pwd != null && !"null".equals(pwd))
                     Intent intent = new Intent(getApplicationContext(), EasemobLoginActivity.class);
                     String im = mLists.get(position).getIm();
+                    String sjmc = mLists.get(position).getSjmc();
                     if (im == null || im.length() == 0){
                         ToastUtil.show(getApplicationContext(), "当前商户暂未提供客服功能");
                         return;
                     }
                     intent.putExtra("im", im);
+                    intent.putExtra("sjmc", sjmc);
                     startActivity(intent);
                 }else{
 //                    ToastUtil.show(getApplicationContext(), "请登录后再试");

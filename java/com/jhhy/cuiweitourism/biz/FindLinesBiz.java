@@ -100,6 +100,7 @@ public class FindLinesBiz {
                             travel.setType(lineObj.getString("txt"));
                             travel.setGroup(lineObj.getString(Consts.KEY_GROUP));
                             travel.setIm(lineObj.getString("im"));
+                            travel.setSjmc(lineObj.getString("sjmc"));
                             listLines.add(travel);
                         }
                     }

@@ -403,6 +403,7 @@
     <string name="plane_flight_change_ticket_notice">注意</string>
     <string name="plane_flight_change_ticket_title">退改签说明</string>
 
+    <string name="refund_notice_title">确认退款吗</string>
 
     <!--XScrollView-->
     <string name="header_hint_refresh_normal">下拉刷新</string>

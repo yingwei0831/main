@@ -118,8 +118,8 @@ public class PlaneCitySelectionActivity extends BaseActivity implements View.OnC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_city_selection);
         setupView();
-        initView();
         getData();
+        initView();
         setupData();
     }
 
@@ -168,13 +168,6 @@ public class PlaneCitySelectionActivity extends BaseActivity implements View.OnC
         list_show = new ArrayList<PlaneTicketCityInfo>();
         map_IsHead = new HashMap<String, Integer>();
 
-        adapter = new PlaneAirportAdapter(PlaneCitySelectionActivity.this, list_show, map_IsHead);
-        listView.setAdapter(adapter);
-
-        adapterSearch = new PlaneAirportAdapter(PlaneCitySelectionActivity.this, list_show, map_IsHead);
-        listSearch = (ListView) findViewById(R.id.list_search);
-        listSearch.setAdapter(adapterSearch);
-
         radioGroup.setOnCheckedChangeListener(this);
         ivSearchLeft.setOnClickListener(this);
     }
@@ -209,6 +202,16 @@ public class PlaneCitySelectionActivity extends BaseActivity implements View.OnC
             radioGroup.setVisibility(View.GONE);
             list_all = InsuranceMainActivity.airportOuter;
         }
+
+        adapter = new PlaneAirportAdapter(PlaneCitySelectionActivity.this, list_show, map_IsHead);
+        adapter.setType(type);
+        listView.setAdapter(adapter);
+
+        adapterSearch = new PlaneAirportAdapter(PlaneCitySelectionActivity.this, list_show, map_IsHead);
+        listSearch = (ListView) findViewById(R.id.list_search);
+        adapterSearch.setType(type);
+        listSearch.setAdapter(adapterSearch);
+
     }
 
     @Override
@@ -246,7 +249,6 @@ public class PlaneCitySelectionActivity extends BaseActivity implements View.OnC
                 map_IsHead.clear();
                 //把输入的字符改成大写
                 String search = editable.toString().trim().toUpperCase();
-                LogUtil.e(TAG, "search = " + search);
 
                 if (TextUtils.isEmpty(search)) {
                     listSearch.setVisibility(View.GONE);
@@ -300,7 +302,6 @@ public class PlaneCitySelectionActivity extends BaseActivity implements View.OnC
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                LogUtil.e(TAG, "--------------listView---onItemClick--------------");
                 if (list_show.get(i).type == PlaneCitySelectionActivity.ITEM) { // 标题点击不给操作
                     PlaneTicketCityInfo city = list_show.get(i);
                     ToastCommon.toastShortShow(getApplicationContext(), null, city.getName());
@@ -309,7 +310,6 @@ public class PlaneCitySelectionActivity extends BaseActivity implements View.OnC
                     bundle.putSerializable("selectCity", city);
                     bundle.putInt("typeSearch", cityType);
                     intent.putExtras(bundle);
-                    LogUtil.e(TAG, "selectCity = " + city);
                     setResult(RESULT_OK, intent);
                     finish();
                 }
@@ -319,7 +319,6 @@ public class PlaneCitySelectionActivity extends BaseActivity implements View.OnC
         listSearch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                LogUtil.e(TAG, "--------------listSearch---onItemClick--------------");
                 if (list_show.get(i).type == PlaneCitySelectionActivity.ITEM) { // 标题点击不给操作
                     PlaneTicketCityInfo city = list_show.get(i);
                     ToastCommon.toastShortShow(getApplicationContext(), null, city.getName());
@@ -328,7 +327,6 @@ public class PlaneCitySelectionActivity extends BaseActivity implements View.OnC
                     bundle.putSerializable("selectCity", city);
                     bundle.putInt("typeSearch", cityType);
                     intent.putExtras(bundle);
-                    LogUtil.e(TAG, "selectCity = " + city);
                     setResult(RESULT_OK, intent);
                     finish();
                 }

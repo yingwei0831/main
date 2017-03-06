@@ -397,7 +397,9 @@
         <activity
             android:name=".ui.VisaMainActivity"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:windowSoftInputMode="adjustResize|stateHidden"
+            />
         <activity
             android:name=".ui.InnerTravelDetailActivity3"
             android:screenOrientation="portrait" />
@@ -497,7 +499,8 @@
             android:name=".ui.VisaItemDetailActivity2"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/ActionBarTheme" />
+            android:theme="@style/ActionBarTheme"
+            />
         <activity
             android:name=".ui.VisaNeedMaterialActivity"
             android:launchMode="singleTop"

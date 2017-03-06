@@ -21,9 +21,11 @@ import com.jhhy.cuiweitourism.adapter.OrderEditContactListAdapter;
 import com.jhhy.cuiweitourism.dialog.TourismCoinActivity;
 import com.jhhy.cuiweitourism.model.User;
 import com.jhhy.cuiweitourism.model.UserContacts;
+import com.jhhy.cuiweitourism.net.biz.CuiweiInfoBiz;
 import com.jhhy.cuiweitourism.net.biz.InsuranceBiz;
 import com.jhhy.cuiweitourism.net.models.FetchModel.InsuranceOrderRequest;
 import com.jhhy.cuiweitourism.net.models.FetchModel.TrainTicketOrderFetch;
+import com.jhhy.cuiweitourism.net.models.ResponseModel.CuiweiInfoResponse;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.FetchError;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.GenericResponseModel;
 import com.jhhy.cuiweitourism.net.models.ResponseModel.InsuranceOrderResponse;
@@ -45,6 +47,8 @@ import java.util.Locale;
 public class InsuranceEditOrderActivity extends BaseActionBarActivity implements AdapterView.OnItemClickListener {
 
     private static final String TAG = "InsuranceEditOrderActivity";
+
+    ArrayList<CuiweiInfoResponse> listService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,7 +124,7 @@ public class InsuranceEditOrderActivity extends BaseActionBarActivity implements
             return;
         }
         InsuranceOrderRequest fetch = new InsuranceOrderRequest(MainActivity.user.getUserId(), insurance.getId(), insurance.getProductname(), insurance.getDefaultprice(), fromDate, String.valueOf(count),
-                name, mobile, remark, String.valueOf(priceIcon), String.valueOf(Integer.parseInt(insurance.getDefaultprice()) * count));
+                name, mobile, remark, priceIcon == 0 ? "0": "1", String.valueOf(priceIcon));
         fetch.setBeibr(listContacts);
 
         InsuranceBiz biz = new InsuranceBiz();
@@ -229,7 +233,7 @@ public class InsuranceEditOrderActivity extends BaseActionBarActivity implements
         if (MainActivity.logged) {
             Intent intent1 = new Intent(getApplicationContext(), TourismCoinActivity.class);
             Bundle bundle1 = new Bundle();
-            bundle1.putString("needScore", String.format(Locale.getDefault(), "%d", Integer.parseInt(insurance.getDefaultprice()) - 1)); //本次订单可以用的最多旅游币
+            bundle1.putString("needScore", String.format(Locale.getDefault(), "%d", Integer.parseInt(insurance.getDefaultprice()) * count - 1)); //本次订单可以用的最多旅游币
             intent1.putExtras(bundle1);
             startActivityForResult(intent1, Consts.REQUEST_CODE_RESERVE_SELECT_COIN);
         }else{
@@ -332,7 +336,51 @@ public class InsuranceEditOrderActivity extends BaseActionBarActivity implements
      * TODO 投保注意事项
      */
     private void viewNotice() {
+        if (listService != null){
+            viewDetail();
+        } else {
+            LoadingIndicator.show(this, getString(R.string.http_notice));
+            CuiweiInfoBiz biz = new CuiweiInfoBiz();
+            biz.fetchCuiweiInfo(new BizGenericCallback<ArrayList<CuiweiInfoResponse>>() {
+                @Override
+                public void onCompletion(GenericResponseModel<ArrayList<CuiweiInfoResponse>> model) {
+                    LoadingIndicator.cancel();
+                    LogUtil.e(TAG, "homePageCustomAdd =" + model.body.toString());
+                    if ("0000".equals(model.headModel.res_code)) {
+                        listService = model.body;
+                        viewDetail();
+                    } else if ("0001".equals(model.headModel.res_code)) {
+                        ToastCommon.toastShortShow(getApplicationContext(), null, model.headModel.res_arg);
+                    }
+                }
 
+                @Override
+                public void onError(FetchError error) {
+                    LoadingIndicator.cancel();
+                    if (error.localReason != null) {
+                        ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
+                    } else {
+                        ToastCommon.toastShortShow(getApplicationContext(), null, "投保注意事项请求失败，请重试");
+                    }
+                }
+            });
+        }
+    }
+
+    private void viewDetail() {
+        for (int i = 0; i< listService.size(); i++){
+            CuiweiInfoResponse item = listService.get(i);
+            if ("投保注意事项".equals(item.getServername())){
+                Intent intent = new Intent(getApplicationContext(), WebViewActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("data", item);
+                intent.putExtras(bundle);
+                startActivity(intent);
+                LogUtil.e(TAG, "title = " + item.getServername());
+                return;
+            }
+        }
+        ToastUtil.show(getApplicationContext(), "暂无投保注意事项");
     }
 
     @Override
@@ -365,7 +413,7 @@ public class InsuranceEditOrderActivity extends BaseActionBarActivity implements
 
     private TextView tvShowIcon; //
     private TextView tvPriceIcon;
-    private int priceIcon;
+    private int priceIcon = 0;
 
     private TextView tvPrice; //商品金额
     private TextView tvPriceOrder; //订单金额

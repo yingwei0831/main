@@ -94,42 +94,6 @@ public abstract class OrderXListViewAdapter extends BaseAdapter implements IOrde
 
         Order order = (Order) getItem(position);
         LogUtil.e(TAG, "status = " + order.getStatus() +", typeId = " + order.getTypeId());
-//        else if ("80".equals(order.getTypeId())){ //火车票：可以付款，可以取消订单；如果已经付款了，可以申请退款，否则没有申请退款；
-//            if (order.getSanfangorderno() == null || order.getSanfangorderno().length() == 0){ //未付款，则进行付款
-//                if (((order.getAddTime() != null && order.getAddTime().length() != 0 && !"null".equals(order.getAddTime())
-//                        && (System.currentTimeMillis() / 1000 - Integer.parseInt(order.getAddTime()) < 15 * 60))) && "1".equals(order.getStatus())){
-//                    holder.tvOrderStatus.setText(context.getString(R.string.fragment_mine_wait_pay));
-//                    holder.btnOrderPayment.setVisibility(View.VISIBLE); //签约付款
-//
-//                    holder.btnOrderCancelPayment.setVisibility(View.GONE); //取消退款
-//                    holder.btnOrderComment.setVisibility(View.GONE); //去评价
-//                    holder.btnOrderCancel.setVisibility(View.GONE); //取消订单
-//                    holder.btnGoRefund.setVisibility(View.GONE); //退款
-//                } else if ("3".equals(order.getStatus())){ //已取消，不可支付
-//                    holder.tvOrderStatus.setText(context.getString(R.string.tab3_order_item_already_cancel));
-//                    holder.btnOrderPayment.setVisibility(View.GONE); //签约付款
-//
-//                    holder.btnOrderCancelPayment.setVisibility(View.GONE); //取消退款
-//                    holder.btnOrderComment.setVisibility(View.GONE); //去评价
-//                    holder.btnOrderCancel.setVisibility(View.GONE); //取消订单
-//                    holder.btnGoRefund.setVisibility(View.GONE); //退款
-//                }else if ("2".equals(order.getStatus())){ //付款成功，可申请退款
-//                    holder.tvOrderStatus.setText(context.getString(R.string.tab3_order_item_payde));
-//                    holder.btnGoRefund.setVisibility(View.VISIBLE); //退款
-//                    holder.btnOrderCancelPayment.setVisibility(View.GONE); //取消退款
-//                    holder.btnOrderComment.setVisibility(View.GONE); //去评价
-//                    holder.btnOrderPayment.setVisibility(View.GONE); //签约付款
-//                    holder.btnOrderCancel.setVisibility(View.GONE);
-//                }
-//            }else{ //已经付款，则申请退款
-//                holder.tvOrderStatus.setText(context.getString(R.string.tab3_order_item_payde));
-//                holder.btnGoRefund.setVisibility(View.VISIBLE); //退款
-//                holder.btnOrderCancelPayment.setVisibility(View.GONE); //取消退款
-//                holder.btnOrderComment.setVisibility(View.GONE); //去评价
-//                holder.btnOrderPayment.setVisibility(View.GONE); //签约付款
-//                holder.btnOrderCancel.setVisibility(View.GONE); //取消订单
-//            }
-//        }
 //        else if ("82".equals(order.getTypeId())){ //机票
 //            //15分钟之内，未支付——>等待付款
 //            //超过15分钟未支付——>取消订单
@@ -174,6 +138,11 @@ public abstract class OrderXListViewAdapter extends BaseAdapter implements IOrde
                         holder.tvOrderStatus.setText(context.getString(R.string.fragment_mine_wait_cancel));
                         holder.btnOrderPayment.setVisibility(View.GONE); //签约付款
                     }
+                }
+                if ("1".equals(order.getTypeId())){
+                    holder.btnOrderPayment.setText("签约付款");
+                }else{
+                    holder.btnOrderPayment.setText("付款");
                 }
             } else if ("0".equals(order.getStatus())) { //正在退款——>取消退款
                 if ("80".equals(order.getTypeId()) || "82".equals(order.getTypeId()) || "2".equals(order.getTypeId())){ //火车/机票/酒店，没有取消退款

@@ -744,25 +744,33 @@ public class InnerTravelMainActivity extends BaseActionBarActivity implements XS
         if (MainActivity.logged) { //|| (number != null && !"null".equals(number) && pwd != null && !"null".equals(pwd))
             Intent intent = new Intent(getApplicationContext(), EasemobLoginActivity.class);
             String im = null;
+            String sjmc = null;
             if (attr == 1){ //跟团游
                 im = listsFollow.get(position).getIm();
+                sjmc = listsFollow.get(position).getSjmc();
             }else if (attr == 142){ //自由游
                 im = listsFreedom.get(position).getIm();
+                sjmc = listsFreedom.get(position).getSjmc();
             }
             if (im == null || im.length() == 0){
                 ToastUtil.show(getApplicationContext(), "当前商户暂未提供客服功能");
                 return;
             }
             intent.putExtra("im", im);
+            intent.putExtra("sjmc", im);
             startActivity(intent);
         }else{
 //            ToastUtil.show(getApplicationContext(), "请登录后再试");
-            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putInt("type", 2);
-            intent.putExtras(bundle);
-            startActivityForResult(intent, REQUEST_LOGIN);
+            userLogin();
         }
+    }
+
+    private void userLogin() {
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("type", 2);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, REQUEST_LOGIN);
     }
 
     private int REQUEST_LOGIN = 2913; //请求登录

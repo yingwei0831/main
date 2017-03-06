@@ -49,7 +49,7 @@ import java.util.List;
 
 public class HotelMainActivity extends BaseActivity implements View.OnClickListener, View.OnTouchListener, GestureDetector.OnGestureListener {
 
-    private String TAG = HotelMainActivity.class.getSimpleName();
+    private String TAG = "HotelMainActivity";
     private ImageView ivTitleLeft;
     private TextView tvTitle;
     private ActionBar actionBar;
@@ -132,7 +132,7 @@ public class HotelMainActivity extends BaseActivity implements View.OnClickListe
 
     private GestureDetector mGestureDetector; // MyScrollView的手势?
 //顶部图片展示
-private List<ADInfo> infos = new ArrayList<ADInfo>();
+    private List<ADInfo> infos = new ArrayList<ADInfo>();
     private ViewFlipper flipper;
     private LinearLayout layoutPoint;
     private List<String> imageUrls = new ArrayList<>();
@@ -319,7 +319,7 @@ private List<ADInfo> infos = new ArrayList<ADInfo>();
         //广告位
         ForeEndActionBiz fbiz = new ForeEndActionBiz();
 //        mark:index（首页）、line_index(国内游、出境游)、header（分类上方）、visa_index（签证）、customize_index(个性定制)
-        ForeEndAdvertise ad = new ForeEndAdvertise("visa_index");
+        ForeEndAdvertise ad = new ForeEndAdvertise("hotel_index");
         fbiz.foreEndGetAdvertisingPosition(ad, new BizGenericCallback<ArrayList<ForeEndAdvertisingPositionInfo>>() {
             @Override
             public void onCompletion(GenericResponseModel<ArrayList<ForeEndAdvertisingPositionInfo>> model) {
@@ -506,7 +506,7 @@ private List<ADInfo> infos = new ArrayList<ADInfo>();
 //		Log.i(TAG, "==============第"+currentPage+"页==========");
     }
 
-    private final Runnable runnable = new Runnable() {
+    private Runnable runnable = new Runnable() {
         @Override
         public void run() {
             if (HotelMainActivity.this != null && !HotelMainActivity.this.isFinishing()) {
@@ -554,5 +554,39 @@ private List<ADInfo> infos = new ArrayList<ADInfo>();
             listHotelProvince.clear();
             listHotelProvince = null;
         }
+        if (handler != null){
+            handler.removeCallbacks(runnable);
+            runnable = null;
+            handler = null;
+        }
+        indicators = null;
+        imageUrls.clear();
+        imageUrls = null;
+        layoutPoint = null;
+        flipper = null;
+        infos.clear();
+        infos = null;
+        mGestureDetector = null;
+
+        btnSearch = null;
+        btnMyOrder = null;
+        btnMyHotel = null;
+        checkInDate = null;
+        checkOutDate = null;
+        etSearchText = null;
+
+        tvCheckInDate = null;
+        tvCheckOutDate = null;
+        tvCheckInNotice = null;
+        tvCheckOutNotice = null;
+
+        layoutCheckIn = null;
+        layoutCheckOut = null;
+
+        actionBar = null;
+        tvAddress = null;
+        tvLocation = null;
+        ivTitleLeft = null;
+        tvTitle = null;
     }
 }

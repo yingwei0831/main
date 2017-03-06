@@ -184,7 +184,8 @@
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:text="以下为本站保密信息，预订产品时作为，不会用作其它用途身份验证"
-        android:textColor="@android:color/holo_red_light" />
+        android:textColor="@android:color/holo_red_light"
+        android:visibility="invisible"/>
 
     <LinearLayout
         android:id="@+id/layout_user_real_info"

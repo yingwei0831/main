@@ -88,7 +88,7 @@ public class VisaDetailInfo implements Serializable{
     public String visaStayPeriod;
     public String innerTimes;
 
-    public String notice;
+    public String notice; //办签须知
     public String acceptArea; //受理范围
     public String remark;
 

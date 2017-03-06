@@ -190,6 +190,7 @@ public class InnerTravelDetailBiz {
                         detail.setIscollect(bodyObj.getString("iscollect"));
                         detail.setTel(bodyObj.getString("tel"));
                         detail.setType(bodyObj.getString("type"));
+                        detail.setSjmc(bodyObj.getString("sjmc"));
                     }
                     msg.obj = detail;
                 }

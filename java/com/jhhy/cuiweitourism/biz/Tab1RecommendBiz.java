@@ -82,6 +82,7 @@ public class Tab1RecommendBiz {
                             travel.setGroup(travelObj.getString(Consts.KEY_GROUP));
                             travel.setIm(travelObj.getString("im"));
                             travel.setGysid(travelObj.getString("gysid"));
+                            travel.setSjmc(travelObj.getString("sjmc"));
                             lists.add(travel);
                         }
                     }

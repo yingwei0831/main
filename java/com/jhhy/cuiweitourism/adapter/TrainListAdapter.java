@@ -21,7 +21,7 @@ import java.util.List;
  */
 public class TrainListAdapter extends MyBaseAdapter {
 
-    private String TAG = TrainListAdapter.class.getSimpleName();
+    private String TAG = "TrainListAdapter";
 
     public TrainListAdapter(Context ct, List list) {
         super(ct, list);

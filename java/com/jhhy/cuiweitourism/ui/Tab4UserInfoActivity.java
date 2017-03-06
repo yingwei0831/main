@@ -9,6 +9,7 @@ import android.os.Message;
 import android.provider.MediaStore;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -54,7 +55,7 @@ public class Tab4UserInfoActivity extends BaseActivity implements View.OnClickLi
     private TextView tvMobile;
 
     private TextView tvNotice;
-    private LinearLayout layoutRealInfo;
+    private LinearLayout layoutRealInfo; //实名认证信息
     private TextView tvRealName;
     private TextView tvID;
 
@@ -141,10 +142,13 @@ public class Tab4UserInfoActivity extends BaseActivity implements View.OnClickLi
         tvGender.setText(MainActivity.user.getUserGender());
         tvMobile.setText(MainActivity.user.getUserPhoneNumber());
 
-//        if (MainActivity.user.getUserTrueName() == null || "null".equals(MainActivity.user.getUserTrueName())){
-//        }
-        tvRealName.setText(MainActivity.user.getUserTrueName());
-        tvID.setText(MainActivity.user.getUserCardId());
+        if (MainActivity.user.getUserTrueName() == null || "null".equals(MainActivity.user.getUserTrueName()) || TextUtils.isEmpty(MainActivity.user.getUserTrueName())
+            || MainActivity.user.getUserCardId() == null || TextUtils.isEmpty(MainActivity.user.getUserCardId()) || "null".equals(MainActivity.user.getUserCardId())){
+            layoutRealInfo.setVisibility(View.INVISIBLE);
+        }else {
+            tvRealName.setText(MainActivity.user.getUserTrueName());
+            tvID.setText(MainActivity.user.getUserCardId());
+        }
     }
 
     @Override

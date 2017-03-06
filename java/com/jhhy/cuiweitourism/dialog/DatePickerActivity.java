@@ -24,7 +24,7 @@ import java.util.TimeZone;
 
 public class DatePickerActivity extends Activity implements View.OnClickListener {
 
-    private String TAG = getClass().getSimpleName();
+    private String TAG = "DatePickerActivity";
 
     private NumberPicker npYear;
     private NumberPicker npMonth;
@@ -34,9 +34,9 @@ public class DatePickerActivity extends Activity implements View.OnClickListener
     private Button btnCancel;
     private Button btnConfirm;
 
-//    private int currentYear;
-//    private int currentMonth;
-//    private int currentDate;
+    private int currentYear;
+    private int currentMonth;
+    private int currentDate;
     private long longdate; //日期的整数,毫秒值
 
     private int year;
@@ -46,6 +46,7 @@ public class DatePickerActivity extends Activity implements View.OnClickListener
     private String week;
 
     private int type = -1; //2:火车票选时间
+    private String dateToday;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,13 +66,13 @@ public class DatePickerActivity extends Activity implements View.OnClickListener
 
         npMonth = (NumberPicker) findViewById(R.id.date_picker_month);
         npMonth.setMaxValue(12);
-        npMonth.setMinValue(01);
+
         npMonth.setFocusable(true);
         npMonth.setFocusableInTouchMode(true);
 
         npDay = (NumberPicker) findViewById(R.id.date_picker_day);
         npDay.setMaxValue(31);
-        npDay.setMinValue(01);
+
         npDay.setFocusable(true);
         npDay.setFocusableInTouchMode(true);
 
@@ -96,19 +97,22 @@ public class DatePickerActivity extends Activity implements View.OnClickListener
         year = calendar.get(Calendar.YEAR);
         month = (calendar.get(Calendar.MONTH) + 1);
         date = calendar.get(Calendar.DAY_OF_MONTH);
+        dateToday = String.format(Locale.getDefault(), "%d-%02d-%d", year, month, date);
 //        LogUtil.e(TAG, "year = " + year +", month = " + month +", date = " + date);
-//        currentYear = year;
-//        currentMonth = month;
-//        currentDate = date;
+        currentYear = year;
+        currentMonth = month;
+        currentDate = date;
         week = Utils.getDayOfStrE(calendar.get(Calendar.DAY_OF_WEEK));
-        newString = String.format("%d年%02d月%02d日 %s", year, month, date, Utils.getDayOfStr(calendar.get(Calendar.DAY_OF_WEEK))); //calendar.get(Calendar.DAY_OF_WEEK);
+        newString = String.format(Locale.getDefault(), "%d年%02d月%02d日 %s", year, month, date, Utils.getDayOfStr(calendar.get(Calendar.DAY_OF_WEEK))); //calendar.get(Calendar.DAY_OF_WEEK);
         longdate = Utils.getTime(String.format(Locale.getDefault(), "%d-%02d-%02d", year, month, date));
 //        LogUtil.e(TAG, "longdate = " + longdate +", currentTimeMillis = " + System.currentTimeMillis());
-        npYear.setMaxValue(calendar.get(Calendar.YEAR) + 2);
+        npYear.setMaxValue(calendar.get(Calendar.YEAR) + 1);
         npYear.setMinValue(calendar.get(Calendar.YEAR));
 
         tvDate.setText(newString);
+        npMonth.setMinValue(currentMonth);
         npMonth.setValue(month);
+        npDay.setMinValue(currentDate);
         npDay.setValue(date);
 
         listenerMonth(month);
@@ -121,6 +125,11 @@ public class DatePickerActivity extends Activity implements View.OnClickListener
                 listenerMonth(newVal);
                 month = npMonth.getValue();
                 date = npDay.getValue();
+                if (month == currentMonth){
+                    npDay.setMinValue(currentDate);
+                }else{
+                    npDay.setMinValue(1);
+                }
                 //xxxx年xx月xx日 星期X
                 setPreviewDate();
             }
@@ -139,6 +148,13 @@ public class DatePickerActivity extends Activity implements View.OnClickListener
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
                 year = npYear.getValue();
+                if (year == currentYear){
+                    npMonth.setMinValue(currentMonth);
+                    npDay.setMinValue(currentDate);
+                }else{
+                    npMonth.setMinValue(1);
+                    npDay.setMinValue(1);
+                }
                 //xxxx年xx月xx日 星期X
                 setPreviewDate();
             }
@@ -151,14 +167,14 @@ public class DatePickerActivity extends Activity implements View.OnClickListener
         Calendar c = Calendar.getInstance();
         TimeZone tz = TimeZone.getTimeZone("GMT+8");
         c.setTimeZone(tz);
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.CHINA);
         try {
-            c.setTime(format.parse( String.format("%d-%d-%d 00:00:00", year, month, date)));
+            c.setTime(format.parse( String.format(Locale.getDefault(), "%d-%d-%d 00:00:00", year, month, date)));
         } catch (ParseException e) {
             e.printStackTrace();
         }
         week = Utils.getDayOfStrE(c.get(Calendar.DAY_OF_WEEK));
-        newString = String.format("%d年%02d月%02d日 %s", year, month, date, Utils.getDayOfStr(c.get(Calendar.DAY_OF_WEEK)));
+        newString = String.format(Locale.getDefault(), "%d年%02d月%02d日 %s", year, month, date, Utils.getDayOfStr(c.get(Calendar.DAY_OF_WEEK)));
         longdate = Utils.getTime(String.format(Locale.getDefault(), "%d-%02d-%02d", year, month, date));
 //        LogUtil.e(TAG, "longdate = " + longdate +", currentTimeMillis = " + System.currentTimeMillis());
         tvDate.setText(newString);
@@ -177,16 +193,16 @@ public class DatePickerActivity extends Activity implements View.OnClickListener
     }
 
     private void confirm() {
-        if (longdate <= System.currentTimeMillis()){
-            ToastUtil.show(getApplicationContext(), "请选择今天以后的日期");
+        if (longdate < Utils.getTime(dateToday)){
+            ToastUtil.show(getApplicationContext(), "请选择 "+dateToday+" 或以后的日期");
             return;
         }
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
         if (type == 2) {
-            bundle.putString("selectDate", String.format("%d-%02d-%02d %s", year, month, date, week));
+            bundle.putString("selectDate", String.format(Locale.getDefault(), "%d-%02d-%02d %s", year, month, date, week));
         }else{
-            bundle.putString("selectDate", String.format("%d-%02d-%02d", year, month, date));
+            bundle.putString("selectDate", String.format(Locale.getDefault(), "%d-%02d-%02d", year, month, date));
         }
         bundle.putLong("longdate", longdate);
         intent.putExtras(bundle);
@@ -196,22 +212,22 @@ public class DatePickerActivity extends Activity implements View.OnClickListener
 
     private void listenerMonth(int month) {
         switch (month){
-            case 01:
-            case 03:
-            case 05:
-            case 07:
+            case 1:
+            case 3:
+            case 5:
+            case 7:
             case 8:
             case 10:
             case 12:
                 npDay.setMaxValue(31);
                 break;
-            case 04:
-            case 06:
+            case 4:
+            case 6:
             case 9:
             case 11:
                 npDay.setMaxValue(30);
                 break;
-            case 02:
+            case 2:
                 int year = npYear.getValue();
                 if ( year / 4 == 0 && year / 100 != 0 || year / 400 == 0){ //闰年29天
                     npDay.setMaxValue(29);

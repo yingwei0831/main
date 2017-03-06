@@ -33,7 +33,17 @@ public class TravelDetail implements Serializable{
     private String tel; //翠微电话
     private String type; //区分国内或国外旅游线路类型    1：国内   2：国外
 
+    String sjmc;
+
     public TravelDetail() {
+    }
+
+    public String getSjmc() {
+        return sjmc;
+    }
+
+    public void setSjmc(String sjmc) {
+        this.sjmc = sjmc;
     }
 
     public String getType() {
