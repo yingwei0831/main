@@ -18,110 +18,65 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:background="#EFF2F7"
-        android:orientation="vertical"
-        android:padding="16dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:visibility="gone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="@string/tab4_account_security_modify_password_current"
-                android:textSize="16sp"
-                android:textColorHint="@android:color/black"
-                android:textColor="@android:color/black"/>
-
-            <EditText
-                android:paddingLeft="10dp"
-                android:layout_marginBottom="16dp"
-                android:id="@+id/et_current_pwd"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/bg_car_corner_1"
-                android:drawablePadding="10dp"
-                android:paddingBottom="16dp"
-                android:paddingTop="16dp"
-                android:textSize="16sp"
-                android:textColorHint="@android:color/darker_gray"
-                android:textColor="@android:color/black"/>
-        </LinearLayout>
+        android:orientation="vertical">
 
 
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:visibility="gone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="@string/tab4_account_security_modify_password_new"
-                android:textSize="16sp" />
-
-            <EditText
-                android:paddingLeft="10dp"
-                android:layout_marginBottom="16dp"
-                android:id="@+id/et_new_pwd"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/bg_car_corner_1"
-                android:drawablePadding="10dp"
-                android:hint="请输入区（县）"
-                android:textColorHint="@android:color/darker_gray"
-                android:textColor="@android:color/black"
-                android:paddingBottom="16dp"
-                android:paddingTop="16dp"
-                android:textSize="16sp" />
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:visibility="gone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="@string/tab4_account_security_modify_password_confirm"
-                android:textSize="16sp" />
-
-            <EditText
-                android:paddingLeft="10dp"
-                android:layout_marginBottom="16dp"
-                android:id="@+id/et_new_pwd_again"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/bg_car_corner_1"
-                android:drawablePadding="10dp"
-                android:hint="填写详细街道地址"
-                android:textColor="@android:color/black"
-                android:textColorHint="@android:color/darker_gray"
-                android:paddingBottom="16dp"
-                android:paddingTop="16dp"
-                android:textSize="16sp"/>
-        </LinearLayout>
-
-
-        <Button
+        <EditText
             android:visibility="gone"
-            android:id="@+id/btn_commit"
+            android:id="@+id/et_new_pwd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:background="@drawable/bg_btn_regist_border_selector"
-            android:text="@string/tab4_account_certification_commit"
-            android:textColor="@android:color/white"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_car_corner_1"
+            android:drawablePadding="10dp"
+            android:hint="请输入区（县）"
+            android:maxLines="1"
+            android:paddingBottom="16dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="16dp"
+            android:textColor="@android:color/black"
+            android:textColorHint="@android:color/darker_gray"
             android:textSize="16sp" />
+
+
+        <AutoCompleteTextView
+            android:id="@+id/keyWord"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_car_corner_1"
+            android:completionThreshold="1"
+            android:dropDownVerticalOffset="1.0dip"
+            android:hint="请输入关键字"
+            android:imeOptions="actionDone"
+            android:inputType="text|textAutoComplete"
+            android:maxLength="20"
+            android:maxLines="1"
+            android:paddingBottom="16dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="37.0dip"
+            android:paddingTop="16dp"
+            android:singleLine="true"
+            android:textColor="#000000"
+            android:textColorHint="@color/darkgrey"
+            android:textSize="15.0sp" />
+
+        <ListView
+            android:id="@+id/list_result"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="#EFF2F7"
+            android:layout_marginTop="4dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            />
+
     </LinearLayout>
+
 </LinearLayout>

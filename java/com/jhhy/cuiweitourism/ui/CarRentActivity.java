@@ -142,18 +142,10 @@ public class CarRentActivity extends BaseActivity implements View.OnClickListene
                 startActivityForResult(new Intent(getApplicationContext(), CarRentTimeSelectActivity.class), SELECT_TIME);
                 break;
             case R.id.tv_select_from_addr: //选择出发地址
-                Intent intentFrom = new Intent(getApplicationContext(), CarRentInputAddressActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putInt("type", 1);
-                intentFrom.putExtras(bundle);
-                startActivityForResult(intentFrom, INPUT_FROM_ADDRESS);
+                selectAddress(1, INPUT_FROM_ADDRESS);
                 break;
             case R.id.tv_select_to_addr: //选择目的地址
-                Intent intentTo = new Intent(getApplicationContext(), CarRentInputAddressActivity.class);
-                Bundle bundleTo = new Bundle();
-                bundleTo.putInt("type", 2);
-                intentTo.putExtras(bundleTo);
-                startActivityForResult(intentTo, INPUT_TO_ADDRESS);
+                selectAddress(2, INPUT_TO_ADDRESS);
                 break;
             case R.id.btn_car_rent_next:
                 if (TextUtils.isEmpty(rentTime) || TextUtils.isEmpty(rentType) || TextUtils.isEmpty(rentFromAddr) || TextUtils.isEmpty(rentToAddr)){
@@ -165,7 +157,8 @@ public class CarRentActivity extends BaseActivity implements View.OnClickListene
                     return;
                 }
                 LoadingIndicator.show(CarRentActivity.this, getString(R.string.http_notice));
-                CarRentNextModel model = new CarRentNextModel(rentType, rentDay, "北京市昌平区史各庄", "北京市大兴区瀛海镇");
+
+                CarRentNextModel model = new CarRentNextModel(rentType, rentDay, rentFromAddr, rentToAddr);
                 carBiz.carRentNextApi(model, new BizCallback() {
                     @Override
                     public void onError(FetchError error) {
@@ -192,12 +185,19 @@ public class CarRentActivity extends BaseActivity implements View.OnClickListene
 
                         intent.putExtras(bundle);
                         startActivityForResult(intent, ORDER_RENT_CAR);
-
                     }
                 });
 
                 break;
         }
+    }
+
+    private void selectAddress(int type, int input_from_address) {
+        Intent intentFrom = new Intent(getApplicationContext(), CarRentInputAddressActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("type", type);
+        intentFrom.putExtras(bundle);
+        startActivityForResult(intentFrom, input_from_address);
     }
 
     private int SELECT_TIME = 2801; //选择用车时间

@@ -407,6 +407,7 @@
             android:name=".ui.CarRentActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
+
         <activity
             android:name=".ui.CarRentInputAddressActivity"
             android:screenOrientation="portrait"
