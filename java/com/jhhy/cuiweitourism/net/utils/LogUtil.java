@@ -14,7 +14,7 @@ public class LogUtil {
 	private final String PATH = ""+ Environment.getExternalStorageDirectory().getPath();
 
 	//true 发布版本。
-	static boolean isRelease = true;
+	static boolean isRelease = false;
 	public static void i(String tag, String msg) {
 		if (isRelease){ //存入日志文件
 //			saveString(tag, msg);

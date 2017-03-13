@@ -450,7 +450,7 @@ public class TrainMainActivity extends BaseActionBarActivity implements View.OnT
                 if (error.localReason != null){
                     ToastCommon.toastShortShow(getApplicationContext(), null, error.localReason);
                 }else{
-                    ToastCommon.toastShortShow(getApplicationContext(), null, "获取广告位数据出错");
+                    ToastCommon.toastShortShow(getApplicationContext(), null, "获取图片失败");
                 }
                 LogUtil.e(TAG, "foreEndGetAdvertisingPosition: " + error.toString());
             }

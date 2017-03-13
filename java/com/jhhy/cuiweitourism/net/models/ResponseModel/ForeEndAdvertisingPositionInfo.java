@@ -8,12 +8,12 @@ import java.util.ArrayList;
 public class ForeEndAdvertisingPositionInfo {
 
 //    "t": [
-//    "http://www.cwly1118.com/uploads/2016/0607/0f59a6280f041ee9a4493358160f7cb6.jpg",
-//    "http://www.cwly1118.com/uploads/2016/0607/0f59a6280f041ee9a4493358160f7cb6.jpg"
+//          "http://www.cwly1118.com/uploads/2016/0607/0f59a6280f041ee9a4493358160f7cb6.jpg",
+//          "http://www.cwly1118.com/uploads/2016/0607/0f59a6280f041ee9a4493358160f7cb6.jpg"
 //    ],
 //    "l": [
-//    "a1",
-//    "b1"
+//          "a1",
+//          "b1"
 //    ]
 
     public ArrayList<String> t;

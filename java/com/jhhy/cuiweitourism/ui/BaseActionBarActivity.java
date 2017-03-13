@@ -49,6 +49,10 @@ public class BaseActionBarActivity extends AppCompatActivity implements View.OnC
         tvTitleRight = (TextView) actionBar.getCustomView().findViewById(R.id.tv_hotel_reserve_rules);
     }
 
+    /**
+     * 返回键点击事件
+     * @param view
+     */
     @Override
     public void onClick(View view) {
         switch (view.getId()){
